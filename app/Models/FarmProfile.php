@@ -85,7 +85,15 @@ class FarmProfile extends Model
     {
         return $this->hasMany(FixedCost::class, 'farm_profiles_id');
     }
-
+      // Add this method to fetch crops based on farm profiles
+      public function cropsFarms()
+      {
+          return $this->hasMany(Crop::class, 'farm_profiles_id');
+      }
+    public function personalinfo()
+    {
+        return $this->belongsTo(PersonalInformations::class, 'personal_informations_id');
+    }
     public function personalInformation()
     {
         return $this->belongsTo(PersonalInformations::class, 'personal_informations_id');
@@ -148,6 +156,7 @@ public function personalInformations()
     {
         return $this->hasMany(Transport::class,'id','farm_profiles_id');
     }
+    
     // public function getPersonalInformationsPrimaryKey()
     // {
     //     $personalInformations = $this->personalInformations;

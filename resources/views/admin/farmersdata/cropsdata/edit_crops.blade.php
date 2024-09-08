@@ -470,559 +470,30 @@
                                             <div class="card-forms border rounded">
 
                                                 <div class="card-body">
-                                                
+                                                    @if (session('message'))
+                                                    <div class="alert alert-success" role="alert">
+                                                      {{ session('message')}}
+                                                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                    </div>
+                                                       
+                                                    @endif
+                                                   
+                                                    @if(session('error'))
+                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                        {{ session('error') }}
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                    </div>
+                                                @endif
                                                 <div class="content">
-                                    <form  id="form" method="POST">
+                                    <form  method="POST" action{{url('updatecrop')}}>
                                         @csrf
                                      
             
                                     <!-- Farm Info Section -->
 
-                                    <div class="step active farmer-info" id="step1">
-                                        <h2>Step 1: Personal Information</h2>
-                                        <br>
-                                        <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p>
-                                        <br>
-                                        <h3>a. Personal Info</h3>
-                                        <div class="input-box col-md-4">
-                                            <input type="hidden" class="form-control light-gray-placeholder users_id" name="users_id" value="{{$userId}}">
-                                        </div>
-                                        <div class="user-details">
-                                            <!-- Existing fields here -->
-                                            <div class="input-box col-md-4">
-                                                <span class="details">First Name</span>
-                                                <input type="text" id="firstName" class="form-control light-gray-placeholder first_name" name="first_name" placeholder="Enter First Name" value="{{ old('first_name') }}">
-                                                <div id="firstNameError" class="invalid-feedback"></div>
-                                            </div>
-                                            <div class="input-box col-md-4">
-                                                <span class="details">Middle Name</span>
-                                                <input type="text" id="middleName" class="form-control light-gray-placeholder middle_name" name="middle_name" placeholder="Enter Middle Name" value="{{ old('middle_name') }}">
-                                                <div id="middleNameError" class="invalid-feedback"></div>
-                                            </div>
-                                            <div class="input-box col-md-4">
-                                                <span class="details">Last Name</span>
-                                                <input type="text" id="lastName" class="form-control light-gray-placeholder last_name" name="last_name" placeholder="Enter Last Name" value="{{ old('last_name') }}">
-                                                <div id="lastNameError" class="invalid-feedback"></div>
-                                            </div>
-                                            <!-- Extension Name Input and Modal -->
-                                            <div class="input-box col-md-4">
-                                                <span class="details">Extension Name</span>
-                                                <div class="d-flex align-items-center">
-                                                    <select class="form-control custom-select extension_name light-gray-placeholder" id="selectExtendName">
-                                                        <option selected disabled>Select</option>
-                                                        <option value="Sr." {{ old('extension_name') == 'Sr.' ? 'selected' : '' }}>Sr.</option>
-                                                        <option value="Jr." {{ old('extension_name') == 'Jr.' ? 'selected' : '' }}>Jr.</option>
-                                                        <option value="others" {{ old('extension_name') == 'others' ? 'selected' : '' }}>Others (optional)</option>
-                                                    </select>
-                                                    <button type="button" id="removeExtendButton" class="btn btn-outline-danger ms-2" style="display: none;">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                                <div id="OthersInputField" style="display: none;">
-                                                    <!-- The custom modal will handle the extension name input -->
-                                                </div>
-                                            </div>
-                                            <!-- Modal for Entering New Extension Name -->
-                                            <div class="modal fade" id="extensionModal" tabindex="-1" aria-labelledby="extensionModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="extensionModalLabel">Enter Extension Name</h5>
-                                                            <!-- Custom close button -->
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <input type="text" id="modalExtensionName" class="form-control" placeholder="Enter extension name">
-                                                            <div id="modalExtensionError" class="invalid-feedback"></div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                            <button type="button" id="modalSaveButton" class="btn btn-primary">Save</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Additional fields -->
-                                            <div class="input-box col-md-4">
-                                                <span class="details">Mother's Maiden Name</span>
-                                                <input type="text" id="mothersMaidenName" class="form-control light-gray-placeholder mothers_maiden_name" name="mothers_maiden_name" placeholder="Mother's Maiden Name" value="{{ old('mothers_maiden_name') }}" required>
-                                                <div id="mothers_maiden_name_error" class="invalid-feedback"></div>
-                                            </div>
-                                            <div class="input-box col-md-4">
-                                                <span class="details">Date of Birth</span>
-                                                <input type="text" id="datepicker" class="form-control light-gray-placeholder date_of_birth" name="date_of_birth" placeholder="Date of Birth" value="{{ old('date_of_birth') }}" required>
-                                                {{-- <div id="date_of_birth_error" class="invalid-feedback"></div> --}}
-                                            </div>
-                                         {{-- <div id="error-message" class="text-danger" style="display: none;"></div> --}}
-                                            <button type="button" class="btn btn-success" id="nextButton" disabled onclick="nextStep()">Next</button>
-                                        </div>
-                                        
-                                    
-                                    </div>
-                                    
-                                        <div class="step farmer-info" id="step2">
-                                            <h2>Step 1: Personal Information</h2><br>
-                                            <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
-                                    <h3>b. Contact & Demographic Info</h3>
-                                    <div class="user-details">
-                                    {{-- <div >
-                                    <span class="details"></span>
-                                    <input type="hidden" class="form-control country l" name="country" id="validationCustom01" value="Philippines" readonly >
-                                    @error('first_name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    </div>
-                                    <div >
-                                    <span class="details"></span>
-                                    <input type="hidden" class="form-control province light-gray-placeholder @error('last_name') is-invalid @enderror" name="province" id="validationCustom01" value="Zamboanga del sur" readonly >
-                                    @error('last_name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    </div> --}}
-                                    {{-- <div >
-                                    <span class="details"></span>
-                                    <input type="hidden"name="email" class="form-control city light-gray-placeholder @error('email') is-invalid @enderror" name="city" id="validationCustom01" value="Zamboanga City" readonly >
-                                    @error('email')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    </div> --}}
-                                    <input type="hidden" class="form-control country l" name="country" id="validationCustom01" value="Philippines" readonly >
-                                    <input type="hidden" class="form-control province light-gray-placeholder @error('last_name') is-invalid @enderror" name="province" id="validationCustom01" value="Zamboanga del sur" readonly >
-                                    <input type="hidden"name="email" class="form-control city light-gray-placeholder @error('email') is-invalid @enderror" name="city" id="validationCustom01" value="Zamboanga City" readonly >
-                                    <div class="input-box col-md-4">
-                                        <span class="details">Agri-District</span>
-                                        <select class="form-control light-gray-placeholder gray-text @error('agri_district') is-invalid @enderror" name="agri_district"  id="districtSelect"  aria-label="Floating label select e">
-                                            <option value="" disabled selected>Select AgriDistrict</option>
-                                            <!-- Add other options as needed -->
-                                        </select>
-                                    </div>
-                                    
-                                  
-
-                                        <!-- Barangay Selection -->
-                                        <div class="input-box col-md-4">
-                                            <span class="details">Barangay</span>
-                                            <div class="d-flex align-items-center">
-                                                <!-- Select dropdown -->
-                                                <select class="form-control barangay custom-select light-gray-placeholder gray-text barangaySelect @error('barangay') is-invalid @enderror" name="barangay" id="SelectBarangay" aria-label="Floating label select e">
-                                                    <option value="" disabled selected>Select Barangay</option>
-                                                    <option value="add">Add New Barangay...</option>
-                                                </select>
-
-                                                <!-- Remove Barangay Button with Font Awesome Icon -->
-                                                {{-- <button type="button" id="removeBarangay" class="btn btn-outline-danger ms-2 d-flex align-items-center" title="Remove Selected Barangay">
-                                                    <i class="fa fa-trash me-1"></i>
-                                                </button>
-
-                                                <!-- Add New Barangay Button with Font Awesome Icon -->
-                                                <button type="button" class="btn btn-success ms-2 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#newBarangayModal" title="Add New Barangay">
-                                                    <i class="fa fa-plus me-1"></i>
-                                                </button> --}}
-                                            </div>
-                                        </div>
-
-                     
-                                        {{-- <select id="districtSelect" class="form-control">
-                                            <option value="" disabled selected>Select AgriDistrict</option>
-                                        </select>
-                                        
-                                        <select class="barangaySelect form-control">
-                                            <option value="" disabled selected>Select Barangay</option>
-                                            <option value="add">Add New Barangay...</option>
-                                        </select>
-                                        
-                                        <select class="organizationSelect form-control">
-                                            <option value="" disabled selected>Select Organization</option>
-                                            <option value="add">Add New Organization...</option>
-                                        </select>
-                                         --}}
-
-
-
-                                    
-                                 
-                                   
-                    <div class="input-box col-md-4">
-                        <span class="details">Street</span>
-                        <input type="text" name="street" id="street" class="form-control street light-gray-placeholder @error('street') is-invalid @enderror" placeholder="Street" autocomplete="new-password" value="{{ old('street') }}">
-                        @error('street')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                                    <div class="input-box col-md-4">
-                                    <span class="details">Zip Code</span>
-                                    <select class="form-control light-gray-placeholder zip_code @error('zip_code') is-invalid @enderror"  name="zip_code"id="validationCustom01" aria-label="Floating label select e">
-                                   
-                                    <option selected value="7000" {{ old('zip_code') == '7000' ? 'selected' : '' }}>7000</option>
-
-                                    </select>
-                                    </div>
-                                    <div class="input-box col-md-4">
-                                    <span class="details">Contact No.</span>
-                                    <input type="number" name="contact_no" id="contact_no" class="form-control contact_no light-gray-placeholder @error('contact_no') is-invalid @enderror"placeholder="Contact no." autocomplete="new-password" value="{{ old('contact_no') }}" >
-                                    @error('contact_no')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    </div>
-                                    <div class="input-box col-md-4">
-                                        <span class="details">Sex</span>
-                                        <div class="d-flex align-items-center">
-                                            <select class="form-control custom-select sex light-gray-placeholder @error('sex') is-invalid @enderror" name="sex" id="selectSex" aria-label="Floating label select e" onchange="handleSexChange()">
-                                                <option value="" disabled selected>Select</option>
-                                                <option value="male" {{ old('sex') == 'male' ? 'selected' : '' }}>Male</option>
-                                                <option value="female" {{ old('sex') == 'female' ? 'selected' : '' }}>Female</option>
-                                                <option value="Others" {{ old('sex') == 'Others' ? 'selected' : '' }}>Others (optional)</option>
-                                            </select>
-                                            <!-- Button section for removing custom entries -->
-                                            <button type="button" id="removeSexButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeSex()">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                        @error('sex')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    
-                                    
-                                    
-                                   
-                                  
-                                    <div class="input-box col-md-4">
-                                        <span class="details">Religion</span>
-                                        <div class="d-flex align-items-center">
-                                            <select class="form-control custom-select religion" id="selectReligion" onchange="checkReligion()">
-                                                <option class="form-control light-gray-placeholder"selected disabled>Select Religion</option>
-                                                <option value="Roman Catholic" {{ old('religion') == 'Roman Catholic' ? 'selected' : '' }}>Roman Catholic</option>
-                                                <option value="Iglesia Ni Cristo" {{ old('religion') == 'Iglesia Ni Cristo' ? 'selected' : '' }}>Iglesia Ni Cristo</option>
-                                                <option value="Seventh-day Adventist" {{ old('religion') == 'Seventh-day Adventist' ? 'selected' : '' }}>Seventh-day Adventist</option>
-                                                <option value="Islam" {{ old('religion') == 'Islam' ? 'selected' : '' }}>Islam</option>
-                                                <option value="Born Again CHurch" {{ old('religion') == 'Born Again CHurch' ? 'selected' : '' }}>Born Again CHurch</option>
-                                                <option value="N/A" {{ old('religion') == 'N/A' ? 'selected' : '' }}>N/A</option>
-                                                <option value="other" {{ old('religion') == 'other' ? 'selected' : '' }}>other</option>
-                                               
-                                            </select>
-                                            <button type="button" id="removeReligionButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeReligion()">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                        
-                                    </div>
-                                    
-                                    
-                              
-                                  
-                                    
-                                    <div class="input-box col-md-4">
-                                        <span class="details">Place of Birth</span>
-                                        <div class="d-flex align-items-center">
-                                            <select class="form-control custom-select light-gray-placeholder place_of_birth" name="place_of_birth" id="selectPlaceBirth" onchange="checkPlaceBirth()" aria-label="Floating label select e">
-                                                <option selected disabled>Select</option>
-                                                <option value="Zamboanga City" {{ old('place_of_birth') == 'Zamboanga City' ? 'selected' : '' }}>Zamboanga City</option>
-                                                <option value="Basilan Province" {{ old('place_of_birth') == 'Basilan Province' ? 'selected' : '' }}>Basilan Province</option>
-                                                <option value="Vitali,ZC" {{ old('place_of_birth') == 'Vitali,ZC' ? 'selected' : '' }}>Vitali,ZC</option>
-                                                <option value="Limaong,ZC" {{ old('place_of_birth') == 'Limaong,ZC' ? 'selected' : '' }}>Limaong,ZC</option>
-                                                <option value="Cotabato" {{ old('place_of_birth') == 'Cotabato' ? 'selected' : '' }}>Cotabato</option>
-                                                <option value="South Cotabato" {{ old('place_of_birth') == 'South Cotabato' ? 'selected' : '' }}>South Cotabato</option>
-                                                <option value="Bunguiao, Zc" {{ old('place_of_birth') == 'Bunguiao, Zc' ? 'selected' : '' }}>Bunguiao, ZC</option>
-                                                <option value="Manicahan,Zc" {{ old('place_of_birth') == 'Manicahan,Zc' ? 'selected' : '' }}>Manicahan, ZC</option>
-                                                <option value="Negros Occidental" {{ old('place_of_birth') == 'Negros Occidental' ? 'selected' : '' }}>Negros Occidental</option>
-                                                <option value="Mercedes, ZC" {{ old('place_of_birth') == 'Mercedes, ZC' ? 'selected' : '' }}>Mercedes, ZC</option>
-                                                <option value="Curuan, ZC" {{ old('place_of_birth') == 'Curuan, ZC' ? 'selected' : '' }}>Curuan, ZC</option>
-                                                <option value="Boalan, Zc" {{ old('place_of_birth') == 'Boalan, Zc' ? 'selected' : '' }}>Boalan, ZC</option>
-                                                <option value="Guiwan, Zc" {{ old('place_of_birth') == 'Guiwan, Zc' ? 'selected' : '' }}>Guiwan, ZC</option>
-                                                <option value="Cabatangan, Zc" {{ old('place_of_birth') == 'Cabatangan, Zc' ? 'selected' : '' }}>Cabatangan, ZC</option>
-                                                <option value="Tugbungan, Zc" {{ old('place_of_birth') == 'Tugbungan, Zc' ? 'selected' : '' }}>Tugbungan, ZC</option>
-                                                <option value="Talabaan, Zc" {{ old('place_of_birth') == 'Talabaan, Zc' ? 'selected' : '' }}>Talabaan, ZC</option>
-                                                <option value="Culianan, Zc" {{ old('place_of_birth') == 'Culianan, Zc' ? 'selected' : '' }}>Culianan, ZC</option>
-                                                <option value="Ayala, Zc" {{ old('place_of_birth') == 'Ayala, Zc' ? 'selected' : '' }}>Ayala, ZC</option>
-                                                <option value="Add Place of Birth" {{ old('place_of_birth') == 'Add Place of Birth' ? 'selected' : '' }}>Add new</option>
-                                            </select>
-                                            <button type="button" id="removePlaceBirthButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removePlaceBirth()">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                        <div id="PlaceBirthInputField" style="display: none;">
-                                            <!-- Input field for new place of birth names -->
-                                        </div>
-                                    </div>
-                                    
-
-                                   
-                                    <div class="input-box col-md-4">
-                                    <span class="details">Civil Status</span>
-                                    <select class="form-control custom-select light-gray-placeholder civil_status"  name="civil_status"id="selectCivil"onchange="checkCivil()"  aria-label="Floating label select e">
-                                        <option selected  disabled>Select</option>
-                                        <option  value="Single" {{ old('civil_status') == 'Single' ? 'selected' : '' }}>Single</option>
-                                        <option value="Maried" {{ old('civil_status') == 'Maried' ? 'selected' : '' }}>Maried</option>
-                                        <option value="Divorced" {{ old('civil_status') == 'Divorced' ? 'selected' : '' }}>Divorced</option>
-                                        <option value="Widow" {{ old('civil_status') == 'Widow' ? 'selected' : '' }}>Widow</option>
-                                       
-                                      </select>
-                                    </div>
-
-                                    <div class="input-box col-md-4" id="MariedInputSelected" style="display: none;">
-                                        <span class="details">Name of Spouse:</span>
-                                        <input type="text" id="MariedInputSelected" name="name_legal_spouse" class="form-control name_legal_spouse light-gray-placeholder @error('mothers_maiden_name') is-invalid @enderror" placeholder="Name of spouse" autocomplete="new-password" value="{{ old('mothers_maiden_name') }}" onkeypress="return blockSymbolsAndNumbers(event)">
-                                        @error('mothers_maiden_name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                        <div class="input-box col-md-4"id="SinWidDevInput"  style="display: none;">
-                                            <span class="details">Name of Spouse:</span>
-                                            {{-- <input type="text"id="MariedInputSelected" name="name_legal_spouse"class="form-control name_legal_spouse light-gray-placeholder @error('mothers_maiden_name') is-invalid @enderror" placeholder="Mother's Maiden Name" autocomplete="new-password" value="{{ old('mothers_maiden_name') }}" >
-                                            --}}
-                                            <select class="form-control light-gray-placeholder @error('name_legal_spouse') is-invalid @enderror" name="name_legal_spouse"id="selectFgroups"onchange="checkfarmGroup()" aria-label="Floating label select e">
-                                           
-                                                <option selected value="N/A" {{ old('name_legal_spouse') == 'N/A' ? 'selected' : '' }}>N/A</option>
-                                                
-                                                
-                                              
-                                              </select>
-                                            </div>
-                                            <div class="input-box col-md-4">
-                                                <span class="details">No. of Children</span>
-                                                <div class="d-flex align-items-center">
-                                                    <select class="form-control no_of_children light-gray-placeholder @error('no_of_children') is-invalid @enderror" name="no_of_children" id="childrenSelect" onchange="checkChildren()" aria-label="Floating label select e">
-                                                        <option selected disabled>Select</option>
-                                                        <option value="1" {{ old('no_of_children') == '1' ? 'selected' : '' }}>1</option>
-                                                        <option value="2" {{ old('no_of_children') == '2' ? 'selected' : '' }}>2</option>
-                                                        <option value="3" {{ old('no_of_children') == '3' ? 'selected' : '' }}>3</option>
-                                                        <option value="4" {{ old('no_of_children') == '4' ? 'selected' : '' }}>4</option>
-                                                        <option value="5" {{ old('no_of_children') == '5' ? 'selected' : '' }}>5</option>
-                                                        <option value="N/A" {{ old('no_of_children') == 'N/A' ? 'selected' : '' }}>N/A</option>
-                                                        <option value="Add" {{ old('no_of_children') == 'Add' ? 'selected' : '' }}>Add</option>
-                                                    </select>
-                                                    <button type="button" id="removeChildrenButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeChildren()">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                                <div id="ChildrenInputField" style="display: none;">
-                                                    <!-- Input field for new number of children names -->
-                                                </div>
-                                            </div>
-                                          
-                                            
-                                    <div class="input-box col-md-4">
-                                        <span class="details">Highest Formal Education</span>
-                                        <div class="d-flex align-items-center">
-                                            <select class="form-control light-gray-placeholder highest_formal_education @error('highest_formal_education') is-invalid @enderror" name="highest_formal_education" id="selectEduc" onchange="checkFormalEduc()" aria-label="Floating label select e">
-                                                <option selected disabled>Select</option>
-                                                <option  value="No Formal Education" {{ old('highest_formal_education') == 'No Formal Education' ? 'selected' : '' }}>No Formal Education</option>
-                                                <option value="Primary Education" {{ old('highest_formal_education') == 'Primary Education' ? 'selected' : '' }}>Primary Education</option>
-                                                <option value="Secondary Education" {{ old('highest_formal_education') == 'Secondary Education' ? 'selected' : '' }}>Secondary Education</option>
-                                                <option value="Vocational Training" {{ old('highest_formal_education') == 'Vocational Training' ? 'selected' : '' }}>Vocational Training</option>
-                                                <option value="Bachelors Degree" {{ old('highest_formal_education') == 'Bachelors Degree' ? 'selected' : '' }}>Bachelor's Degree</option>
-                                                <option value="Masters Degree" {{ old('highest_formal_education') == 'Masters Degree' ? 'selected' : '' }}>Master's Degree</option>
-                                                <option value="Doctorate" {{ old('highest_formal_education') == 'Doctorate' ? 'selected' : '' }}>Doctorate</option>
-                                                <option value="Other" {{ old('highest_formal_education') == 'Other' ? 'selected' : '' }}>Other</option>
-                                                <option value="Add" {{ old('highest_formal_education') == 'Add' ? 'selected' : '' }}>Add</option>
-                                            </select>
-                                            <button type="button" id="removeEducationButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeFormalEduc()">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                        <div id="EducationInputField" style="display: none;">
-                                            <!-- Input field for new education names -->
-                                        </div>
-                                    </div>
-                                    
-                                       {{-- add new form --}}
-                                {{-- <div class="input-box col-md-4" id="otherformInputContainer" style="display: none;">
-                                    <label for="add_formEduc">add prefer:</label>
-                                    <input type="text" id="otherformInputContainer" name="add_formEduc" value="military" class="form-control light-gray-placeholder add_formEduc" placeholder="enter highest formal education">
-                                </div> --}}
-      
-                                    <div class="input-box col-md-4">
-                                    <span class="details">Person with Disability</span>
-
-                                        <select class="form-control light-gray-placeholder person_with_disability @error('person_with_disability') is-invalid @enderror" name="person_with_disability"id="selectPWD"onchange="checkPWD()" aria-label="Floating label select e">
-                                        <option selected  disabled>Select</option>
-                                    <option value="1" {{ old('person_with_disability') == 'Yes' ? 'selected' : '' }}>Yes</option>
-                                    <option value="0" {{ old('person_with_disability') == 'No' ? 'selected' : '' }}>No</option>
-
-
-                                    </select>
-                                    </div>
-
-                                    <div class="input-box col-md-4"id="YesInputSelected" style="display: none;" >
-                                    <span class="details">PWD ID No.</span>
-                                    <input type="number" name="pwd_id_no" id="YesInputSelected" class="form-control YEspwd_id_no light-gray-placeholder @error('pwd_id_no') is-invalid @enderror" placeholder="Mother's Maiden Name" autocomplete="new-password" value="{{ old('pwd_id_no') }}" >
-                                    @error('pwd_id_no')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    </div>
-
-
-                                    <div class="input-box col-md-4" id="NoInputSelected" style="display: none;">
-                                    <span class="details">PWD ID No</span>
-                                    <select class="form-control Nopwd_id_no $('select.YEspwd_id_no').val(), @error('pwd_id_no') is-invalid @enderror" name="pwd_id_no"id="selectFgroups"onchange="checkfarmGroup()" aria-label="Floating label select e">
-                                 
-                                    <option selected value="N/A" {{ old('pwd_id_no') == 'N/A' ? 'selected' : '' }}>N/A</option>
-
-
-
-                                    </select>
-                                    </div>
-
-
-                                    <div class="input-box col-md-4">
-                                    <span class="details">Government Issued ID</span>
-                                    <select class="form-control government_issued_id @error('government_issued_id') is-invalid @enderror"  name="government_issued_id"id="selectGov"onchange="CheckGoverniD()" aria-label="Floating label select e">
-                                    <option selected  disabled>Select</option>
-                                    <option value="Yes" {{ old('government_issued_id') == 'Yes' ? 'selected' : '' }}>Yes</option>
-                                    <option value="No" {{ old('government_issued_id') == 'No' ? 'selected' : '' }}>No</option>
-
-                                    </select>
-                                    </div>
-
-                                    <div class="input-box col-md-4" id="iDtypeSelected" style="display: none;">
-                                        <span class="details">Gov ID Type</span>
-                                        <div class="d-flex align-items-center">
-                                            <select class="form-control id_type custom-select @error('id_type') is-invalid @enderror" name="id_type" id="selectIDType" onchange="checkIDtype()" aria-label="Floating label select e">
-                                                <option selected  disabled>Select</option>
-                                                <option value="Driver License" {{ old('id_type') == 'Driver License' ? 'selected' : '' }}>Driver License</option>
-                                                <option value="Passport" {{ old('id_type') == 'Passport' ? 'selected' : '' }}>Passport</option>
-                                                <option value="Postal ID" {{ old('id_type') == 'Postal ID' ? 'selected' : '' }}>Postal ID</option>
-                                                <option value="Phylsys ID" {{ old('id_type') == 'Phylsys ID' ? 'selected' : '' }}>Phylsys ID</option>
-                                                <option value="PRC ID" {{ old('id_type') == 'PRC ID' ? 'selected' : '' }}>PRC ID</option>
-                                                <option value="Brgy. ID" {{ old('id_type') == 'Brgy. ID' ? 'selected' : '' }}>Brgy. ID</option>
-                                                <option value="Voters ID" {{ old('id_type') == 'Voters ID' ? 'selected' : '' }}>Voters ID</option>
-                                                <option value="Senior ID" {{ old('id_type') == 'Senior ID' ? 'selected' : '' }}>Senior ID</option>
-                                                <option value="PhilHealth ID" {{ old('id_type') == 'PhilHealth ID' ? 'selected' : '' }}>PhilHealth ID</option>
-                                                <option value="Tin ID" {{ old('id_type') == 'Tin ID' ? 'selected' : '' }}>Tin ID</option>
-                                                <option value="BIR ID" {{ old('id_type') == 'BIR ID' ? 'selected' : '' }}>BIR ID</option>
-                                                <option value="N/A" {{ old('id_type') == 'N/A' ? 'selected' : '' }}>N/A</option>
-                                                <option value="addNew" {{ old('id_type') == 'addNew' ? 'selected' : '' }}>Other ID Type</option>
-                                            </select>
-                                            <button type="button" id="removeIDButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeIDType()">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                        @error('id_type')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    
-                                    <div class="input-box col-md-4"  id="idNoInput" style="display: none;">
-                                    <span class="details">Gov-ID no.</span>
-                                    <input type="number" name="add_Idtype" id="add_Idtype" class="form-control add_Idtype light-gray-placeholder @error('add_Idtype') is-invalid @enderror" placeholder="gov. id no" autocomplete="new-password" value="{{ old('add_Idtype') }}" >
-                                    @error('add_Idtype')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    </div>
-                                    {{-- <div class="input-box col-md-4" id="NoSelected" style="display: none;">
-                                        <label for="OthersInput">Non-Gov-ID Type:</label>
-                                        <input type="text" id="OthersInput" class="form-control placeholder-text @error('gov_id_no') is-invalid @enderror"name="add_Idtype" id="validationCustom02" placeholder="Enter gov-id type"  value="{{ old('gov_id_no') }}">
-                                        @error('gov_id_no')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    </div> --}}
-                                    <div class="input-box col-md-4"  id="NoSelected" style="display: none;">
-                                    <span class="details">Non-Gov ID</span>
-                                    <input type="text" name="id_types" id="non_gov_id_types" class="form-control non_gov_id_types light-gray-placeholder @error('id_types') is-invalid @enderror" placeholder="non-gov id" autocomplete="new-password" value="{{ old('id_types') }}" >
-                                    @error('id_types')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    </div>
-
-                                    </div>
-                                            <!-- Add other personal information fields -->
-                                            <button type="button" class="btn btn-primary" onclick="previousStep()">Previous</button>
-                                            <button type="button" class="btn btn-success" id="nextButton" onclick="nextStep()">Next</button>
-                                        </div>
-
-                                        {{-- farmers info last part --}}
-                                        <div class="step farmer-info" id="step1.3">
-                                            <h2>Step 1: Personal Information</h2><br>
-                                            <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
-                                            <h3>c. Association Info</h3>
-                                              <div class="user-details">
-                                                <div class="input-box col-md-4" style="display: none;">
-                                                    <span class="details">Agri-District</span>
-                                                    <select class="form-control custom-select light-gray-placeholder agri_district @error('agri_district') is-invalid @enderror"  name="agri_district" id="selectAgri" onchange="checkAgri()"  aria-label="Floating label select e">
-                                                    <option disabled>Select Agri-District</option>
-                                                    <option value="{{$agri_district}}" {{$agri_district == "ayala" ? 'selected' : ''}}>{{$agri_district}}</option>
-                               
-                                                    </select>
-                                                    </div>
-                                                 
-                                                        <div class="input-box  col-md-4 " >
-                                                            <span class="details">Member of farmer Ass/Org/Coop</span>
-                                                            <select class="form-control custom-select light-gray-placeholder gray-text member_ofany_farmers @error('member_ofany_farmers_ass_org_coop') is-invalid @enderror" id="selectMember" onchange="checkMmbership()" name="member_ofany_farmers_ass_org_coop" aria-label="Floating label select e">
-                                                                <option selected  disabled>Select</option>
-                                                                <option value="1" {{('member_ofany_farmers_ass_org_coop') == 1 ? 'selected' : '' }}>Yes</option>
-                                                                <option value="0" {{ ('member_ofany_farmers_ass_org_coop') == 0 ? 'selected' : '' }}>No</option>
-                                                            </select>
-                                                            @error('member_ofany_farmers_ass_org_coop')
-                                                            <div class="invalid-feedback">{{ $message }}</div>
-                                                            @enderror
-                                                          </div>
-                  
-                    
-
-                                <!-- Organization Selection -->
-                                    <div class="input-box col-md-4" id="YesFarmersGroup" style="display: none;">
-                                        <span class="details">Name of Ass/Org/Coop</span>
-                                        <div class="d-flex align-items-center">
-                                            <!-- Select dropdown -->
-                                            <select class="form-control nameof_farmers custom-select light-gray-placeholder gray-text @error('organization') is-invalid @enderror" name="organization" id="SelectOrganization" aria-label="Floating label select e">
-                                                <!-- Options will be dynamically populated based on the selected agri_district -->
-                                            </select>
-
-                                            <!-- Remove Organization Button with Font Awesome Icon -->
-                                            <button type="button" id="removeOrganization" class="btn btn-outline-danger ms-2 d-flex align-items-center" title="Remove Selected Organization">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-
-                                            <!-- Add New Organization Button with Font Awesome Icon -->
-                                            <button type="button" class="btn btn-success ms-2 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#newOrganizationModal" title="Add New Organization">
-                                                <i class="fa fa-plus me-1"></i>
-                                        </div>
-                                    </div>
-                                <div class="input-box col-md-4" id="NoFarmersGroup" style="display: none;font-size: 12px">
-                                    <span class="details">Name of Farmers Ass/Org/Coop</span>
-                                    <select class="form-control NoFarmersGroup @error('nameof_farmers_ass_org_coop') is-invalid @enderror" name="nameof_farmers_ass_org_coop"id="selectFgroups"onchange="checkfarmGroup()" aria-label="Floating label select e">
-                                       
-                                        <option selected value="N/A" {{ old('nameof_farmers_ass_org_coop') == 'N/A' ? 'selected' : '' }}>N/A</option> 
-                          </select>
-                      </div>
-                    
-                     
-                      <div class="input-box col-md-4">
-                        <span class="details">Name of Contact Person</span>
-                        <input type="text" class="form-control light-gray-placeholder name_contact_person @error('name_contact_person') is-invalid @enderror" name="name_contact_person" placeholder="Enter name of contact person" value="{{ old('name_contact_person') }}" id="contactPersonInput" onkeypress="return blockSymbolsAndNumbers(event)">
-                        @error('name_contact_person')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                      <div class="input-box col-md-4">
-                        <span class="details">Celphone/Tel.no</span>
-                        <input type="number" class="form-control cp_tel_no light-gray-placeholder @error('cp_tel_no') is-invalid @enderror" name="cp_tel_no" placeholder="Enter your cp tel no"value="{{ old('cp_tel_no') }}" >
-                        @error('cp_tel_no')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                      </div>
-                      <div class="input-box col-md-4">
-                        <span class="details">Date of Interview</span>
-                        <input type="text" class="form-control light-gray-placeholder date_of_interviewed @error('date_of_interview') is-invalid @enderror" name="date_interview" id="datepicker" placeholder="Date of Interview" value="{{ old('date_of_interview') }}" data-input='true' required>
-                        @error('date_of_interview')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    
-                    
-                    
-                    
-                    </div>
-                                           
-                                            <!-- Add other personal information fields -->
-                                            <button type="button" class="btn btn-primary" onclick="previousStep()">Previous</button>
-                                            <button type="button" class="btn btn-success"  id="nextButton" onclick="nextStep()">Next</button>
-                                        </div>
 
 <!-- Step 1: Farm Profile -->
-<div class="step farm-info" id="step2">
+<div class="step active farm-info" id="step2">
     <!-- Farm Profile and Crop Accordion -->
     <div class="accordion farm-info" id="accordionFarmProfile">
         <!-- Farm Profile Section -->
@@ -1030,230 +501,68 @@
             <div class="card-header d-flex justify-content-between align-items-center" id="headingFarmProfile" style="background-color: #f8f9fa; border: none; padding: 10px 20px;">
                 <h5 class="mb-0" style="margin: 0;">
                     <button class="btn btn-modern" type="button" data-toggle="collapse" data-target="#collapseFarmProfile" aria-expanded="true" aria-controls="collapseFarmProfile">
-                        Add Farm Profile
+                        Crop Farm 
                     </button>
                 </h5>
                 
                 <!-- Button to Add New Crop Section (aligned to the right) -->
-                <button class="btn btn-secondary ml-auto" type="button" id="addCropButton">Add Crop</button>
+                {{-- <button class="btn btn-secondary ml-auto" type="button" id="addCropButton">Add Crop</button> --}}
             </div>
             
             <div id="collapseFarmProfile" class="collapse show" aria-labelledby="headingFarmProfile" data-parent="#accordionFarmProfile">
                 <div class="card-body">
                     <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
                     <div id="farmProfiles"></div>
-                    <h3>a. Farm Location </h3>
+                    <h3>Update Crop Farm </h3>
                     <div class="user-details">
                         <div id="farmProfiles">
+                            <input type="hidden" class="form-control light-gray-placeholder farm_profiles_id"value="{{$cropfarm->farm_profiles_id}}" name="farm_profiles_id" placeholder="Enter farm address" id="farm_profiles_id" onkeypress="return blockSymbolsAndNumbers(event)">
+                            <input type="hidden" class="form-control light-gray-placeholder users_id"value="{{$cropfarm->users_id}}" name="users_id" placeholder="Enter farm address" id="users_id" onkeypress="return blockSymbolsAndNumbers(event)">
                         <div class="user-details">
-                            <div class="input-box col-md-4">
-                                <span class="details">Tenurial Status:</span>
-                                {{-- <label class="detail">Tenurial Status:</label> --}}
-                                <div class="d-flex align-items-center">
-                                    <select class="form-control custom-select light-gray-placeholder placeholder-text tenurial_status @error('tenurial_status') is-invalid @enderror" name="tenurial_status" id="selectTenurialStatus" onchange="checkTenurial()" aria-label="label select e">
-                                        <option selected disabled>Select</option>
-                                        <option  value="Owner" {{ old('tenurial_status') == 'Owner' ? 'selected' : '' }}>Owner</option>
-                                        <option value="Owner Tiller" {{ old('tenurial_status') == 'Owner Tiller' ? 'selected' : '' }}>Owner Tiller</option>
-                                        <option value="Tenant" {{ old('tenurial_status') == 'Tenant' ? 'selected' : '' }}>Tenant</option>
-                                        <option value="Tiller" {{ old('tenurial_status') == 'Tiller' ? 'selected' : '' }}>Tiller</option>
-                                        <option value="Lease" {{ old('tenurial_status') == 'Lease' ? 'selected' : '' }}>Lease</option>
-                                        <option value="Add" {{ old('tenurial_status') == 'Add' ? 'selected' : '' }}>Add</option>
+                     
+
+                          
+                                <div class="input-box col-md-4">
+                                    <label for="crop_name">Crop Name:</label>
+                                    <select class="form-control crop_name" name="crop_name">
+                                        <option value="" disabled selected>Select Crop</option>
                                     </select>
-                                    <button type="button" id="removeTenurialButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeTenurial()">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
                                 </div>
-                                @error('tenurial_status')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
+                                
+                                <div class="input-box col-md-4">
+                                    <label for="crop_variety">Crop Variety:</label>
+                                    <select class="form-control crop_variety" name="type_of_variety_planted">
+                                        <option value="{{$cropfarm->type_of_variety_planted}}">{{$cropfarm->type_of_variety_planted}}</option>
+                                        <option value="add">Add New Variety...</option>
+                                        
+                                    </select>
+                                </div>
+                         
                             <div class="input-box col-md-4">
-                                <span class="details">Farm Address:</span>
-                                <input type="text" class="form-control light-gray-placeholder farm_address" name="farm_profiles[0][farm_address]" placeholder="Enter farm address" id="rice_farm_address_0" onkeypress="return blockSymbolsAndNumbers(event)">
+                                <span class="details">Preferred Variety:</span>
+                                <input type="text" class="form-control light-gray-placeholder preferred_variety"value="{{$cropfarm->preferred_variety}}" name="preferred_variety" placeholder="Enter farm address" id="preferred_variety" onkeypress="return blockSymbolsAndNumbers(event)">
                             </div>
                             <div class="input-box col-md-4">
                                 <span class="details">No.of Years as Farmer:</span>
-                                <input type="number" class="form-control light-gray-placeholder no_of_years_as_farmers" name="farm_profiles[0][no_of_years_as_farmers]" id="no_of_years_as_farmers_0" placeholder="Enter no fo years as farmers">
+                                <input type="number" class="form-control light-gray-placeholder  no_crop_year" value="{{$cropfarm->no_of_cropping_per_year}}" name="no_of_cropping_per_year" id="no_of_cropping_per_year" placeholder="Enter no fo years as farmers">
                             </div>
                             <div class="input-box col-md-4">
-                                <span class="details">GPS Longitude:</span>
-                                <input type="text" class="form-control light-gray-placeholder gps_longitude" name="farm_profiles[0][gps_longitude]" id="gps_longitude_0" placeholder="GPS_longitude" readonly >
+                                <span class="details">Planting Schedule (Wet Season):</span>
+                                <input type="text" class="form-control light-gray-placeholder wet_season" value="{{$cropfarm->planting_schedule_wetseason}}"  name="planting_schedule_wetseason" id="datepicker" placeholder="Wet season" >
                               </div>
                               <div class="input-box col-md-4">
-                                <span class="details">GPS Latitude:</span>
-                                <input type="number" class="form-control light-gray-placeholder gps_latitude" name="farm_profiles[0][gps_latitude]" id="gps_latitude_0"placeholder="GPS_latitude" readonly>
+                                <span class="details">Planting Schedule (Dry Season):</span>
+                                <input type="number" class="form-control light-gray-placeholder dry_season" value="{{$cropfarm->planting_schedule_dryseason}}" name="planting_schedule_dryseason" id="datepicker"placeholder="Dry season">
                               </div>
                             
-                                    <!-- Map Modal -->
-                        <div id="mapModal" class="modal fade" tabindex="-1" role="dialog">
-                            <div class="modal-dialog modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title">Select Location on Map</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                                </div>
-                                <div class="modal-body">
-                                <div id="map" style="height: 400px; width: 100%;"></div>
-                                <div class="form-row mt-3">
-                                    <div class="col">
-                                    <label for="modal_latitude">Latitude:</label>
-                                    <input type="number" class="form-control light-gray-placeholder"placeholder="Enter latitude" id="modal_latitude">
-                                    </div>
-                                    <div class="col">
-                                    <label for="modal_longitude">Longitude:</label>
-                                    <input type="number" class="form-control light-gray-placeholder"placeholder="Enter longitude" id="modal_longitude">
-                                    </div>
-                                </div>
-                                </div>
-                                <div class="modal-footer">
-                               
-                                <button type="button" class="btn btn-primary" id="saveLocation">Close</button>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-  
+                                   
+                                
                        
                             <div class="input-box col-md-4">
-                                <span class="details">Total Physical Area (has):</span>
-                                <input type="number" class="form-control light-gray-placeholder total_physical_area_has" name="farm_profiles[0][total_physical_area_has]" id="total_physical_area_has_0" value="{{old('total_physical_area_has')}}" >
+                                <span class="details">Yield Kg/Tons:</span>
+                                <input type="number" class="form-control light-gray-placeholder yield_kg_ha" value="{{$cropfarm->yield_kg_ha}}" name="yield_kg_ha" id="yield_kg_ha" placeholder="yield kg/ha" value="{{old('yield_kg_ha')}}" >
                             </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">Total Area Cultivated (has):</span>
-                                <input type="number" class="form-control light-gray-placeholder Total_area_cultivated_has" name="farm_profiles[0][Total_area_cultivated_has]"id="rice_area_cultivated_has_0" placeholder=" Enter total area cultivated has" value="{{'total_area_cultivated'}}">
-                            </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">Land Title No:</span>
-                                <input type="text" class="form-control light-gray-placeholder land_title_no" name="farm_profiles[0][land_title_no]" id="land_title_no_0" placeholder="Enter land title no" value="{{old('land_title_no')}}">
-                            </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">Lot No:</span>
-                                <input type="text" class="form-control light-gray-placeholder lot_no" name="farm_profiles[0][lot_no]"value="445.54" id="lot_no_0" placeholder="Enter lot no" value="{{old('lot_no')}}">
-                            </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">Area Prone To:</span>
-                                <div class="d-flex align-items-center">
-                                    <select class="form-control custom-select light-gray-placeholder area_prone_to placeholder-text @error('area_prone_to') is-invalid @enderror" id="selectedAreaprone" onchange="checkProne()" name="area_prone_to" aria-label="Floating label select e">
-                                        <option selected disabled>Select</option>
-                                        <option  value="Flood" {{ old('area_prone_to') == 'Flood' ? 'selected' : '' }}>Flood</option>
-                                        <option value="Drought" {{ old('area_prone_to') == 'Drought' ? 'selected' : '' }}>Drought</option>
-                                        <option value="Saline" {{ old('area_prone_to') == 'Saline' ? 'selected' : '' }}>Saline</option>
-                                        <option value="N/A" {{ old('area_prone_to') == 'N/A' ? 'selected' : '' }}>N/A</option>
-                                        <option value="Add Prone" {{ old('area_prone_to') == 'Add Prone' ? 'selected' : '' }}>Add</option>
-                                    </select>
-                                    <button type="button" id="removeProneButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeProne()">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </div>
-                                @error('area_prone_to')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
-                            {{-- <div class="input-box col-md-4" id="AreaProneInput" style="display: none;">
-                                <label for="lot_no_0">Add New area Prone to:</label>
-                                <input type="text"id="AreaProneInputField" class="form-control light-gray-placeholder add_newProneYear"value="8434.34" name="farm_profiles[0][lot_no]" id="lot_no_0" >
-                            </div> --}}
-                            <div class="input-box col-md-4">
-                                <span class="details">Ecosystem:</span>
-                                <div class="d-flex align-items-center">
-                                    <select class="form-control custom-select light-gray-placeholder ecosystem placeholder-text @error('ecosystem') is-invalid @enderror" id="selectedEcosystem" onchange="checkEcosystem()" name="ecosystem" aria-label="Floating label select e">
-                                        <option selected disabled>Select</option>
-                                        <option value="Lowland Rain Fed" {{ old('ecosystem') == 'Lowland Rain Fed' ? 'selected' : '' }}>Lowland Rain Fed</option>
-                                        <option value="Lowland Irrigated" {{ old('ecosystem') == 'Lowland Irrigated' ? 'selected' : '' }}>Lowland Irrigated</option>
-                                        <option value="Add ecosystem" {{ old('ecosystem') == 'Add ecosystem' ? 'selected' : '' }}>Add</option>
-                                    </select>
-                                    <button type="button" id="removeEcosystemButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeEcosystem()">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </div>
-                                @error('ecosystem')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
-
-                            {{-- <div class="input-box col-md-4" id="EcosystemInput"  style="display: none;">
-                                <label for="lot_no_0">Add New Ecosystem:</label>
-                                <input type="text"id="EcosystemInputField" class="form-control light-gray-placeholder add_newProneYear"value="rainy land" name="farm_profiles[0][lot_no]" id="lot_no_0" >
-                            </div> --}}
-                        </div>
-                        <h3>b. Insurance and Financial Information</h3><br>
-                            <div class="user-details">
-                          
-                    <div class="input-box col-md-4">
-                        <span class="details">RSBA Register:</span>
-                               
-                                <select class="form-control custom-select light-gray-placeholder rsba_register placeholder-text @error('rsba_register') is-invalid @enderror" id="rsba_register" name="rsba_register" aria-label="Floating label select e">
-                                    <option  disabled>Select</option>
-                                    <option selected value="Yes" {{ old('rsba_register') == 'Yes' ? 'selected' : '' }}>Yes</option>
-                                    <option value="No" {{ old('rsba_register') == 'No' ? 'selected' : '' }}>No</option>
-                              
-                                  </select>
-                            
-                            </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">PCIC Insured:</span>
-                                
-                                <select class="form-control custom-select light-gray-placeholder pcic_insured placeholder-text @error('pcic_insured') is-invalid @enderror" id="pcic_insured" name="pcic_insured" aria-label="Floating label select e">
-                                    <option selected disabled>Select</option>
-                                    <option  alue="Yes" {{ old('pcic_insured') == 'Yes' ? 'selected' : '' }}>Yes</option>
-                                    <option value="No" {{ old('pcic_insured') == 'No' ? 'selected' : '' }}>No</option>
-                              
-                                  </select>
-                            </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">Government Assisted:</span>
-                           
-                                <select class="form-control custom-select light-gray-placeholder government_assisted placeholder-text @error('government_assisted') is-invalid @enderror" id="government_assisted" name="government_assisted" aria-label="Floating label select e">
-                                    <option selected class="light-gray-placeholder"  disabled>Select</option>
-                                    <option value="Yes" {{ old('government_assisted') == 'Yes' ? 'selected' : '' }}>Yes</option>
-                                    <option value="No" {{ old('government_assisted') == 'No' ? 'selected' : '' }}>No</option>
-                              
-                                  </select>
-                            
-                            </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">Source of Capital:</span>
-                                <div class="d-flex align-items-center">
-                                    <select class="form-control custom-select light-gray-placeholder source_of_capital placeholder-text @error('source_of_capital') is-invalid @enderror" id="selectedSourceCapital" onchange="checkSourceCapital()" name="source_of_capital" aria-label="Floating label select e">
-                                        <option selected disabled>Select</option>
-                                        <option value="Own" {{ old('source_of_capital') == 'Own' ? 'selected' : '' }}>Own</option>
-                                        <option value="Loan" {{ old('source_of_capital') == 'Loan' ? 'selected' : '' }}>Loan</option>
-                                        <option value="Financed" {{ old('source_of_capital') == 'Financed' ? 'selected' : '' }}>Financed</option>
-                                        <option value="Others" {{ old('source_of_capital') == 'Others' ? 'selected' : '' }}>Others</option>
-                                    </select>
-                                    <button type="button" id="removeSourceCapitalButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeSourceCapital()">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </div>
-                                @error('source_of_capital')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
-                          
-
-                            <div class="input-box col-md-4">
-                                <span class="details">Remarks/Recommendation:</span>
-                                <input type="text" class="form-control light-gray-placeholder remarks" name="farm_profiles[0][remarks_recommendation]" id="remarks_recommendation_0" placeholder=" Enter remarks" onkeypress="return blockSymbolsAndNumbers(event)">
-                            </div>
-                            {{-- <div class="input-box col-md-4">
-                                <label for="oca_district_office_0">OCA District Office:</label>
-                                <input type="text" class="form-control light-gray-placeholder oca_district_office" name="farm_profiles[0][oca_district_office]" id="oca_district_office_0" placeholder=" Enter oca district" >
-                            </div> --}}
-                            <div class="input-box col-md-4">
-                                <span class="details">Name of Technicians:</span>
-                                <input type="text" class="form-control light-gray-placeholder name_technicians" name="farm_profiles[0][name_technicians]" id="name_technicians_0" placeholder="Enter name of technicians" onkeypress="return blockSymbolsAndNumbers(event)">
-                            </div>
-                            
-                            <div class="input-box col-md-4">
-                                <span class="details">Date of Interview:</span>
-                                <input type="text" class="form-control light-gray-placeholder date_interview" name="farm_profiles[0][date_interview]" id="datepicker" placeholder="date interview" required>
-                            </div>
+            
                             
                 
                             
@@ -1269,7 +578,7 @@
 
         <!-- Buttons outside the accordions -->
             <div class="button-container mt-3 d-flex justify-content-between">
-                <button type="button" class="btn btn-primary" onclick="previousStep()">Previous</button>
+                <button type="button" class="btn btn-primary" onclick="goBack()">Back</button>
                 <button type="submit" class="btn btn-success" id="submitButton">Save</button>
             </div>
                                     </div>
@@ -1298,12 +607,12 @@
         <div class="modal-body">
           <div class="accordion" id="confirmationAccordion">
             <!-- Farmer Information Accordion -->
-                <div class="accordion-item">
-                <h2 class="accordion-header" id="headingFarmerInfo">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFarmerInfo" aria-expanded="true" aria-controls="collapseFarmerInfo">
-                    <i class="fas fa-user"></i> Farmer Information
-                    </button>
-                </h2>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingFarmerInfo">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFarmerInfo" aria-expanded="true" aria-controls="collapseFarmerInfo">
+                  <i class="fas fa-user"></i> Farmer Information
+                </button>
+              </h2>
               <div id="collapseFarmerInfo" class="accordion-collapse collapse show" aria-labelledby="headingFarmerInfo" data-bs-parent="#confirmationAccordion">
                 <div class="accordion-body">
                     <ul class="farmer-details">
@@ -1685,48 +994,7 @@
   
 
   
-  {{-- <!-- Success Modal -->
-<!-- Success Modal -->
-<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content shadow-lg">
-            <div class="modal-header border-0">
-                <h5 class="modal-title" id="successModalLabel">Success</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- Success message will be displayed here -->
-            </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="proceedToNextStep()">Proceed</button>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- Error Modal -->
-<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content shadow-lg">
-            <div class="modal-header border-0">
-                <h5 class="modal-title" id="errorModalLabel">Error</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="errorModalBody">
-                <!-- Error message will be displayed here -->
-            </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-  
-  
-   --}}
 
 
  <!-- Modal for Adding New Barangay -->
@@ -1845,63 +1113,63 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 
 // Function to fetch crop varieties based on selected crop name
-function fetchCropVarieties(cropId, selectElement) {
-    $.ajax({
-        url: '/admin-view-Farmers-survey-form',
-        method: 'GET',
-        data: { type: 'varieties', crop_name: cropId },
-        success: function(response) {
-            if (response.error) {
-                console.error('Error fetching crop varieties:', response.error);
-                return;
-            }
+// function fetchCropVarieties(cropId, selectElement) {
+//     $.ajax({
+//         url: '/admin-view-Farmers-survey-form',
+//         method: 'GET',
+//         data: { type: 'varieties', crop_name: cropId },
+//         success: function(response) {
+//             if (response.error) {
+//                 console.error('Error fetching crop varieties:', response.error);
+//                 return;
+//             }
 
-            const $varietySelect = $(selectElement).closest('.crop-section').find('.crop_variety');
-            $varietySelect.empty(); // Clear existing options
-            $varietySelect.append('<option value="" disabled selected>Select Variety</option>');
-            $varietySelect.append('<option value="add">Add New Variety...</option>'); // Option to add new variety
+//             const $varietySelect = $(selectElement).closest('.crop-section').find('.crop_variety');
+//             $varietySelect.empty(); // Clear existing options
+//             $varietySelect.append('<option value="" disabled selected>Select Variety</option>');
+//             $varietySelect.append('<option value="add">Add New Variety...</option>'); // Option to add new variety
 
-            $.each(response, function(id, variety) {
-                $varietySelect.append(new Option(variety, id));
-            });
-        },
-        error: function(xhr) {
-            console.error('AJAX request failed. Status:', xhr.status, 'Response:', xhr.responseText);
-        }
-    });
-}
+//             $.each(response, function(id, variety) {
+//                 $varietySelect.append(new Option(variety, id));
+//             });
+//         },
+//         error: function(xhr) {
+//             console.error('AJAX request failed. Status:', xhr.status, 'Response:', xhr.responseText);
+//         }
+//     });
+// }
 
-// Bind change event to crop name dropdowns
-$(document).on('change', '.crop_name', function() {
-    const cropId = $(this).val();
-    if (cropId) {
-        fetchCropVarieties(cropId, this);
-    } else {
-        // Clear the variety dropdown if no crop is selected
-        $(this).closest('.crop-section').find('.crop_variety').empty().append('<option value="" disabled selected>Select Variety</option><option value="add">Add New Variety...</option>');
-    }
-});
+// // Bind change event to crop name dropdowns
+// $(document).on('change', '.crop_name', function() {
+//     const cropId = $(this).val();
+//     if (cropId) {
+//         fetchCropVarieties(cropId, this);
+//     } else {
+//         // Clear the variety dropdown if no crop is selected
+//         $(this).closest('.crop-section').find('.crop_variety').empty().append('<option value="" disabled selected>Select Variety</option><option value="add">Add New Variety...</option>');
+//     }
+// });
 
-// Bind change event to crop variety dropdowns
-$(document).on('change', '.crop_variety', function() {
-    const cropVarietySelect = this;
+// // Bind change event to crop variety dropdowns
+// $(document).on('change', '.crop_variety', function() {
+//     const cropVarietySelect = this;
 
-    if (cropVarietySelect.value === "add") {
-        var newVariety = prompt("Please enter the name of the crop variety:");
+//     if (cropVarietySelect.value === "add") {
+//         var newVariety = prompt("Please enter the name of the crop variety:");
 
-        if (newVariety) {
-            var existingOption = Array.from(cropVarietySelect.options).find(option => option.value === newVariety);
+//         if (newVariety) {
+//             var existingOption = Array.from(cropVarietySelect.options).find(option => option.value === newVariety);
 
-            if (!existingOption) {
-                var newOption = document.createElement("option");
-                newOption.text = newVariety;
-                newOption.value = newVariety;
-                cropVarietySelect.appendChild(newOption);
-                cropVarietySelect.value = newVariety; // Select the newly added variety
-            }
-        }
-    }
-});
+//             if (!existingOption) {
+//                 var newOption = document.createElement("option");
+//                 newOption.text = newVariety;
+//                 newOption.value = newVariety;
+//                 cropVarietySelect.appendChild(newOption);
+//                 cropVarietySelect.value = newVariety; // Select the newly added variety
+//             }
+//         }
+//     }
+// });
 
 
 // Function to fetch crop varieties based on selected crop name
@@ -2999,68 +2267,18 @@ const form = $('#form');
 form.on('submit', function(event) {
     event.preventDefault(); // Prevent the form from reloading the page
   
-    // Gather farmer info from the form inputs
-    let farmerInfo = {
-        'users_id': $('input.users_id').val(),
-        'first_name': $('input.first_name').val(),
-        'middle_name': $('input.middle_name').val(),
-        'last_name': $('input.last_name').val(),
-        'extension_name': $('select.extension_name').val(),
-        'country': $('input.country').val(),
-        'province': $('input.province').val(),
-        'city': $('input.city').val(),
-        'agri_district': $('select.agri_district').val(),
-        'barangay': $('select.barangay').val(),
-        'street': $('input.street').val(),
-        'zip_code': $('select.zip_code').val(),
-        'contact_no': $('input.contact_no').val(),
-        'sex': $('select.sex').val(),
-        'religion': $('select.religion').val(),
-        'date_of_birth': $('input.date_of_birth').val(),
-        'place_of_birth': $('select.place_of_birth').val(),
-        'civil_status': $('select.civil_status').val(),
-        'name_legal_spouse': $('input.name_legal_spouse').val(),
-        'no_of_children': $('select.no_of_children').val(),
-        'mothers_maiden_name': $('input.mothers_maiden_name').val(),
-        'highest_formal_education': $('select.highest_formal_education').val(),
-        // 'add_formEduc': $('select.add_formEduc').val(),
-        'person_with_disability': $('select.person_with_disability').val(),
-        'YEspwd_id_no': $('input.YEspwd_id_no').val(),
-        'Nopwd_id_no': $('select.Nopwd_id_no').val(),
-        'government_issued_id': $('select.government_issued_id').val(),
-        'id_type': $('select.id_type').val(),
-        'add_Idtype': $('input.add_Idtype').val(),
-        'non_gov_id_types': $('input.non_gov_id_types').val(),
-        'member_ofany_farmers': $('select.member_ofany_farmers').val(),
-        'nameof_farmers': $('select.nameof_farmers').val(),
-        'NoFarmersGroup': $('select.NoFarmersGroup').val(),
-        'add_FarmersGroup': $('input.add_FarmersGroup').val(),
-        'name_contact_person': $('input.name_contact_person').val(),
-        'cp_tel_no': $('input.cp_tel_no').val(),
-        'date_of_interviewed': $('input.date_of_interviewed').val(),
-    };
 
     // Gather farm info from the form inputs
-    let farmInfo = {
-    'tenurial_status': $('select.tenurial_status').val(),
-    'farm_address': $('input.farm_address').val(),
-    'no_of_years_as_farmers': $('input.no_of_years_as_farmers').val(),
-    'gps_longitude': $('input.gps_longitude').val(),
-    'gps_latitude': $('input.gps_latitude').val(),
-    'total_physical_area_has': $('input.total_physical_area_has').val(),
-    'Total_area_cultivated_has': $('input.Total_area_cultivated_has').val(),
-    'land_title_no': $('input.land_title_no').val(),
-    'lot_no': $('input.lot_no').val(),
-    'area_prone_to': $('select.area_prone_to').val(),
-    'ecosystem': $('select.ecosystem').val(),
-    'rsba_register': $('select.rsba_register').val(),
-    'pcic_insured': $('select.pcic_insured').val(),
-    'government_assisted': $('select.government_assisted').val(),
-    'source_of_capital': $('select.source_of_capital').val(),
-    'remarks': $('input.remarks').val(),
-    'oca_district_office': $('input.oca_district_office').val(),
-    'name_technicians': $('input.name_technicians').val(),
-    'date_interview': $('input.date_interview').val(),
+    let cropInfo = {
+    'users_id': $('input.users_id').val(),
+    'crop_name': $('select.crop_name').val(),
+    'crop_variety': $('select.crop_variety').val(),
+    'preferred_variety': $('input.preferred_variety').val(),
+    'dry_season': $('input.dry_season').val(),
+    'wet_season': $('input.wet_season').val(),
+    'no_crop_year': $('input.no_crop_year').val(),
+    'yield_kg_ha': $('input.yield_kg_ha').val(),
+   
 };
 
 
@@ -3068,452 +2286,448 @@ form.on('submit', function(event) {
     
 
 
-    const cropSections = document.querySelectorAll('#cropProfiles .crop-section','#salesSection .sale-entry');
+//     const cropSections = document.querySelectorAll('#cropProfiles .crop-section','#salesSection .sale-entry');
         
-        // Initialize an array to store crop data
-        let cropInfo = [];
+//         // Initialize an array to store crop data
+//         let cropInfo = [];
         
-        cropSections.forEach(section => {
-    // Extract the crop number from the section's ID
-    let cropId = section.id.split('_')[1]; 
+//         cropSections.forEach(section => {
+//     // Extract the crop number from the section's ID
+//     let cropId = section.id.split('_')[1]; 
 
-    // Function to safely get element value
-    const getValue = (selector) => {
-        const element = section.querySelector(selector);
-        return element ? element.value : null;
-    };
+//     // Function to safely get element value
+//     const getValue = (selector) => {
+//         const element = section.querySelector(selector);
+//         return element ? element.value : null;
+//     };
 
-    let cropName = getValue('.crop_name');
-    let cropVariety = getValue('.crop_variety');
-    let PreferredVariety = getValue('.preferred_variety');
-    let drySeason = getValue('.dry_season');
-    let wetSeason = getValue('.wet_season');
-    let noCroppingYear = getValue('.no_crop_year');
-    let YieldkgHa = getValue('.yield_kg_ha');
+//     let cropName = getValue('.crop_name');
+//     let cropVariety = getValue('.crop_variety');
+//     let PreferredVariety = getValue('.preferred_variety');
+//     let drySeason = getValue('.dry_season');
+//     let wetSeason = getValue('.wet_season');
+//     let noCroppingYear = getValue('.no_crop_year');
+//     let YieldkgHa = getValue('.yield_kg_ha');
 
-    // Production
-    let seedType = getValue('.seed-type');
-    let seedUsed = getValue('.seed-used');
-    let seedSource = getValue('.seed-source');
-    let Unit = getValue('.unit');
-    let fertilizedUsed = getValue('.fertilized-used');
-    let pesticidesUsed = getValue('.pesticides-used');
-    let insecticidesUsed = getValue('.insecticides-used');
-    let areaplanted = getValue('.area-planted');
-    let Dateplanted = getValue('.date-planted');
-    let Dateharvested= getValue('.date-harvested');
-    let Yieldkg = getValue('.yield-kg');
+//     // Production
+//     let seedType = getValue('.seed-type');
+//     let seedUsed = getValue('.seed-used');
+//     let seedSource = getValue('.seed-source');
+//     let Unit = getValue('.unit');
+//     let fertilizedUsed = getValue('.fertilized-used');
+//     let pesticidesUsed = getValue('.pesticides-used');
+//     let insecticidesUsed = getValue('.insecticides-used');
+//     let areaplanted = getValue('.area-planted');
+//     let Dateplanted = getValue('.date-planted');
+//     let Dateharvested= getValue('.date-harvested');
+//     let Yieldkg = getValue('.yield-kg');
 
-    // Fixed cost
-    let particular = getValue('.particular');
-    let no_of_Has = getValue('.no-has');
-    let costPer_has = getValue('.cost-has');
-    let TotalFixed = getValue('.total-amount');
+//     // Fixed cost
+//     let particular = getValue('.particular');
+//     let no_of_Has = getValue('.no-has');
+//     let costPer_has = getValue('.cost-has');
+//     let TotalFixed = getValue('.total-amount');
 
-    // Machineries
-    let PlowingMachine = getValue('.plowing-machine');
-    let plow_status = getValue('.plow_status');
-    let no_of_plowing = getValue('.no_of_plowing');
-    let cost_per_plowing = getValue('.cost_per_plowing');
-    let plowing_cost = getValue('.plowing_cost');
-    let harro_machine = getValue('.harro_machine');
-    let harro_ownership_status = getValue('.harro_ownership_status');
-    let no_of_harrowing = getValue('.no_of_harrowing');
-    let cost_per_harrowing = getValue('.cost_per_harrowing');
-    let harrowing_cost_total = getValue('.harrowing_cost_total');
-    let harvest_machine = getValue('.harvest_machine');
-    let harvest_ownership_status = getValue('.harvest_ownership_status');
-    let no_of_Harvesting = getValue('.no_of_Harvesting');
-    let cost_per_Harvesting = getValue('.cost_per_Harvesting');
-    let Harvesting_cost_total = getValue('.Harvesting_cost_total');
-    let postharv_ownership_status = getValue('.postharv_ownership_status');
-    let postharves_machine = getValue('.postharves_machine');
-    let postharvestCost = getValue('.postharvestCost');
-    let total_cost_for_machineries = getValue('.total_cost_for_machineries');
+//     // Machineries
+//     let PlowingMachine = getValue('.plowing-machine');
+//     let plow_status = getValue('.plow_status');
+//     let no_of_plowing = getValue('.no_of_plowing');
+//     let cost_per_plowing = getValue('.cost_per_plowing');
+//     let plowing_cost = getValue('.plowing_cost');
+//     let harro_machine = getValue('.harro_machine');
+//     let harro_ownership_status = getValue('.harro_ownership_status');
+//     let no_of_harrowing = getValue('.no_of_harrowing');
+//     let cost_per_harrowing = getValue('.cost_per_harrowing');
+//     let harrowing_cost_total = getValue('.harrowing_cost_total');
+//     let harvest_machine = getValue('.harvest_machine');
+//     let harvest_ownership_status = getValue('.harvest_ownership_status');
+//     let no_of_Harvesting = getValue('.no_of_Harvesting');
+//     let cost_per_Harvesting = getValue('.cost_per_Harvesting');
+//     let Harvesting_cost_total = getValue('.Harvesting_cost_total');
+//     let postharv_ownership_status = getValue('.postharv_ownership_status');
+//     let postharves_machine = getValue('.postharves_machine');
+//     let postharvestCost = getValue('.postharvestCost');
+//     let total_cost_for_machineries = getValue('.total_cost_for_machineries');
 
-    // Variables cost
-    let var_seed_variety = getValue('.seed_name');
-    let seed_name = getValue('.seed_name');
-    let unit = getValue('.unit');
-    let quantity = getValue('.quantity');
-    let unit_price_seed = getValue('.unit_price_seed');
-    let total_seed_cost = getValue('.total_seed_cost');
-    let no_of_person = getValue('.no_of_person');
-    let rate_per_person = getValue('.rate_per_person');
-    let total_labor_cost = getValue('.total_labor_cost');
-    let name_of_fertilizer = getValue('.name_of_fertilizer');
-    let no_ofsacks = getValue('.no_ofsacks');
-    let unitprice_per_sacks = getValue('.unitprice_per_sacks');
-    let total_cost_fertilizers = getValue('.total_cost_fertilizers');
-    let pesticides_name = getValue('.pesticides_name');
-    let no_of_l_kg = getValue('.no_of_l_kg');
-    let unitprice_ofpesticides = getValue('.unitprice_ofpesticides');
-    let total_cost_pesticides = getValue('.total_cost_pesticides');
-    let type_of_vehicle = getValue('.type_of_vehicle');
-    let Total_DeliveryCost = getValue('.Total_DeliveryCost');
-    let total_machinery_fuel_cost = getValue('.total_machinery_fuel_cost');
-    let total_variable_costs = getValue('.total_variable_costs');
+//     // Variables cost
+//     let var_seed_variety = getValue('.seed_name');
+//     let seed_name = getValue('.seed_name');
+//     let unit = getValue('.unit');
+//     let quantity = getValue('.quantity');
+//     let unit_price_seed = getValue('.unit_price_seed');
+//     let total_seed_cost = getValue('.total_seed_cost');
+//     let no_of_person = getValue('.no_of_person');
+//     let rate_per_person = getValue('.rate_per_person');
+//     let total_labor_cost = getValue('.total_labor_cost');
+//     let name_of_fertilizer = getValue('.name_of_fertilizer');
+//     let no_ofsacks = getValue('.no_ofsacks');
+//     let unitprice_per_sacks = getValue('.unitprice_per_sacks');
+//     let total_cost_fertilizers = getValue('.total_cost_fertilizers');
+//     let pesticides_name = getValue('.pesticides_name');
+//     let no_of_l_kg = getValue('.no_of_l_kg');
+//     let unitprice_ofpesticides = getValue('.unitprice_ofpesticides');
+//     let total_cost_pesticides = getValue('.total_cost_pesticides');
+//     let type_of_vehicle = getValue('.type_of_vehicle');
+//     let Total_DeliveryCost = getValue('.Total_DeliveryCost');
+//     let total_machinery_fuel_cost = getValue('.total_machinery_fuel_cost');
+//     let total_variable_costs = getValue('.total_variable_costs');
 
-    // Check if any field has value to avoid empty entries
-    let salesData = [];
+//     // Check if any field has value to avoid empty entries
+//     let salesData = [];
 
-    let saleEntries = section.querySelectorAll('.sale-entry');
-    saleEntries.forEach((entry) => {
-        let saleId = entry.id.split('_')[2]; // Adjust based on your ID format
+//     let saleEntries = section.querySelectorAll('.sale-entry');
+//     saleEntries.forEach((entry) => {
+//         let saleId = entry.id.split('_')[2]; // Adjust based on your ID format
 
-        let soldTo = getValue('.sold_to');
-        let measurement = getValue('.measurement');
-        let unit_price_sold = getValue('.unit_price_sold');
-        let grossIncometotal = getValue('.gross_income');
+//         let soldTo = getValue('.sold_to');
+//         let measurement = getValue('.measurement');
+//         let unit_price_sold = getValue('.unit_price_sold');
+//         let grossIncometotal = getValue('.gross_income');
         
-        // Store sale data
-        salesData.push({
-            saleId: saleId,
-            soldTo: soldTo,
-            measurement: measurement,
-            unit_price: unit_price_sold,
-            quantity: quantity,
-            grossIncome: grossIncometotal
-        });
-    });
+//         // Store sale data
+//         salesData.push({
+//             saleId: saleId,
+//             soldTo: soldTo,
+//             measurement: measurement,
+//             unit_price: unit_price_sold,
+//             quantity: quantity,
+//             grossIncome: grossIncometotal
+//         });
+//     });
 
-    cropInfo.push({
-        id: cropId,
-        crop_name: cropName,
-        variety: {
-            type_variety: cropVariety,
-            preferred: PreferredVariety,
-            wet_season: wetSeason,
-            dry_season: drySeason,
-            no_cropping_year: noCroppingYear,
-            yield_kg_ha: YieldkgHa
-        },
-        production: {
-            seedtype: seedType,
-            seedUsed: seedUsed,
-            seedSource: seedSource,
-            unit: Unit,
-            fertilizedUsed: fertilizedUsed,
-            pesticidesUsed: pesticidesUsed,
-            insecticide: insecticidesUsed,
-            areaPlanted: areaplanted,
-            datePlanted: Dateplanted,
-            Dateharvested:Dateharvested,
-            yieldkg: Yieldkg
-        },
-        sales: salesData,
-        fixedCost: {
-            particular: particular,
-            no_of_has: no_of_Has,
-            costperHas: costPer_has,
-            TotalFixed: TotalFixed
-        },
-        machineries: {
-            PlowingMachine: PlowingMachine,
-            plow_status: plow_status,
-            no_of_plowing: no_of_plowing,
-            cost_per_plowing: cost_per_plowing,
-            plowing_cost: plowing_cost,
-            harro_machine: harro_machine,
-            harro_ownership_status: harro_ownership_status,
-            no_of_harrowing: no_of_harrowing,
-            cost_per_harrowing: cost_per_harrowing,
-            harrowing_cost_total: harrowing_cost_total,
-            harvest_machine: harvest_machine,
-            harvest_ownership_status: harvest_ownership_status,
-            no_of_Harvesting: no_of_Harvesting,
-            cost_per_Harvesting: cost_per_Harvesting,
-            Harvesting_cost_total: Harvesting_cost_total,
-            postharv_ownership_status: postharv_ownership_status,
-            postharves_machine: postharves_machine,
-            postharvestCost: postharvestCost,
-            total_cost_for_machineries: total_cost_for_machineries
-        },
-        variables: {
-            seed_name: seed_name,
-            unit: unit,
-            quantity: quantity,
-            unit_price_seed: unit_price_seed,
-            total_seed_cost: total_seed_cost,
-            no_of_person: no_of_person,
-            rate_per_person: rate_per_person,
-            total_labor_cost: total_labor_cost,
-            name_of_fertilizer: name_of_fertilizer,
-            no_ofsacks: no_ofsacks,
-            unitprice_per_sacks: unitprice_per_sacks,
-            total_cost_fertilizers: total_cost_fertilizers,
-            pesticides_name: pesticides_name,
-            no_of_l_kg: no_of_l_kg,
-            unitprice_ofpesticides: unitprice_ofpesticides,
-            total_cost_pesticides: total_cost_pesticides,
-            type_of_vehicle: type_of_vehicle,
-            Total_DeliveryCost: Total_DeliveryCost,
-            total_machinery_fuel_cost: total_machinery_fuel_cost,
-            total_variable_costs: total_variable_costs
-        }
-    });
-});
+//     cropInfo.push({
+//         id: cropId,
+//         crop_name: cropName,
+//         variety: {
+//             type_variety: cropVariety,
+//             preferred: PreferredVariety,
+//             wet_season: wetSeason,
+//             dry_season: drySeason,
+//             no_cropping_year: noCroppingYear,
+//             yield_kg_ha: YieldkgHa
+//         },
+//         production: {
+//             seedtype: seedType,
+//             seedUsed: seedUsed,
+//             seedSource: seedSource,
+//             unit: Unit,
+//             fertilizedUsed: fertilizedUsed,
+//             pesticidesUsed: pesticidesUsed,
+//             insecticide: insecticidesUsed,
+//             areaPlanted: areaplanted,
+//             datePlanted: Dateplanted,
+//             Dateharvested:Dateharvested,
+//             yieldkg: Yieldkg
+//         },
+//         sales: salesData,
+//         fixedCost: {
+//             particular: particular,
+//             no_of_has: no_of_Has,
+//             costperHas: costPer_has,
+//             TotalFixed: TotalFixed
+//         },
+//         machineries: {
+//             PlowingMachine: PlowingMachine,
+//             plow_status: plow_status,
+//             no_of_plowing: no_of_plowing,
+//             cost_per_plowing: cost_per_plowing,
+//             plowing_cost: plowing_cost,
+//             harro_machine: harro_machine,
+//             harro_ownership_status: harro_ownership_status,
+//             no_of_harrowing: no_of_harrowing,
+//             cost_per_harrowing: cost_per_harrowing,
+//             harrowing_cost_total: harrowing_cost_total,
+//             harvest_machine: harvest_machine,
+//             harvest_ownership_status: harvest_ownership_status,
+//             no_of_Harvesting: no_of_Harvesting,
+//             cost_per_Harvesting: cost_per_Harvesting,
+//             Harvesting_cost_total: Harvesting_cost_total,
+//             postharv_ownership_status: postharv_ownership_status,
+//             postharves_machine: postharves_machine,
+//             postharvestCost: postharvestCost,
+//             total_cost_for_machineries: total_cost_for_machineries
+//         },
+//         variables: {
+//             seed_name: seed_name,
+//             unit: unit,
+//             quantity: quantity,
+//             unit_price_seed: unit_price_seed,
+//             total_seed_cost: total_seed_cost,
+//             no_of_person: no_of_person,
+//             rate_per_person: rate_per_person,
+//             total_labor_cost: total_labor_cost,
+//             name_of_fertilizer: name_of_fertilizer,
+//             no_ofsacks: no_ofsacks,
+//             unitprice_per_sacks: unitprice_per_sacks,
+//             total_cost_fertilizers: total_cost_fertilizers,
+//             pesticides_name: pesticides_name,
+//             no_of_l_kg: no_of_l_kg,
+//             unitprice_ofpesticides: unitprice_ofpesticides,
+//             total_cost_pesticides: total_cost_pesticides,
+//             type_of_vehicle: type_of_vehicle,
+//             Total_DeliveryCost: Total_DeliveryCost,
+//             total_machinery_fuel_cost: total_machinery_fuel_cost,
+//             total_variable_costs: total_variable_costs
+//         }
+//     });
+// });
 
 console.log(cropInfo);
 
 
      
 //   // Create the final data object
-let dataobject = {
-    'farmer': farmerInfo, 
-    'farm': farmInfo,
-    'crops': cropInfo,
-};
 
-// Log the entire data object to the console for debugging
-// console.log("Data Object:", dataobject);
 
-// const csrfToken = $('input[name="_token"]').attr('value');
+
+
+
+const csrfToken = $('input[name="_token"]').attr('value');
+
+    // Send the AJAX request
+    $.ajax({
+        url: '/admin-edit-crop-farms/{farmData}',
+        method: 'POST',
+        contentType: 'application/json', // Set content type for JSON
+        data: JSON.stringify(cropInfo), // Attach the prepared data here
+        headers: {
+            'X-CSRF-TOKEN': csrfToken // Include the CSRF token in the headers
+        },
+        success: function(response) {
+
+            console.log(response);
+
+            if(response.success) {
+                console.log(response);
+                console.log(response.success);
+            }
+        },
+        error: function(error) {
+            console.error('Error:', error.responseJSON.message);
+        }
+    }); 
+
+
+// Function to open confirmation modal with data preview
+// function openConfirmModal(data) {
+//     // Check and populate the modal with the farmer's details
+//     $('#farmerFirstname').text(data.farmer?.first_name || 'N/A');
+//     $('#farmerLastname').text(data.farmer?.last_name || 'N/A');
+//     $('#farmerMiddleName').text(data.farmer?.middle_name || 'N/A');
+//     $('#farmerExtensionName').text(data.farmer?.extension_name || 'N/A');
+//     $('#farmerCountry').text(data.farmer?.country || 'N/A');
+//     $('#farmerProvince').text(data.farmer?.province || 'N/A');
+//     $('#farmerCity').text(data.farmer?.city || 'N/A');
+//     $('#farmerAgriDistrict').text(data.farmer?.agri_district || 'N/A');
+//     $('#farmerBarangay').text(data.farmer?.barangay || 'N/A');
+//     $('#farmerStreet').text(data.farmer?.street || 'N/A');
+//     $('#farmerZipCode').text(data.farmer?.zip_code || 'N/A');
+//     $('#farmerContactNo').text(data.farmer?.contact_no || 'N/A');
+//     $('#farmerSex').text(data.farmer?.sex || 'N/A');
+//     $('#farmerReligion').text(data.farmer?.religion || 'N/A');
+//     $('#farmerDateOfBirth').text(data.farmer?.date_of_birth || 'N/A');
+//     $('#farmerPlaceOfBirth').text(data.farmer?.place_of_birth || 'N/A');
+//     $('#farmerCivilStatus').text(data.farmer?.civil_status || 'N/A');
+//     $('#farmerNameLegalSpouse').text(data.farmer?.name_legal_spouse || 'N/A');
+//     $('#farmerNoOfChildren').text(data.farmer?.no_of_children || 'N/A');
+//     $('#farmerMothersMaidenName').text(data.farmer?.mothers_maiden_name || 'N/A');
+//     $('#farmerHighestFormalEducation').text(data.farmer?.highest_formal_education || 'N/A');
+//     $('#farmerPersonWithDisability').text(data.farmer?.person_with_disability || 'N/A');
+//     $('#farmerYespwdIdNo').text(data.farmer?.YEspwd_id_no || 'N/A');
+//     $('#farmerNopwdIdNo').text(data.farmer?.Nopwd_id_no || 'N/A');
+//     $('#farmerGovernmentIssuedId').text(data.farmer?.government_issued_id || 'N/A');
+//     $('#farmerIdType').text(data.farmer?.id_type || 'N/A');
+//     $('#farmerAddIdType').text(data.farmer?.add_Idtype || 'N/A');
+//     $('#farmerNonGovIdTypes').text(data.farmer?.non_gov_id_types || 'N/A');
+//     $('#farmerMemberOfAnyFarmers').text(data.farmer?.member_ofany_farmers || 'N/A');
+//     $('#farmerNameOfFarmers').text(data.farmer?.nameof_farmers || 'N/A');
+//     $('#farmerNoFarmersGroup').text(data.farmer?.NoFarmersGroup || 'N/A');
+//     $('#farmerAddFarmersGroup').text(data.farmer?.add_FarmersGroup || 'N/A');
+//     $('#farmerNameContactPerson').text(data.farmer?.name_contact_person || 'N/A');
+//     $('#farmerCpTelNo').text(data.farmer?.cp_tel_no || 'N/A');
+//     $('#farmerDateOfInterview').text(data.farmer?.date_of_interview || 'N/A');
+
+//     // Check and populate the modal with the farm's details
+//     $('#farmTenurialStatus').text(data.farm?.tenurial_status || 'N/A');
+//     $('#farmAddress').text(data.farm?.farm_address || 'N/A');
+//     $('#farmYearsAsFarmer').text(data.farm?.no_of_years_as_farmers || 'N/A');
+//     $('#farmGpsLongitude').text(data.farm?.gps_longitude || 'N/A');
+//     $('#farmGpsLatitude').text(data.farm?.gps_latitude || 'N/A');
+//     $('#farmTotalPhysicalArea').text(data.farm?.total_physical_area_has || 'N/A');
+//     $('#farmTotalAreaCultivated').text(data.farm?.total_area_cultivated_has || 'N/A');
+//     $('#farmLandTitleNo').text(data.farm?.land_title_no || 'N/A');
+//     $('#farmLotNo').text(data.farm?.lot_no || 'N/A');
+//     $('#farmAreaProneTo').text(data.farm?.area_prone_to || 'N/A');
+//     $('#farmEcosystem').text(data.farm?.ecosystem || 'N/A');
+//     $('#farmRsbaRegister').text(data.farm?.rsba_register || 'N/A');
+//     $('#farmPcicInsured').text(data.farm?.pcic_insured || 'N/A');
+//     $('#farmGovernmentAssisted').text(data.farm?.government_assisted || 'N/A');
+//     $('#farmSourceOfCapital').text(data.farm?.source_of_capital || 'N/A');
+//     $('#farmRemarks').text(data.farm?.remarks || 'N/A');
+//     $('#farmOcaDistrictOffice').text(data.farm?.oca_district_office || 'N/A');
+//     $('#farmNameTechnicians').text(data.farm?.name_technicians || 'N/A');
+//     $('#farmDateInterview').text(data.farm?.date_interview || 'N/A');
+
+//     // Clear previous crop info from the modal
+//     $('#cropAccordionBody').empty();
+
+// // Loop through the crops and populate individual crop details in list format
+// data.crops.forEach(function(crop, index) {
+//     let cropHtml = `
+//       <div class="crop-info">
+//     <h3>Crop ${index + 1}</h3><br>
+//     <div class="detail-grid">
+//         <div class="detail-row">
+//             <h4>Crop Information:</h4><br>
+//             <ul class="list-unstyled">
+//                 <li><strong>Crop Name:</strong> <span>${crop.crop_name || 'N/A'}</span></li>
+//                 <li><strong>Crop Variety:</strong> <span>${crop.variety.type_variety || 'N/A'}</span></li>
+//                 <li><strong>Preferred Variety:</strong> <span>${crop.variety.preferred || 'N/A'}</span></li>
+//                 <li><strong>Wet Season:</strong> <span>${crop.variety.wet_season || 'N/A'}</span></li>
+//                 <li><strong>Dry Season:</strong> <span>${crop.variety.dry_season || 'N/A'}</span></li>
+//                 <li><strong>Number of Cropping Years:</strong> <span>${crop.variety.no_cropping_year || 'N/A'}</span></li>
+//                 <li><strong>Yield (kg/ha):</strong> <span>${crop.variety.yield_kg_ha || 'N/A'}</span></li>
+//             </ul>
+//         </div>
+
+//         <div class="detail-row">
+//             <h4>Production Details:</h4>
+//             <ul class="list-unstyled">
+//                 <li><strong>Seed Type:</strong> <span>${crop.production.seedtype || 'N/A'}</span></li>
+//                 <li><strong>Seed Used:</strong> <span>${crop.production.seedUsed || 'N/A'}</span></li>
+//                 <li><strong>Seed Source:</strong> <span>${crop.production.seedSource || 'N/A'}</span></li>
+//                 <li><strong>Unit:</strong> <span>${crop.production.unit || 'N/A'}</span></li>
+//                 <li><strong>Fertilizer Used:</strong> <span>${crop.production.fertilizedUsed || 'N/A'}</span></li>
+//                 <li><strong>Pesticides Used:</strong> <span>${crop.production.pesticidesUsed || 'N/A'}</span></li>
+//                 <li><strong>Insecticides Used:</strong> <span>${crop.production.insecticide || 'N/A'}</span></li>
+//                 <li><strong>Area Planted:</strong> <span>${crop.production.areaPlanted || 'N/A'}</span></li>
+//                 <li><strong>Date Planted:</strong> <span>${crop.production.datePlanted || 'N/A'}</span></li>
+//                 <li><strong>Date Harvested:</strong> <span>${crop.production.Dateharvested || 'N/A'}</span></li>
+//                 <li><strong>Yield (kg):</strong> <span>${crop.production.yieldkg || 'N/A'}</span></li>
+//             </ul>
+//         </div>
+
+//         <div class="detail-row">
+//             <h4>Fixed Costs:</h4>
+//             <ul class="list-unstyled">
+//                 <li><strong>Particular:</strong> <span>${crop.fixedCost.particular || 'N/A'}</span></li>
+//                 <li><strong>Number of Hectares:</strong> <span>${crop.fixedCost.no_of_has || 'N/A'}</span></li>
+//                 <li><strong>Cost per Hectare:</strong> <span>${crop.fixedCost.costperHas || 'N/A'}</span></li>
+//                 <li><strong>Total Fixed Cost:</strong> <span>${crop.fixedCost.TotalFixed || 'N/A'}</span></li>
+//             </ul>
+//         </div>
+
+//         <div class="detail-row">
+//             <h4>Machineries:</h4>
+//             <ul class="list-unstyled">
+//                 <li><strong>Plowing Machine:</strong> <span>${crop.machineries.PlowingMachine || 'N/A'}</span></li>
+//                 <li><strong>Plow Status:</strong> <span>${crop.machineries.plow_status || 'N/A'}</span></li>
+//                 <li><strong>Number of Plowing:</strong> <span>${crop.machineries.no_of_plowing || 'N/A'}</span></li>
+//                 <li><strong>Cost per Plowing:</strong> <span>${crop.machineries.cost_per_plowing || 'N/A'}</span></li>
+//                 <li><strong>Plowing Cost:</strong> <span>${crop.machineries.plowing_cost || 'N/A'}</span></li>
+//                 <li><strong>Harrow Machine:</strong> <span>${crop.machineries.harro_machine || 'N/A'}</span></li>
+//                 <li><strong>Harrow Ownership Status:</strong> <span>${crop.machineries.harro_ownership_status || 'N/A'}</span></li>
+//                 <li><strong>Number of Harrowing:</strong> <span>${crop.machineries.no_of_harrowing || 'N/A'}</span></li>
+//                 <li><strong>Cost per Harrowing:</strong> <span>${crop.machineries.cost_per_harrowing || 'N/A'}</span></li>
+//                 <li><strong>Harrowing Cost Total:</strong> <span>${crop.machineries.harrowing_cost_total || 'N/A'}</span></li>
+//                 <li><strong>Harvest Machine:</strong> <span>${crop.machineries.harvest_machine || 'N/A'}</span></li>
+//                 <li><strong>Harvest Ownership Status:</strong> <span>${crop.machineries.harvest_ownership_status || 'N/A'}</span></li>
+//                 <li><strong>Number of Harvesting:</strong> <span>${crop.machineries.no_of_Harvesting || 'N/A'}</span></li>
+//                 <li><strong>Cost per Harvesting:</strong> <span>${crop.machineries.cost_per_Harvesting || 'N/A'}</span></li>
+//                 <li><strong>Harvesting Cost Total:</strong> <span>${crop.machineries.Harvesting_cost_total || 'N/A'}</span></li>
+//                 <li><strong>Postharvest Machine:</strong> <span>${crop.machineries.postharves_machine || 'N/A'}</span></li>
+//                 <li><strong>Postharvest Ownership Status:</strong> <span>${crop.machineries.postharvestCost || 'N/A'}</span></li>
+//                 <li><strong>Postharvest Cost:</strong> <span>${crop.machineries.total_cost_for_machineries || 'N/A'}</span></li>
+//             </ul>
+//         </div>
+
+//         <div class="detail-row">
+//             <h4>Variable Costs:</h4>
+//             <ul class="list-unstyled">
+//                 <li><strong>Seed Name:</strong> <span>${crop.variables.seed_name || 'N/A'}</span></li>
+//                 <li><strong>Unit:</strong> <span>${crop.variables.unit || 'N/A'}</span></li>
+//                 <li><strong>Quantity:</strong> <span>${crop.variables.quantity || 'N/A'}</span></li>
+//                 <li><strong>Unit Price Seed:</strong> <span>${crop.variables.unit_price_seed || 'N/A'}</span></li>
+//                 <li><strong>Total Seed Cost:</strong> <span>${crop.variables.total_seed_cost || 'N/A'}</span></li>
+//                 <li><strong>Number of Persons:</strong> <span>${crop.variables.no_of_person || 'N/A'}</span></li>
+//                 <li><strong>Rate per Person:</strong> <span>${crop.variables.rate_per_person || 'N/A'}</span></li>
+//                 <li><strong>Total Labor Cost:</strong> <span>${crop.variables.total_labor_cost || 'N/A'}</span></li>
+//                 <li><strong>Name of Fertilizer:</strong> <span>${crop.variables.name_of_fertilizer || 'N/A'}</span></li>
+//                 <li><strong>Number of Sacks:</strong> <span>${crop.variables.no_ofsacks || 'N/A'}</span></li>
+//                 <li><strong>Unit Price per Sack:</strong> <span>${crop.variables.unit_price_per_sack || 'N/A'}</span></li>
+//                 <li><strong>Total Cost of Fertilizers:</strong> <span>${crop.variables.total_cost_fertilizers || 'N/A'}</span></li>
+//                 <li><strong>Pesticides Name:</strong> <span>${crop.variables.pesticides_name || 'N/A'}</span></li>
+//                 <li><strong>Number of Liters/Kgs:</strong> <span>${crop.variables.no_of_liters || 'N/A'}</span></li>
+//                 <li><strong>Unit Price of Pesticides:</strong> <span>${crop.variables.unit_price_of_pesticides || 'N/A'}</span></li>
+//                 <li><strong>Total Cost of Pesticides:</strong> <span>${crop.variables.total_cost_of_pesticides || 'N/A'}</span></li>
+//                 <li><strong>Insecticides Name:</strong> <span>${crop.variables.insecticides_name || 'N/A'}</span></li>
+//                 <li><strong>Number of Liters/Kgs:</strong> <span>${crop.variables.no_of_liters_insecticides || 'N/A'}</span></li>
+//                 <li><strong>Unit Price of Insecticides:</strong> <span>${crop.variables.unit_price_of_insecticides || 'N/A'}</span></li>
+//                 <li><strong>Total Cost of Insecticides:</strong> <span>${crop.variables.total_cost_insecticides || 'N/A'}</span></li>
+//                 <li><strong>Total Variable Costs:</strong> <span>${crop.variables.total_variable_cost || 'N/A'}</span></li>
+//             </ul>
+//         </div>
+//     </div>
+//  <br>
+// </div>
+
+//     `;
+
+//     // Append the crop info HTML to the modal
+//     $('#cropAccordionBody').append(cropHtml);
+// });
+
+//     $('#confirmModal').modal('show');
+// }
+
+
+
+// // Call this function to show the confirmation modal when needed
+// openConfirmModal(dataobject);
+
+// /// Confirm and Save event
+// $('#confirmSave').on('click', function() {
+//     const csrfToken = $('input[name="_token"]').attr('value');
 
 //     // Send the AJAX request
 //     $.ajax({
 //         url: '/admin-view-Farmers-survey-form',
 //         method: 'POST',
-//         contentType: 'application/json', // Set content type for JSON
-//         data: JSON.stringify(dataobject), // Attach the prepared data here
+//         contentType: 'application/json',
+//         data: JSON.stringify(dataobject), // Attach the prepared data
 //         headers: {
 //             'X-CSRF-TOKEN': csrfToken // Include the CSRF token in the headers
 //         },
 //         success: function(response) {
-
 //             console.log(response);
+//             if (response.success) {
+//                 var successModal = new bootstrap.Modal(document.getElementById('successModal'), {
+//                         keyboard: false
 
-//             if(response.success) {
-//                 console.log(response);
-//                 console.log(response.success);
-//             }
-//         },
-//         error: function(error) {
-//             console.error('Error:', error.responseJSON.message);
-//         }
-//     }); 
-
-
-// Function to open confirmation modal with data preview
-function openConfirmModal(data) {
-    // Check and populate the modal with the farmer's details
-    $('#farmerFirstname').text(data.farmer?.first_name || 'N/A');
-    $('#farmerLastname').text(data.farmer?.last_name || 'N/A');
-    $('#farmerMiddleName').text(data.farmer?.middle_name || 'N/A');
-    $('#farmerExtensionName').text(data.farmer?.extension_name || 'N/A');
-    $('#farmerCountry').text(data.farmer?.country || 'N/A');
-    $('#farmerProvince').text(data.farmer?.province || 'N/A');
-    $('#farmerCity').text(data.farmer?.city || 'N/A');
-    $('#farmerAgriDistrict').text(data.farmer?.agri_district || 'N/A');
-    $('#farmerBarangay').text(data.farmer?.barangay || 'N/A');
-    $('#farmerStreet').text(data.farmer?.street || 'N/A');
-    $('#farmerZipCode').text(data.farmer?.zip_code || 'N/A');
-    $('#farmerContactNo').text(data.farmer?.contact_no || 'N/A');
-    $('#farmerSex').text(data.farmer?.sex || 'N/A');
-    $('#farmerReligion').text(data.farmer?.religion || 'N/A');
-    $('#farmerDateOfBirth').text(data.farmer?.date_of_birth || 'N/A');
-    $('#farmerPlaceOfBirth').text(data.farmer?.place_of_birth || 'N/A');
-    $('#farmerCivilStatus').text(data.farmer?.civil_status || 'N/A');
-    $('#farmerNameLegalSpouse').text(data.farmer?.name_legal_spouse || 'N/A');
-    $('#farmerNoOfChildren').text(data.farmer?.no_of_children || 'N/A');
-    $('#farmerMothersMaidenName').text(data.farmer?.mothers_maiden_name || 'N/A');
-    $('#farmerHighestFormalEducation').text(data.farmer?.highest_formal_education || 'N/A');
-    $('#farmerPersonWithDisability').text(data.farmer?.person_with_disability || 'N/A');
-    $('#farmerYespwdIdNo').text(data.farmer?.YEspwd_id_no || 'N/A');
-    $('#farmerNopwdIdNo').text(data.farmer?.Nopwd_id_no || 'N/A');
-    $('#farmerGovernmentIssuedId').text(data.farmer?.government_issued_id || 'N/A');
-    $('#farmerIdType').text(data.farmer?.id_type || 'N/A');
-    $('#farmerAddIdType').text(data.farmer?.add_Idtype || 'N/A');
-    $('#farmerNonGovIdTypes').text(data.farmer?.non_gov_id_types || 'N/A');
-    $('#farmerMemberOfAnyFarmers').text(data.farmer?.member_ofany_farmers || 'N/A');
-    $('#farmerNameOfFarmers').text(data.farmer?.nameof_farmers || 'N/A');
-    $('#farmerNoFarmersGroup').text(data.farmer?.NoFarmersGroup || 'N/A');
-    $('#farmerAddFarmersGroup').text(data.farmer?.add_FarmersGroup || 'N/A');
-    $('#farmerNameContactPerson').text(data.farmer?.name_contact_person || 'N/A');
-    $('#farmerCpTelNo').text(data.farmer?.cp_tel_no || 'N/A');
-    $('#farmerDateOfInterview').text(data.farmer?.date_of_interview || 'N/A');
-
-    // Check and populate the modal with the farm's details
-    $('#farmTenurialStatus').text(data.farm?.tenurial_status || 'N/A');
-    $('#farmAddress').text(data.farm?.farm_address || 'N/A');
-    $('#farmYearsAsFarmer').text(data.farm?.no_of_years_as_farmers || 'N/A');
-    $('#farmGpsLongitude').text(data.farm?.gps_longitude || 'N/A');
-    $('#farmGpsLatitude').text(data.farm?.gps_latitude || 'N/A');
-    $('#farmTotalPhysicalArea').text(data.farm?.total_physical_area_has || 'N/A');
-    $('#farmTotalAreaCultivated').text(data.farm?.total_area_cultivated_has || 'N/A');
-    $('#farmLandTitleNo').text(data.farm?.land_title_no || 'N/A');
-    $('#farmLotNo').text(data.farm?.lot_no || 'N/A');
-    $('#farmAreaProneTo').text(data.farm?.area_prone_to || 'N/A');
-    $('#farmEcosystem').text(data.farm?.ecosystem || 'N/A');
-    $('#farmRsbaRegister').text(data.farm?.rsba_register || 'N/A');
-    $('#farmPcicInsured').text(data.farm?.pcic_insured || 'N/A');
-    $('#farmGovernmentAssisted').text(data.farm?.government_assisted || 'N/A');
-    $('#farmSourceOfCapital').text(data.farm?.source_of_capital || 'N/A');
-    $('#farmRemarks').text(data.farm?.remarks || 'N/A');
-    $('#farmOcaDistrictOffice').text(data.farm?.oca_district_office || 'N/A');
-    $('#farmNameTechnicians').text(data.farm?.name_technicians || 'N/A');
-    $('#farmDateInterview').text(data.farm?.date_interview || 'N/A');
-
-    // Clear previous crop info from the modal
-    $('#cropAccordionBody').empty();
-
-// Loop through the crops and populate individual crop details in list format
-data.crops.forEach(function(crop, index) {
-    let cropHtml = `
-      <div class="crop-info">
-    <h3>Crop ${index + 1}</h3><br>
-    <div class="detail-grid">
-        <div class="detail-row">
-            <h4>Crop Information:</h4><br>
-            <ul class="list-unstyled">
-                <li><strong>Crop Name:</strong> <span>${crop.crop_name || 'N/A'}</span></li>
-                <li><strong>Crop Variety:</strong> <span>${crop.variety.type_variety || 'N/A'}</span></li>
-                <li><strong>Preferred Variety:</strong> <span>${crop.variety.preferred || 'N/A'}</span></li>
-                <li><strong>Wet Season:</strong> <span>${crop.variety.wet_season || 'N/A'}</span></li>
-                <li><strong>Dry Season:</strong> <span>${crop.variety.dry_season || 'N/A'}</span></li>
-                <li><strong>Number of Cropping Years:</strong> <span>${crop.variety.no_cropping_year || 'N/A'}</span></li>
-                <li><strong>Yield (kg/ha):</strong> <span>${crop.variety.yield_kg_ha || 'N/A'}</span></li>
-            </ul>
-        </div>
-
-        <div class="detail-row">
-            <h4>Production Details:</h4>
-            <ul class="list-unstyled">
-                <li><strong>Seed Type:</strong> <span>${crop.production.seedtype || 'N/A'}</span></li>
-                <li><strong>Seed Used:</strong> <span>${crop.production.seedUsed || 'N/A'}</span></li>
-                <li><strong>Seed Source:</strong> <span>${crop.production.seedSource || 'N/A'}</span></li>
-                <li><strong>Unit:</strong> <span>${crop.production.unit || 'N/A'}</span></li>
-                <li><strong>Fertilizer Used:</strong> <span>${crop.production.fertilizedUsed || 'N/A'}</span></li>
-                <li><strong>Pesticides Used:</strong> <span>${crop.production.pesticidesUsed || 'N/A'}</span></li>
-                <li><strong>Insecticides Used:</strong> <span>${crop.production.insecticide || 'N/A'}</span></li>
-                <li><strong>Area Planted:</strong> <span>${crop.production.areaPlanted || 'N/A'}</span></li>
-                <li><strong>Date Planted:</strong> <span>${crop.production.datePlanted || 'N/A'}</span></li>
-                <li><strong>Date Harvested:</strong> <span>${crop.production.Dateharvested || 'N/A'}</span></li>
-                <li><strong>Yield (kg):</strong> <span>${crop.production.yieldkg || 'N/A'}</span></li>
-            </ul>
-        </div>
-
-        <div class="detail-row">
-            <h4>Fixed Costs:</h4>
-            <ul class="list-unstyled">
-                <li><strong>Particular:</strong> <span>${crop.fixedCost.particular || 'N/A'}</span></li>
-                <li><strong>Number of Hectares:</strong> <span>${crop.fixedCost.no_of_has || 'N/A'}</span></li>
-                <li><strong>Cost per Hectare:</strong> <span>${crop.fixedCost.costperHas || 'N/A'}</span></li>
-                <li><strong>Total Fixed Cost:</strong> <span>${crop.fixedCost.TotalFixed || 'N/A'}</span></li>
-            </ul>
-        </div>
-
-        <div class="detail-row">
-            <h4>Machineries:</h4>
-            <ul class="list-unstyled">
-                <li><strong>Plowing Machine:</strong> <span>${crop.machineries.PlowingMachine || 'N/A'}</span></li>
-                <li><strong>Plow Status:</strong> <span>${crop.machineries.plow_status || 'N/A'}</span></li>
-                <li><strong>Number of Plowing:</strong> <span>${crop.machineries.no_of_plowing || 'N/A'}</span></li>
-                <li><strong>Cost per Plowing:</strong> <span>${crop.machineries.cost_per_plowing || 'N/A'}</span></li>
-                <li><strong>Plowing Cost:</strong> <span>${crop.machineries.plowing_cost || 'N/A'}</span></li>
-                <li><strong>Harrow Machine:</strong> <span>${crop.machineries.harro_machine || 'N/A'}</span></li>
-                <li><strong>Harrow Ownership Status:</strong> <span>${crop.machineries.harro_ownership_status || 'N/A'}</span></li>
-                <li><strong>Number of Harrowing:</strong> <span>${crop.machineries.no_of_harrowing || 'N/A'}</span></li>
-                <li><strong>Cost per Harrowing:</strong> <span>${crop.machineries.cost_per_harrowing || 'N/A'}</span></li>
-                <li><strong>Harrowing Cost Total:</strong> <span>${crop.machineries.harrowing_cost_total || 'N/A'}</span></li>
-                <li><strong>Harvest Machine:</strong> <span>${crop.machineries.harvest_machine || 'N/A'}</span></li>
-                <li><strong>Harvest Ownership Status:</strong> <span>${crop.machineries.harvest_ownership_status || 'N/A'}</span></li>
-                <li><strong>Number of Harvesting:</strong> <span>${crop.machineries.no_of_Harvesting || 'N/A'}</span></li>
-                <li><strong>Cost per Harvesting:</strong> <span>${crop.machineries.cost_per_Harvesting || 'N/A'}</span></li>
-                <li><strong>Harvesting Cost Total:</strong> <span>${crop.machineries.Harvesting_cost_total || 'N/A'}</span></li>
-                <li><strong>Postharvest Machine:</strong> <span>${crop.machineries.postharves_machine || 'N/A'}</span></li>
-                <li><strong>Postharvest Ownership Status:</strong> <span>${crop.machineries.postharvestCost || 'N/A'}</span></li>
-                <li><strong>Postharvest Cost:</strong> <span>${crop.machineries.total_cost_for_machineries || 'N/A'}</span></li>
-            </ul>
-        </div>
-
-        <div class="detail-row">
-            <h4>Variable Costs:</h4>
-            <ul class="list-unstyled">
-                <li><strong>Seed Name:</strong> <span>${crop.variables.seed_name || 'N/A'}</span></li>
-                <li><strong>Unit:</strong> <span>${crop.variables.unit || 'N/A'}</span></li>
-                <li><strong>Quantity:</strong> <span>${crop.variables.quantity || 'N/A'}</span></li>
-                <li><strong>Unit Price Seed:</strong> <span>${crop.variables.unit_price_seed || 'N/A'}</span></li>
-                <li><strong>Total Seed Cost:</strong> <span>${crop.variables.total_seed_cost || 'N/A'}</span></li>
-                <li><strong>Number of Persons:</strong> <span>${crop.variables.no_of_person || 'N/A'}</span></li>
-                <li><strong>Rate per Person:</strong> <span>${crop.variables.rate_per_person || 'N/A'}</span></li>
-                <li><strong>Total Labor Cost:</strong> <span>${crop.variables.total_labor_cost || 'N/A'}</span></li>
-                <li><strong>Name of Fertilizer:</strong> <span>${crop.variables.name_of_fertilizer || 'N/A'}</span></li>
-                <li><strong>Number of Sacks:</strong> <span>${crop.variables.no_ofsacks || 'N/A'}</span></li>
-                <li><strong>Unit Price per Sack:</strong> <span>${crop.variables.unit_price_per_sack || 'N/A'}</span></li>
-                <li><strong>Total Cost of Fertilizers:</strong> <span>${crop.variables.total_cost_fertilizers || 'N/A'}</span></li>
-                <li><strong>Pesticides Name:</strong> <span>${crop.variables.pesticides_name || 'N/A'}</span></li>
-                <li><strong>Number of Liters/Kgs:</strong> <span>${crop.variables.no_of_liters || 'N/A'}</span></li>
-                <li><strong>Unit Price of Pesticides:</strong> <span>${crop.variables.unit_price_of_pesticides || 'N/A'}</span></li>
-                <li><strong>Total Cost of Pesticides:</strong> <span>${crop.variables.total_cost_of_pesticides || 'N/A'}</span></li>
-                <li><strong>Insecticides Name:</strong> <span>${crop.variables.insecticides_name || 'N/A'}</span></li>
-                <li><strong>Number of Liters/Kgs:</strong> <span>${crop.variables.no_of_liters_insecticides || 'N/A'}</span></li>
-                <li><strong>Unit Price of Insecticides:</strong> <span>${crop.variables.unit_price_of_insecticides || 'N/A'}</span></li>
-                <li><strong>Total Cost of Insecticides:</strong> <span>${crop.variables.total_cost_insecticides || 'N/A'}</span></li>
-                <li><strong>Total Variable Costs:</strong> <span>${crop.variables.total_variable_cost || 'N/A'}</span></li>
-            </ul>
-        </div>
-    </div>
- <br>
-</div>
-
-    `;
-
-    // Append the crop info HTML to the modal
-    $('#cropAccordionBody').append(cropHtml);
-});
-
-    $('#confirmModal').modal('show');
-}
-
-
-
-// Call this function to show the confirmation modal when needed
-openConfirmModal(dataobject);
-
-/// Confirm and Save event
-$('#confirmSave').on('click', function() {
-    const csrfToken = $('input[name="_token"]').attr('value');
-
-    // Send the AJAX request
-    $.ajax({
-        url: '/admin-view-Farmers-survey-form',
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(dataobject), // Attach the prepared data
-        headers: {
-            'X-CSRF-TOKEN': csrfToken // Include the CSRF token in the headers
-        },
-        success: function(response) {
-            console.log(response);
-            if (response.success) {
-                var successModal = new bootstrap.Modal(document.getElementById('successModal'), {
-                        keyboard: false
-
-                    });
-                    successModal.show(); // Show success modal
+//                     });
+//                     successModal.show(); // Show success modal
                     
-                    // Close the confirmation modal after successful save
-                    var confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
-                    if (confirmModal) {
-                        confirmModal.hide();
-                    }
-                }
-        },
-        error: function(xhr) {
-            console.error('Error:', xhr.responseJSON.error);
+//                     // Close the confirmation modal after successful save
+//                     var confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+//                     if (confirmModal) {
+//                         confirmModal.hide();
+//                     }
+//                 }
+//         },
+//         error: function(xhr) {
+//             console.error('Error:', xhr.responseJSON.error);
 
-            // Display the error message in the modal body
-            $('#errorModalBody').text(xhr.responseJSON.error);
-
-
-    // Show the modal
-    $('#errorModal').modal('show');
-}
+//             // Display the error message in the modal body
+//             $('#errorModalBody').text(xhr.responseJSON.error);
 
 
-    });
-});
+//     // Show the modal
+//     $('#errorModal').modal('show');
+// }
+
+
+//     });
+// });
 });
 
 
@@ -3675,343 +2889,202 @@ function checkMmbership() {
 
 
 // Function to check agri_district and display barangay and organization inputs accordingly
-// function checkAgri() {
-//     var agriDistrict = document.getElementById("selectAgri").value;
-//     var barangayInput = document.getElementById("barangayInput");
-//     var organizationInput = document.getElementById("YesFarmersGroup");
+function checkAgri() {
+    var agriDistrict = document.getElementById("selectAgri").value;
+    var barangayInput = document.getElementById("barangayInput");
+    var organizationInput = document.getElementById("YesFarmersGroup");
 
-//     if (['ayala', 'vitali', 'culianan', 'tumaga', 'manicahan', 'curuan'].includes(agriDistrict)) {
-//         barangayInput.style.display = "block"; // Show barangay input
-//         populateBarangays(agriDistrict); // Populate barangays based on selected district
-//         if (document.getElementById("selectMember").value === "1") {
-//             populateOrganizations(agriDistrict); // Populate organizations based on selected district
-//         }
-//     } else {
-//         barangayInput.style.display = "none"; // Hide barangay input
-//     }
-// }
+    if (['ayala', 'vitali', 'culianan', 'tumaga', 'manicahan', 'curuan'].includes(agriDistrict)) {
+        barangayInput.style.display = "block"; // Show barangay input
+        populateBarangays(agriDistrict); // Populate barangays based on selected district
+        if (document.getElementById("selectMember").value === "1") {
+            populateOrganizations(agriDistrict); // Populate organizations based on selected district
+        }
+    } else {
+        barangayInput.style.display = "none"; // Hide barangay input
+    }
+}
 
-// $(document).ready(function() {
-//     function populateBarangays(agriDistrict) {
-//         var barangaySelect = document.getElementById("SelectBarangay");
-
-//         // Clear previous options
-//         barangaySelect.innerHTML = '';
-
-//         // AJAX call to get barangays
-//         $.ajax({
-//             url: '/admin-view-Farmers-survey-form',
-//             method: 'GET',
-//             data: { district: agriDistrict, type: 'barangays' },
-//             success: function(response) {
-//                 console.log('Barangays Response:', response);
-
-//                 if (response.length > 0) {
-//                     response.forEach(function(barangay) {
-//                         var option = document.createElement("option");
-//                         option.text = barangay.barangay_name;
-//                         option.value = barangay.barangay_name;
-//                         barangaySelect.appendChild(option);
-//                     });
-//                 } else {
-//                     var noOption = document.createElement("option");
-//                     noOption.text = "No barangays found";
-//                     noOption.disabled = true;
-//                     barangaySelect.appendChild(noOption);
-//                 }
-//             },
-//             error: function(xhr, status, error) {
-//                 console.log("Error fetching barangays:", error);
-//             }
-//         });
-//     }
-
-//     function populateOrganizations(agriDistrict) {
-//         var organizationSelect = document.getElementById("SelectOrganization");
-
-//         // Clear previous options
-//         organizationSelect.innerHTML = '';
-
-//         // AJAX call to get organizations
-//         $.ajax({
-//             url: '/admin-view-Farmers-survey-form',
-//             method: 'GET',
-//             data: { district: agriDistrict, type: 'organizations' },
-//             success: function(response) {
-//                 console.log('Organizations Response:', response);
-
-//                 if (response.length > 0) {
-//                     response.forEach(function(organization) {
-//                         var option = document.createElement("option");
-//                         option.text = organization.organization_name;
-//                         option.value = organization.organization_name;
-//                         organizationSelect.appendChild(option);
-//                     });
-//                 } else {
-//                     var noOption = document.createElement("option");
-//                     noOption.text = "No organizations found";
-//                     noOption.disabled = true;
-//                     organizationSelect.appendChild(noOption);
-//                 }
-//             },
-//             error: function(xhr, status, error) {
-//                 console.log("Error fetching organizations:", error);
-//             }
-//         });
-//     }
-
-//     function removeBarangay() {
-//         var barangaySelect = document.getElementById("SelectBarangay");
-//         var selectedValue = barangaySelect.value;
-
-//         if (selectedValue) {
-//             var confirmRemove = confirm("Are you sure you want to remove this barangay?");
-//             if (confirmRemove) {
-//                 var selectedIndex = barangaySelect.selectedIndex;
-//                 barangaySelect.remove(selectedIndex);
-//             }
-//         }
-//     }
-
-//     function removeOrganization() {
-//         var organizationSelect = document.getElementById("SelectOrganization");
-//         var selectedValue = organizationSelect.value;
-
-//         if (selectedValue) {
-//             var confirmRemove = confirm("Are you sure you want to remove this organization?");
-//             if (confirmRemove) {
-//                 var selectedIndex = organizationSelect.selectedIndex;
-//                 organizationSelect.remove(selectedIndex);
-//             }
-//         }
-//     }
-
-//     // Modal to add new barangay
-//     $('#saveNewBarangay').click(function() {
-//         var newBarangayName = $('#newBarangayName').val(); // Get the input value from modal
-//         if (newBarangayName) {
-//             var barangaySelect = document.getElementById("SelectBarangay");
-//             var existingOption = Array.from(barangaySelect.options).find(option => option.value === newBarangayName);
-
-//             if (!existingOption) {
-//                 // Add new barangay to the dropdown
-//                 var newOption = document.createElement("option");
-//                 newOption.text = newBarangayName;
-//                 newOption.value = newBarangayName;
-//                 barangaySelect.appendChild(newOption);
-
-//                 // Set the new barangay as selected
-//                 barangaySelect.value = newBarangayName;
-
-//                 // Close the modal after adding the barangay
-//                 $('#newBarangayModal').modal('hide');
-//             } else {
-//                 alert("Barangay already exists.");
-//             }
-//         } else {
-//             alert("Please enter a barangay name.");
-//         }
-//     });
-
-//     // Clear input when modal closes
-//     $('#newBarangayModal').on('hidden.bs.modal', function () {
-//         $('#newBarangayName').val('');
-//     });
-
-//     // Modal to add new organization
-//     var saveButton = document.getElementById('addNewOrganization');
-//     var organizationNameInput = document.getElementById('organizationName');
-//     var errorMessage = document.getElementById('error-message');
-//     var organizationSelect = document.getElementById("SelectOrganization");
-
-//     saveButton.addEventListener('click', function () {
-//         var newOrganizationName = organizationNameInput.value.trim();
-
-//         if (newOrganizationName) {
-//             var existingOption = Array.from(organizationSelect.options).find(option => option.value === newOrganizationName);
-
-//             if (!existingOption) {
-//                 // Add new organization to the dropdown
-//                 var newOption = document.createElement("option");
-//                 newOption.text = newOrganizationName;
-//                 newOption.value = newOrganizationName;
-//                 organizationSelect.appendChild(newOption);
-
-//                 // Set the new organization as selected
-//                 organizationSelect.value = newOrganizationName;
-
-//                 // Clear input and error message
-//                 organizationNameInput.value = '';
-//                 errorMessage.classList.add('d-none');
-
-//                 // Close modal
-//                 var modal = bootstrap.Modal.getInstance(document.getElementById('newOrganizationModal'));
-//                 modal.hide();
-//             } else {
-//                 alert("Organization already exists.");
-//             }
-//         } else {
-//             // Show error message
-//             errorMessage.classList.remove('d-none');
-//         }
-//     });
-
-//     // Clear error message on input change
-//     organizationNameInput.addEventListener('input', function () {
-//         if (organizationNameInput.value.trim()) {
-//             errorMessage.classList.add('d-none');
-//         }
-//     });
-
-//     // Attach event listeners for removal buttons
-//     $('#removeBarangay').click(removeBarangay);
-//     $('#removeOrganization').click(removeOrganization);
-
-//     // Call population functions
-//     var agriDistrict = '{{ $agri_district }}'; // Ensure this is dynamically set
-//     populateBarangays(agriDistrict);
-//     populateOrganizations(agriDistrict);
-// });
 $(document).ready(function() {
-    // Function to fetch AgriDistricts
-    function fetchAgriDistricts() {
+    function populateBarangays(agriDistrict) {
+        var barangaySelect = document.getElementById("SelectBarangay");
+
+        // Clear previous options
+        barangaySelect.innerHTML = '';
+
+        // AJAX call to get barangays
         $.ajax({
-            url: '/admin-view-Farmers-survey-form', // Route for fetching AgriDistricts
+            url: '/admin-view-Farmers-survey-form',
             method: 'GET',
-            data: { type: 'districts' }, // Request districts
+            data: { district: agriDistrict, type: 'barangays' },
             success: function(response) {
-                console.log('Received AgriDistricts data:', response);
+                console.log('Barangays Response:', response);
 
-                if (response.error) {
-                    console.error('Error fetching AgriDistricts:', response.error);
-                    return;
-                }
-
-                if (typeof response === 'object' && Object.keys(response).length > 0) {
-                    $('#districtSelect').empty().append('<option value="" disabled selected>Select AgriDistrict</option>');
-
-                    $.each(response, function(id, district) {
-                        $('#districtSelect').append(new Option(district, id));
+                if (response.length > 0) {
+                    response.forEach(function(barangay) {
+                        var option = document.createElement("option");
+                        option.text = barangay.barangay_name;
+                        option.value = barangay.barangay_name;
+                        barangaySelect.appendChild(option);
                     });
                 } else {
-                    console.warn('No AgriDistrict data received or data is empty.');
+                    var noOption = document.createElement("option");
+                    noOption.text = "No barangays found";
+                    noOption.disabled = true;
+                    barangaySelect.appendChild(noOption);
                 }
             },
-            error: function(xhr) {
-                console.error('AJAX request failed. Status:', xhr.status, 'Response:', xhr.responseText);
+            error: function(xhr, status, error) {
+                console.log("Error fetching barangays:", error);
             }
         });
     }
 
-    // Function to fetch Barangays based on selected AgriDistrict
-    function fetchBarangays(districtId, selectElement) {
+    function populateOrganizations(agriDistrict) {
+        var organizationSelect = document.getElementById("SelectOrganization");
+
+        // Clear previous options
+        organizationSelect.innerHTML = '';
+
+        // AJAX call to get organizations
         $.ajax({
             url: '/admin-view-Farmers-survey-form',
             method: 'GET',
-            data: { type: 'barangays', district: districtId },
+            data: { district: agriDistrict, type: 'organizations' },
             success: function(response) {
-                console.log('Received Barangays data:', response);
+                console.log('Organizations Response:', response);
 
-                if (response.error) {
-                    console.error('Error fetching Barangays:', response.error);
-                    return;
+                if (response.length > 0) {
+                    response.forEach(function(organization) {
+                        var option = document.createElement("option");
+                        option.text = organization.organization_name;
+                        option.value = organization.organization_name;
+                        organizationSelect.appendChild(option);
+                    });
+                } else {
+                    var noOption = document.createElement("option");
+                    noOption.text = "No organizations found";
+                    noOption.disabled = true;
+                    organizationSelect.appendChild(noOption);
                 }
-
-                const $barangaySelect = $(selectElement).closest('.user-details').find('.barangaySelect');
-                $barangaySelect.empty();
-                $barangaySelect.append('<option value="" disabled selected>Select Barangay</option>');
-                $barangaySelect.append('<option value="add">Add New Barangay...</option>');
-
-                $.each(response, function(id, barangay) {
-                    $barangaySelect.append(new Option(barangay, id));
-                });
             },
-            error: function(xhr) {
-                console.error('AJAX request failed. Status:', xhr.status, 'Response:', xhr.responseText);
+            error: function(xhr, status, error) {
+                console.log("Error fetching organizations:", error);
             }
         });
     }
 
-    // Function to fetch Organizations based on selected AgriDistrict
-    function fetchOrganizations(districtId, selectElement) {
-        $.ajax({
-            url: '/admin-view-Farmers-survey-form',
-            method: 'GET',
-            data: { type: 'organizations', district: districtId },
-            success: function(response) {
-                console.log('Received Organizations data:', response);
+    function removeBarangay() {
+        var barangaySelect = document.getElementById("SelectBarangay");
+        var selectedValue = barangaySelect.value;
 
-                if (response.error) {
-                    console.error('Error fetching Organizations:', response.error);
-                    return;
-                }
-
-                const $organizationSelect = $(selectElement).closest('.user-details').find('.organizationSelect');
-                $organizationSelect.empty();
-                $organizationSelect.append('<option value="" disabled selected>Select Organization</option>');
-                $organizationSelect.append('<option value="add">Add New Organization...</option>');
-
-                $.each(response, function(id, organization) {
-                    $organizationSelect.append(new Option(organization, id));
-                });
-            },
-            error: function(xhr) {
-                console.error('AJAX request failed. Status:', xhr.status, 'Response:', xhr.responseText);
+        if (selectedValue) {
+            var confirmRemove = confirm("Are you sure you want to remove this barangay?");
+            if (confirmRemove) {
+                var selectedIndex = barangaySelect.selectedIndex;
+                barangaySelect.remove(selectedIndex);
             }
-        });
+        }
     }
 
-    // Fetch AgriDistricts on page load
-    fetchAgriDistricts();
+    function removeOrganization() {
+        var organizationSelect = document.getElementById("SelectOrganization");
+        var selectedValue = organizationSelect.value;
 
-    // Bind change event to AgriDistrict dropdown
-    $(document).on('change', '#districtSelect', function() {
-        const districtId = $(this).val();
-        if (districtId) {
-            fetchBarangays(districtId, this); // Fetch barangays for the selected district
-            fetchOrganizations(districtId, this); // Fetch organizations for the selected district
+        if (selectedValue) {
+            var confirmRemove = confirm("Are you sure you want to remove this organization?");
+            if (confirmRemove) {
+                var selectedIndex = organizationSelect.selectedIndex;
+                organizationSelect.remove(selectedIndex);
+            }
+        }
+    }
+
+    // Modal to add new barangay
+    $('#saveNewBarangay').click(function() {
+        var newBarangayName = $('#newBarangayName').val(); // Get the input value from modal
+        if (newBarangayName) {
+            var barangaySelect = document.getElementById("SelectBarangay");
+            var existingOption = Array.from(barangaySelect.options).find(option => option.value === newBarangayName);
+
+            if (!existingOption) {
+                // Add new barangay to the dropdown
+                var newOption = document.createElement("option");
+                newOption.text = newBarangayName;
+                newOption.value = newBarangayName;
+                barangaySelect.appendChild(newOption);
+
+                // Set the new barangay as selected
+                barangaySelect.value = newBarangayName;
+
+                // Close the modal after adding the barangay
+                $('#newBarangayModal').modal('hide');
+            } else {
+                alert("Barangay already exists.");
+            }
         } else {
-            $(this).closest('.user-details').find('.barangaySelect, .organizationSelect').empty()
-                .append('<option value="" disabled selected>Select Barangay</option>')
-                .append('<option value="" disabled selected>Select Organization</option>');
+            alert("Please enter a barangay name.");
         }
     });
 
-    // Bind change event to Barangay dropdowns to add new barangay
-    $(document).on('change', '.barangaySelect', function() {
-        const barangaySelect = this;
-        if (barangaySelect.value === "add") {
-            const newBarangay = prompt("Please enter the name of the barangay:");
-            if (newBarangay) {
-                const existingOption = Array.from(barangaySelect.options).find(option => option.value === newBarangay);
-                if (!existingOption) {
-                    const newOption = document.createElement("option");
-                    newOption.text = newBarangay;
-                    newOption.value = newBarangay;
-                    barangaySelect.appendChild(newOption);
-                    barangaySelect.value = newBarangay;
-                }
+    // Clear input when modal closes
+    $('#newBarangayModal').on('hidden.bs.modal', function () {
+        $('#newBarangayName').val('');
+    });
+
+    // Modal to add new organization
+    var saveButton = document.getElementById('addNewOrganization');
+    var organizationNameInput = document.getElementById('organizationName');
+    var errorMessage = document.getElementById('error-message');
+    var organizationSelect = document.getElementById("SelectOrganization");
+
+    saveButton.addEventListener('click', function () {
+        var newOrganizationName = organizationNameInput.value.trim();
+
+        if (newOrganizationName) {
+            var existingOption = Array.from(organizationSelect.options).find(option => option.value === newOrganizationName);
+
+            if (!existingOption) {
+                // Add new organization to the dropdown
+                var newOption = document.createElement("option");
+                newOption.text = newOrganizationName;
+                newOption.value = newOrganizationName;
+                organizationSelect.appendChild(newOption);
+
+                // Set the new organization as selected
+                organizationSelect.value = newOrganizationName;
+
+                // Clear input and error message
+                organizationNameInput.value = '';
+                errorMessage.classList.add('d-none');
+
+                // Close modal
+                var modal = bootstrap.Modal.getInstance(document.getElementById('newOrganizationModal'));
+                modal.hide();
+            } else {
+                alert("Organization already exists.");
             }
+        } else {
+            // Show error message
+            errorMessage.classList.remove('d-none');
         }
     });
 
-    // Bind change event to Organization dropdowns to add new organization
-    $(document).on('change', '.organizationSelect', function() {
-        const organizationSelect = this;
-        if (organizationSelect.value === "add") {
-            const newOrganization = prompt("Please enter the name of the organization:");
-            if (newOrganization) {
-                const existingOption = Array.from(organizationSelect.options).find(option => option.value === newOrganization);
-                if (!existingOption) {
-                    const newOption = document.createElement("option");
-                    newOption.text = newOrganization;
-                    newOption.value = newOrganization;
-                    organizationSelect.appendChild(newOption);
-                    organizationSelect.value = newOrganization;
-                }
-            }
+    // Clear error message on input change
+    organizationNameInput.addEventListener('input', function () {
+        if (organizationNameInput.value.trim()) {
+            errorMessage.classList.add('d-none');
         }
     });
+
+    // Attach event listeners for removal buttons
+    $('#removeBarangay').click(removeBarangay);
+    $('#removeOrganization').click(removeOrganization);
+
+    // Call population functions
+    var agriDistrict = '{{ $agri_district }}'; // Ensure this is dynamically set
+    populateBarangays(agriDistrict);
+    populateOrganizations(agriDistrict);
 });
 
 
@@ -4153,39 +3226,118 @@ calculateTotalFertilizerCost();
 <!-- Include jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.getElementById('addCropButton').addEventListener('click', function() {
-        var cropProfilesSection = document.getElementById('cropProfiles');
-    
-        // Scroll to the cropProfiles section
-        cropProfilesSection.scrollIntoView({ behavior: 'smooth' });
-    
-        // Optional: Open the crop section if it's inside an accordion or collapsible
-        // Assuming you are using Bootstrap accordion
-        var collapseElement = document.getElementById('cropAccordion'); // Update with the actual ID
-        if (collapseElement) {
-            var bsCollapse = new bootstrap.Collapse(collapseElement, { toggle: true });
+    // Function to fetch crop names
+    function fetchCropNames() {
+        $.ajax({
+            url: '/admin-edit-crop-farms/{farmData}',
+            method: 'GET',
+            data: { type: 'crops' },
+            success: function(response) {
+                console.log('AJAX response:', response);
+
+                if (response.error) {
+                    console.error('Error fetching crop names:', response.error);
+                    return;
+                }
+
+                if (typeof response === 'object' && Object.keys(response).length > 0) {
+                    console.log('Received crop names data:', response);
+
+                    $('#farmProfiles select.crop_name').each(function() {
+                        const $select = $(this);
+                        $select.empty();
+                        $select.append('<option value="{{$cropfarm->crop_name}}">{{$cropfarm->crop_name}}</option>');
+
+                        console.log('Processing dropdown:', $select);
+
+                        $.each(response, function(id, name) {
+                            console.log('Adding crop:', name, 'with ID:', id);
+                            $select.append(new Option(name, id));
+                        });
+
+                        console.log('Populated crop dropdown with options:', $select.html());
+                    });
+                } else {
+                    console.warn('No crop names data received or data is empty.');
+                }
+            },
+            error: function(xhr) {
+                console.error('AJAX request failed. Status:', xhr.status, 'Response:', xhr.responseText);
+            }
+        });
+    }
+
+    // Function to fetch crop varieties based on selected crop name
+    function fetchCropVarieties(cropId, selectElement) {
+        $.ajax({
+            url: '/admin-edit-crop-farms/{farmData}',
+            method: 'GET',
+            data: { type: 'varieties', crop_name: cropId },
+            success: function(response) {
+                if (response.error) {
+                    console.error('Error fetching crop varieties:', response.error);
+                    return;
+                }
+
+                const $varietySelect = $(selectElement).closest('.user-details').find('.crop_variety');
+                $varietySelect.empty(); // Clear existing options
+                $varietySelect.append('<option value="{{$cropfarm->type_of_variety_planted}}">{{$cropfarm->type_of_variety_planted}}</option>');
+                $varietySelect.append('<option value="add">Add New Variety...</option>'); // Option to add new variety
+
+                $.each(response, function(id, variety) {
+                    $varietySelect.append(new Option(variety, id));
+                });
+            },
+            error: function(xhr) {
+                console.error('AJAX request failed. Status:', xhr.status, 'Response:', xhr.responseText);
+            }
+        });
+    }
+
+    // Bind change event to crop name dropdowns
+    $(document).on('change', '.crop_name', function() {
+        const cropId = $(this).val();
+        if (cropId) {
+            fetchCropVarieties(cropId, this);
+        } else {
+            // Clear the variety dropdown if no crop is selected
+            $(this).closest('.crop-section').find('.crop_variety').empty().append('<option value="" disabled selected>Select Variety</option><option value="add">Add New Variety...</option>');
         }
     });
-    </script>
 
-<script>
-    // Example for initializing jQuery UI Datepicker
-    $(function() {
-        $("#datepicker").datepicker({
-            dateFormat: "yy-mm-dd" // Adjust format as needed
-        });
+    // Bind change event to crop variety dropdowns
+    $(document).on('change', '.crop_variety', function() {
+        const cropVarietySelect = this;
+
+        if (cropVarietySelect.value === "add") {
+            var newVariety = prompt("Please enter the name of the crop variety:");
+
+            if (newVariety) {
+                var existingOption = Array.from(cropVarietySelect.options).find(option => option.value === newVariety);
+
+                if (!existingOption) {
+                    var newOption = document.createElement("option");
+                    newOption.text = newVariety;
+                    newOption.value = newVariety;
+                    cropVarietySelect.appendChild(newOption);
+                    cropVarietySelect.value = newVariety; // Select the newly added variety
+                }
+            }
+        }
     });
 
-    // Example for showing validation errors
-    function showDateOfBirthError(message) {
-        $("#date_of_birth_error").text(message).show();
-    }
-
-    // Example for hiding validation errors
-    function hideDateOfBirthError() {
-        $("#date_of_birth_error").hide();
-    }
+    // Initialize by fetching crop names when the page is ready
+    $(document).ready(function() {
+        fetchCropNames();
+    });
 </script>
+<script>
+    function goBack() {
+        window.history.back(); // This will go back to the previous page in the browser history
+    }
+    </script>  
+
+<script>
   @endsection

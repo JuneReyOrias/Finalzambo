@@ -133,7 +133,7 @@
                                               @enderror
                                                         </div>
 
-                                                        <div class="col-md-6">
+                                                        {{-- <div class="col-md-6">
                                                           <label for="agri_district" class="form-label">Role</label>
                                                           <select class="form-control  @error('agri_district') is-invalid @enderror"  name="role"id="validationCustom01" aria-label="Floating label select e">
                                                             <option selected disabled>Select Agri-District</option>
@@ -144,7 +144,7 @@
                                                                                  @error('agri_district')
                                                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                                                       @enderror
-                                                                               </div>
+                                                                               </div> --}}
 
                                                         <div>
                                                           <button type="submit"  class="btn btn-outline-primary btn-icon-text mb-2 mb-md-0">

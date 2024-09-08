@@ -38,14 +38,14 @@
                                 <div class="me-md-1">
                                     <a href="{{ route('admin.barangay.add_form') }}" class="btn btn-success">Add</a>
                                 </div>
-                                <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET" class="me-2">
+                                <form id="farmProfileSearchForm" action="" method="GET" class="me-2">
                                     <div class="input-group">
                                         <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
                                         <button class="btn btn-outline-success" type="submit">Search</button>
                                     </div>
                                 </form>
                             
-                                <form id="showAllForm" action="{{ route('polygon.polygons_show') }}" method="GET">
+                                <form id="showAllForm" action="" method="GET">
                                     <button class="btn btn-outline-success" type="submit">All</button>
                                 </form>
                             </div>
@@ -161,7 +161,7 @@
                                             <tr class="table-light">
                                                  
                                                  <td>{{$seed->id}}</td>
-                                                 <td>{{$seed->agri_districts_id }}</td>
+                                                 <td>{{$seed->district}}</td>
                                                  <td>{{$seed->barangay_name }}</td>
                                                
                                                 

@@ -59,7 +59,7 @@
                                     <thead class="thead-light" >
                                         <tr>
                                             <th>#</th>
-                                            <th>agri-district id.</th>
+                                            <th>agri-district</th>
                                             <th>Polygon name</th>
                                             <th>color</th>
                                             <th>point 1 lat</th>
@@ -89,7 +89,7 @@
                                             <tr class="table-light">
                                                  
                                                  <td>{{$seed->id}}</td>
-                                                 <td>{{$seed->agri_districts_id }}</td>
+                                                 <td>{{$seed->agri_districts }}</td>
                                                  <td>{{$seed->poly_name }}</td>
                                                  <td>{{$seed->strokecolor }}</td>
                                                  <td>{{$seed->verone_latitude }}</td>
@@ -175,44 +175,20 @@
                                     <thead class="thead-light">
                                         <tr >
                                             
-                                              <th>parcels id</th>
-                                              <th>Agri-District</th>
+                                              <th>#</th>
                                               <th>Parcel Name</th>
-                                              <th>ARPOwnerName</th>
+                                              <th>ARP OwnerName</th>
+                                              <th>Agri-District</th>
                                               <th>brgyName</th>
                                               <th>land title no</th>
                                               <th>Lot no.</th>
                                               <th>pkind desc</th>
                                               <th>pused desc</th>
                                               <th>actual used</th>
-                                             
-                                              <th>Point 1 lat</th>
-                                              <th>Point 1 lng</th>
-                                              <th>Point 2 lat</th>
-                                              <th>Point 2 lng</th>
-                                              <th>Point 3 lat</th>
-                                              <th>Point 3 lng</th>
-                                              <th>Point 4 lat</th>
-                                              <th>Point 4 lng</th>
-                                              <th>Point 5 lat</th>
-                                              <th>Point 5 lng</th>
-                                              <th>Point 6 lat</th>
-                                              <th>Point 6 lng</th>
-                                              <th>Point 7 lat</th>
-                                              <th>Point 7 lng</th>
-                                              <th>Point 8 lat</th>
-                                              <th>Point 8 lng</th>
-                                              <th>Point 9 lat</th>
-                                              <th>Point 9 lng</th>
-                                              <th>Point 10 lat</th>
-                                              <th>Point 10 lng</th>
-                                              <th>Point 11 lat</th>
-                                              <th>Point 11 lng</th>
-                                              <th>Point 12 lat</th>
-                                              <th>Point 12 lng</th>
+                                              <th>Longitude</th>
+                                              <th>Latitude</th>
                                               <th>Area</th>
                                               <th>Parcel Color</th>
-                                       
                                               <th>Action</th>
                                           </tr>
                                       </thead>
@@ -222,41 +198,18 @@
                                           <tr class="table-light">
                                              
                                                <td>{{  $personalinformation->id }}</td>
-                                              <td>{{  $personalinformation->agri_districts_id }}</td>
+                                              
                                               <td>{{  $personalinformation->parcel_name}}</td>
                                               <td>{{  $personalinformation->arpowner_na }}</td>
-                                              <td>{{  $personalinformation->brgy_name }}</td>
+                                              <td>{{  $personalinformation->agri_districts }}</td>
+                                              <td>{{  $personalinformation->barangay_name }}</td>
                                               <td>{{  $personalinformation->tct_no}}</td>
                                               <td>{{  $personalinformation->lot_no }}</td>
                                               <td>{{  $personalinformation->pkind_desc }}</td>
                                               <td>{{  $personalinformation->puse_desc }}</td>
                                               <td>{{  $personalinformation->actual_used}}</td>
-                                              <td>{{  $personalinformation->parone_latitude }}</td>
-                                              <td>{{  $personalinformation->parone_longitude }}</td>
-                                              <td>{{  $personalinformation->partwo_latitude }}</td>
-                                              <td>{{  $personalinformation->partwo_longitude }}</td>
-                                              <td>{{  $personalinformation->parthree_latitude}}</td>
-                                              <td>{{  $personalinformation->parthree_longitude }}</td>
-                                              <td>{{  $personalinformation->parfour_latitude}}</td>
-                                              <td>{{  $personalinformation->parfour_longitude }}</td>
-                                              <td>{{  $personalinformation->parfive_latitude }}</td>
-                                              <td>{{  $personalinformation->parfive_longitude }}</td>
-                                              <td>{{  $personalinformation->parsix_latitude }}</td>
-                                            
-                                              <td>{{  $personalinformation->parsix_longitude  }}</td>
-                                              <td>{{  $personalinformation->parseven_latitude }}</td>
-                                              <td>{{  $personalinformation->parseven_longitude }}</td>
-                      
-                                              <td>{{  $personalinformation->pareight_latitude }}</td>
-                                              <td>{{  $personalinformation->pareight_longitude }}</td>
-                                              <td>{{  $personalinformation->parnine_latitude}}</td>
-                                              <td>{{  $personalinformation->parnine_longitude }}</td>
-                                              <td>{{  $personalinformation->parten_latitude }}</td>
-                                              <td>{{  $personalinformation->parten_longitude}}</td>
-                                              <td>{{  $personalinformation->pareleven_latitude }}</td>
-                                              <td>{{  $personalinformation->pareleven_longitude }}</td>
-                                              <td>{{  $personalinformation->partwelve_latitude }}</td>
-                                              <td>{{  $personalinformation->partwelve_longitude }}</td>
+                                              <td>{{  $personalinformation->latitude }}</td>
+                                              <td>{{  $personalinformation->longitude }}</td>
                                               <td>{{  $personalinformation->area }}</td>
                                               <td>{{  $personalinformation->parcolor }}</td>
                                              
@@ -274,7 +227,7 @@
                                         @endforeach
                                         @else
                                         <tr>
-                                            <td class="text-center" colspan="5">Parcel  is empty</td>
+                                            <td class="text-center" colspan="10">Farm Parcel  is empty</td>
                                         </tr>
                                         @endif
                                     </tbody>
@@ -528,7 +481,7 @@
                                                                              
                                                                                <th>#</th>
                                                                                <th>Crop Name</th>
-                                                                               <th>Crop type</th>
+                                                                               {{-- <th>Crop type</th> --}}
                                                                           
                                                                         
                                                                                <th>Action</th>
@@ -541,16 +494,16 @@
                                                                               
                                                                                 <td>{{  $cropcategory->id }}</td>
                                                                                <td>{{  $cropcategory->crop_name }}</td>
-                                                                               <td>{{  $cropcategory->type_of_variety}}</td>
+                                                                               {{-- <td>{{  $cropcategory->type_of_variety}}</td> --}}
                                                                              
                                                                               
                                                                                <td>
                                                                                   
                                                                                                                                                 <!-- Example link to open edit modal -->
-                                                                                     <a href="{{route('agri_districts.agri_edit', $cropcategory->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a> 
+                                                                                     <a href="{{route('crop_category.crop_edit', $cropcategory->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a> 
                                                                        
             
-                                                                                        <form  action="{{ route('agri_districts.agri_delete',  $cropcategory->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
+                                                                                        <form  action="{{ route('crop_category.crop_destroy',  $cropcategory->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
                                                                                             {{ csrf_field()}}
                                                                                             <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
                                                                                    </form>
@@ -577,6 +530,91 @@
                                                                  <li><a href="{{ $CropCat->nextPageUrl() }}">Next</a></li>
                                                              </ul>
                                                          </div>
+                                                          {{-- crop variety look up table--}}
+                                                          <input type="radio" name="tabs" id="cropVariety" checked="checked">
+                                                          <label for="cropVariety">Crop Variety</label>
+                                                          <div class="tab">
+                                                              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                                                  <div class="input-group mb-3">
+                                                                      <h5>Add Crop Variety</h5>
+                                                                  </div>
+                                                                 <div class="me-md-1">
+                                                                         <!-- Button trigger modal -->
+                                                                         <div class="me-md-1">
+                                                                             <a href="{{ route('admin.variety.add_variety') }}" class="btn btn-success">Add</a>
+                                                                         </div>
+                                                                     </div>
+                                         
+                                                                  <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET">
+                                                                      <div class="input-group mb-3">
+                                                                          <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
+                                                                          <button class="btn btn-outline-success" type="submit">Search</button>
+                                                                      </div>
+                                                                  </form>
+                                                                  <form id="showAllForm" action="{{ route('polygon.polygons_show') }}" method="GET">
+                                                                      <button class="btn btn-outline-success" type="submit">All</button>
+                                                                  </form>
+                                                              </div>
+             
+             
+                              
+                                                              <div class="table-responsive">
+                                                                  <table class="table table-bordered datatable">
+                                                                      <!-- Table content here -->
+                                                                      <thead class="thead-light">
+                                                                          <tr >
+                                                                              
+                                                                                <th>#</th>
+                                                                                <th>Crop Name</th>
+                                                                                <th>Variety Name</th>
+                                                                           
+                                                                         
+                                                                                <th>Action</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                          @if($CropVariety->count() > 0)
+                                                                        @foreach($CropVariety as $cropcategory)
+                                                                            <tr class="table-light">
+                                                                               
+                                                                                 <td>{{  $cropcategory->id }}</td>
+                                                                                <td>{{  $cropcategory->crop_name }}</td>
+                                                                                <td>{{  $cropcategory->variety_name}}</td>
+                                                                              
+                                                                               
+                                                                                <td>
+                                                                                   
+                                                                                                                                                 <!-- Example link to open edit modal -->
+                                                                                      <a href="{{route('admin.variety.edit_variety', $cropcategory->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a> 
+                                                                        
+             
+                                                                                         <form  action="{{ route('admin.variety.delete',  $cropcategory->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
+                                                                                             {{ csrf_field()}}
+                                                                                             <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                                                                    </form>
+                                                                                   
+                                                                                </td>
+                                                                          </tr>
+                                                                          @endforeach
+                                                                          @else
+                                                                          <tr>
+                                                                              <td class="text-center" colspan="5">Crop Variety is empty</td>
+                                                                          </tr>
+                                                                          @endif
+                                                                      </tbody>
+                                                                  </table>
+                                                              </div>
+                                                               <!-- Pagination links -->
+                                                               <ul class="pagination">
+                                                                  <li><a href="{{ $CropVariety->previousPageUrl() }}">Previous</a></li>
+                                                                  @foreach ($CropVariety->getUrlRange(1,$CropVariety->lastPage()) as $page => $url)
+                                                                      <li class="{{ $page == $CropVariety->currentPage() ? 'active' : '' }}">
+                                                                          <a href="{{ $url }}">{{ $page }}</a>
+                                                                      </li>
+                                                                  @endforeach
+                                                                  <li><a href="{{ $CropVariety->nextPageUrl() }}">Next</a></li>
+                                                              </ul>
+                                                          </div>
                         <!-- Repeat the same structure for other tabs -->
 
 

@@ -30,8 +30,16 @@ class VariableCost extends Model
     ];
     
   
-   
-    
+     // Define the relationship with LastProductionData
+     public function lastProductionData()
+     {
+         return $this->belongsTo(LastProductionDatas::class, 'last_production_datas_id');
+     }
+    // Relationship to CropFarm
+    public function crop()
+    {
+        return $this->belongsTo(Crop::class, 'crops_farms_id');
+    }  
 
     // relations to personal info and farm profile
     public function personalinformation()

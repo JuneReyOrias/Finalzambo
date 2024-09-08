@@ -324,12 +324,17 @@
                         
                         <div class="input-box">
                             <span class="details">AgriDistrict</span>
-                            <select class="form-control light-gray-placeholder" name="agri_districts_id" id="agri_districts_id">
-                                <option value="{{ $farmerOrg->agri_districts_id }}">{{ $farmerOrg->agri_districts_id}}</option>
-                                <!-- Options populated dynamically from your server-side code -->
+                            <select class="form-control light-gray-placeholder" name="district" id="agri_districts_id">
+                                
+                                <option value="{{ $farmerOrg->district }}">
+                                    {{ ucwords(str_replace('_', ' ', strtolower($farmerOrg->district))) }}
+                                </option>
                                 @foreach ($agriDistrict as $agri)
-                                    <option value="{{ $agri->id }}">{{ $agri->district }}</option>
+                                    <option value="{{ $agri->id }}">
+                                        {{ ucwords(str_replace('_', ' ', strtolower($agri->district))) }}
+                                    </option>
                                 @endforeach
+                                
                             </select>
                         </div>
                         
@@ -349,7 +354,7 @@
                           </div> --}}
                         <div class="input-box">
                           <span class="details"> Farmer Org/Coop/Assoc Name</span>
-                          <input type="text" class="form-control light-gray-placeholder @error('org_name') is-invalid @enderror" value="{{ $farmerOrg->org_name}}" name="org_name"id="selectReligion"onchange="checkReligion()" >
+                          <input type="text" class="form-control light-gray-placeholder @error('org_name') is-invalid @enderror" value="{{ $farmerOrg->organization_name}}" name="organization_name"id="selectReligion"onchange="checkReligion()" >
                           @error('org_name')
                           <div class="invalid-feedback">{{ $message }}</div>
                       @enderror

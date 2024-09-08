@@ -17,6 +17,10 @@ class CropCategory extends Model
         'crop_descript',
         
     ];
+    public function varieties()
+    {
+        return $this->hasMany(Categorize::class, 'crop_categorys_id');
+    }
     public function user()
     {
         return $this->belongsTo(User::class,'users_id', )->withDefault();

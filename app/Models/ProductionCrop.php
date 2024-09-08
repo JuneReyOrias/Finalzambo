@@ -5,11 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LandingPage extends Model
+class ProductionCrop extends Model
 {
     use HasFactory;
-
-    protected $table="landingpage";
-    protected $guarded=[];
-
+    
+   protected $table='production_crops';
 }

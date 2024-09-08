@@ -348,7 +348,7 @@
                         <div class="input-box">
                           <span class="details">Crop Name</span>
                           <select class="form-control light-gray-placeholder" name="crop_name" id="selectcrop" onchange="checkcropname()" aria-label="Floating label select e">
-                              <option value="{{$cropsEdit->crop_name}}">{{$cropsEdit->crop_name}}</option>
+                              <option selected disabled>Select</option>
                               @foreach ($crop as $crops)
                               <option value="{{$crops->crop_name}}">{{$crops->crop_name}}</option>
                               @endforeach
@@ -366,14 +366,14 @@
                       </div>
                       
                        
-                        {{-- <div class="input-box">
+                        <div class="input-box">
                           <span class="details">Crop Variety</span>
-                          <input type="text" class="form-control light-gray-placeholder @error('variety_name') is-invalid @enderror"value="{{$variety->variety_name}}"  name="variety_name"placeholder="Enter crop variety" value="{{ old('variety_name') }}" >
+                          <input type="text" class="form-control light-gray-placeholder @error('variety_name') is-invalid @enderror"  name="variety_name"placeholder="Enter crop variety" value="{{ old('variety_name') }}" >
                           @error('variety_name')
                           <div class="invalid-feedback">{{ $message }}</div>
                       @enderror
                         </div>
-                      --}}
+                     
                         
                       </div>
                       <div class="form_1_btns">

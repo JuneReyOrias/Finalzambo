@@ -20,6 +20,16 @@ class Crop extends Model
         'crop_type_soil',
         'crop_description',
     ];
+     // Relationship with CropFarm
+     public function cropFarm()
+     {
+         return $this->belongsTo(Crop::class, 'crops_farms_id');
+     }
+     // If needed, set up the inverse relationship with FarmProfile
+     public function farmProfiles()
+     {
+         return $this->hasMany(FarmProfile::class, 'personal_informations_id');
+     }
     public function user()
     {
         return $this->belongsTo(User::class,'user_id', )->withDefault();
@@ -36,8 +46,25 @@ class Crop extends Model
     {
         return $this->belongsTo(FarmProfile::class, 'farm_profiles_id');
     }
-    public function production()
+    // public function production()
+    // {
+    //     return $this->belongsTo(LastProductionDatas::class, 'crops_farms_id');
+    // }
+    public function lastProductionData()
     {
-        return $this->belongsTo(LastProductionDatas::class, 'crops_farms_id');
+        return $this->hasMany(LastProductionDatas::class, 'crops_farms_id');
+    }
+
+     // Relationship to VariableCost
+    // Relationship to VariableCost
+    public function variableCosts()
+    {
+        return $this->hasMany(VariableCost::class, 'crops_farms_id');
+    }
+
+    // Relationship to Crop
+    public function crop()
+    {
+        return $this->belongsTo(Crop::class, 'crop_name', 'crop_name');
     }
 }

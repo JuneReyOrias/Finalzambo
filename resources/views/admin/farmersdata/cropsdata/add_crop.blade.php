@@ -478,7 +478,7 @@
             
                                     <!-- Farm Info Section -->
 
-                                    <div class="step active farmer-info" id="step1">
+                                    <div class="step farmer-info" id="step1">
                                         <h2>Step 1: Personal Information</h2>
                                         <br>
                                         <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p>
@@ -487,7 +487,7 @@
                                         <div class="input-box col-md-4">
                                             <input type="hidden" class="form-control light-gray-placeholder users_id" name="users_id" value="{{$userId}}">
                                         </div>
-                                        <div class="user-details">
+                                        {{-- <div class="user-details">
                                             <!-- Existing fields here -->
                                             <div class="input-box col-md-4">
                                                 <span class="details">First Name</span>
@@ -551,11 +551,11 @@
                                             <div class="input-box col-md-4">
                                                 <span class="details">Date of Birth</span>
                                                 <input type="text" id="datepicker" class="form-control light-gray-placeholder date_of_birth" name="date_of_birth" placeholder="Date of Birth" value="{{ old('date_of_birth') }}" required>
-                                                {{-- <div id="date_of_birth_error" class="invalid-feedback"></div> --}}
+                                                <div id="date_of_birth_error" class="invalid-feedback"></div>
                                             </div>
-                                         {{-- <div id="error-message" class="text-danger" style="display: none;"></div> --}}
+                                         <div id="error-message" class="text-danger" style="display: none;"></div>
                                             <button type="button" class="btn btn-success" id="nextButton" disabled onclick="nextStep()">Next</button>
-                                        </div>
+                                        </div> --}}
                                         
                                     
                                     </div>
@@ -591,51 +591,46 @@
                                     <input type="hidden"name="email" class="form-control city light-gray-placeholder @error('email') is-invalid @enderror" name="city" id="validationCustom01" value="Zamboanga City" readonly >
                                     <div class="input-box col-md-4">
                                         <span class="details">Agri-District</span>
-                                        <select class="form-control light-gray-placeholder gray-text @error('agri_district') is-invalid @enderror" name="agri_district"  id="districtSelect"  aria-label="Floating label select e">
-                                            <option value="" disabled selected>Select AgriDistrict</option>
+                                        <select class="form-control light-gray-placeholder gray-text @error('agri_district') is-invalid @enderror" name="agri_district" id="selectAgri" onchange="checkAgri()" aria-label="Floating label select e">
+                                            <option value="{{ $agri_district }}" {{ $agri_district == "ayala" ? 'selected' : '' }}>{{ $agri_district }}</option>
                                             <!-- Add other options as needed -->
                                         </select>
                                     </div>
                                     
-                                  
+                                    {{-- <div class="input-box col-md-4" id="barangayInput" style="{{ in_array($agri_district, ['ayala','vitali', 'culianan', 'tumaga', 'manicahan', 'curuan']) ? 'display: block;' : 'display: none;' }}">
+                                        <span class="details">Barangay</span>
+                                        <select class="form-control light-gray-placeholder gray-text @error('barangay') is-invalid @enderror" name="barangay" id="SelectBarangay" aria-label="Floating label select e">
+                                            <!-- Options will be dynamically populated based on the selected agri_district -->
+                                           
+                                        </select>
+                                        <button type="button" id="removeBarangay" class="btn btn-danger mt-2">Remove Selected Barangay</button>
 
-                                        <!-- Barangay Selection -->
-                                        <div class="input-box col-md-4">
-                                            <span class="details">Barangay</span>
-                                            <div class="d-flex align-items-center">
-                                                <!-- Select dropdown -->
-                                                <select class="form-control barangay custom-select light-gray-placeholder gray-text barangaySelect @error('barangay') is-invalid @enderror" name="barangay" id="SelectBarangay" aria-label="Floating label select e">
-                                                    <option value="" disabled selected>Select Barangay</option>
-                                                    <option value="add">Add New Barangay...</option>
-                                                </select>
+                                    </div> --}}
+                                 <!-- Barangay Selection -->
 
-                                                <!-- Remove Barangay Button with Font Awesome Icon -->
-                                                {{-- <button type="button" id="removeBarangay" class="btn btn-outline-danger ms-2 d-flex align-items-center" title="Remove Selected Barangay">
-                                                    <i class="fa fa-trash me-1"></i>
-                                                </button>
+                    <!-- Barangay Selection -->
+                    <div class="input-box col-md-4">
+                        <span class="details">Barangay</span>
+                        <div class="d-flex align-items-center">
+                            <!-- Select dropdown -->
+                            <select class="form-control barangay custom-select light-gray-placeholder gray-text @error('barangay') is-invalid @enderror" name="barangay" id="SelectBarangay" aria-label="Floating label select e">
+                                <!-- Options will be dynamically populated based on the selected agri_district -->
+                            </select>
 
-                                                <!-- Add New Barangay Button with Font Awesome Icon -->
-                                                <button type="button" class="btn btn-success ms-2 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#newBarangayModal" title="Add New Barangay">
-                                                    <i class="fa fa-plus me-1"></i>
-                                                </button> --}}
-                                            </div>
-                                        </div>
+                            <!-- Remove Barangay Button with Font Awesome Icon -->
+                            <button type="button" id="removeBarangay" class="btn btn-outline-danger ms-2 d-flex align-items-center" title="Remove Selected Barangay">
+                                <i class="fa fa-trash me-1"></i>
+                            </button>
+
+                            <!-- Add New Barangay Button with Font Awesome Icon -->
+                            <button type="button" class="btn btn-success ms-2 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#newBarangayModal" title="Add New Barangay">
+                                <i class="fa fa-plus me-1"></i>
+                            </button>
+                        </div>
+                    </div>
 
                      
-                                        {{-- <select id="districtSelect" class="form-control">
-                                            <option value="" disabled selected>Select AgriDistrict</option>
-                                        </select>
-                                        
-                                        <select class="barangaySelect form-control">
-                                            <option value="" disabled selected>Select Barangay</option>
-                                            <option value="add">Add New Barangay...</option>
-                                        </select>
-                                        
-                                        <select class="organizationSelect form-control">
-                                            <option value="" disabled selected>Select Organization</option>
-                                            <option value="add">Add New Organization...</option>
-                                        </select>
-                                         --}}
+  
 
 
 
@@ -1005,7 +1000,7 @@
                       </div>
                       <div class="input-box col-md-4">
                         <span class="details">Date of Interview</span>
-                        <input type="text" class="form-control light-gray-placeholder date_of_interviewed @error('date_of_interview') is-invalid @enderror" name="date_interview" id="datepicker" placeholder="Date of Interview" value="{{ old('date_of_interview') }}" data-input='true' required>
+                        <input type="text" class="form-control light-gray-placeholder date_of_interviewed @error('date_of_interview') is-invalid @enderror"value="2020-0909" name="date_interview" id="datepicker" placeholder="Date of Interview" value="{{ old('date_of_interview') }}" data-input='true' required>
                         @error('date_of_interview')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -1022,254 +1017,31 @@
                                         </div>
 
 <!-- Step 1: Farm Profile -->
-<div class="step farm-info" id="step2">
+<div class="step active farm-info" id="step2">
     <!-- Farm Profile and Crop Accordion -->
     <div class="accordion farm-info" id="accordionFarmProfile">
         <!-- Farm Profile Section -->
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center" id="headingFarmProfile" style="background-color: #f8f9fa; border: none; padding: 10px 20px;">
                 <h5 class="mb-0" style="margin: 0;">
-                    <button class="btn btn-modern" type="button" data-toggle="collapse" data-target="#collapseFarmProfile" aria-expanded="true" aria-controls="collapseFarmProfile">
-                        Add Farm Profile
+                    {{-- <button class="btn btn-modern" type="button" data-toggle="collapse" data-target="#collapseFarmProfile" aria-expanded="true" aria-controls="collapseFarmProfile">
+                        Add Farm Profile --}}
+                        <button class="btn btn-secondary ml-auto" type="button" id="addCropButton">Add Crop</button>
                     </button>
                 </h5>
                 
                 <!-- Button to Add New Crop Section (aligned to the right) -->
-                <button class="btn btn-secondary ml-auto" type="button" id="addCropButton">Add Crop</button>
+                {{-- <button class="btn btn-secondary ml-auto" type="button" id="addCropButton">Add Crop</button> --}}
             </div>
             
-            <div id="collapseFarmProfile" class="collapse show" aria-labelledby="headingFarmProfile" data-parent="#accordionFarmProfile">
-                <div class="card-body">
-                    <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
-                    <div id="farmProfiles"></div>
-                    <h3>a. Farm Location </h3>
-                    <div class="user-details">
-                        <div id="farmProfiles">
-                        <div class="user-details">
-                            <div class="input-box col-md-4">
-                                <span class="details">Tenurial Status:</span>
-                                {{-- <label class="detail">Tenurial Status:</label> --}}
-                                <div class="d-flex align-items-center">
-                                    <select class="form-control custom-select light-gray-placeholder placeholder-text tenurial_status @error('tenurial_status') is-invalid @enderror" name="tenurial_status" id="selectTenurialStatus" onchange="checkTenurial()" aria-label="label select e">
-                                        <option selected disabled>Select</option>
-                                        <option  value="Owner" {{ old('tenurial_status') == 'Owner' ? 'selected' : '' }}>Owner</option>
-                                        <option value="Owner Tiller" {{ old('tenurial_status') == 'Owner Tiller' ? 'selected' : '' }}>Owner Tiller</option>
-                                        <option value="Tenant" {{ old('tenurial_status') == 'Tenant' ? 'selected' : '' }}>Tenant</option>
-                                        <option value="Tiller" {{ old('tenurial_status') == 'Tiller' ? 'selected' : '' }}>Tiller</option>
-                                        <option value="Lease" {{ old('tenurial_status') == 'Lease' ? 'selected' : '' }}>Lease</option>
-                                        <option value="Add" {{ old('tenurial_status') == 'Add' ? 'selected' : '' }}>Add</option>
-                                    </select>
-                                    <button type="button" id="removeTenurialButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeTenurial()">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </div>
-                                @error('tenurial_status')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
-                            <div class="input-box col-md-4">
-                                <span class="details">Farm Address:</span>
-                                <input type="text" class="form-control light-gray-placeholder farm_address" name="farm_profiles[0][farm_address]" placeholder="Enter farm address" id="rice_farm_address_0" onkeypress="return blockSymbolsAndNumbers(event)">
-                            </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">No.of Years as Farmer:</span>
-                                <input type="number" class="form-control light-gray-placeholder no_of_years_as_farmers" name="farm_profiles[0][no_of_years_as_farmers]" id="no_of_years_as_farmers_0" placeholder="Enter no fo years as farmers">
-                            </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">GPS Longitude:</span>
-                                <input type="text" class="form-control light-gray-placeholder gps_longitude" name="farm_profiles[0][gps_longitude]" id="gps_longitude_0" placeholder="GPS_longitude" readonly >
-                              </div>
-                              <div class="input-box col-md-4">
-                                <span class="details">GPS Latitude:</span>
-                                <input type="number" class="form-control light-gray-placeholder gps_latitude" name="farm_profiles[0][gps_latitude]" id="gps_latitude_0"placeholder="GPS_latitude" readonly>
-                              </div>
-                            
-                                    <!-- Map Modal -->
-                        <div id="mapModal" class="modal fade" tabindex="-1" role="dialog">
-                            <div class="modal-dialog modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title">Select Location on Map</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                                </div>
-                                <div class="modal-body">
-                                <div id="map" style="height: 400px; width: 100%;"></div>
-                                <div class="form-row mt-3">
-                                    <div class="col">
-                                    <label for="modal_latitude">Latitude:</label>
-                                    <input type="number" class="form-control light-gray-placeholder"placeholder="Enter latitude" id="modal_latitude">
-                                    </div>
-                                    <div class="col">
-                                    <label for="modal_longitude">Longitude:</label>
-                                    <input type="number" class="form-control light-gray-placeholder"placeholder="Enter longitude" id="modal_longitude">
-                                    </div>
-                                </div>
-                                </div>
-                                <div class="modal-footer">
-                               
-                                <button type="button" class="btn btn-primary" id="saveLocation">Close</button>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-  
-                       
-                            <div class="input-box col-md-4">
-                                <span class="details">Total Physical Area (has):</span>
-                                <input type="number" class="form-control light-gray-placeholder total_physical_area_has" name="farm_profiles[0][total_physical_area_has]" id="total_physical_area_has_0" value="{{old('total_physical_area_has')}}" >
-                            </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">Total Area Cultivated (has):</span>
-                                <input type="number" class="form-control light-gray-placeholder Total_area_cultivated_has" name="farm_profiles[0][Total_area_cultivated_has]"id="rice_area_cultivated_has_0" placeholder=" Enter total area cultivated has" value="{{'total_area_cultivated'}}">
-                            </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">Land Title No:</span>
-                                <input type="text" class="form-control light-gray-placeholder land_title_no" name="farm_profiles[0][land_title_no]" id="land_title_no_0" placeholder="Enter land title no" value="{{old('land_title_no')}}">
-                            </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">Lot No:</span>
-                                <input type="text" class="form-control light-gray-placeholder lot_no" name="farm_profiles[0][lot_no]"value="445.54" id="lot_no_0" placeholder="Enter lot no" value="{{old('lot_no')}}">
-                            </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">Area Prone To:</span>
-                                <div class="d-flex align-items-center">
-                                    <select class="form-control custom-select light-gray-placeholder area_prone_to placeholder-text @error('area_prone_to') is-invalid @enderror" id="selectedAreaprone" onchange="checkProne()" name="area_prone_to" aria-label="Floating label select e">
-                                        <option selected disabled>Select</option>
-                                        <option  value="Flood" {{ old('area_prone_to') == 'Flood' ? 'selected' : '' }}>Flood</option>
-                                        <option value="Drought" {{ old('area_prone_to') == 'Drought' ? 'selected' : '' }}>Drought</option>
-                                        <option value="Saline" {{ old('area_prone_to') == 'Saline' ? 'selected' : '' }}>Saline</option>
-                                        <option value="N/A" {{ old('area_prone_to') == 'N/A' ? 'selected' : '' }}>N/A</option>
-                                        <option value="Add Prone" {{ old('area_prone_to') == 'Add Prone' ? 'selected' : '' }}>Add</option>
-                                    </select>
-                                    <button type="button" id="removeProneButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeProne()">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </div>
-                                @error('area_prone_to')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
-                            {{-- <div class="input-box col-md-4" id="AreaProneInput" style="display: none;">
-                                <label for="lot_no_0">Add New area Prone to:</label>
-                                <input type="text"id="AreaProneInputField" class="form-control light-gray-placeholder add_newProneYear"value="8434.34" name="farm_profiles[0][lot_no]" id="lot_no_0" >
-                            </div> --}}
-                            <div class="input-box col-md-4">
-                                <span class="details">Ecosystem:</span>
-                                <div class="d-flex align-items-center">
-                                    <select class="form-control custom-select light-gray-placeholder ecosystem placeholder-text @error('ecosystem') is-invalid @enderror" id="selectedEcosystem" onchange="checkEcosystem()" name="ecosystem" aria-label="Floating label select e">
-                                        <option selected disabled>Select</option>
-                                        <option value="Lowland Rain Fed" {{ old('ecosystem') == 'Lowland Rain Fed' ? 'selected' : '' }}>Lowland Rain Fed</option>
-                                        <option value="Lowland Irrigated" {{ old('ecosystem') == 'Lowland Irrigated' ? 'selected' : '' }}>Lowland Irrigated</option>
-                                        <option value="Add ecosystem" {{ old('ecosystem') == 'Add ecosystem' ? 'selected' : '' }}>Add</option>
-                                    </select>
-                                    <button type="button" id="removeEcosystemButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeEcosystem()">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </div>
-                                @error('ecosystem')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
-
-                            {{-- <div class="input-box col-md-4" id="EcosystemInput"  style="display: none;">
-                                <label for="lot_no_0">Add New Ecosystem:</label>
-                                <input type="text"id="EcosystemInputField" class="form-control light-gray-placeholder add_newProneYear"value="rainy land" name="farm_profiles[0][lot_no]" id="lot_no_0" >
-                            </div> --}}
-                        </div>
-                        <h3>b. Insurance and Financial Information</h3><br>
-                            <div class="user-details">
-                          
-                    <div class="input-box col-md-4">
-                        <span class="details">RSBA Register:</span>
-                               
-                                <select class="form-control custom-select light-gray-placeholder rsba_register placeholder-text @error('rsba_register') is-invalid @enderror" id="rsba_register" name="rsba_register" aria-label="Floating label select e">
-                                    <option  disabled>Select</option>
-                                    <option selected value="Yes" {{ old('rsba_register') == 'Yes' ? 'selected' : '' }}>Yes</option>
-                                    <option value="No" {{ old('rsba_register') == 'No' ? 'selected' : '' }}>No</option>
-                              
-                                  </select>
-                            
-                            </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">PCIC Insured:</span>
-                                
-                                <select class="form-control custom-select light-gray-placeholder pcic_insured placeholder-text @error('pcic_insured') is-invalid @enderror" id="pcic_insured" name="pcic_insured" aria-label="Floating label select e">
-                                    <option selected disabled>Select</option>
-                                    <option  alue="Yes" {{ old('pcic_insured') == 'Yes' ? 'selected' : '' }}>Yes</option>
-                                    <option value="No" {{ old('pcic_insured') == 'No' ? 'selected' : '' }}>No</option>
-                              
-                                  </select>
-                            </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">Government Assisted:</span>
-                           
-                                <select class="form-control custom-select light-gray-placeholder government_assisted placeholder-text @error('government_assisted') is-invalid @enderror" id="government_assisted" name="government_assisted" aria-label="Floating label select e">
-                                    <option selected class="light-gray-placeholder"  disabled>Select</option>
-                                    <option value="Yes" {{ old('government_assisted') == 'Yes' ? 'selected' : '' }}>Yes</option>
-                                    <option value="No" {{ old('government_assisted') == 'No' ? 'selected' : '' }}>No</option>
-                              
-                                  </select>
-                            
-                            </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">Source of Capital:</span>
-                                <div class="d-flex align-items-center">
-                                    <select class="form-control custom-select light-gray-placeholder source_of_capital placeholder-text @error('source_of_capital') is-invalid @enderror" id="selectedSourceCapital" onchange="checkSourceCapital()" name="source_of_capital" aria-label="Floating label select e">
-                                        <option selected disabled>Select</option>
-                                        <option value="Own" {{ old('source_of_capital') == 'Own' ? 'selected' : '' }}>Own</option>
-                                        <option value="Loan" {{ old('source_of_capital') == 'Loan' ? 'selected' : '' }}>Loan</option>
-                                        <option value="Financed" {{ old('source_of_capital') == 'Financed' ? 'selected' : '' }}>Financed</option>
-                                        <option value="Others" {{ old('source_of_capital') == 'Others' ? 'selected' : '' }}>Others</option>
-                                    </select>
-                                    <button type="button" id="removeSourceCapitalButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeSourceCapital()">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </div>
-                                @error('source_of_capital')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
-                          
-
-                            <div class="input-box col-md-4">
-                                <span class="details">Remarks/Recommendation:</span>
-                                <input type="text" class="form-control light-gray-placeholder remarks" name="farm_profiles[0][remarks_recommendation]" id="remarks_recommendation_0" placeholder=" Enter remarks" onkeypress="return blockSymbolsAndNumbers(event)">
-                            </div>
-                            {{-- <div class="input-box col-md-4">
-                                <label for="oca_district_office_0">OCA District Office:</label>
-                                <input type="text" class="form-control light-gray-placeholder oca_district_office" name="farm_profiles[0][oca_district_office]" id="oca_district_office_0" placeholder=" Enter oca district" >
-                            </div> --}}
-                            <div class="input-box col-md-4">
-                                <span class="details">Name of Technicians:</span>
-                                <input type="text" class="form-control light-gray-placeholder name_technicians" name="farm_profiles[0][name_technicians]" id="name_technicians_0" placeholder="Enter name of technicians" onkeypress="return blockSymbolsAndNumbers(event)">
-                            </div>
-                            
-                            <div class="input-box col-md-4">
-                                <span class="details">Date of Interview:</span>
-                                <input type="text" class="form-control light-gray-placeholder date_interview" name="farm_profiles[0][date_interview]" id="datepicker" placeholder="date interview" required>
-                            </div>
-                            
-                
-                            
-                        
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    
         <div id="cropProfiles" class="cropsect">
             <!-- Dynamic Crop Fields Will Be Added Here -->
         </div>
 
         <!-- Buttons outside the accordions -->
             <div class="button-container mt-3 d-flex justify-content-between">
-                <button type="button" class="btn btn-primary" onclick="previousStep()">Previous</button>
+                <button type="button" class="btn btn-primary" onclick="goBack()">Back</button>
                 <button type="submit" class="btn btn-success" id="submitButton">Save</button>
             </div>
                                     </div>
@@ -1298,12 +1070,12 @@
         <div class="modal-body">
           <div class="accordion" id="confirmationAccordion">
             <!-- Farmer Information Accordion -->
-                <div class="accordion-item">
-                <h2 class="accordion-header" id="headingFarmerInfo">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFarmerInfo" aria-expanded="true" aria-controls="collapseFarmerInfo">
-                    <i class="fas fa-user"></i> Farmer Information
-                    </button>
-                </h2>
+            {{-- <div class="accordion-item">
+              <h2 class="accordion-header" id="headingFarmerInfo">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFarmerInfo" aria-expanded="true" aria-controls="collapseFarmerInfo">
+                  <i class="fas fa-user"></i> Farmer Information
+                </button>
+              </h2>
               <div id="collapseFarmerInfo" class="accordion-collapse collapse show" aria-labelledby="headingFarmerInfo" data-bs-parent="#confirmationAccordion">
                 <div class="accordion-body">
                     <ul class="farmer-details">
@@ -1349,9 +1121,9 @@
                 </div>
               </div>
             </div>
-  
+   --}}
             <!-- Farm Information Accordion -->
-            <div class="accordion-item">
+            {{-- <div class="accordion-item">
               <h2 class="accordion-header" id="headingFarmInfo">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFarmInfo" aria-expanded="false" aria-controls="collapseFarmInfo">
                   <i class="fas fa-tractor"></i> Farm Information
@@ -1384,7 +1156,7 @@
                 </div>
               </div>
             </div>
-  
+   --}}
             <!-- Crops Information Accordion -->
             <div class="accordion-item">
               <h2 class="accordion-header" id="headingCropsInfo">
@@ -2074,6 +1846,8 @@ $(document).ready(function() {
                         
                         <div class="user-details">
                         <!-- Crop Fields -->
+                          <input type="hidden" class="form-control farm_id" name="crop_profiles[${cropCounter}][no_of_cropping_per_year]"placeholder="no of cropping/year"value="{{$farmData->id}}" id="no_of_cropping_per_year_${cropCounter}">
+                            
                          <div class="input-box col-md-4">
                               
                                   <label for="crop_name_${cropCounter}">Crop Name</label>
@@ -2103,7 +1877,8 @@ $(document).ready(function() {
                               <div class="input-box col-md-4">
                                 <label for="no_of_cropping_per_year_${cropCounter}">No. of cropping/year:</label>
                                 <input type="number" class="form-control no_crop_year" name="crop_profiles[${cropCounter}][no_of_cropping_per_year]"placeholder="no of cropping/year" id="no_of_cropping_per_year_${cropCounter}">
-                            </div>
+                            
+                                </div>
                             <div class="input-box col-md-4">
                                 <label for="planting_schedule_wetseason_${cropCounter}">Planting Schedule (Wet Season):</label>
                                 <input type="text" class="form-control wet_season" name="crop_profiles[${cropCounter}][planting_schedule_wetseason]"  id="datepicker_${cropCounter}" placeholder="Planting schedule"
@@ -2999,71 +2774,7 @@ const form = $('#form');
 form.on('submit', function(event) {
     event.preventDefault(); // Prevent the form from reloading the page
   
-    // Gather farmer info from the form inputs
-    let farmerInfo = {
-        'users_id': $('input.users_id').val(),
-        'first_name': $('input.first_name').val(),
-        'middle_name': $('input.middle_name').val(),
-        'last_name': $('input.last_name').val(),
-        'extension_name': $('select.extension_name').val(),
-        'country': $('input.country').val(),
-        'province': $('input.province').val(),
-        'city': $('input.city').val(),
-        'agri_district': $('select.agri_district').val(),
-        'barangay': $('select.barangay').val(),
-        'street': $('input.street').val(),
-        'zip_code': $('select.zip_code').val(),
-        'contact_no': $('input.contact_no').val(),
-        'sex': $('select.sex').val(),
-        'religion': $('select.religion').val(),
-        'date_of_birth': $('input.date_of_birth').val(),
-        'place_of_birth': $('select.place_of_birth').val(),
-        'civil_status': $('select.civil_status').val(),
-        'name_legal_spouse': $('input.name_legal_spouse').val(),
-        'no_of_children': $('select.no_of_children').val(),
-        'mothers_maiden_name': $('input.mothers_maiden_name').val(),
-        'highest_formal_education': $('select.highest_formal_education').val(),
-        // 'add_formEduc': $('select.add_formEduc').val(),
-        'person_with_disability': $('select.person_with_disability').val(),
-        'YEspwd_id_no': $('input.YEspwd_id_no').val(),
-        'Nopwd_id_no': $('select.Nopwd_id_no').val(),
-        'government_issued_id': $('select.government_issued_id').val(),
-        'id_type': $('select.id_type').val(),
-        'add_Idtype': $('input.add_Idtype').val(),
-        'non_gov_id_types': $('input.non_gov_id_types').val(),
-        'member_ofany_farmers': $('select.member_ofany_farmers').val(),
-        'nameof_farmers': $('select.nameof_farmers').val(),
-        'NoFarmersGroup': $('select.NoFarmersGroup').val(),
-        'add_FarmersGroup': $('input.add_FarmersGroup').val(),
-        'name_contact_person': $('input.name_contact_person').val(),
-        'cp_tel_no': $('input.cp_tel_no').val(),
-        'date_of_interviewed': $('input.date_of_interviewed').val(),
-    };
-
-    // Gather farm info from the form inputs
-    let farmInfo = {
-    'tenurial_status': $('select.tenurial_status').val(),
-    'farm_address': $('input.farm_address').val(),
-    'no_of_years_as_farmers': $('input.no_of_years_as_farmers').val(),
-    'gps_longitude': $('input.gps_longitude').val(),
-    'gps_latitude': $('input.gps_latitude').val(),
-    'total_physical_area_has': $('input.total_physical_area_has').val(),
-    'Total_area_cultivated_has': $('input.Total_area_cultivated_has').val(),
-    'land_title_no': $('input.land_title_no').val(),
-    'lot_no': $('input.lot_no').val(),
-    'area_prone_to': $('select.area_prone_to').val(),
-    'ecosystem': $('select.ecosystem').val(),
-    'rsba_register': $('select.rsba_register').val(),
-    'pcic_insured': $('select.pcic_insured').val(),
-    'government_assisted': $('select.government_assisted').val(),
-    'source_of_capital': $('select.source_of_capital').val(),
-    'remarks': $('input.remarks').val(),
-    'oca_district_office': $('input.oca_district_office').val(),
-    'name_technicians': $('input.name_technicians').val(),
-    'date_interview': $('input.date_interview').val(),
-};
-
-
+   
     // Gather crop info from the form inputs
     
 
@@ -3090,7 +2801,7 @@ form.on('submit', function(event) {
     let wetSeason = getValue('.wet_season');
     let noCroppingYear = getValue('.no_crop_year');
     let YieldkgHa = getValue('.yield_kg_ha');
-
+    let farmid = getValue('.farm_id');
     // Production
     let seedType = getValue('.seed-type');
     let seedUsed = getValue('.seed-used');
@@ -3186,7 +2897,8 @@ form.on('submit', function(event) {
             wet_season: wetSeason,
             dry_season: drySeason,
             no_cropping_year: noCroppingYear,
-            yield_kg_ha: YieldkgHa
+            yield_kg_ha: YieldkgHa,
+            farmId:farmid
         },
         production: {
             seedtype: seedType,
@@ -3260,8 +2972,8 @@ console.log(cropInfo);
      
 //   // Create the final data object
 let dataobject = {
-    'farmer': farmerInfo, 
-    'farm': farmInfo,
+    // 'farmer': farmerInfo, 
+    // 'farm': farmInfo,
     'crops': cropInfo,
 };
 
@@ -3272,7 +2984,7 @@ let dataobject = {
 
 //     // Send the AJAX request
 //     $.ajax({
-//         url: '/admin-view-Farmers-survey-form',
+//         url: '/admin-add-crop-farms/{farmData}',
 //         method: 'POST',
 //         contentType: 'application/json', // Set content type for JSON
 //         data: JSON.stringify(dataobject), // Attach the prepared data here
@@ -3292,7 +3004,7 @@ let dataobject = {
 //             console.error('Error:', error.responseJSON.message);
 //         }
 //     }); 
-
+// }); 
 
 // Function to open confirmation modal with data preview
 function openConfirmModal(data) {
@@ -3366,8 +3078,10 @@ data.crops.forEach(function(crop, index) {
         <div class="detail-row">
             <h4>Crop Information:</h4><br>
             <ul class="list-unstyled">
+                
                 <li><strong>Crop Name:</strong> <span>${crop.crop_name || 'N/A'}</span></li>
                 <li><strong>Crop Variety:</strong> <span>${crop.variety.type_variety || 'N/A'}</span></li>
+                <li><strong>farm iD:</strong> <span>${crop.variety.farmId || 'N/A'}</span></li>
                 <li><strong>Preferred Variety:</strong> <span>${crop.variety.preferred || 'N/A'}</span></li>
                 <li><strong>Wet Season:</strong> <span>${crop.variety.wet_season || 'N/A'}</span></li>
                 <li><strong>Dry Season:</strong> <span>${crop.variety.dry_season || 'N/A'}</span></li>
@@ -3468,7 +3182,7 @@ data.crops.forEach(function(crop, index) {
 
 
 
-// Call this function to show the confirmation modal when needed
+// // Call this function to show the confirmation modal when needed
 openConfirmModal(dataobject);
 
 /// Confirm and Save event
@@ -3477,7 +3191,7 @@ $('#confirmSave').on('click', function() {
 
     // Send the AJAX request
     $.ajax({
-        url: '/admin-view-Farmers-survey-form',
+        url: '/admin-add-crop-farms/{farmData}',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(dataobject), // Attach the prepared data
@@ -3675,343 +3389,202 @@ function checkMmbership() {
 
 
 // Function to check agri_district and display barangay and organization inputs accordingly
-// function checkAgri() {
-//     var agriDistrict = document.getElementById("selectAgri").value;
-//     var barangayInput = document.getElementById("barangayInput");
-//     var organizationInput = document.getElementById("YesFarmersGroup");
+function checkAgri() {
+    var agriDistrict = document.getElementById("selectAgri").value;
+    var barangayInput = document.getElementById("barangayInput");
+    var organizationInput = document.getElementById("YesFarmersGroup");
 
-//     if (['ayala', 'vitali', 'culianan', 'tumaga', 'manicahan', 'curuan'].includes(agriDistrict)) {
-//         barangayInput.style.display = "block"; // Show barangay input
-//         populateBarangays(agriDistrict); // Populate barangays based on selected district
-//         if (document.getElementById("selectMember").value === "1") {
-//             populateOrganizations(agriDistrict); // Populate organizations based on selected district
-//         }
-//     } else {
-//         barangayInput.style.display = "none"; // Hide barangay input
-//     }
-// }
+    if (['ayala', 'vitali', 'culianan', 'tumaga', 'manicahan', 'curuan'].includes(agriDistrict)) {
+        barangayInput.style.display = "block"; // Show barangay input
+        populateBarangays(agriDistrict); // Populate barangays based on selected district
+        if (document.getElementById("selectMember").value === "1") {
+            populateOrganizations(agriDistrict); // Populate organizations based on selected district
+        }
+    } else {
+        barangayInput.style.display = "none"; // Hide barangay input
+    }
+}
 
-// $(document).ready(function() {
-//     function populateBarangays(agriDistrict) {
-//         var barangaySelect = document.getElementById("SelectBarangay");
-
-//         // Clear previous options
-//         barangaySelect.innerHTML = '';
-
-//         // AJAX call to get barangays
-//         $.ajax({
-//             url: '/admin-view-Farmers-survey-form',
-//             method: 'GET',
-//             data: { district: agriDistrict, type: 'barangays' },
-//             success: function(response) {
-//                 console.log('Barangays Response:', response);
-
-//                 if (response.length > 0) {
-//                     response.forEach(function(barangay) {
-//                         var option = document.createElement("option");
-//                         option.text = barangay.barangay_name;
-//                         option.value = barangay.barangay_name;
-//                         barangaySelect.appendChild(option);
-//                     });
-//                 } else {
-//                     var noOption = document.createElement("option");
-//                     noOption.text = "No barangays found";
-//                     noOption.disabled = true;
-//                     barangaySelect.appendChild(noOption);
-//                 }
-//             },
-//             error: function(xhr, status, error) {
-//                 console.log("Error fetching barangays:", error);
-//             }
-//         });
-//     }
-
-//     function populateOrganizations(agriDistrict) {
-//         var organizationSelect = document.getElementById("SelectOrganization");
-
-//         // Clear previous options
-//         organizationSelect.innerHTML = '';
-
-//         // AJAX call to get organizations
-//         $.ajax({
-//             url: '/admin-view-Farmers-survey-form',
-//             method: 'GET',
-//             data: { district: agriDistrict, type: 'organizations' },
-//             success: function(response) {
-//                 console.log('Organizations Response:', response);
-
-//                 if (response.length > 0) {
-//                     response.forEach(function(organization) {
-//                         var option = document.createElement("option");
-//                         option.text = organization.organization_name;
-//                         option.value = organization.organization_name;
-//                         organizationSelect.appendChild(option);
-//                     });
-//                 } else {
-//                     var noOption = document.createElement("option");
-//                     noOption.text = "No organizations found";
-//                     noOption.disabled = true;
-//                     organizationSelect.appendChild(noOption);
-//                 }
-//             },
-//             error: function(xhr, status, error) {
-//                 console.log("Error fetching organizations:", error);
-//             }
-//         });
-//     }
-
-//     function removeBarangay() {
-//         var barangaySelect = document.getElementById("SelectBarangay");
-//         var selectedValue = barangaySelect.value;
-
-//         if (selectedValue) {
-//             var confirmRemove = confirm("Are you sure you want to remove this barangay?");
-//             if (confirmRemove) {
-//                 var selectedIndex = barangaySelect.selectedIndex;
-//                 barangaySelect.remove(selectedIndex);
-//             }
-//         }
-//     }
-
-//     function removeOrganization() {
-//         var organizationSelect = document.getElementById("SelectOrganization");
-//         var selectedValue = organizationSelect.value;
-
-//         if (selectedValue) {
-//             var confirmRemove = confirm("Are you sure you want to remove this organization?");
-//             if (confirmRemove) {
-//                 var selectedIndex = organizationSelect.selectedIndex;
-//                 organizationSelect.remove(selectedIndex);
-//             }
-//         }
-//     }
-
-//     // Modal to add new barangay
-//     $('#saveNewBarangay').click(function() {
-//         var newBarangayName = $('#newBarangayName').val(); // Get the input value from modal
-//         if (newBarangayName) {
-//             var barangaySelect = document.getElementById("SelectBarangay");
-//             var existingOption = Array.from(barangaySelect.options).find(option => option.value === newBarangayName);
-
-//             if (!existingOption) {
-//                 // Add new barangay to the dropdown
-//                 var newOption = document.createElement("option");
-//                 newOption.text = newBarangayName;
-//                 newOption.value = newBarangayName;
-//                 barangaySelect.appendChild(newOption);
-
-//                 // Set the new barangay as selected
-//                 barangaySelect.value = newBarangayName;
-
-//                 // Close the modal after adding the barangay
-//                 $('#newBarangayModal').modal('hide');
-//             } else {
-//                 alert("Barangay already exists.");
-//             }
-//         } else {
-//             alert("Please enter a barangay name.");
-//         }
-//     });
-
-//     // Clear input when modal closes
-//     $('#newBarangayModal').on('hidden.bs.modal', function () {
-//         $('#newBarangayName').val('');
-//     });
-
-//     // Modal to add new organization
-//     var saveButton = document.getElementById('addNewOrganization');
-//     var organizationNameInput = document.getElementById('organizationName');
-//     var errorMessage = document.getElementById('error-message');
-//     var organizationSelect = document.getElementById("SelectOrganization");
-
-//     saveButton.addEventListener('click', function () {
-//         var newOrganizationName = organizationNameInput.value.trim();
-
-//         if (newOrganizationName) {
-//             var existingOption = Array.from(organizationSelect.options).find(option => option.value === newOrganizationName);
-
-//             if (!existingOption) {
-//                 // Add new organization to the dropdown
-//                 var newOption = document.createElement("option");
-//                 newOption.text = newOrganizationName;
-//                 newOption.value = newOrganizationName;
-//                 organizationSelect.appendChild(newOption);
-
-//                 // Set the new organization as selected
-//                 organizationSelect.value = newOrganizationName;
-
-//                 // Clear input and error message
-//                 organizationNameInput.value = '';
-//                 errorMessage.classList.add('d-none');
-
-//                 // Close modal
-//                 var modal = bootstrap.Modal.getInstance(document.getElementById('newOrganizationModal'));
-//                 modal.hide();
-//             } else {
-//                 alert("Organization already exists.");
-//             }
-//         } else {
-//             // Show error message
-//             errorMessage.classList.remove('d-none');
-//         }
-//     });
-
-//     // Clear error message on input change
-//     organizationNameInput.addEventListener('input', function () {
-//         if (organizationNameInput.value.trim()) {
-//             errorMessage.classList.add('d-none');
-//         }
-//     });
-
-//     // Attach event listeners for removal buttons
-//     $('#removeBarangay').click(removeBarangay);
-//     $('#removeOrganization').click(removeOrganization);
-
-//     // Call population functions
-//     var agriDistrict = '{{ $agri_district }}'; // Ensure this is dynamically set
-//     populateBarangays(agriDistrict);
-//     populateOrganizations(agriDistrict);
-// });
 $(document).ready(function() {
-    // Function to fetch AgriDistricts
-    function fetchAgriDistricts() {
+    function populateBarangays(agriDistrict) {
+        var barangaySelect = document.getElementById("SelectBarangay");
+
+        // Clear previous options
+        barangaySelect.innerHTML = '';
+
+        // AJAX call to get barangays
         $.ajax({
-            url: '/admin-view-Farmers-survey-form', // Route for fetching AgriDistricts
+            url: '/admin-view-Farmers-survey-form',
             method: 'GET',
-            data: { type: 'districts' }, // Request districts
+            data: { district: agriDistrict, type: 'barangays' },
             success: function(response) {
-                console.log('Received AgriDistricts data:', response);
+                console.log('Barangays Response:', response);
 
-                if (response.error) {
-                    console.error('Error fetching AgriDistricts:', response.error);
-                    return;
-                }
-
-                if (typeof response === 'object' && Object.keys(response).length > 0) {
-                    $('#districtSelect').empty().append('<option value="" disabled selected>Select AgriDistrict</option>');
-
-                    $.each(response, function(id, district) {
-                        $('#districtSelect').append(new Option(district, id));
+                if (response.length > 0) {
+                    response.forEach(function(barangay) {
+                        var option = document.createElement("option");
+                        option.text = barangay.barangay_name;
+                        option.value = barangay.barangay_name;
+                        barangaySelect.appendChild(option);
                     });
                 } else {
-                    console.warn('No AgriDistrict data received or data is empty.');
+                    var noOption = document.createElement("option");
+                    noOption.text = "No barangays found";
+                    noOption.disabled = true;
+                    barangaySelect.appendChild(noOption);
                 }
             },
-            error: function(xhr) {
-                console.error('AJAX request failed. Status:', xhr.status, 'Response:', xhr.responseText);
+            error: function(xhr, status, error) {
+                console.log("Error fetching barangays:", error);
             }
         });
     }
 
-    // Function to fetch Barangays based on selected AgriDistrict
-    function fetchBarangays(districtId, selectElement) {
+    function populateOrganizations(agriDistrict) {
+        var organizationSelect = document.getElementById("SelectOrganization");
+
+        // Clear previous options
+        organizationSelect.innerHTML = '';
+
+        // AJAX call to get organizations
         $.ajax({
             url: '/admin-view-Farmers-survey-form',
             method: 'GET',
-            data: { type: 'barangays', district: districtId },
+            data: { district: agriDistrict, type: 'organizations' },
             success: function(response) {
-                console.log('Received Barangays data:', response);
+                console.log('Organizations Response:', response);
 
-                if (response.error) {
-                    console.error('Error fetching Barangays:', response.error);
-                    return;
+                if (response.length > 0) {
+                    response.forEach(function(organization) {
+                        var option = document.createElement("option");
+                        option.text = organization.organization_name;
+                        option.value = organization.organization_name;
+                        organizationSelect.appendChild(option);
+                    });
+                } else {
+                    var noOption = document.createElement("option");
+                    noOption.text = "No organizations found";
+                    noOption.disabled = true;
+                    organizationSelect.appendChild(noOption);
                 }
-
-                const $barangaySelect = $(selectElement).closest('.user-details').find('.barangaySelect');
-                $barangaySelect.empty();
-                $barangaySelect.append('<option value="" disabled selected>Select Barangay</option>');
-                $barangaySelect.append('<option value="add">Add New Barangay...</option>');
-
-                $.each(response, function(id, barangay) {
-                    $barangaySelect.append(new Option(barangay, id));
-                });
             },
-            error: function(xhr) {
-                console.error('AJAX request failed. Status:', xhr.status, 'Response:', xhr.responseText);
+            error: function(xhr, status, error) {
+                console.log("Error fetching organizations:", error);
             }
         });
     }
 
-    // Function to fetch Organizations based on selected AgriDistrict
-    function fetchOrganizations(districtId, selectElement) {
-        $.ajax({
-            url: '/admin-view-Farmers-survey-form',
-            method: 'GET',
-            data: { type: 'organizations', district: districtId },
-            success: function(response) {
-                console.log('Received Organizations data:', response);
+    function removeBarangay() {
+        var barangaySelect = document.getElementById("SelectBarangay");
+        var selectedValue = barangaySelect.value;
 
-                if (response.error) {
-                    console.error('Error fetching Organizations:', response.error);
-                    return;
-                }
-
-                const $organizationSelect = $(selectElement).closest('.user-details').find('.organizationSelect');
-                $organizationSelect.empty();
-                $organizationSelect.append('<option value="" disabled selected>Select Organization</option>');
-                $organizationSelect.append('<option value="add">Add New Organization...</option>');
-
-                $.each(response, function(id, organization) {
-                    $organizationSelect.append(new Option(organization, id));
-                });
-            },
-            error: function(xhr) {
-                console.error('AJAX request failed. Status:', xhr.status, 'Response:', xhr.responseText);
+        if (selectedValue) {
+            var confirmRemove = confirm("Are you sure you want to remove this barangay?");
+            if (confirmRemove) {
+                var selectedIndex = barangaySelect.selectedIndex;
+                barangaySelect.remove(selectedIndex);
             }
-        });
+        }
     }
 
-    // Fetch AgriDistricts on page load
-    fetchAgriDistricts();
+    function removeOrganization() {
+        var organizationSelect = document.getElementById("SelectOrganization");
+        var selectedValue = organizationSelect.value;
 
-    // Bind change event to AgriDistrict dropdown
-    $(document).on('change', '#districtSelect', function() {
-        const districtId = $(this).val();
-        if (districtId) {
-            fetchBarangays(districtId, this); // Fetch barangays for the selected district
-            fetchOrganizations(districtId, this); // Fetch organizations for the selected district
+        if (selectedValue) {
+            var confirmRemove = confirm("Are you sure you want to remove this organization?");
+            if (confirmRemove) {
+                var selectedIndex = organizationSelect.selectedIndex;
+                organizationSelect.remove(selectedIndex);
+            }
+        }
+    }
+
+    // Modal to add new barangay
+    $('#saveNewBarangay').click(function() {
+        var newBarangayName = $('#newBarangayName').val(); // Get the input value from modal
+        if (newBarangayName) {
+            var barangaySelect = document.getElementById("SelectBarangay");
+            var existingOption = Array.from(barangaySelect.options).find(option => option.value === newBarangayName);
+
+            if (!existingOption) {
+                // Add new barangay to the dropdown
+                var newOption = document.createElement("option");
+                newOption.text = newBarangayName;
+                newOption.value = newBarangayName;
+                barangaySelect.appendChild(newOption);
+
+                // Set the new barangay as selected
+                barangaySelect.value = newBarangayName;
+
+                // Close the modal after adding the barangay
+                $('#newBarangayModal').modal('hide');
+            } else {
+                alert("Barangay already exists.");
+            }
         } else {
-            $(this).closest('.user-details').find('.barangaySelect, .organizationSelect').empty()
-                .append('<option value="" disabled selected>Select Barangay</option>')
-                .append('<option value="" disabled selected>Select Organization</option>');
+            alert("Please enter a barangay name.");
         }
     });
 
-    // Bind change event to Barangay dropdowns to add new barangay
-    $(document).on('change', '.barangaySelect', function() {
-        const barangaySelect = this;
-        if (barangaySelect.value === "add") {
-            const newBarangay = prompt("Please enter the name of the barangay:");
-            if (newBarangay) {
-                const existingOption = Array.from(barangaySelect.options).find(option => option.value === newBarangay);
-                if (!existingOption) {
-                    const newOption = document.createElement("option");
-                    newOption.text = newBarangay;
-                    newOption.value = newBarangay;
-                    barangaySelect.appendChild(newOption);
-                    barangaySelect.value = newBarangay;
-                }
+    // Clear input when modal closes
+    $('#newBarangayModal').on('hidden.bs.modal', function () {
+        $('#newBarangayName').val('');
+    });
+
+    // Modal to add new organization
+    var saveButton = document.getElementById('addNewOrganization');
+    var organizationNameInput = document.getElementById('organizationName');
+    var errorMessage = document.getElementById('error-message');
+    var organizationSelect = document.getElementById("SelectOrganization");
+
+    saveButton.addEventListener('click', function () {
+        var newOrganizationName = organizationNameInput.value.trim();
+
+        if (newOrganizationName) {
+            var existingOption = Array.from(organizationSelect.options).find(option => option.value === newOrganizationName);
+
+            if (!existingOption) {
+                // Add new organization to the dropdown
+                var newOption = document.createElement("option");
+                newOption.text = newOrganizationName;
+                newOption.value = newOrganizationName;
+                organizationSelect.appendChild(newOption);
+
+                // Set the new organization as selected
+                organizationSelect.value = newOrganizationName;
+
+                // Clear input and error message
+                organizationNameInput.value = '';
+                errorMessage.classList.add('d-none');
+
+                // Close modal
+                var modal = bootstrap.Modal.getInstance(document.getElementById('newOrganizationModal'));
+                modal.hide();
+            } else {
+                alert("Organization already exists.");
             }
+        } else {
+            // Show error message
+            errorMessage.classList.remove('d-none');
         }
     });
 
-    // Bind change event to Organization dropdowns to add new organization
-    $(document).on('change', '.organizationSelect', function() {
-        const organizationSelect = this;
-        if (organizationSelect.value === "add") {
-            const newOrganization = prompt("Please enter the name of the organization:");
-            if (newOrganization) {
-                const existingOption = Array.from(organizationSelect.options).find(option => option.value === newOrganization);
-                if (!existingOption) {
-                    const newOption = document.createElement("option");
-                    newOption.text = newOrganization;
-                    newOption.value = newOrganization;
-                    organizationSelect.appendChild(newOption);
-                    organizationSelect.value = newOrganization;
-                }
-            }
+    // Clear error message on input change
+    organizationNameInput.addEventListener('input', function () {
+        if (organizationNameInput.value.trim()) {
+            errorMessage.classList.add('d-none');
         }
     });
+
+    // Attach event listeners for removal buttons
+    $('#removeBarangay').click(removeBarangay);
+    $('#removeOrganization').click(removeOrganization);
+
+    // Call population functions
+    var agriDistrict = '{{ $agri_district }}'; // Ensure this is dynamically set
+    populateBarangays(agriDistrict);
+    populateOrganizations(agriDistrict);
 });
 
 
@@ -4126,7 +3699,11 @@ cost_per_ha.addEventListener('input', calculateTotalFertilizerCost);
 calculateTotalFertilizerCost();
   </script>
     
-    
+    <script>
+        function goBack() {
+            window.history.back(); // This will go back to the previous page in the browser history
+        }
+        </script> 
     
     <script>
         // To show the modal
@@ -4154,38 +3731,5 @@ calculateTotalFertilizerCost();
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     
-<script>
-    document.getElementById('addCropButton').addEventListener('click', function() {
-        var cropProfilesSection = document.getElementById('cropProfiles');
-    
-        // Scroll to the cropProfiles section
-        cropProfilesSection.scrollIntoView({ behavior: 'smooth' });
-    
-        // Optional: Open the crop section if it's inside an accordion or collapsible
-        // Assuming you are using Bootstrap accordion
-        var collapseElement = document.getElementById('cropAccordion'); // Update with the actual ID
-        if (collapseElement) {
-            var bsCollapse = new bootstrap.Collapse(collapseElement, { toggle: true });
-        }
-    });
-    </script>
 
-<script>
-    // Example for initializing jQuery UI Datepicker
-    $(function() {
-        $("#datepicker").datepicker({
-            dateFormat: "yy-mm-dd" // Adjust format as needed
-        });
-    });
-
-    // Example for showing validation errors
-    function showDateOfBirthError(message) {
-        $("#date_of_birth_error").text(message).show();
-    }
-
-    // Example for hiding validation errors
-    function hideDateOfBirthError() {
-        $("#date_of_birth_error").hide();
-    }
-</script>
   @endsection

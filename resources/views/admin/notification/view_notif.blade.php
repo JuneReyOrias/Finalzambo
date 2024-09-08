@@ -33,24 +33,22 @@
                             
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <div class="input-group mb-3 me-md-1">
-                                    <h5 for="Seed" class="me-3">a. Add Barangay</h5>
+                                    <h5 for="Seed" class="me-3">Notification</h5>
                                 </div>
                             
                                 <div class="me-md-1">
-                                    <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addBarangayModal">
-                                        Add
-                                    </button>
+                                    <a href="{{ route('admin.notification.add_notif') }}" class="btn btn-success">Add</a>
+
                                 </div>
                             
-                                <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET" class="me-2">
+                                <form id="farmProfileSearchForm" action="" method="GET" class="me-2">
                                     <div class="input-group">
                                         <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
                                         <button class="btn btn-outline-success" type="submit">Search</button>
                                     </div>
                                 </form>
                             
-                                <form id="showAllForm" action="{{ route('polygon.polygons_show') }}" method="GET">
+                                <form id="showAllForm" action="" method="GET">
                                     <button class="btn btn-outline-success" type="submit">All</button>
                                 </form>
                             </div>
@@ -151,48 +149,27 @@
                                     <thead class="thead-light" >
                                         <tr>
                                             <th>#</th>
-                                            <th>agri-district</th>
-                                            <th>Barangay name</th>
+                                            <th>sender</th>
+                                            <th>Reciever</th>
+                                            <th>Message</th>
                                      
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- @if($polygons->count() > 0)
-                                        @foreach($polygons as $seed)
+                                        {{-- @if($polygons->count() > 0) --}}
+                                        @foreach($notif as $message)
                                             <tr class="table-light">
                                                  
-                                                 <td>{{$seed->id}}</td>
-                                                 <td>{{$seed->agri_districts_id }}</td>
-                                                 <td>{{$seed->poly_name }}</td>
-                                                 <td>{{$seed->strokecolor }}</td>
-                                                 <td>{{$seed->verone_latitude }}</td>
-                                                <td>{{$seed->verone_longitude}}</td>
-                                                <td>{{$seed->vertwo_latitude }}</td>
-                                                <td>{{$seed->vertwo_longitude}}</td>
-                                                <td>{{$seed->verthree_latitude }}</td>
-                                                <td>{{$seed->verthree_longitude }}</td>
-                        
-                                                <td>{{$seed->vertfour_latitude }}</td>
-                                                <td>{{$seed->vertfour_longitude}}</td>
-                                                <td>{{$seed->verfive_latitude }}</td>
-                                                <td>{{$seed->verfive_longitude}}</td>
-                                                <td>{{$seed->versix_latitude }}</td>
-                                                <td>{{$seed->versix_longitude}}</td>
-                                                <td>{{$seed->verseven_latitude }}</td>
-                                                <td>{{$seed->verseven_longitude}}</td>
-                                                <td>{{$seed->vereight_latitude }}</td>
-                                                <td>{{$seed->verteight_longitude}}</td>
-                                                <td>{{$seed->area}}</td>
-                                                <td>{{$seed->perimeter}}</td>
-                                                
-                                                
-                          
+                                                 <td>{{$message->id}}</td>
+                                                 <td>{{$message->sender_id }}</td>
+                                                 <td>{{$message->receiver_id }}</td>
+                                                 <td>{{$message->message }}</td>
                                                 <td>
                                                    
-                                                     <a href="{{route('polygon.polygons_edit',  $seed->id)}}" title="Edit Student"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
+                                                     <a href="{{route('admin.notification.edit_notif',  $message->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
                                         
-                                                     <form  action="{{ route('polygon.delete', $seed->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
+                                                     <form  action="{{ route('admin.notification.delete', $message->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
                                                     @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-danger btn-sm" title="Delete Student" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
@@ -201,24 +178,24 @@
                                                 </td>
                                         </tr>
                                         @endforeach
-                                        @else
-                                        <tr>
-                                            <td class="text-center" colspan="5">Polygon Cost is empty</td>
-                                        </tr>
-                                        @endif --}}
+                                       
+                                        {{-- <tr>
+                                            <td class="text-center" colspan="5">Notification is empty</td>
+                                        </tr> --}}
+                                     
                                     </tbody>
                                 </table>
                             </div>
                              <!-- Pagination links -->
-                             {{-- <ul class="pagination">
-                                <li><a href="{{ $polygons->previousPageUrl() }}">Previous</a></li>
-                                @foreach ($polygons->getUrlRange(1,$polygons->lastPage()) as $page => $url)
-                                    <li class="{{ $page == $polygons->currentPage() ? 'active' : '' }}">
+                             <ul class="pagination">
+                                <li><a href="{{ $notif->previousPageUrl() }}">Previous</a></li>
+                                @foreach ($notif->getUrlRange(1,$notif->lastPage()) as $page => $url)
+                                    <li class="{{ $page == $notif->currentPage() ? 'active' : '' }}">
                                         <a href="{{ $url }}">{{ $page }}</a>
                                     </li>
                                 @endforeach
-                                <li><a href="{{ $polygons->nextPageUrl() }}">Next</a></li>
-                            </ul> --}}
+                                <li><a href="{{ $notif->nextPageUrl() }}">Next</a></li>
+                            </ul>
                         </div>
 
 

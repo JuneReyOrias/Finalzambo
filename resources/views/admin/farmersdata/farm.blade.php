@@ -50,13 +50,24 @@
                                          <i class="fa fa-arrow-left" aria-hidden="true"></i>
                                   
                                  </a>
-                                <div class="input-group mb-3">
-                                    @foreach ($farmData as $farmDatas)
-                                    <h5 for="personainfo">Farmer: {{$farmDatas->personalinformation->first_name.' '.$farmDatas->personalinformation->last_name}}</h5>
-                                    @endforeach
-
+                                 <div class="input-group mb-3">
+                                    <!-- Check if $farmData is not empty -->
+                                    @if($farmData->isNotEmpty())
+                                        @foreach($farmData as $farm)
+                                            <!-- Check if personalInformation relation is loaded -->
+                                            @if($farm->personalInformation)
+                                                <h5 for="personainfo">
+                                                    Farmer: {{ $farm->personalInformation->first_name . ' ' . $farm->personalInformation->last_name }}
+                                                </h5>
+                                            @else
+                                                <h5 for="personainfo">Farmer information not available.</h5>
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        <h5 for="personainfo">No farm data available.</h5>
+                                    @endif
                                 </div>
-                                <a href="{{route('farm_profile.farm_index')}}" title="Add farm">
+                                <a href="{{route('farm_profile.farm_index',$personalinfos->id)}}" title="Add farm">
                                     <button class="btn btn-success btn-sm">
                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                     </button>

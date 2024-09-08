@@ -45,11 +45,12 @@
                         
                             
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <a href="{{ route('admin.farmersdata.genfarmers') }}" title="back">
-                                    
-                                         <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                                  
-                                 </a>
+                               
+
+                                <button type="button" class="btn" onclick="goBack()" title="Back">
+                                    <i class="fa fa-arrow-left text-primary" aria-hidden="true"></i>
+                                </button>
+                                
                                  <div class="input-group mb-3">
                                     <h5 for="personainfo"></h5>
                                 </div>
@@ -107,23 +108,25 @@
                            
 
                             </div>
-                            <form method="GET" action="{{ route('admin.farmersdata.crop', $farmData->id) }}">
+                         
                                 <div class="user-details">
-      
-                                    <div class="input-box">
-                                        <select lass="form-control light-gray-placeholder" name="crop_name" id="selectCrop" onchange="this.form.submit()">
-                                            
-                                            <option value="All" {{ request('crop_name') == 'All' ? 'selected' : '' }}>Crop Name</option>
-                                            @foreach($cropData->pluck('crop_name')->unique() as $cropName)
+                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                        <a href="{{route('admin.farmersdata.genfarmers')}}" title="back">
+        
+                                         </a>
+                                      
+                                            <div class="input-group mb-3">
+        
+                                                <h5 for="personainfo">Crop: {{ $productionData->first()->crop->crop_name ?? 'N/A' }}</h5>
+                                             
                                            
-                                                <option value="{{ $cropName }}" {{ request('crop_name') == $cropName ? 'selected' : '' }}>
-                                                    {{ $cropName }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                        </div>
+                                   
+        
+                                    </div
+                                  >
                                 </div>
-                            </form>
+                       
                             
                             <div class="table-responsive">
                                 <table class="table table-bordered datatable">
@@ -310,11 +313,9 @@
                         <label for="Fixed">Fixed Cost</label>
                         <div class="tab">
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <a href="{{ route('admin.farmersdata.genfarmers') }}" title="back">
-                                    
-                                         <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                                  
-                                 </a>
+                                <button type="button" class="btn" onclick="goBack()" title="Back">
+                                    <i class="fa fa-arrow-left text-primary" aria-hidden="true"></i>
+                                </button>
                                  <div class="input-group mb-3">
                                     <h5 for="personainfo"></h5>
                                 </div>
@@ -372,23 +373,23 @@
                            
 
                             </div>
-                            <form method="GET" action="{{ route('admin.farmersdata.crop', $farmData->id) }}">
-                                <div class="user-details">
-      
-                                    <div class="input-box">
-                                        <select lass="form-control light-gray-placeholder" name="crop_name" id="selectCrop" onchange="this.form.submit()">
-                                            
-                                            <option value="All" {{ request('crop_name') == 'All' ? 'selected' : '' }}>Crop Name</option>
-                                            @foreach($cropData->pluck('crop_name')->unique() as $cropName)
-                                           
-                                                <option value="{{ $cropName }}" {{ request('crop_name') == $cropName ? 'selected' : '' }}>
-                                                    {{ $cropName }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                            <div class="user-details">
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <a href="{{route('admin.farmersdata.genfarmers')}}" title="back">
+    
+                                     </a>
+                                  
+                                        <div class="input-group mb-3">
+    
+                                            <h5 for="personainfo">Crop: {{ $productionData->first()->crop->crop_name ?? 'N/A' }}</h5>
+                                         
+                                       
                                     </div>
-                                </div>
-                            </form>
+                               
+    
+                                </div
+                              >
+                            </div>
                             <div class="table-responsive">
                                 <table class="table table-bordered datatable">
                                     <!-- Table content here -->
@@ -487,11 +488,9 @@
                         <label for="machine">Machineries Cost</label>
                         <div class="tab">
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <a href="{{ route('admin.farmersdata.genfarmers') }}" title="back">
-                                    
-                                         <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                                  
-                                 </a>
+                                <button type="button" class="btn" onclick="goBack()" title="Back">
+                                    <i class="fa fa-arrow-left text-primary" aria-hidden="true"></i>
+                                </button>
                                  <div class="input-group mb-3">
                                     <h5 for="personainfo"></h5>
                                 </div>
@@ -549,23 +548,23 @@
                            
 
                             </div>
-                            <form method="GET" action="{{ route('admin.farmersdata.crop', $farmData->id) }}">
-                                <div class="user-details">
-      
-                                    <div class="input-box">
-                                        <select lass="form-control light-gray-placeholder" name="crop_name" id="selectCrop" onchange="this.form.submit()">
-                                            
-                                            <option value="All" {{ request('crop_name') == 'All' ? 'selected' : '' }}>Crop Name</option>
-                                            @foreach($cropData->pluck('crop_name')->unique() as $cropName)
-                                           
-                                                <option value="{{ $cropName }}" {{ request('crop_name') == $cropName ? 'selected' : '' }}>
-                                                    {{ $cropName }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                            <div class="user-details">
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <a href="{{route('admin.farmersdata.genfarmers')}}" title="back">
+    
+                                     </a>
+                                  
+                                        <div class="input-group mb-3">
+    
+                                            <h5 for="personainfo">Crop: {{ $productionData->first()->crop->crop_name ?? 'N/A' }}</h5>
+                                         
+                                       
                                     </div>
-                                </div>
-                            </form>
+                               
+    
+                                </div
+                              >
+                            </div>
                             <div class="table-responsive">
                                 <table class="table table-bordered datatable">
                                     <!-- Table content here -->
@@ -750,11 +749,10 @@
                         <label for="variable">Variable Cost</label>
                         <div class="tab">
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <a href="{{ route('admin.farmersdata.genfarmers') }}" title="back">
-                                    
-                                         <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                                  
-                                 </a>
+                                <button type="button" class="btn" onclick="goBack()" title="Back">
+                                    <i class="fa fa-arrow-left text-primary" aria-hidden="true"></i>
+                                </button>
+                                
                                  <div class="input-group mb-3">
                                     <h5 for="personainfo"></h5>
                                 </div>
@@ -783,9 +781,17 @@
                                   
                                  </a>
                                  <div class="input-group mb-3">
-                                    <h5 for="personainfo">Farmer: {{$farmData->personalinformation->first_name.' '.$farmData->personalinformation->last_name}}</h5>
+                                    @if($personalInfos->isNotEmpty())
+                                        @foreach($personalInfos as $personalInfo)
+                                            <h5 for="personainfo">
+                                                Farmer: {{ $personalInfo->first_name . ' ' . $personalInfo->last_name }}
+                                            </h5>
+                                        @endforeach
+                                    @else
+                                        <h5 for="personainfo">No personal information available.</h5>
+                                    @endif
                                 </div>
-                                   
+                                
                               
 {{--                             
                                 <form id="farmProfileSearchForm" action="{{ route('admin.farmersdata.genfarmers') }}" method="GET">
@@ -812,23 +818,23 @@
                            
 
                             </div>
-                            <form method="GET" action="{{ route('admin.farmersdata.crop', $farmData->id) }}">
-                                <div class="user-details">
-      
-                                    <div class="input-box">
-                                        <select lass="form-control light-gray-placeholder" name="crop_name" id="selectCrop" onchange="this.form.submit()">
-                                            
-                                            <option value="All" {{ request('crop_name') == 'All' ? 'selected' : '' }}>Crop Name</option>
-                                            @foreach($cropData->pluck('crop_name')->unique() as $cropName)
-                                           
-                                                <option value="{{ $cropName }}" {{ request('crop_name') == $cropName ? 'selected' : '' }}>
-                                                    {{ $cropName }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                            <div class="user-details">
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <a href="{{route('admin.farmersdata.genfarmers')}}" title="back">
+    
+                                     </a>
+                                  
+                                        <div class="input-group mb-3">
+    
+                                            <h5 for="personainfo">Crop: {{ $productionData->first()->crop->crop_name ?? 'N/A' }}</h5>
+                                         
+                                       
                                     </div>
-                                </div>
-                            </form>
+                               
+    
+                                </div
+                              >
+                            </div>
                             <div class="table-responsive">
                                 <table class="table table-bordered datatable">
                                     <!-- Table content here -->
@@ -980,4 +986,10 @@
         });
     });
   </script>
+   <script>
+    function goBack() {
+        window.history.back(); // This will go back to the previous page in the browser history
+    }
+    </script>  
+
 @endsection

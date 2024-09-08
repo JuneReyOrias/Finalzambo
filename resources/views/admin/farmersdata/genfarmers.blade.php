@@ -43,6 +43,11 @@
                                 <div class="input-group mb-3">
                                     <h5 for="personainfo">I.Personal Information</h5>
                                 </div>
+                                <a href="{{route("admin.farmersdata.samplefolder.farm_edit")}}" title="Add farm">
+                                    <button class="btn btn-success btn-sm">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                    </button>
+                                </a>
                                 <form id="farmProfileSearchForm" action="{{ route('admin.farmersdata.genfarmers') }}" method="GET">
                                     <div class="input-group mb-3">
                                         <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">

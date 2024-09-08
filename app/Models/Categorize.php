@@ -7,15 +7,27 @@ use Illuminate\Database\Eloquent\Model;
 
 class Categorize extends Model
 {
+
+    //crop variety model
     use HasFactory;
     protected $table="categorizes";
     protected $fillable=[
         'users_id',
         'agri_districts_id',
-        'cat_name',
+        'crop_categorys_id',
+        'type_of_variety',
         'cat_descript',
         
     ];
+    public function crop()
+    {
+        return $this->belongsTo(CropCategory::class);
+    }
+   
+    public function cropvariety()
+    {
+        return $this->belongsTo(Seed::class);
+    }
     public function user()
     {
         return $this->belongsTo(User::class,'user_id','id' )->withDefault();

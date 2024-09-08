@@ -47,7 +47,10 @@ class PersonalInformations extends Model
       'image',
       
     ];
-
+    public function farmProfile()
+    {
+        return $this->hasMany(FarmProfile::class, 'personal_informations_id');
+    }
          // relationship  machineries used farm profiles
  public function lastProduction()
  {

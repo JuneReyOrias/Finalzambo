@@ -49,7 +49,7 @@ class RegisteredUserController extends Controller
              
              return redirect('/login')->with('message', 'Registered successfully');
          } catch(\Exception $ex) {
-             dd($ex);
+            //  dd($ex);
              return redirect('/register')->with('message', 'Something went wrong');
          }
      }

@@ -48,11 +48,11 @@
           </a>
           <div class="collapse" id="farmersData">
             <ul class="nav sub-menu" style="padding-left: 70px;">
-              <li class="nav-item">
+              {{-- <li class="nav-item">
                 <a href="{{route('personalinfo.create')}}" class="nav-link">Farmers</a>
-              </li>
+              </li> --}}
               <li class="nav-item">
-                <a href="{{route('admin.farmersdata.genfarmers')}}" class="nav-link">General Reports</a>
+                <a href="{{route('admin.farmersdata.genfarmers')}}" class="nav-link">Farmers</a>
               </li>
              
             </ul>
@@ -69,11 +69,11 @@
           <div class="collapse" id="Forms">
             <ul class="nav sub-menu"  style="padding-left: 70px;">
 
-              <li class="nav-item">
+              {{-- <li class="nav-item">
                 <a href="{{route('admin.corn.forms.corn_form')}}" class="nav-link">Survey Form</a>
-              </li>
+              </li> --}}
               <li class="nav-item">
-                <a href="{{route('admin.farmersdata.samplefolder.farm_edit')}}" class="nav-link">Sample Folder</a>
+                <a href="{{route('admin.farmersdata.samplefolder.farm_edit')}}" class="nav-link">Survey Form</a>
               </li>
 
 
@@ -404,40 +404,9 @@
           <div class="collapse" id="icons">
             <ul class="nav sub-menu"style="padding-left:70px;">
               <li class="nav-item">
-                <a href="{{route('polygon.polygons_show')}}" class="nav-link">Rice Boarders</a>
+                <a href="{{route('polygon.polygons_show')}}" class="nav-link">Crop Setting</a>
               </li>
-              {{-- <li class="nav-item">
-                <a href="{{route('parcels.show')}}" class="nav-link">Parcellary Boarders</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">Ricefield Boarders</a>
-              </li> --}}
-              {{-- <li class="nav-item">
-                <a href="{{route('agri_districts.insertdata')}}" class="nav-link">Agri-Districts</a>
-              </li> --}}
-              <li class="nav-item">
-                <a href="{{route('categorize.index')}}" class="nav-link">Category</a>
-              </li>
-              {{-- <li class="nav-item">
-                <a href="{{route('crop_category.crop_create')}}" class="nav-link">Crop Category Create</a>
-              </li>      
-               <li class="nav-item">
-                <a href="{{route('fisheries_category.fisheries_create')}}" class="nav-link">Fisheries Category Create</a>
-              </li>    
-               
-              <li class="nav-item">
-                <a href="{{route('livestock_category.livestock_create')}}" class="nav-link">Livestocks Category Create</a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('crops.create')}}" class="nav-link">Crop Create</a>
-              </li>          
-               <li class="nav-item">
-                <a href="{{route('fish.create')}}" class="nav-link">Fisheries  Create</a>
-              </li>        
-               <li class="nav-item">
-                <a href="{{route('livestocks.create')}}" class="nav-link">Livestocks Create</a>
-              </li>  --}}
-             
+            
             </ul>
           </div>
         </li>
@@ -494,7 +463,7 @@
           <div class="collapse" id="homepage">
             <ul class="nav sub-menu"style="padding-left:70px;">
               <li class="nav-item">
-                <a href="{{route('landing-page.add_homepage')}}" class="nav-link">Homepage Tools</a>
+                <a href="{{route('landing-page.view_homepage')}}" class="nav-link">Homepage Tools</a>
               </li>
            
              
@@ -525,7 +494,7 @@
             <i class="link-arrow" data-feather="chevron-down"></i>
           </a>
           <div class="collapse" id="general-pages">
-            <ul class="nav sub-menu"style="padding-left:12px;">
+            <ul class="nav sub-menu"style="padding-left:70px;">
               <li class="nav-item">
                 <a href="{{route('admin.create_account.display_users')}}" class="nav-link">Users</a>
               </li>

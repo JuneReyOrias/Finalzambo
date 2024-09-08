@@ -401,6 +401,34 @@
                       <option value="N/A" {{ old('pwd_id_no') == 'N/A' ? 'selected' : '' }}>N/A</option>
                       
                       
+
+
+
+
+
+
+
+
+
+
+                      
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     
                     </select>
                 </div>

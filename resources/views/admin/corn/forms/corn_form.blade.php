@@ -285,11 +285,11 @@
             <div class="card-body">
               
               <div class="content">
-                <form id="multiStepForm" action{{url('CornSave')}}method="POST">
+                <form id="form"method="POST">
                     @csrf
         
                     <!-- Step 1: Personal Information -->
-                    <div class="step active" id="step1">
+                    <div class="step active" id="step1"class="farm-info">
                         <h2>Step 1: Personal Information</h2>
                         <br>
                         <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
@@ -337,7 +337,7 @@
         
                         <button type="button" class="btn btn-primary" onclick="nextStep()">Next</button>
                     </div>
-                    <div class="step" id="step1.2">
+                    <div class="step" id="step1.2"class="farm-info">
                         <h2>Step 1: Personal Information</h2><br>
                         <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
                 <h3>b. Contact & Demographic Info</h3>
@@ -582,7 +582,7 @@
                         <button type="button" class="btn btn-primary" onclick="previousStep()">Previous</button>
                         <button type="button" class="btn btn-primary" onclick="nextStep()">Next</button>
                     </div>
-                    <div class="step" id="step1.3">
+                    <div class="step farmer-info" id="step1.3">
                         <h2>Step 1: Personal Information</h2><br>
                         <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
                         <h3>c. Association Info</h3>
@@ -710,7 +710,7 @@
                         <button type="button" class="btn btn-primary" onclick="nextStep()">Next</button>
                     </div>
                     <!-- Step 2: Farm Profile -->
-                    <div class="step" id="step2">
+                    <div class="step" id="step2" class="farm-info">
                         <h2>Step 2: Farm Profile</h2>
                         <div id="farmProfiles">
                             <!-- Sample Farm Profile -->
@@ -1609,7 +1609,86 @@
     </div>
 
 
+<script>
+// Assuming you have a form with the ID 'form'
+const form = $('#form');
 
+console.log(2)
+
+// Bind the submit event to the form
+form.on('submit', function(event) {
+    event.preventDefault(); // Prevent the form from reloading the page
+  
+
+        // Gather farmer info from the form inputs
+        // let farmerInfo = {
+        //     'name': $('input[name="personal_in"]').val(),
+          
+      
+        // };
+
+        // Gather farm info from the form inputs
+   // Gather farm info from the form inputs
+let farmInfo = {
+    'tenurial_status': $('input[name="tenurial_status"]').val(),
+    'farmer_id': $('input[name="personal_informations_id"]').val()
+};
+
+console.log("sasa")
+// Log the object to verify its contents
+console.log(farmInfo);
+
+
+            // Gather crop info from the form inputs
+            let cropInfo = [];
+
+$('.crop input[name="crop[]"]').each(function() {
+    cropInfo.push({
+        crop_name: $(this).val()
+    });
+});
+// console.log("Farmer Info:", farmerInfo); // Display the gathered farmer info in the console
+// console.log("Farm Info:", farmInfo); // Display the gathered farm info in the console
+// console.log("Crops entered so far:", cropInfo); // Display the gathered crops in the console
+// });
+
+    let dataobject = {
+        // 'farmer': farmerInfo, 
+        'farm': farmInfo,
+        'crops': cropInfo
+    }
+   // Log the entire data object to the console
+   console.log("Data Object:", dataobject);
+
+    const csrfToken = $('input[name="_token"]').attr('value');
+
+    //   Send the AJAX request
+    $.ajax({
+        url: '/admin-view-Farmers-samplefolder',
+        method: 'POST',
+        contentType: 'application/json', // Set content type for JSON
+        data: JSON.stringify(dataobject), // Attach the prepared data here
+        headers: {
+          'X-CSRF-TOKEN': csrfToken // Include the CSRF token in the headers
+        },
+        success: function(response) {
+
+         
+          console.log(response);
+
+
+
+        },
+        error: function(error) {
+          console.error('Error:', error.responseJSON.message);
+        }
+    });
+});
+
+
+
+
+</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>

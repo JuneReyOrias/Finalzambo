@@ -726,57 +726,7 @@
 			   apexBarChart.render();
 		   }
 		   // Monthly Sales Chart - RTL - END
-		   var riceProductionValue ={{ number_format($totalRiceProduction,2)}};
-		   // Cloud Storage Chart
-		   if ($('#storageChart').length) {
-			   var options = {
-				   chart: {
-					   height: 260,
-					   type: "radialBar"
-				   },
-				   series: [riceProductionValue],
-				   colors: [colors.success],
-				   plotOptions: {
-					   radialBar: {
-						   hollow: {
-							   margin: 15,
-							   size: "70%"
-						   },
-						   track: {
-							   show: true,
-							   background: colors.light,
-							   strokeWidth: '100%',
-							   opacity: 1,
-							   margin: 5,
-						   },
-						   dataLabels: {
-							   showOn: "always",
-							   name: {
-								   offsetY: -11,
-								   show: true,
-								   color: colors.success,
-								   fontSize: "13px"
-							   },
-							   value: {
-								   color: colors.success,
-								   fontSize: "30px",
-								   show: true
-							   }
-						   }
-					   }
-				   },
-				   fill: {
-					   opacity: 1
-				   },
-				   stroke: {
-					   lineCap: "round",
-				   },
-				   labels: ["Rice Production"]
-			   };
-	   
-			   var chart = new ApexCharts(document.querySelector("#storageChart"), options);
-			   chart.render();
-		   }
+
 		   // Cloud Storage Chart - END
 	   
 	   

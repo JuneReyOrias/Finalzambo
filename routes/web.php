@@ -55,9 +55,24 @@ use App\Models\AgriDistrict;
 // })->middleware(['auth', 'verified'])->name('dashboard'); 
 
 
-// view production
-Route::get('/admin-view-Farmers-samplefolder',[PersonalInformationsController ::class,'samplefolder'])->name('admin.farmersdata.samplefolder.farm_edit');
+// Crop Variety
+Route::get('/admin-add-crop-variety',[PolygonController ::class,'AddVariety'])->name('admin.variety.add_variety');
+Route::post('/admin-add-crop-variety',[PolygonController ::class,'SaveVariety']);
+Route::get('/admin-edit-crop-variety/{variety}',[PolygonController ::class,'editVariety'])->name('admin.variety.edit_variety');
+Route::post('/admin-edit-crop-variety/{variety}',[PolygonController ::class,'UpdateVariety']);
+Route::post('/admin-delete-crop-variety/{variety}',[PolygonController ::class,'DeleteVariety'])->name('admin.variety.delete');
 
+// view production
+Route::get('/admin-add-crop-farms/{farmData}',[FarmProfileController ::class,'cropsnewfarm'])->name('admin.farmersdata.cropsdata.add_crop');
+Route::post('/admin-add-crop-farms/{farmData}',[FarmProfileController ::class,'saveCropfarm']);
+Route::get('/admin-edit-crop-farms/{farmData}',[FarmProfileController ::class,'CropEdit'])->name('admin.farmersdata.cropsdata.edit_crops');
+Route::post('/admin-edit-crop-farms/{farmData}',[FarmProfileController ::class,'Updatecrop']);
+Route::get('/admin-delete-crop-farms/{farmData}',[FarmProfileController ::class,'Deletecropfarm'])->name('admin.farmersdata.cropsdata.edit_crops');
+
+// view production
+Route::get('/admin-view-Farmers-survey-form',[PersonalInformationsController ::class,'samplefolder'])->name('admin.farmersdata.samplefolder.farm_edit');
+Route::post('/admin-view-Farmers-survey-form',[PersonalInformationsController ::class,'test']);
+Route::get('/admin-edit-crop-farms/{farmData}',[FarmProfileController ::class,'CropEdit'])->name('admin.farmersdata.cropsdata.delete');
 
 
 
@@ -72,16 +87,32 @@ Route::get('/admin-view-Farmers-crop/{farmData}',[PersonalInformationsController
 Route::get('/admin-view-Farmers-farm/{personalinfos}',[PersonalInformationsController ::class,'farmview'])->name('admin.farmersdata.farm');
 // view farmerse data
 Route::get('/admin-view-General-Farmers',[AdminController::class,'GenFarmers'])->name('admin.farmersdata.genfarmers');
- // admin  add barangay form
- Route::get('/admin-add-homepage-setting',[LandingPageController::class,'addHomepage'])->name('landing-page.add_homepage');
+ 
+
+// admin homepage form
+ Route::get('/admin-view-homepage-setting',[LandingPageController::class,'viewHomepages'])->name('landing-page.view_homepage');
+ Route::get('/admin-add-homepage',[LandingPageController::class,'addHomepage'])->name('landing-page.add_homepage');
+ Route::post('/admin-add-homepage',[LandingPageController::class,'SavePage']);
+ Route::get('/admin-edit-homepage/{Page}',[LandingPageController::class,'editHomepage'])->name('landing-page.edit_homepage');
+ Route::post('/admin-edit-homepage/{Page}',[LandingPageController::class,'editSave']);
+ Route::post('/admin-delete-homepage/{Page}',[LandingPageController::class,'DeletePage'])->name('landing-page.delete');
+
+
+//  notification
  Route::get('/admin-view-notification',[NotificationController::class,'addnotification'])->name('admin.notification.view_notif');
+ Route::get('/admin-add-notification',[NotificationController::class,'Message'])->name('admin.notification.add_notif');
+ Route::post('/admin-add-notification',[NotificationController::class,'Messagestore']);
+ Route::get('/admin-edit-notification/{message}',[NotificationController::class,'NotifEdit'])->name('admin.notification.edit_notif');
+ Route::post('/admin-edit-notification/{message}',[NotificationController::class,'MessageUpdate']);
+ Route::delete('/admin-delete-notification/{message}',[NotificationController::class,'DeleteNotif'])->name('admin.notification.delete');
 
  // admin  add barangay form
  Route::get('/admin-add-farmer-org',[AdminController::class,'addFamerOrg'])->name('admin.farmerOrg.add_form');
  Route::post('/admin-add-farmer-org',[AdminController::class,'saveFarmerOrg']);
  Route::get('/admin-view-farmer-org',[AdminController::class,'viewfarmersOrg'])->name('admin.farmerOrg.view_orgs');
- Route::get('/admin-edit-farmer-org/{farmerOrg}',[AdminController::class,'EditOrg'])->name('admin.farmerOrg.view_org');
+ Route::get('/admin-edit-farmer-org/{farmerOrg}',[AdminController::class,'EditOrg'])->name('admin.farmerOrg.edit_org');
  Route::post('/admin-edit-farmer-org/{farmerOrg}',[AdminController::class,'updateFarmerOrg']);
+ Route::post('/admin-edit-farmer-org/{farmerOrg}',[AdminController::class,'deleteFarmerOrg']);
 
     // admin  add barangay form
     Route::get('/admin-add-barangay',[AdminController::class,'barangayForm'])->name('admin.barangay.add_form');
@@ -92,16 +123,16 @@ Route::get('/admin-view-General-Farmers',[AdminController::class,'GenFarmers'])-
     Route::get('/admin-view-barangays',[AdminController::class,'viewBaranagay'])->name('admin.barangay.view_forms');
 
         // admin corn map 
-        Route::get('admin-view-corn-map',[AdminController::class,'CornMap'])->name('map.cornmap');
+        Route::get('/admin-view-corn-map',[AdminController::class,'CornMap'])->name('map.cornmap');
 
         // admin coconut map 
-        Route::get('admin-view-coconut-map',[AdminController::class,'CoconutMap'])->name('map.coconutmap');
+        Route::get('/admin-view-coconut-map',[AdminController::class,'CoconutMap'])->name('map.coconutmap');
 
         // admin chicken map 
-        Route::get('admin-view-chicken-map',[AdminController::class,'ChickenMap'])->name('map.chickenmap');
+        Route::get('/admin-view-chicken-map',[AdminController::class,'ChickenMap'])->name('map.chickenmap');
 
         // admin hogs map 
-        Route::get('admin-view-hogs-map',[AdminController::class,'HogsMap'])->name('map.hogsmap');
+        Route::get('/admin-view-hogs-map',[AdminController::class,'HogsMap'])->name('map.hogsmap');
 
        
 
@@ -111,18 +142,18 @@ Route::get('/admin-view-General-Farmers',[AdminController::class,'GenFarmers'])-
        
 
         // admin reports per district map 
-        Route::get('admin-view-forms',[AdminController::class,'CornForm'])->name('admin.corn.forms.corn_form');
-        Route::post('admin-view-forms',[AdminController::class,'CornSave']);
-        Route::get('admin-views',[AdminController::class,'Getforms'])->name('admin.corn.forms.partials.forms-steps');
+        Route::get('/admin-survey-forms',[AdminController::class,'CornForm'])->name('admin.corn.forms.corn_form');
+        Route::post('/admin-survey-forms',[AdminController::class,'CornSave']);
+        Route::get('/admin-views',[AdminController::class,'Getforms'])->name('admin.corn.forms.partials.forms-steps');
 
        
         // admin farmers district map 
-        Route::get('admin-view-farmer-info',[AdminController::class,'FarmerInformations'])->name('admin.corn.farmersInfo.information');
+        Route::get('/admin-view-farmer-info',[AdminController::class,'FarmerInformations'])->name('admin.corn.farmersInfo.information');
        
      
 
             // admin varieties district map 
-            Route::get('admin-view-varieties',[AdminController::class,'Varieties'])->name('admin.corn.variety.varieties');
+            Route::get('/admin-view-varieties',[AdminController::class,'Varieties'])->name('admin.corn.variety.varieties');
 
             
             // admin production district map 
@@ -453,7 +484,10 @@ Route::post('/fisheriescategory/create',[FisheriesCategoryController::class, 'st
 //crop-category
 Route::get('/admin-add-new-crop', [CropCategoryController:: class,'CropCategory'])->name('crop_category.crop_create');
 Route::post('/admin-add-new-crop',[CropCategoryController::class, 'store']);
-// Route::get('/crops-category', [CategorizeController:: class,'CropCategory'])->name('crop_category.crop_create');
+Route::get('/admin-edit-new-crop/{cropsEdit}', [CropCategoryController:: class,'editcrop'])->name('crop_category.crop_edit');
+Route::post('/admin-edit-new-crop/{cropsEdit}',[CropCategoryController::class, 'Updatecrops']);
+Route::post('/admin-delete-crop/{cropsEdit}', [CropCategoryController:: class,'Deletecategory'])->name('crop_category.crop_destroy');
+
 
 //catgorize router
 Route::get('/admin-category', [CategorizeController:: class,'Category'])->name('categorize.index');
@@ -561,8 +595,8 @@ Route::controller(PersonalInformationsController::class)->group(function () {
 
 //farm profiles route
 // Route::middleware('auth')->group(function () {
-    Route::get('/admin-farmprofile',[FarmProfileController::class ,'FarmProfile'])->name('farm_profile.farm_index');
-    Route::post('/admin-farmprofile',[FarmProfileController::class, 'store'])->name('farm_profile.store');
+    Route::get('/admin-add-farm/{personalinfos}',[FarmProfileController::class ,'FarmProfile'])->name('farm_profile.farm_index');
+    Route::post('/admin-add-farm/{personalinfos}',[FarmProfileController::class, 'store']);
 // });
 
 // fixed cost update, edit,delte for admin 
@@ -691,3 +725,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin-edit-lastproduction-data/{productions}', [LastProductionDataController::class, 'Proddataupdate']);
     Route::delete('/admin-delete-lastproduction-data/{productions}', [LastProductionDataController::class, 'ProdDestroy'])->name('production_data.delete');
 });
+
+
+
+
+

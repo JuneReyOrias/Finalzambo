@@ -40,14 +40,14 @@
                                     <a href="{{ route('admin.farmerOrg.add_form') }}" class="btn btn-success">Add</a>
                                 </div>
                             
-                                <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET" class="me-2">
+                                <form id="farmProfileSearchForm" action="" method="GET" class="me-2">
                                     <div class="input-group">
                                         <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
                                         <button class="btn btn-outline-success" type="submit">Search</button>
                                     </div>
                                 </form>
                             
-                                <form id="showAllForm" action="{{ route('polygon.polygons_show') }}" method="GET">
+                                <form id="showAllForm" action="" method="GET">
                                     <button class="btn btn-outline-success" type="submit">All</button>
                                 </form>
                             </div>
@@ -156,20 +156,20 @@
                                     </thead>
                                     <tbody>
                                         @if($FarmerOrg->count() > 0)
-                                        @foreach($FarmerOrg as $seed)
+                                        @foreach($FarmerOrg as $org)
                                             <tr class="table-light">
                                                  
-                                                 <td>{{$seed->id}}</td>
-                                                 <td>{{$seed->agri_districts_id }}</td>
-                                                 <td>{{$seed->org_name }}</td>
+                                                 <td>{{$org->id}}</td>
+                                                 <td>{{$org->district }}</td>
+                                                 <td>{{$org->organization_name }}</td>
                                                
                                                 
                           
                                                 <td>
                                                    
-                                                     <a href="{{route('admin.farmerOrg.view_org',  $seed->id)}}" title="Edit Student"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
+                                                     <a href="{{route('admin.farmerOrg.edit_org',  $org->id)}}" title="Edit Student"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
                                         
-                                                     <form  action="{{ route('polygon.delete', $seed->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
+                                                     <form  action="{{ route('polygon.delete', $org->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
                                                     @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-danger btn-sm" title="Delete Student" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>

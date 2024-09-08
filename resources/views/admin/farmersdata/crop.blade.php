@@ -45,16 +45,14 @@
                         
                             
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <a href="{{ route('admin.farmersdata.genfarmers') }}" title="back">
-                                    
-                                         <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                                  
-                                 </a>
+                                <button type="button" class="btn" onclick="goBack()" title="Back">
+                                    <i class="fa fa-arrow-left text-primary" aria-hidden="true"></i>
+                                </button>
                                  <div class="input-group mb-3">
                                     <h5 for="personainfo"></h5>
                                 </div>
                                    
-                                <a href="" title="Add farm">
+                                <a href="{{ route('admin.farmersdata.cropsdata.add_crop',$farmData->id)}}" title="Add farm">
                                     <button class="btn btn-success btn-sm">
                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                     </button>
@@ -78,8 +76,17 @@
                                   
                                  </a>
                                  <div class="input-group mb-3">
-                                    <h5 for="personainfo">Farmer: {{$farmData->personalinformation->first_name.' '.$farmData->personalinformation->last_name}}</h5>
+                                    @if($personalInfos->isNotEmpty())
+                                        @foreach($personalInfos as $personalInfo)
+                                            <h5 for="personainfo">
+                                                Farmer: {{ $personalInfo->first_name . ' ' . $personalInfo->last_name }}
+                                            </h5>
+                                        @endforeach
+                                    @else
+                                        <h5 for="personainfo">No personal information available.</h5>
+                                    @endif
                                 </div>
+                                
                                    
                               
 {{--                             
@@ -107,7 +114,7 @@
                            
 
                             </div>
-                            <form method="GET" action="{{ route('admin.farmersdata.crop', $farmData->id) }}">
+                            <form method="GET" action="{{ route('admin.farmersdata.crop',$farmData->id) }}">
                                 <div class="user-details">
       
                                     <div class="input-box">
@@ -201,9 +208,9 @@
                             </button>
                         </a>
                                                      
-                        <a href="{{route('farm_profile.farm_edit', $cropData->id)}}" title="view farm"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a> 
+                        <a href="{{route('admin.farmersdata.cropsdata.edit_crops', $cropData->id)}}" title="view farm"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a> 
                 
-                        <form  action="{{ route('agent.farmprofile.delete', $cropData->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
+                        <form  action="{{ route('admin.farmersdata.cropsdata.delete', $cropData->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
                            {{-- {{ csrf_field()}} --}}@csrf
                            @method('DELETE')
                            <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
@@ -277,4 +284,9 @@
         });
     });
   </script>
+   <script>
+    function goBack() {
+        window.history.back(); // This will go back to the previous page in the browser history
+    }
+    </script>  
 @endsection
