@@ -3261,252 +3261,252 @@ let dataobject = {
 // Log the entire data object to the console for debugging
 // console.log("Data Object:", dataobject);
 
-// const csrfToken = $('input[name="_token"]').attr('value');
-
-//     // Send the AJAX request
-//     $.ajax({
-//         url: '/admin-view-Farmers-survey-form',
-//         method: 'POST',
-//         contentType: 'application/json', // Set content type for JSON
-//         data: JSON.stringify(dataobject), // Attach the prepared data here
-//         headers: {
-//             'X-CSRF-TOKEN': csrfToken // Include the CSRF token in the headers
-//         },
-//         success: function(response) {
-
-//             console.log(response);
-
-//             if(response.success) {
-//                 console.log(response);
-//                 console.log(response.success);
-//             }
-//         },
-//         error: function(error) {
-//             console.error('Error:', error.responseJSON.message);
-//         }
-//     }); 
-
-
-// // Function to open confirmation modal with data preview
-function openConfirmModal(data) {
-    // Check and populate the modal with the farmer's details
-    $('#farmerFirstname').text(data.farmer?.first_name || 'N/A');
-    $('#farmerLastname').text(data.farmer?.last_name || 'N/A');
-    $('#farmerMiddleName').text(data.farmer?.middle_name || 'N/A');
-    $('#farmerExtensionName').text(data.farmer?.extension_name || 'N/A');
-    $('#farmerCountry').text(data.farmer?.country || 'N/A');
-    $('#farmerProvince').text(data.farmer?.province || 'N/A');
-    $('#farmerCity').text(data.farmer?.city || 'N/A');
-    $('#farmerAgriDistrict').text(data.farmer?.agri_district || 'N/A');
-    $('#farmerBarangay').text(data.farmer?.barangay || 'N/A');
-    $('#farmerStreet').text(data.farmer?.street || 'N/A');
-    $('#farmerZipCode').text(data.farmer?.zip_code || 'N/A');
-    $('#farmerContactNo').text(data.farmer?.contact_no || 'N/A');
-    $('#farmerSex').text(data.farmer?.sex || 'N/A');
-    $('#farmerReligion').text(data.farmer?.religion || 'N/A');
-    $('#farmerDateOfBirth').text(data.farmer?.date_of_birth || 'N/A');
-    $('#farmerPlaceOfBirth').text(data.farmer?.place_of_birth || 'N/A');
-    $('#farmerCivilStatus').text(data.farmer?.civil_status || 'N/A');
-    $('#farmerNameLegalSpouse').text(data.farmer?.name_legal_spouse || 'N/A');
-    $('#farmerNoOfChildren').text(data.farmer?.no_of_children || 'N/A');
-    $('#farmerMothersMaidenName').text(data.farmer?.mothers_maiden_name || 'N/A');
-    $('#farmerHighestFormalEducation').text(data.farmer?.highest_formal_education || 'N/A');
-    $('#farmerPersonWithDisability').text(data.farmer?.person_with_disability || 'N/A');
-    $('#farmerYespwdIdNo').text(data.farmer?.YEspwd_id_no || 'N/A');
-    $('#farmerNopwdIdNo').text(data.farmer?.Nopwd_id_no || 'N/A');
-    $('#farmerGovernmentIssuedId').text(data.farmer?.government_issued_id || 'N/A');
-    $('#farmerIdType').text(data.farmer?.id_type || 'N/A');
-    $('#farmerAddIdType').text(data.farmer?.add_Idtype || 'N/A');
-    $('#farmerNonGovIdTypes').text(data.farmer?.non_gov_id_types || 'N/A');
-    $('#farmerMemberOfAnyFarmers').text(data.farmer?.member_ofany_farmers || 'N/A');
-    $('#farmerNameOfFarmers').text(data.farmer?.nameof_farmers || 'N/A');
-    $('#farmerNoFarmersGroup').text(data.farmer?.NoFarmersGroup || 'N/A');
-    $('#farmerAddFarmersGroup').text(data.farmer?.add_FarmersGroup || 'N/A');
-    $('#farmerNameContactPerson').text(data.farmer?.name_contact_person || 'N/A');
-    $('#farmerCpTelNo').text(data.farmer?.cp_tel_no || 'N/A');
-    $('#farmerDateOfInterview').text(data.farmer?.date_of_interview || 'N/A');
-
-    // Check and populate the modal with the farm's details
-    $('#farmTenurialStatus').text(data.farm?.tenurial_status || 'N/A');
-    $('#farmAddress').text(data.farm?.farm_address || 'N/A');
-    $('#farmYearsAsFarmer').text(data.farm?.no_of_years_as_farmers || 'N/A');
-    $('#farmGpsLongitude').text(data.farm?.gps_longitude || 'N/A');
-    $('#farmGpsLatitude').text(data.farm?.gps_latitude || 'N/A');
-    $('#farmTotalPhysicalArea').text(data.farm?.total_physical_area_has || 'N/A');
-    $('#farmTotalAreaCultivated').text(data.farm?.total_area_cultivated_has || 'N/A');
-    $('#farmLandTitleNo').text(data.farm?.land_title_no || 'N/A');
-    $('#farmLotNo').text(data.farm?.lot_no || 'N/A');
-    $('#farmAreaProneTo').text(data.farm?.area_prone_to || 'N/A');
-    $('#farmEcosystem').text(data.farm?.ecosystem || 'N/A');
-    $('#farmRsbaRegister').text(data.farm?.rsba_register || 'N/A');
-    $('#farmPcicInsured').text(data.farm?.pcic_insured || 'N/A');
-    $('#farmGovernmentAssisted').text(data.farm?.government_assisted || 'N/A');
-    $('#farmSourceOfCapital').text(data.farm?.source_of_capital || 'N/A');
-    $('#farmRemarks').text(data.farm?.remarks || 'N/A');
-    $('#farmOcaDistrictOffice').text(data.farm?.oca_district_office || 'N/A');
-    $('#farmNameTechnicians').text(data.farm?.name_technicians || 'N/A');
-    $('#farmDateInterview').text(data.farm?.date_interview || 'N/A');
-
-    // Clear previous crop info from the modal
-    $('#cropAccordionBody').empty();
-
-// Loop through the crops and populate individual crop details in list format
-data.crops.forEach(function(crop, index) {
-    let cropHtml = `
-      <div class="crop-info">
-    <h3>Crop ${index + 1}</h3><br>
-    <div class="detail-grid">
-        <div class="detail-row">
-            <h4>Crop Information:</h4><br>
-            <ul class="list-unstyled">
-                <li><strong>Crop Name:</strong> <span>${crop.crop_name || 'N/A'}</span></li>
-                <li><strong>Crop Variety:</strong> <span>${crop.variety.type_variety || 'N/A'}</span></li>
-                <li><strong>Preferred Variety:</strong> <span>${crop.variety.preferred || 'N/A'}</span></li>
-                <li><strong>Wet Season:</strong> <span>${crop.variety.wet_season || 'N/A'}</span></li>
-                <li><strong>Dry Season:</strong> <span>${crop.variety.dry_season || 'N/A'}</span></li>
-                <li><strong>Number of Cropping Years:</strong> <span>${crop.variety.no_cropping_year || 'N/A'}</span></li>
-                <li><strong>Yield (kg/ha):</strong> <span>${crop.variety.yield_kg_ha || 'N/A'}</span></li>
-            </ul>
-        </div>
-
-        <div class="detail-row">
-            <h4>Production Details:</h4>
-            <ul class="list-unstyled">
-                <li><strong>Seed Type:</strong> <span>${crop.production.seedtype || 'N/A'}</span></li>
-                <li><strong>Seed Used:</strong> <span>${crop.production.seedUsed || 'N/A'}</span></li>
-                <li><strong>Seed Source:</strong> <span>${crop.production.seedSource || 'N/A'}</span></li>
-                <li><strong>Unit:</strong> <span>${crop.production.unit || 'N/A'}</span></li>
-                <li><strong>Fertilizer Used:</strong> <span>${crop.production.fertilizedUsed || 'N/A'}</span></li>
-                <li><strong>Pesticides Used:</strong> <span>${crop.production.pesticidesUsed || 'N/A'}</span></li>
-                <li><strong>Insecticides Used:</strong> <span>${crop.production.insecticide || 'N/A'}</span></li>
-                <li><strong>Area Planted:</strong> <span>${crop.production.areaPlanted || 'N/A'}</span></li>
-                <li><strong>Date Planted:</strong> <span>${crop.production.datePlanted || 'N/A'}</span></li>
-                <li><strong>Date Harvested:</strong> <span>${crop.production.Dateharvested || 'N/A'}</span></li>
-                <li><strong>Yield (kg):</strong> <span>${crop.production.yieldkg || 'N/A'}</span></li>
-            </ul>
-        </div>
-
-        <div class="detail-row">
-            <h4>Fixed Costs:</h4>
-            <ul class="list-unstyled">
-                <li><strong>Particular:</strong> <span>${crop.fixedCost.particular || 'N/A'}</span></li>
-                <li><strong>Number of Hectares:</strong> <span>${crop.fixedCost.no_of_has || 'N/A'}</span></li>
-                <li><strong>Cost per Hectare:</strong> <span>${crop.fixedCost.costperHas || 'N/A'}</span></li>
-                <li><strong>Total Fixed Cost:</strong> <span>${crop.fixedCost.TotalFixed || 'N/A'}</span></li>
-            </ul>
-        </div>
-
-        <div class="detail-row">
-            <h4>Machineries:</h4>
-            <ul class="list-unstyled">
-                <li><strong>Plowing Machine:</strong> <span>${crop.machineries.PlowingMachine || 'N/A'}</span></li>
-                <li><strong>Plow Status:</strong> <span>${crop.machineries.plow_status || 'N/A'}</span></li>
-                <li><strong>Number of Plowing:</strong> <span>${crop.machineries.no_of_plowing || 'N/A'}</span></li>
-                <li><strong>Cost per Plowing:</strong> <span>${crop.machineries.cost_per_plowing || 'N/A'}</span></li>
-                <li><strong>Plowing Cost:</strong> <span>${crop.machineries.plowing_cost || 'N/A'}</span></li>
-                <li><strong>Harrow Machine:</strong> <span>${crop.machineries.harro_machine || 'N/A'}</span></li>
-                <li><strong>Harrow Ownership Status:</strong> <span>${crop.machineries.harro_ownership_status || 'N/A'}</span></li>
-                <li><strong>Number of Harrowing:</strong> <span>${crop.machineries.no_of_harrowing || 'N/A'}</span></li>
-                <li><strong>Cost per Harrowing:</strong> <span>${crop.machineries.cost_per_harrowing || 'N/A'}</span></li>
-                <li><strong>Harrowing Cost Total:</strong> <span>${crop.machineries.harrowing_cost_total || 'N/A'}</span></li>
-                <li><strong>Harvest Machine:</strong> <span>${crop.machineries.harvest_machine || 'N/A'}</span></li>
-                <li><strong>Harvest Ownership Status:</strong> <span>${crop.machineries.harvest_ownership_status || 'N/A'}</span></li>
-                <li><strong>Number of Harvesting:</strong> <span>${crop.machineries.no_of_Harvesting || 'N/A'}</span></li>
-                <li><strong>Cost per Harvesting:</strong> <span>${crop.machineries.cost_per_Harvesting || 'N/A'}</span></li>
-                <li><strong>Harvesting Cost Total:</strong> <span>${crop.machineries.Harvesting_cost_total || 'N/A'}</span></li>
-                <li><strong>Postharvest Machine:</strong> <span>${crop.machineries.postharves_machine || 'N/A'}</span></li>
-                <li><strong>Postharvest Ownership Status:</strong> <span>${crop.machineries.postharvestCost || 'N/A'}</span></li>
-                <li><strong>Postharvest Cost:</strong> <span>${crop.machineries.total_cost_for_machineries || 'N/A'}</span></li>
-            </ul>
-        </div>
-
-        <div class="detail-row">
-            <h4>Variable Costs:</h4>
-            <ul class="list-unstyled">
-                <li><strong>Seed Name:</strong> <span>${crop.variables.seed_name || 'N/A'}</span></li>
-                <li><strong>Unit:</strong> <span>${crop.variables.unit || 'N/A'}</span></li>
-                <li><strong>Quantity:</strong> <span>${crop.variables.quantity || 'N/A'}</span></li>
-                <li><strong>Unit Price Seed:</strong> <span>${crop.variables.unit_price_seed || 'N/A'}</span></li>
-                <li><strong>Total Seed Cost:</strong> <span>${crop.variables.total_seed_cost || 'N/A'}</span></li>
-                <li><strong>Number of Persons:</strong> <span>${crop.variables.no_of_person || 'N/A'}</span></li>
-                <li><strong>Rate per Person:</strong> <span>${crop.variables.rate_per_person || 'N/A'}</span></li>
-                <li><strong>Total Labor Cost:</strong> <span>${crop.variables.total_labor_cost || 'N/A'}</span></li>
-                <li><strong>Name of Fertilizer:</strong> <span>${crop.variables.name_of_fertilizer || 'N/A'}</span></li>
-                <li><strong>Number of Sacks:</strong> <span>${crop.variables.no_ofsacks || 'N/A'}</span></li>
-                <li><strong>Unit Price per Sack:</strong> <span>${crop.variables.unit_price_per_sack || 'N/A'}</span></li>
-                <li><strong>Total Cost of Fertilizers:</strong> <span>${crop.variables.total_cost_fertilizers || 'N/A'}</span></li>
-                <li><strong>Pesticides Name:</strong> <span>${crop.variables.pesticides_name || 'N/A'}</span></li>
-                <li><strong>Number of Liters/Kgs:</strong> <span>${crop.variables.no_of_liters || 'N/A'}</span></li>
-                <li><strong>Unit Price of Pesticides:</strong> <span>${crop.variables.unit_price_of_pesticides || 'N/A'}</span></li>
-                <li><strong>Total Cost of Pesticides:</strong> <span>${crop.variables.total_cost_of_pesticides || 'N/A'}</span></li>
-                <li><strong>Insecticides Name:</strong> <span>${crop.variables.insecticides_name || 'N/A'}</span></li>
-                <li><strong>Number of Liters/Kgs:</strong> <span>${crop.variables.no_of_liters_insecticides || 'N/A'}</span></li>
-                <li><strong>Unit Price of Insecticides:</strong> <span>${crop.variables.unit_price_of_insecticides || 'N/A'}</span></li>
-                <li><strong>Total Cost of Insecticides:</strong> <span>${crop.variables.total_cost_insecticides || 'N/A'}</span></li>
-                <li><strong>Total Variable Costs:</strong> <span>${crop.variables.total_variable_cost || 'N/A'}</span></li>
-            </ul>
-        </div>
-    </div>
- <br>
-</div>
-
-    `;
-
-    // Append the crop info HTML to the modal
-    $('#cropAccordionBody').append(cropHtml);
-});
-
-    $('#confirmModal').modal('show');
-}
-
-
-
-// Call this function to show the confirmation modal when needed
-openConfirmModal(dataobject);
-
-/// Confirm and Save event
-$('#confirmSave').on('click', function() {
-    const csrfToken = $('input[name="_token"]').attr('value');
+const csrfToken = $('input[name="_token"]').attr('value');
 
     // Send the AJAX request
     $.ajax({
         url: '/admin-view-Farmers-survey-form',
         method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(dataobject), // Attach the prepared data
+        contentType: 'application/json', // Set content type for JSON
+        data: JSON.stringify(dataobject), // Attach the prepared data here
         headers: {
             'X-CSRF-TOKEN': csrfToken // Include the CSRF token in the headers
         },
         success: function(response) {
+
             console.log(response);
-            if (response.success) {
-                var successModal = new bootstrap.Modal(document.getElementById('successModal'), {
-                        keyboard: false
 
-                    });
-                    successModal.show(); // Show success modal
-                    
-                    // Close the confirmation modal after successful save
-                    var confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
-                    if (confirmModal) {
-                        confirmModal.hide();
-                    }
-                }
+            if(response.success) {
+                console.log(response);
+                console.log(response.success);
+            }
         },
-        error: function(xhr) {
-            console.error('Error:', xhr.responseJSON.error);
-
-            // Display the error message in the modal body
-            $('#errorModalBody').text(xhr.responseJSON.error);
-
-
-    // Show the modal
-    $('#errorModal').modal('show');
-}
+        error: function(error) {
+            console.error('Error:', error.responseJSON.message);
+        }
+    }); 
 
 
-    });
-});
+// // Function to open confirmation modal with data preview
+// function openConfirmModal(data) {
+//     // Check and populate the modal with the farmer's details
+//     $('#farmerFirstname').text(data.farmer?.first_name || 'N/A');
+//     $('#farmerLastname').text(data.farmer?.last_name || 'N/A');
+//     $('#farmerMiddleName').text(data.farmer?.middle_name || 'N/A');
+//     $('#farmerExtensionName').text(data.farmer?.extension_name || 'N/A');
+//     $('#farmerCountry').text(data.farmer?.country || 'N/A');
+//     $('#farmerProvince').text(data.farmer?.province || 'N/A');
+//     $('#farmerCity').text(data.farmer?.city || 'N/A');
+//     $('#farmerAgriDistrict').text(data.farmer?.agri_district || 'N/A');
+//     $('#farmerBarangay').text(data.farmer?.barangay || 'N/A');
+//     $('#farmerStreet').text(data.farmer?.street || 'N/A');
+//     $('#farmerZipCode').text(data.farmer?.zip_code || 'N/A');
+//     $('#farmerContactNo').text(data.farmer?.contact_no || 'N/A');
+//     $('#farmerSex').text(data.farmer?.sex || 'N/A');
+//     $('#farmerReligion').text(data.farmer?.religion || 'N/A');
+//     $('#farmerDateOfBirth').text(data.farmer?.date_of_birth || 'N/A');
+//     $('#farmerPlaceOfBirth').text(data.farmer?.place_of_birth || 'N/A');
+//     $('#farmerCivilStatus').text(data.farmer?.civil_status || 'N/A');
+//     $('#farmerNameLegalSpouse').text(data.farmer?.name_legal_spouse || 'N/A');
+//     $('#farmerNoOfChildren').text(data.farmer?.no_of_children || 'N/A');
+//     $('#farmerMothersMaidenName').text(data.farmer?.mothers_maiden_name || 'N/A');
+//     $('#farmerHighestFormalEducation').text(data.farmer?.highest_formal_education || 'N/A');
+//     $('#farmerPersonWithDisability').text(data.farmer?.person_with_disability || 'N/A');
+//     $('#farmerYespwdIdNo').text(data.farmer?.YEspwd_id_no || 'N/A');
+//     $('#farmerNopwdIdNo').text(data.farmer?.Nopwd_id_no || 'N/A');
+//     $('#farmerGovernmentIssuedId').text(data.farmer?.government_issued_id || 'N/A');
+//     $('#farmerIdType').text(data.farmer?.id_type || 'N/A');
+//     $('#farmerAddIdType').text(data.farmer?.add_Idtype || 'N/A');
+//     $('#farmerNonGovIdTypes').text(data.farmer?.non_gov_id_types || 'N/A');
+//     $('#farmerMemberOfAnyFarmers').text(data.farmer?.member_ofany_farmers || 'N/A');
+//     $('#farmerNameOfFarmers').text(data.farmer?.nameof_farmers || 'N/A');
+//     $('#farmerNoFarmersGroup').text(data.farmer?.NoFarmersGroup || 'N/A');
+//     $('#farmerAddFarmersGroup').text(data.farmer?.add_FarmersGroup || 'N/A');
+//     $('#farmerNameContactPerson').text(data.farmer?.name_contact_person || 'N/A');
+//     $('#farmerCpTelNo').text(data.farmer?.cp_tel_no || 'N/A');
+//     $('#farmerDateOfInterview').text(data.farmer?.date_of_interview || 'N/A');
+
+//     // Check and populate the modal with the farm's details
+//     $('#farmTenurialStatus').text(data.farm?.tenurial_status || 'N/A');
+//     $('#farmAddress').text(data.farm?.farm_address || 'N/A');
+//     $('#farmYearsAsFarmer').text(data.farm?.no_of_years_as_farmers || 'N/A');
+//     $('#farmGpsLongitude').text(data.farm?.gps_longitude || 'N/A');
+//     $('#farmGpsLatitude').text(data.farm?.gps_latitude || 'N/A');
+//     $('#farmTotalPhysicalArea').text(data.farm?.total_physical_area_has || 'N/A');
+//     $('#farmTotalAreaCultivated').text(data.farm?.total_area_cultivated_has || 'N/A');
+//     $('#farmLandTitleNo').text(data.farm?.land_title_no || 'N/A');
+//     $('#farmLotNo').text(data.farm?.lot_no || 'N/A');
+//     $('#farmAreaProneTo').text(data.farm?.area_prone_to || 'N/A');
+//     $('#farmEcosystem').text(data.farm?.ecosystem || 'N/A');
+//     $('#farmRsbaRegister').text(data.farm?.rsba_register || 'N/A');
+//     $('#farmPcicInsured').text(data.farm?.pcic_insured || 'N/A');
+//     $('#farmGovernmentAssisted').text(data.farm?.government_assisted || 'N/A');
+//     $('#farmSourceOfCapital').text(data.farm?.source_of_capital || 'N/A');
+//     $('#farmRemarks').text(data.farm?.remarks || 'N/A');
+//     $('#farmOcaDistrictOffice').text(data.farm?.oca_district_office || 'N/A');
+//     $('#farmNameTechnicians').text(data.farm?.name_technicians || 'N/A');
+//     $('#farmDateInterview').text(data.farm?.date_interview || 'N/A');
+
+//     // Clear previous crop info from the modal
+//     $('#cropAccordionBody').empty();
+
+// // Loop through the crops and populate individual crop details in list format
+// data.crops.forEach(function(crop, index) {
+//     let cropHtml = `
+//       <div class="crop-info">
+//     <h3>Crop ${index + 1}</h3><br>
+//     <div class="detail-grid">
+//         <div class="detail-row">
+//             <h4>Crop Information:</h4><br>
+//             <ul class="list-unstyled">
+//                 <li><strong>Crop Name:</strong> <span>${crop.crop_name || 'N/A'}</span></li>
+//                 <li><strong>Crop Variety:</strong> <span>${crop.variety.type_variety || 'N/A'}</span></li>
+//                 <li><strong>Preferred Variety:</strong> <span>${crop.variety.preferred || 'N/A'}</span></li>
+//                 <li><strong>Wet Season:</strong> <span>${crop.variety.wet_season || 'N/A'}</span></li>
+//                 <li><strong>Dry Season:</strong> <span>${crop.variety.dry_season || 'N/A'}</span></li>
+//                 <li><strong>Number of Cropping Years:</strong> <span>${crop.variety.no_cropping_year || 'N/A'}</span></li>
+//                 <li><strong>Yield (kg/ha):</strong> <span>${crop.variety.yield_kg_ha || 'N/A'}</span></li>
+//             </ul>
+//         </div>
+
+//         <div class="detail-row">
+//             <h4>Production Details:</h4>
+//             <ul class="list-unstyled">
+//                 <li><strong>Seed Type:</strong> <span>${crop.production.seedtype || 'N/A'}</span></li>
+//                 <li><strong>Seed Used:</strong> <span>${crop.production.seedUsed || 'N/A'}</span></li>
+//                 <li><strong>Seed Source:</strong> <span>${crop.production.seedSource || 'N/A'}</span></li>
+//                 <li><strong>Unit:</strong> <span>${crop.production.unit || 'N/A'}</span></li>
+//                 <li><strong>Fertilizer Used:</strong> <span>${crop.production.fertilizedUsed || 'N/A'}</span></li>
+//                 <li><strong>Pesticides Used:</strong> <span>${crop.production.pesticidesUsed || 'N/A'}</span></li>
+//                 <li><strong>Insecticides Used:</strong> <span>${crop.production.insecticide || 'N/A'}</span></li>
+//                 <li><strong>Area Planted:</strong> <span>${crop.production.areaPlanted || 'N/A'}</span></li>
+//                 <li><strong>Date Planted:</strong> <span>${crop.production.datePlanted || 'N/A'}</span></li>
+//                 <li><strong>Date Harvested:</strong> <span>${crop.production.Dateharvested || 'N/A'}</span></li>
+//                 <li><strong>Yield (kg):</strong> <span>${crop.production.yieldkg || 'N/A'}</span></li>
+//             </ul>
+//         </div>
+
+//         <div class="detail-row">
+//             <h4>Fixed Costs:</h4>
+//             <ul class="list-unstyled">
+//                 <li><strong>Particular:</strong> <span>${crop.fixedCost.particular || 'N/A'}</span></li>
+//                 <li><strong>Number of Hectares:</strong> <span>${crop.fixedCost.no_of_has || 'N/A'}</span></li>
+//                 <li><strong>Cost per Hectare:</strong> <span>${crop.fixedCost.costperHas || 'N/A'}</span></li>
+//                 <li><strong>Total Fixed Cost:</strong> <span>${crop.fixedCost.TotalFixed || 'N/A'}</span></li>
+//             </ul>
+//         </div>
+
+//         <div class="detail-row">
+//             <h4>Machineries:</h4>
+//             <ul class="list-unstyled">
+//                 <li><strong>Plowing Machine:</strong> <span>${crop.machineries.PlowingMachine || 'N/A'}</span></li>
+//                 <li><strong>Plow Status:</strong> <span>${crop.machineries.plow_status || 'N/A'}</span></li>
+//                 <li><strong>Number of Plowing:</strong> <span>${crop.machineries.no_of_plowing || 'N/A'}</span></li>
+//                 <li><strong>Cost per Plowing:</strong> <span>${crop.machineries.cost_per_plowing || 'N/A'}</span></li>
+//                 <li><strong>Plowing Cost:</strong> <span>${crop.machineries.plowing_cost || 'N/A'}</span></li>
+//                 <li><strong>Harrow Machine:</strong> <span>${crop.machineries.harro_machine || 'N/A'}</span></li>
+//                 <li><strong>Harrow Ownership Status:</strong> <span>${crop.machineries.harro_ownership_status || 'N/A'}</span></li>
+//                 <li><strong>Number of Harrowing:</strong> <span>${crop.machineries.no_of_harrowing || 'N/A'}</span></li>
+//                 <li><strong>Cost per Harrowing:</strong> <span>${crop.machineries.cost_per_harrowing || 'N/A'}</span></li>
+//                 <li><strong>Harrowing Cost Total:</strong> <span>${crop.machineries.harrowing_cost_total || 'N/A'}</span></li>
+//                 <li><strong>Harvest Machine:</strong> <span>${crop.machineries.harvest_machine || 'N/A'}</span></li>
+//                 <li><strong>Harvest Ownership Status:</strong> <span>${crop.machineries.harvest_ownership_status || 'N/A'}</span></li>
+//                 <li><strong>Number of Harvesting:</strong> <span>${crop.machineries.no_of_Harvesting || 'N/A'}</span></li>
+//                 <li><strong>Cost per Harvesting:</strong> <span>${crop.machineries.cost_per_Harvesting || 'N/A'}</span></li>
+//                 <li><strong>Harvesting Cost Total:</strong> <span>${crop.machineries.Harvesting_cost_total || 'N/A'}</span></li>
+//                 <li><strong>Postharvest Machine:</strong> <span>${crop.machineries.postharves_machine || 'N/A'}</span></li>
+//                 <li><strong>Postharvest Ownership Status:</strong> <span>${crop.machineries.postharvestCost || 'N/A'}</span></li>
+//                 <li><strong>Postharvest Cost:</strong> <span>${crop.machineries.total_cost_for_machineries || 'N/A'}</span></li>
+//             </ul>
+//         </div>
+
+//         <div class="detail-row">
+//             <h4>Variable Costs:</h4>
+//             <ul class="list-unstyled">
+//                 <li><strong>Seed Name:</strong> <span>${crop.variables.seed_name || 'N/A'}</span></li>
+//                 <li><strong>Unit:</strong> <span>${crop.variables.unit || 'N/A'}</span></li>
+//                 <li><strong>Quantity:</strong> <span>${crop.variables.quantity || 'N/A'}</span></li>
+//                 <li><strong>Unit Price Seed:</strong> <span>${crop.variables.unit_price_seed || 'N/A'}</span></li>
+//                 <li><strong>Total Seed Cost:</strong> <span>${crop.variables.total_seed_cost || 'N/A'}</span></li>
+//                 <li><strong>Number of Persons:</strong> <span>${crop.variables.no_of_person || 'N/A'}</span></li>
+//                 <li><strong>Rate per Person:</strong> <span>${crop.variables.rate_per_person || 'N/A'}</span></li>
+//                 <li><strong>Total Labor Cost:</strong> <span>${crop.variables.total_labor_cost || 'N/A'}</span></li>
+//                 <li><strong>Name of Fertilizer:</strong> <span>${crop.variables.name_of_fertilizer || 'N/A'}</span></li>
+//                 <li><strong>Number of Sacks:</strong> <span>${crop.variables.no_ofsacks || 'N/A'}</span></li>
+//                 <li><strong>Unit Price per Sack:</strong> <span>${crop.variables.unit_price_per_sack || 'N/A'}</span></li>
+//                 <li><strong>Total Cost of Fertilizers:</strong> <span>${crop.variables.total_cost_fertilizers || 'N/A'}</span></li>
+//                 <li><strong>Pesticides Name:</strong> <span>${crop.variables.pesticides_name || 'N/A'}</span></li>
+//                 <li><strong>Number of Liters/Kgs:</strong> <span>${crop.variables.no_of_liters || 'N/A'}</span></li>
+//                 <li><strong>Unit Price of Pesticides:</strong> <span>${crop.variables.unit_price_of_pesticides || 'N/A'}</span></li>
+//                 <li><strong>Total Cost of Pesticides:</strong> <span>${crop.variables.total_cost_of_pesticides || 'N/A'}</span></li>
+//                 <li><strong>Insecticides Name:</strong> <span>${crop.variables.insecticides_name || 'N/A'}</span></li>
+//                 <li><strong>Number of Liters/Kgs:</strong> <span>${crop.variables.no_of_liters_insecticides || 'N/A'}</span></li>
+//                 <li><strong>Unit Price of Insecticides:</strong> <span>${crop.variables.unit_price_of_insecticides || 'N/A'}</span></li>
+//                 <li><strong>Total Cost of Insecticides:</strong> <span>${crop.variables.total_cost_insecticides || 'N/A'}</span></li>
+//                 <li><strong>Total Variable Costs:</strong> <span>${crop.variables.total_variable_cost || 'N/A'}</span></li>
+//             </ul>
+//         </div>
+//     </div>
+//  <br>
+// </div>
+
+//     `;
+
+//     // Append the crop info HTML to the modal
+//     $('#cropAccordionBody').append(cropHtml);
+// });
+
+//     $('#confirmModal').modal('show');
+// }
+
+
+
+// // Call this function to show the confirmation modal when needed
+// openConfirmModal(dataobject);
+
+// /// Confirm and Save event
+// $('#confirmSave').on('click', function() {
+//     const csrfToken = $('input[name="_token"]').attr('value');
+
+//     // Send the AJAX request
+//     $.ajax({
+//         url: '/admin-view-Farmers-survey-form',
+//         method: 'POST',
+//         contentType: 'application/json',
+//         data: JSON.stringify(dataobject), // Attach the prepared data
+//         headers: {
+//             'X-CSRF-TOKEN': csrfToken // Include the CSRF token in the headers
+//         },
+//         success: function(response) {
+//             console.log(response);
+//             if (response.success) {
+//                 var successModal = new bootstrap.Modal(document.getElementById('successModal'), {
+//                         keyboard: false
+
+//                     });
+//                     successModal.show(); // Show success modal
+                    
+//                     // Close the confirmation modal after successful save
+//                     var confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+//                     if (confirmModal) {
+//                         confirmModal.hide();
+//                     }
+//                 }
+//         },
+//         error: function(xhr) {
+//             console.error('Error:', xhr.responseJSON.error);
+
+//             // Display the error message in the modal body
+//             $('#errorModalBody').text(xhr.responseJSON.error);
+
+
+//     // Show the modal
+//     $('#errorModal').modal('show');
+// }
+
+
+//     });
+// });
 });
 
 
