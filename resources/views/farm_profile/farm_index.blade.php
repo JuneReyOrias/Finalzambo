@@ -478,7 +478,455 @@
             
                                     <!-- Farm Info Section -->
 
-                            
+                                  
+                                        
+                                        <div class="step farmer-info" id="step2">
+                                            <h2>Step 1: Personal Information</h2><br>
+                                            <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
+                                    <h3>b. Contact & Demographic Info</h3>
+                                    <div class="user-details">
+                                    {{-- <div >
+                                    <span class="details"></span>
+                                    <input type="hidden" class="form-control country l" name="country" id="validationCustom01" value="Philippines" readonly >
+                                    @error('first_name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    </div>
+                                    <div >
+                                    <span class="details"></span>
+                                    <input type="hidden" class="form-control province light-gray-placeholder @error('last_name') is-invalid @enderror" name="province" id="validationCustom01" value="Zamboanga del sur" readonly >
+                                    @error('last_name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    </div> --}}
+                                    {{-- <div >
+                                    <span class="details"></span>
+                                    <input type="hidden"name="email" class="form-control city light-gray-placeholder @error('email') is-invalid @enderror" name="city" id="validationCustom01" value="Zamboanga City" readonly >
+                                    @error('email')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    </div> --}}
+                                    <input type="hidden" class="form-control country l" name="country" id="validationCustom01" value="Philippines" readonly >
+                                    <input type="hidden" class="form-control province light-gray-placeholder @error('last_name') is-invalid @enderror" name="province" id="validationCustom01" value="Zamboanga del sur" readonly >
+                                    <input type="hidden"name="email" class="form-control city light-gray-placeholder @error('email') is-invalid @enderror" name="city" id="validationCustom01" value="Zamboanga City" readonly >
+                                  
+
+                     
+                                        {{-- <select id="districtSelect" class="form-control">
+                                            <option value="" disabled selected>Select AgriDistrict</option>
+                                        </select>
+                                        
+                                        <select class="barangaySelect form-control">
+                                            <option value="" disabled selected>Select Barangay</option>
+                                            <option value="add">Add New Barangay...</option>
+                                        </select>
+                                        
+                                        <select class="organizationSelect form-control">
+                                            <option value="" disabled selected>Select Organization</option>
+                                            <option value="add">Add New Organization...</option>
+                                        </select>
+                                         --}}
+
+
+
+                                    
+                                 
+                                   
+                    <div class="input-box col-md-4">
+                        <span class="details">Street</span>
+                        <input type="text" name="street" id="street" class="form-control street light-gray-placeholder @error('street') is-invalid @enderror" placeholder="Street" autocomplete="new-password" value="{{ old('street') }}">
+                        @error('street')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                                    <div class="input-box col-md-4">
+                                    <span class="details">Zip Code</span>
+                                    <select class="form-control light-gray-placeholder zip_code @error('zip_code') is-invalid @enderror"  name="zip_code"id="validationCustom01" aria-label="Floating label select e">
+                                   
+                                    <option selected value="7000" {{ old('zip_code') == '7000' ? 'selected' : '' }}>7000</option>
+
+                                    </select>
+                                    </div>
+                                    <div class="input-box col-md-4">
+                                    <span class="details">Contact No.</span>
+                                    <input type="number" name="contact_no" id="contact_no" class="form-control contact_no light-gray-placeholder @error('contact_no') is-invalid @enderror"placeholder="Contact no." autocomplete="new-password" value="{{ old('contact_no') }}" >
+                                    @error('contact_no')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    </div>
+                                    <div class="input-box col-md-4">
+                                        <span class="details">Sex</span>
+                                        <div class="d-flex align-items-center">
+                                            <select class="form-control custom-select sex light-gray-placeholder @error('sex') is-invalid @enderror" name="sex" id="selectSex" aria-label="Floating label select e" onchange="handleSexChange()">
+                                                <option value="" disabled selected>Select</option>
+                                                <option value="male" {{ old('sex') == 'male' ? 'selected' : '' }}>Male</option>
+                                                <option value="female" {{ old('sex') == 'female' ? 'selected' : '' }}>Female</option>
+                                                <option value="Others" {{ old('sex') == 'Others' ? 'selected' : '' }}>Others (optional)</option>
+                                            </select>
+                                            <!-- Button section for removing custom entries -->
+                                            <button type="button" id="removeSexButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeSex()">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                        @error('sex')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    
+                                    
+                                    
+                                   
+                                  
+                                    <div class="input-box col-md-4">
+                                        <span class="details">Religion</span>
+                                        <div class="d-flex align-items-center">
+                                            <select class="form-control custom-select religion" id="selectReligion" onchange="checkReligion()">
+                                                <option class="form-control light-gray-placeholder"selected disabled>Select Religion</option>
+                                                <option value="Roman Catholic" {{ old('religion') == 'Roman Catholic' ? 'selected' : '' }}>Roman Catholic</option>
+                                                <option value="Iglesia Ni Cristo" {{ old('religion') == 'Iglesia Ni Cristo' ? 'selected' : '' }}>Iglesia Ni Cristo</option>
+                                                <option value="Seventh-day Adventist" {{ old('religion') == 'Seventh-day Adventist' ? 'selected' : '' }}>Seventh-day Adventist</option>
+                                                <option value="Islam" {{ old('religion') == 'Islam' ? 'selected' : '' }}>Islam</option>
+                                                <option value="Born Again CHurch" {{ old('religion') == 'Born Again CHurch' ? 'selected' : '' }}>Born Again CHurch</option>
+                                                <option value="N/A" {{ old('religion') == 'N/A' ? 'selected' : '' }}>N/A</option>
+                                                <option value="other" {{ old('religion') == 'other' ? 'selected' : '' }}>other</option>
+                                               
+                                            </select>
+                                            <button type="button" id="removeReligionButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeReligion()">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                    
+                              
+                                  
+                                    
+                                    <div class="input-box col-md-4">
+                                        <span class="details">Place of Birth</span>
+                                        <div class="d-flex align-items-center">
+                                            <select class="form-control custom-select light-gray-placeholder place_of_birth" name="place_of_birth" id="selectPlaceBirth" onchange="checkPlaceBirth()" aria-label="Floating label select e">
+                                                <option selected disabled>Select</option>
+                                                <option value="Zamboanga City" {{ old('place_of_birth') == 'Zamboanga City' ? 'selected' : '' }}>Zamboanga City</option>
+                                                <option value="Basilan Province" {{ old('place_of_birth') == 'Basilan Province' ? 'selected' : '' }}>Basilan Province</option>
+                                                <option value="Vitali,ZC" {{ old('place_of_birth') == 'Vitali,ZC' ? 'selected' : '' }}>Vitali,ZC</option>
+                                                <option value="Limaong,ZC" {{ old('place_of_birth') == 'Limaong,ZC' ? 'selected' : '' }}>Limaong,ZC</option>
+                                                <option value="Cotabato" {{ old('place_of_birth') == 'Cotabato' ? 'selected' : '' }}>Cotabato</option>
+                                                <option value="South Cotabato" {{ old('place_of_birth') == 'South Cotabato' ? 'selected' : '' }}>South Cotabato</option>
+                                                <option value="Bunguiao, Zc" {{ old('place_of_birth') == 'Bunguiao, Zc' ? 'selected' : '' }}>Bunguiao, ZC</option>
+                                                <option value="Manicahan,Zc" {{ old('place_of_birth') == 'Manicahan,Zc' ? 'selected' : '' }}>Manicahan, ZC</option>
+                                                <option value="Negros Occidental" {{ old('place_of_birth') == 'Negros Occidental' ? 'selected' : '' }}>Negros Occidental</option>
+                                                <option value="Mercedes, ZC" {{ old('place_of_birth') == 'Mercedes, ZC' ? 'selected' : '' }}>Mercedes, ZC</option>
+                                                <option value="Curuan, ZC" {{ old('place_of_birth') == 'Curuan, ZC' ? 'selected' : '' }}>Curuan, ZC</option>
+                                                <option value="Boalan, Zc" {{ old('place_of_birth') == 'Boalan, Zc' ? 'selected' : '' }}>Boalan, ZC</option>
+                                                <option value="Guiwan, Zc" {{ old('place_of_birth') == 'Guiwan, Zc' ? 'selected' : '' }}>Guiwan, ZC</option>
+                                                <option value="Cabatangan, Zc" {{ old('place_of_birth') == 'Cabatangan, Zc' ? 'selected' : '' }}>Cabatangan, ZC</option>
+                                                <option value="Tugbungan, Zc" {{ old('place_of_birth') == 'Tugbungan, Zc' ? 'selected' : '' }}>Tugbungan, ZC</option>
+                                                <option value="Talabaan, Zc" {{ old('place_of_birth') == 'Talabaan, Zc' ? 'selected' : '' }}>Talabaan, ZC</option>
+                                                <option value="Culianan, Zc" {{ old('place_of_birth') == 'Culianan, Zc' ? 'selected' : '' }}>Culianan, ZC</option>
+                                                <option value="Ayala, Zc" {{ old('place_of_birth') == 'Ayala, Zc' ? 'selected' : '' }}>Ayala, ZC</option>
+                                                <option value="Add Place of Birth" {{ old('place_of_birth') == 'Add Place of Birth' ? 'selected' : '' }}>Add new</option>
+                                            </select>
+                                            <button type="button" id="removePlaceBirthButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removePlaceBirth()">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                        <div id="PlaceBirthInputField" style="display: none;">
+                                            <!-- Input field for new place of birth names -->
+                                        </div>
+                                    </div>
+                                    
+
+                                   
+                                    <div class="input-box col-md-4">
+                                    <span class="details">Civil Status</span>
+                                    <select class="form-control custom-select light-gray-placeholder civil_status"  name="civil_status"id="selectCivil"onchange="checkCivil()"  aria-label="Floating label select e">
+                                        <option selected  disabled>Select</option>
+                                        <option  value="Single" {{ old('civil_status') == 'Single' ? 'selected' : '' }}>Single</option>
+                                        <option value="Maried" {{ old('civil_status') == 'Maried' ? 'selected' : '' }}>Maried</option>
+                                        <option value="Divorced" {{ old('civil_status') == 'Divorced' ? 'selected' : '' }}>Divorced</option>
+                                        <option value="Widow" {{ old('civil_status') == 'Widow' ? 'selected' : '' }}>Widow</option>
+                                       
+                                      </select>
+                                    </div>
+
+                                    <div class="input-box col-md-4" id="MariedInputSelected" style="display: none;">
+                                        <span class="details">Name of Spouse:</span>
+                                        <input type="text" id="MariedInputSelected" name="name_legal_spouse" class="form-control name_legal_spouse light-gray-placeholder @error('mothers_maiden_name') is-invalid @enderror" placeholder="Name of spouse" autocomplete="new-password" value="{{ old('mothers_maiden_name') }}" onkeypress="return blockSymbolsAndNumbers(event)">
+                                        @error('mothers_maiden_name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                        <div class="input-box col-md-4"id="SinWidDevInput"  style="display: none;">
+                                            <span class="details">Name of Spouse:</span>
+                                            {{-- <input type="text"id="MariedInputSelected" name="name_legal_spouse"class="form-control name_legal_spouse light-gray-placeholder @error('mothers_maiden_name') is-invalid @enderror" placeholder="Mother's Maiden Name" autocomplete="new-password" value="{{ old('mothers_maiden_name') }}" >
+                                            --}}
+                                            <select class="form-control light-gray-placeholder @error('name_legal_spouse') is-invalid @enderror" name="name_legal_spouse"id="selectFgroups"onchange="checkfarmGroup()" aria-label="Floating label select e">
+                                           
+                                                <option selected value="N/A" {{ old('name_legal_spouse') == 'N/A' ? 'selected' : '' }}>N/A</option>
+                                                
+                                                
+                                              
+                                              </select>
+                                            </div>
+                                            <div class="input-box col-md-4">
+                                                <span class="details">No. of Children</span>
+                                                <div class="d-flex align-items-center">
+                                                    <select class="form-control no_of_children light-gray-placeholder @error('no_of_children') is-invalid @enderror" name="no_of_children" id="childrenSelect" onchange="checkChildren()" aria-label="Floating label select e">
+                                                        <option selected disabled>Select</option>
+                                                        <option value="1" {{ old('no_of_children') == '1' ? 'selected' : '' }}>1</option>
+                                                        <option value="2" {{ old('no_of_children') == '2' ? 'selected' : '' }}>2</option>
+                                                        <option value="3" {{ old('no_of_children') == '3' ? 'selected' : '' }}>3</option>
+                                                        <option value="4" {{ old('no_of_children') == '4' ? 'selected' : '' }}>4</option>
+                                                        <option value="5" {{ old('no_of_children') == '5' ? 'selected' : '' }}>5</option>
+                                                        <option value="N/A" {{ old('no_of_children') == 'N/A' ? 'selected' : '' }}>N/A</option>
+                                                        <option value="Add" {{ old('no_of_children') == 'Add' ? 'selected' : '' }}>Add</option>
+                                                    </select>
+                                                    <button type="button" id="removeChildrenButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeChildren()">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                                <div id="ChildrenInputField" style="display: none;">
+                                                    <!-- Input field for new number of children names -->
+                                                </div>
+                                            </div>
+                                          
+                                            
+                                    <div class="input-box col-md-4">
+                                        <span class="details">Highest Formal Education</span>
+                                        <div class="d-flex align-items-center">
+                                            <select class="form-control light-gray-placeholder highest_formal_education @error('highest_formal_education') is-invalid @enderror" name="highest_formal_education" id="selectEduc" onchange="checkFormalEduc()" aria-label="Floating label select e">
+                                                <option selected disabled>Select</option>
+                                                <option  value="No Formal Education" {{ old('highest_formal_education') == 'No Formal Education' ? 'selected' : '' }}>No Formal Education</option>
+                                                <option value="Primary Education" {{ old('highest_formal_education') == 'Primary Education' ? 'selected' : '' }}>Primary Education</option>
+                                                <option value="Secondary Education" {{ old('highest_formal_education') == 'Secondary Education' ? 'selected' : '' }}>Secondary Education</option>
+                                                <option value="Vocational Training" {{ old('highest_formal_education') == 'Vocational Training' ? 'selected' : '' }}>Vocational Training</option>
+                                                <option value="Bachelors Degree" {{ old('highest_formal_education') == 'Bachelors Degree' ? 'selected' : '' }}>Bachelor's Degree</option>
+                                                <option value="Masters Degree" {{ old('highest_formal_education') == 'Masters Degree' ? 'selected' : '' }}>Master's Degree</option>
+                                                <option value="Doctorate" {{ old('highest_formal_education') == 'Doctorate' ? 'selected' : '' }}>Doctorate</option>
+                                                <option value="Other" {{ old('highest_formal_education') == 'Other' ? 'selected' : '' }}>Other</option>
+                                                <option value="Add" {{ old('highest_formal_education') == 'Add' ? 'selected' : '' }}>Add</option>
+                                            </select>
+                                            <button type="button" id="removeEducationButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeFormalEduc()">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                        <div id="EducationInputField" style="display: none;">
+                                            <!-- Input field for new education names -->
+                                        </div>
+                                    </div>
+                                    
+                                       {{-- add new form --}}
+                                {{-- <div class="input-box col-md-4" id="otherformInputContainer" style="display: none;">
+                                    <label for="add_formEduc">add prefer:</label>
+                                    <input type="text" id="otherformInputContainer" name="add_formEduc" value="military" class="form-control light-gray-placeholder add_formEduc" placeholder="enter highest formal education">
+                                </div> --}}
+      
+                                    <div class="input-box col-md-4">
+                                    <span class="details">Person with Disability</span>
+
+                                        <select class="form-control light-gray-placeholder person_with_disability @error('person_with_disability') is-invalid @enderror" name="person_with_disability"id="selectPWD"onchange="checkPWD()" aria-label="Floating label select e">
+                                        <option selected  disabled>Select</option>
+                                    <option value="1" {{ old('person_with_disability') == 'Yes' ? 'selected' : '' }}>Yes</option>
+                                    <option value="0" {{ old('person_with_disability') == 'No' ? 'selected' : '' }}>No</option>
+
+
+                                    </select>
+                                    </div>
+
+                                    <div class="input-box col-md-4"id="YesInputSelected" style="display: none;" >
+                                    <span class="details">PWD ID No.</span>
+                                    <input type="number" name="pwd_id_no" id="YesInputSelected" class="form-control YEspwd_id_no light-gray-placeholder @error('pwd_id_no') is-invalid @enderror" placeholder="Mother's Maiden Name" autocomplete="new-password" value="{{ old('pwd_id_no') }}" >
+                                    @error('pwd_id_no')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    </div>
+
+
+                                    <div class="input-box col-md-4" id="NoInputSelected" style="display: none;">
+                                    <span class="details">PWD ID No</span>
+                                    <select class="form-control Nopwd_id_no $('select.YEspwd_id_no').val(), @error('pwd_id_no') is-invalid @enderror" name="pwd_id_no"id="selectFgroups"onchange="checkfarmGroup()" aria-label="Floating label select e">
+                                 
+                                    <option selected value="N/A" {{ old('pwd_id_no') == 'N/A' ? 'selected' : '' }}>N/A</option>
+
+
+
+                                    </select>
+                                    </div>
+
+
+                                    <div class="input-box col-md-4">
+                                    <span class="details">Government Issued ID</span>
+                                    <select class="form-control government_issued_id @error('government_issued_id') is-invalid @enderror"  name="government_issued_id"id="selectGov"onchange="CheckGoverniD()" aria-label="Floating label select e">
+                                    <option selected  disabled>Select</option>
+                                    <option value="Yes" {{ old('government_issued_id') == 'Yes' ? 'selected' : '' }}>Yes</option>
+                                    <option value="No" {{ old('government_issued_id') == 'No' ? 'selected' : '' }}>No</option>
+
+                                    </select>
+                                    </div>
+
+                                    <div class="input-box col-md-4" id="iDtypeSelected" style="display: none;">
+                                        <span class="details">Gov ID Type</span>
+                                        <div class="d-flex align-items-center">
+                                            <select class="form-control id_type custom-select @error('id_type') is-invalid @enderror" name="id_type" id="selectIDType" onchange="checkIDtype()" aria-label="Floating label select e">
+                                                <option selected  disabled>Select</option>
+                                                <option value="Driver License" {{ old('id_type') == 'Driver License' ? 'selected' : '' }}>Driver License</option>
+                                                <option value="Passport" {{ old('id_type') == 'Passport' ? 'selected' : '' }}>Passport</option>
+                                                <option value="Postal ID" {{ old('id_type') == 'Postal ID' ? 'selected' : '' }}>Postal ID</option>
+                                                <option value="Phylsys ID" {{ old('id_type') == 'Phylsys ID' ? 'selected' : '' }}>Phylsys ID</option>
+                                                <option value="PRC ID" {{ old('id_type') == 'PRC ID' ? 'selected' : '' }}>PRC ID</option>
+                                                <option value="Brgy. ID" {{ old('id_type') == 'Brgy. ID' ? 'selected' : '' }}>Brgy. ID</option>
+                                                <option value="Voters ID" {{ old('id_type') == 'Voters ID' ? 'selected' : '' }}>Voters ID</option>
+                                                <option value="Senior ID" {{ old('id_type') == 'Senior ID' ? 'selected' : '' }}>Senior ID</option>
+                                                <option value="PhilHealth ID" {{ old('id_type') == 'PhilHealth ID' ? 'selected' : '' }}>PhilHealth ID</option>
+                                                <option value="Tin ID" {{ old('id_type') == 'Tin ID' ? 'selected' : '' }}>Tin ID</option>
+                                                <option value="BIR ID" {{ old('id_type') == 'BIR ID' ? 'selected' : '' }}>BIR ID</option>
+                                                <option value="N/A" {{ old('id_type') == 'N/A' ? 'selected' : '' }}>N/A</option>
+                                                <option value="addNew" {{ old('id_type') == 'addNew' ? 'selected' : '' }}>Other ID Type</option>
+                                            </select>
+                                            <button type="button" id="removeIDButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeIDType()">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                        @error('id_type')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    
+                                    <div class="input-box col-md-4"  id="idNoInput" style="display: none;">
+                                    <span class="details">Gov-ID no.</span>
+                                    <input type="number" name="add_Idtype" id="add_Idtype" class="form-control add_Idtype light-gray-placeholder @error('add_Idtype') is-invalid @enderror" placeholder="gov. id no" autocomplete="new-password" value="{{ old('add_Idtype') }}" >
+                                    @error('add_Idtype')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    </div>
+                                    {{-- <div class="input-box col-md-4" id="NoSelected" style="display: none;">
+                                        <label for="OthersInput">Non-Gov-ID Type:</label>
+                                        <input type="text" id="OthersInput" class="form-control placeholder-text @error('gov_id_no') is-invalid @enderror"name="add_Idtype" id="validationCustom02" placeholder="Enter gov-id type"  value="{{ old('gov_id_no') }}">
+                                        @error('gov_id_no')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    </div> --}}
+                                    <div class="input-box col-md-4"  id="NoSelected" style="display: none;">
+                                    <span class="details">Non-Gov ID</span>
+                                    <input type="text" name="id_types" id="non_gov_id_types" class="form-control non_gov_id_types light-gray-placeholder @error('id_types') is-invalid @enderror" placeholder="non-gov id" autocomplete="new-password" value="{{ old('id_types') }}" >
+                                    @error('id_types')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    </div>
+
+                                    </div>
+                                            <!-- Add other personal information fields -->
+                                            <button type="button" class="btn btn-primary" onclick="previousStep()">Previous</button>
+                                            <button type="button" class="btn btn-success" id="nextButton" onclick="nextStep()">Next</button>
+                                        </div>
+
+                                        {{-- farmers info last part --}}
+                                        <div class="step farmer-info" id="step1.3">
+                                            <h2>Step 1: Personal Information</h2><br>
+                                            <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
+                                            <h3>c. Association Info</h3>
+                                              <div class="user-details">
+                                                <div class="input-box col-md-4">
+                                                    <span class="details">Agri-District</span>
+                                                    <select class="form-control light-gray-placeholder gray-text agri_district @error('agri_district') is-invalid @enderror" name="agri_district"  id="districtSelect"  aria-label="Floating label select e">
+                                                        <option value="" disabled selected>Select AgriDistrict</option>
+                                                        <!-- Add other options as needed -->
+                                                    </select>
+                                                </div>
+                                                
+                                              
+            
+                                                    <!-- Barangay Selection -->
+                                                    <div class="input-box col-md-4">
+                                                        <span class="details">Barangay</span>
+                                                        <div class="d-flex align-items-center">
+                                                            <!-- Select dropdown -->
+                                                            <select class="form-control barangay custom-select light-gray-placeholder gray-text barangaySelect @error('barangay') is-invalid @enderror" name="barangay" id="SelectBarangay" aria-label="Floating label select e">
+                                                                <option value="" disabled selected>Select Barangay</option>
+                                                                <option value="add">Add New Barangay...</option>
+                                                            </select>
+            
+                                                            <!-- Remove Barangay Button with Font Awesome Icon -->
+                                                            {{-- <button type="button" id="removeBarangay" class="btn btn-outline-danger ms-2 d-flex align-items-center" title="Remove Selected Barangay">
+                                                                <i class="fa fa-trash me-1"></i>
+                                                            </button>
+            
+                                                            <!-- Add New Barangay Button with Font Awesome Icon -->
+                                                            <button type="button" class="btn btn-success ms-2 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#newBarangayModal" title="Add New Barangay">
+                                                                <i class="fa fa-plus me-1"></i>
+                                                            </button> --}}
+                                                        </div>
+                                                    </div>
+                                                        <div class="input-box  col-md-4 " >
+                                                            <span class="details">Member of farmer Ass/Org/Coop</span>
+                                                            <select class="form-control custom-select light-gray-placeholder gray-text member_ofany_farmers @error('member_ofany_farmers_ass_org_coop') is-invalid @enderror" id="selectMember" onchange="checkMmbership()" name="member_ofany_farmers_ass_org_coop" aria-label="Floating label select e">
+                                                                <option selected  disabled>Select</option>
+                                                                <option value="1" {{('member_ofany_farmers_ass_org_coop') == 1 ? 'selected' : '' }}>Yes</option>
+                                                                <option value="0" {{ ('member_ofany_farmers_ass_org_coop') == 0 ? 'selected' : '' }}>No</option>
+                                                            </select>
+                                                            @error('member_ofany_farmers_ass_org_coop')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
+                                                          </div>
+                  
+                    
+
+                                <!-- Organization Selection -->
+                                    <div class="input-box col-md-4" id="YesFarmersGroup" style="display: none;">
+                                        <span class="details">Name of Ass/Org/Coop</span>
+                                        <div class="d-flex align-items-center">
+                                            <!-- Select dropdown -->
+                                            <select class="organizationSelect form-control nameof_farmers custom-select light-gray-placeholder gray-text @error('organization') is-invalid @enderror" name="organization" id="SelectOrganization" aria-label="Floating label select e">
+                                                <option value="" disabled selected>Select Organization</option>
+                                                <option value="add">Add New Organization...</option>
+                                            </select>
+
+                                            <!-- Remove Organization Button with Font Awesome Icon -->
+                                            {{-- <button type="button" id="removeOrganization" class="btn btn-outline-danger ms-2 d-flex align-items-center" title="Remove Selected Organization">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+
+                                            <!-- Add New Organization Button with Font Awesome Icon -->
+                                            <button type="button" class="btn btn-success ms-2 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#newOrganizationModal" title="Add New Organization">
+                                                <i class="fa fa-plus me-1"></i> --}}
+                                        </div>
+                                    </div>
+                                <div class="input-box col-md-4" id="NoFarmersGroup" style="display: none;font-size: 12px">
+                                    <span class="details">Name of Farmers Ass/Org/Coop</span>
+                                    <select class="form-control NoFarmersGroup @error('nameof_farmers_ass_org_coop') is-invalid @enderror" name="nameof_farmers_ass_org_coop"id="selectFgroups"onchange="checkfarmGroup()" aria-label="Floating label select e">
+                                       
+                                        <option selected value="N/A" {{ old('nameof_farmers_ass_org_coop') == 'N/A' ? 'selected' : '' }}>N/A</option> 
+                          </select>
+                      </div>
+                    
+                     
+                      <div class="input-box col-md-4">
+                        <span class="details">Name of Contact Person</span>
+                        <input type="text" class="form-control light-gray-placeholder name_contact_person @error('name_contact_person') is-invalid @enderror" name="name_contact_person" placeholder="Enter name of contact person" value="{{ old('name_contact_person') }}" id="contactPersonInput" onkeypress="return blockSymbolsAndNumbers(event)">
+                        @error('name_contact_person')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                      <div class="input-box col-md-4">
+                        <span class="details">Celphone/Tel.no</span>
+                        <input type="number" class="form-control cp_tel_no light-gray-placeholder @error('cp_tel_no') is-invalid @enderror" name="cp_tel_no" placeholder="Enter your cp tel no"value="{{ old('cp_tel_no') }}" >
+                        @error('cp_tel_no')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                      </div>
+                   
+                    
+                    
+                    
+                    
+                    </div>
+                                           
+                                            <!-- Add other personal information fields -->
+                                            <button type="button" class="btn btn-primary" onclick="previousStep()">Previous</button>
+                                            <button type="button" class="btn btn-success"  id="nextButton" onclick="nextStep()">Next</button>
+                                        </div>
 
 <!-- Step 1: Farm Profile -->
 <div class="step active farm-info" id="step2">
@@ -505,15 +953,9 @@
                     <div class="user-details">
                         <div id="farmProfiles">
                         <div class="user-details">
-                          
-                                
-                                <input type="hidden" class="form-control light-gray-placeholder users_id" name="farm_profiles[0][farm_address]"value="{{$userId}}" placeholder="Enter farm address" id="rice_farm_address_0">
-                         
-                               
-                                <input type="hidden"class="form-control light-gray-placeholder personalinfo_id" id="personalinfos" value="{{ $personalinfos->id }}">
-                                <input type="hidden"class="form-control light-gray-placeholder agri_districts" id="personalinfos" value="{{ $agri_district }}">
-                          
-                                <div class="input-box col-md-4">
+                            <input type="hidden" class="form-control light-gray-placeholder users_id" value="{{$userId}}" placeholder="Enter farm address" id="rice_farm_address_0">
+                            <input type="hidden"class="form-control light-gray-placeholder personalinfo_id" id="personalinfos" value="{{ $personalinfos->id }}">
+                            <div class="input-box col-md-4">
                                 <span class="details">Tenurial Status:</span>
                                 {{-- <label class="detail">Tenurial Status:</label> --}}
                                 <div class="d-flex align-items-center">
@@ -586,7 +1028,7 @@
                        
                             <div class="input-box col-md-4">
                                 <span class="details">Total Physical Area (has):</span>
-                                <input type="number" class="form-control light-gray-placeholder total_physical_area_has" name="farm_profiles[0][total_physical_area_has]" id="total_physical_area_has_0"placeholder=" Enter Total Physical Area (has)" value="{{old('total_physical_area_has')}}" >
+                                <input type="number" class="form-control light-gray-placeholder total_physical_area_has" name="farm_profiles[0][total_physical_area_has]" id="total_physical_area_has_0" value="{{old('total_physical_area_has')}}" >
                             </div>
                             <div class="input-box col-md-4">
                                 <span class="details">Total Area Cultivated (has):</span>
@@ -598,7 +1040,7 @@
                             </div>
                             <div class="input-box col-md-4">
                                 <span class="details">Lot No:</span>
-                                <input type="text" class="form-control light-gray-placeholder lot_no" name="farm_profiles[0][lot_no]" id="lot_no_0" placeholder="Enter lot no" value="{{old('lot_no')}}">
+                                <input type="text" class="form-control light-gray-placeholder lot_no" name="farm_profiles[0][lot_no]"value="445.54" id="lot_no_0" placeholder="Enter lot no" value="{{old('lot_no')}}">
                             </div>
                             <div class="input-box col-md-4">
                                 <span class="details">Area Prone To:</span>
@@ -708,10 +1150,10 @@
                                 <span class="details">Remarks/Recommendation:</span>
                                 <input type="text" class="form-control light-gray-placeholder remarks" name="farm_profiles[0][remarks_recommendation]" id="remarks_recommendation_0" placeholder=" Enter remarks" onkeypress="return blockSymbolsAndNumbers(event)">
                             </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">OCA District Office:</span>
-                                <input type="text" class="form-control light-gray-placeholder oca_district_office" name="farm_profiles[0][oca_district_office]" id="oca_district_office_0"value="{{$agri_district}}" placeholder=" Enter oca district" readonly>
-                            </div>
+                            {{-- <div class="input-box col-md-4">
+                                <label for="oca_district_office_0">OCA District Office:</label>
+                                <input type="text" class="form-control light-gray-placeholder oca_district_office" name="farm_profiles[0][oca_district_office]" id="oca_district_office_0" placeholder=" Enter oca district" >
+                            </div> --}}
                             <div class="input-box col-md-4">
                                 <span class="details">Name of Technicians:</span>
                                 <input type="text" class="form-control light-gray-placeholder name_technicians" name="farm_profiles[0][name_technicians]" id="name_technicians_0" placeholder="Enter name of technicians" onkeypress="return blockSymbolsAndNumbers(event)">
@@ -765,57 +1207,7 @@
         <div class="modal-body">
           <div class="accordion" id="confirmationAccordion">
             <!-- Farmer Information Accordion -->
-            {{-- <div class="accordion-item">
-              <h2 class="accordion-header" id="headingFarmerInfo">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFarmerInfo" aria-expanded="true" aria-controls="collapseFarmerInfo">
-                  <i class="fas fa-user"></i> Farmer Information
-                </button>
-              </h2>
-              <div id="collapseFarmerInfo" class="accordion-collapse collapse show" aria-labelledby="headingFarmerInfo" data-bs-parent="#confirmationAccordion">
-                <div class="accordion-body">
-                    <ul class="farmer-details">
-                        <li><strong>First Name:</strong> <span id="farmerFirstname"></span></li>
-                        <li><strong>Last Name:</strong> <span id="farmerLastname"></span></li>
-                        <li><strong>Middle Name:</strong> <span id="farmerMiddleName"></span></li>
-                        <li><strong>Extension Name:</strong> <span id="farmerExtensionName"></span></li>
-                        <li><strong>Country:</strong> <span id="farmerCountry"></span></li>
-                        <li><strong>Province:</strong> <span id="farmerProvince"></span></li>
-                        <li><strong>City:</strong> <span id="farmerCity"></span></li>
-                        <li><strong>Agri District:</strong> <span id="farmerAgriDistrict"></span></li>
-                        <li><strong>Barangay:</strong> <span id="farmerBarangay"></span></li>
-                        <li><strong>Street:</strong> <span id="farmerStreet"></span></li>
-                        <li><strong>Zip Code:</strong> <span id="farmerZipCode"></span></li>
-                        <li><strong>Contact Number:</strong> <span id="farmerContactNo"></span></li>
-                        <li><strong>Sex:</strong> <span id="farmerSex"></span></li>
-                        <li><strong>Religion:</strong> <span id="farmerReligion"></span></li>
-                        <li><strong>Date of Birth:</strong> <span id="farmerDateOfBirth"></span></li>
-                        <li><strong>Place of Birth:</strong> <span id="farmerPlaceOfBirth"></span></li>
-                        <li><strong>Civil Status:</strong> <span id="farmerCivilStatus"></span></li>
-                        <li><strong>Name of Legal Spouse:</strong> <span id="farmerNameLegalSpouse"></span></li>
-                        <li><strong>Number of Children:</strong> <span id="farmerNoOfChildren"></span></li>
-                        <li><strong>Mother's Maiden Name:</strong> <span id="farmerMothersMaidenName"></span></li>
-                        <li><strong>Highest Formal Education:</strong> <span id="farmerHighestFormalEducation"></span></li>
-                        <li><strong>Person with Disability:</strong> <span id="farmerPersonWithDisability"></span></li>
-                        <li><strong>YESPWD ID Number:</strong> <span id="farmerYespwdIdNo"></span></li>
-                        <li><strong>NOPWD ID Number:</strong> <span id="farmerNopwdIdNo"></span></li>
-                        <li><strong>Government Issued ID:</strong> <span id="farmerGovernmentIssuedId"></span></li>
-                        <li><strong>ID Type:</strong> <span id="farmerIdType"></span></li>
-                        <li><strong>Additional ID Type:</strong> <span id="farmerAddIdType"></span></li>
-                        <li><strong>Non-Government ID Types:</strong> <span id="farmerNonGovIdTypes"></span></li>
-                        <li><strong>Member of Any Farmers' Group:</strong> <span id="farmerMemberOfAnyFarmers"></span></li>
-                        <li><strong>Name of Farmers' Group:</strong> <span id="farmerNameOfFarmers"></span></li>
-                        <li><strong>Number of Farmers' Groups:</strong> <span id="farmerNoFarmersGroup"></span></li>
-                        <li><strong>Additional Farmers' Group:</strong> <span id="farmerAddFarmersGroup"></span></li>
-                        <li><strong>Contact Person's Name:</strong> <span id="farmerNameContactPerson"></span></li>
-                        <li><strong>Contact Person's Number:</strong> <span id="farmerCpTelNo"></span></li>
-                        <li><strong>Date of Interview:</strong> <span id="farmerDateOfInterview"></span></li>
-                    </ul>
-                    
-                    
-                
-                </div>
-              </div>
-            </div> --}}
+               
   
             <!-- Farm Information Accordion -->
             <div class="accordion-item">
@@ -827,7 +1219,6 @@
               <div id="collapseFarmInfo" class="accordion-collapse collapse" aria-labelledby="headingFarmInfo" data-bs-parent="#confirmationAccordion">
                 <div class="accordion-body">
                     <ul class="farm-details">
-                       
                         <li><strong>Tenurial Status:</strong> <span id="farmTenurialStatus"></span></li>
                         <li><strong>Farm Address:</strong> <span id="farmAddress"></span></li>
                         <li><strong>Number of Years as Farmer:</strong> <span id="farmYearsAsFarmer"></span></li>
@@ -1141,10 +1532,11 @@
           <p>Your data has been successfully added.</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
-          {{-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">Proceed</button> --}}
+          {{-- <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button> --}}
+          <button type="button" class="btn btn-primary" class="btn btn-success" onclick="goBack()">Famer Frofile</button>
+          {{-- <a href="{{route('admin.farmersdata.samplefolder.farm_edit')}}" class="btn btn-success">Famer Frofile</a>
             <!-- Link to proceed to another page -->
-            <a href="{{route('admin.farmersdata.genfarmers')}}" class="btn btn-success">Proceed to Farmer Info</a>
+            <a href="{{route('admin.farmersdata.genfarmers')}}" class="btn btn-success">Proceed to Farmer Info</a> --}}
         </div>
       </div>
     </div>
@@ -1274,7 +1666,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function fetchCropNames() {
     $.ajax({
-        url: '/admin-add-farm/{personalinfos}',
+        url: '/admin-view-Farmers-survey-form',
         method: 'GET',
         data: { type: 'crops' },
         success: function(response) {
@@ -1315,7 +1707,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Function to fetch crop varieties based on selected crop name
 function fetchCropVarieties(cropId, selectElement) {
     $.ajax({
-        url: '/admin-add-farm/{personalinfos}',
+        url: '/admin-view-Farmers-survey-form',
         method: 'GET',
         data: { type: 'varieties', crop_name: cropId },
         success: function(response) {
@@ -1375,7 +1767,7 @@ $(document).on('change', '.crop_variety', function() {
 // Function to fetch crop varieties based on selected crop name
 // function fetchCropSeeds(varietyId, selectElement) {
 //     $.ajax({
-//         url: '/admin-add-farm/{personalinfos}',
+//         url: '/admin-view-Farmers-survey-form',
 //         method: 'GET',
 //         data: { type: 'seedname', variety_name: varietyId },
 //         success: function(response) {
@@ -1424,7 +1816,7 @@ $(document).on('change', '.crop_variety', function() {
 // });
 function fetchCropSeeds(varietyId, selectElement) {
     $.ajax({
-        url: '/admin-add-farm/{personalinfos}',
+        url: '/admin-view-Farmers-survey-form',
         method: 'GET',
         data: { type: 'seedname', variety_name: varietyId },
         success: function(response) {
@@ -2044,18 +2436,15 @@ $(document).ready(function() {
                            <div class="input-box col-md-4">
                                 <span class="details">Post Harvest Machineries Used</span>
                                 <div class="d-flex align-items-center">
-                                    <select class="form-control custom-select light-gray-placeholder postharves_machine @error('postharvest_machineries_used') is-invalid @enderror" 
+                                    <select class="form-control custom-select light-gray-placeholder postharv_ownership_status @error('postharvest_machineries_used') is-invalid @enderror" 
                                             name="postharvest_machineries_used_${cropCounter}" 
                                             id="selectPostHarvestMachineries_${cropCounter}" 
                                             onchange="checkPostHarvestMachineries(${cropCounter})" 
                                             aria-label="label select e">
-                                        <option selected disabled>Select</option>
-                                        <option value="Hand Tractor" {{ old('postharvest_machineries_used_${cropCounter}') == 'Hand Tractor' ? 'selected' : '' }}>Hand Tractor</option>
-                                        <option value="Four-Wheel Tractors" {{ old('postharvest_machineries_used_${cropCounter}') == 'Four-Wheel Tractors' ? 'selected' : '' }}>Four-Wheel Tractors</option>
-                                        <option value="Compact Tractors:" {{ old('postharvest_machineries_used_${cropCounter}') == 'Compact Tractors:' ? 'selected' : '' }}>Compact Tractors</option>
-                                        <option value="Rice Transplanters" {{ old('postharvest_machineries_used_${cropCounter}') == 'Rice Transplanters' ? 'selected' : '' }}>Rice Transplanters</option>
-                                        <option value="Crawler Tractors" {{ old('postharvest_machineries_used_${cropCounter}') == 'Crawler Tractors' ? 'selected' : '' }}>Crawler Tractors</option>
-                                        <option value="Others" {{ old('postharvest_machineries_used_${cropCounter}') == 'Others' ? 'selected' : '' }}>Others</option>
+                                            <option selected disabled>Select</option>
+                                        <option value="Own" {{ old('postharvest_machineries_used_${cropCounter}') == 'Own' ? 'selected' : '' }}>Own</option>
+                                        <option value="Rent" {{ old('postharvest_machineries_used_${cropCounter}') == 'Rent' ? 'selected' : '' }}>Rent</option>
+                                        <option value="Other" {{ old('postharvest_machineries_used_${cropCounter}') == 'Other' ? 'selected' : '' }}>Other</option>
                                     </select>
                                     <button type="button" id="removePostHarvestMachineryButton_${cropCounter}" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removePostHarvestMachinery(${cropCounter})">
                                         <i class="fa fa-trash"></i>
@@ -2464,7 +2853,6 @@ document.querySelectorAll('[id^="salesSection_"]').forEach(section => {
 
 
 // Assuming you have a form with the ID 'form'
-// Assuming you have a form with the ID 'form'
 const form = $('#form');
 
 // Bind the submit event to the form
@@ -2509,14 +2897,14 @@ form.on('submit', function(event) {
         'add_FarmersGroup': $('input.add_FarmersGroup').val(),
         'name_contact_person': $('input.name_contact_person').val(),
         'cp_tel_no': $('input.cp_tel_no').val(),
-        'date_of_interview': $('input.date_of_interview').val(),
+        'date_of_interviewed': $('input.date_of_interviewed').val(),
     };
 
     // Gather farm info from the form inputs
     let farmInfo = {
-    'users_id': $('input.users_id').val(),
-    'personalinfo_id': $('input.personalinfo_id').val(),
-    'agri_districts': $('input.agri_districts').val(),
+
+    'personal_info': $('input.personalinfo_id').val(),
+    'user_id': $('input.users_id').val(),
     'tenurial_status': $('select.tenurial_status').val(),
     'farm_address': $('input.farm_address').val(),
     'no_of_years_as_farmers': $('input.no_of_years_as_farmers').val(),
@@ -2735,52 +3123,44 @@ console.log(cropInfo);
      
 //   // Create the final data object
 let dataobject = {
-    'farmer': farmerInfo, 
+    // 'farmer': farmerInfo, 
     'farm': farmInfo,
     'crops': cropInfo,
 };
 
 // Log the entire data object to the console for debugging
-console.log("Data Object:", dataobject);
+// console.log("Data Object:", dataobject);
 
-// Function to open confirmation modal with data preview
+// const csrfToken = $('input[name="_token"]').attr('value');
+
+//     // Send the AJAX request
+//     $.ajax({
+//         url: '/admin-add-farm/{personalinfos}',
+//         method: 'POST',
+//         contentType: 'application/json', // Set content type for JSON
+//         data: JSON.stringify(dataobject), // Attach the prepared data here
+//         headers: {
+//             'X-CSRF-TOKEN': csrfToken // Include the CSRF token in the headers
+//         },
+//         success: function(response) {
+
+//             console.log(response);
+
+//             if(response.success) {
+//                 console.log(response);
+//                 console.log(response.success);
+//             }
+//         },
+//         error: function(error) {
+//             console.error('Error:', error.responseJSON.message);
+//         }
+//     }); 
+
+
+// // Function to open confirmation modal with data preview
 function openConfirmModal(data) {
     // Check and populate the modal with the farmer's details
-    $('#farmerFirstname').text(data.farmer?.first_name || 'N/A');
-    $('#farmerLastname').text(data.farmer?.last_name || 'N/A');
-    $('#farmerMiddleName').text(data.farmer?.middle_name || 'N/A');
-    $('#farmerExtensionName').text(data.farmer?.extension_name || 'N/A');
-    $('#farmerCountry').text(data.farmer?.country || 'N/A');
-    $('#farmerProvince').text(data.farmer?.province || 'N/A');
-    $('#farmerCity').text(data.farmer?.city || 'N/A');
-    $('#farmerAgriDistrict').text(data.farmer?.agri_district || 'N/A');
-    $('#farmerBarangay').text(data.farmer?.barangay || 'N/A');
-    $('#farmerStreet').text(data.farmer?.street || 'N/A');
-    $('#farmerZipCode').text(data.farmer?.zip_code || 'N/A');
-    $('#farmerContactNo').text(data.farmer?.contact_no || 'N/A');
-    $('#farmerSex').text(data.farmer?.sex || 'N/A');
-    $('#farmerReligion').text(data.farmer?.religion || 'N/A');
-    $('#farmerDateOfBirth').text(data.farmer?.date_of_birth || 'N/A');
-    $('#farmerPlaceOfBirth').text(data.farmer?.place_of_birth || 'N/A');
-    $('#farmerCivilStatus').text(data.farmer?.civil_status || 'N/A');
-    $('#farmerNameLegalSpouse').text(data.farmer?.name_legal_spouse || 'N/A');
-    $('#farmerNoOfChildren').text(data.farmer?.no_of_children || 'N/A');
-    $('#farmerMothersMaidenName').text(data.farmer?.mothers_maiden_name || 'N/A');
-    $('#farmerHighestFormalEducation').text(data.farmer?.highest_formal_education || 'N/A');
-    $('#farmerPersonWithDisability').text(data.farmer?.person_with_disability || 'N/A');
-    $('#farmerYespwdIdNo').text(data.farmer?.YEspwd_id_no || 'N/A');
-    $('#farmerNopwdIdNo').text(data.farmer?.Nopwd_id_no || 'N/A');
-    $('#farmerGovernmentIssuedId').text(data.farmer?.government_issued_id || 'N/A');
-    $('#farmerIdType').text(data.farmer?.id_type || 'N/A');
-    $('#farmerAddIdType').text(data.farmer?.add_Idtype || 'N/A');
-    $('#farmerNonGovIdTypes').text(data.farmer?.non_gov_id_types || 'N/A');
-    $('#farmerMemberOfAnyFarmers').text(data.farmer?.member_ofany_farmers || 'N/A');
-    $('#farmerNameOfFarmers').text(data.farmer?.nameof_farmers || 'N/A');
-    $('#farmerNoFarmersGroup').text(data.farmer?.NoFarmersGroup || 'N/A');
-    $('#farmerAddFarmersGroup').text(data.farmer?.add_FarmersGroup || 'N/A');
-    $('#farmerNameContactPerson').text(data.farmer?.name_contact_person || 'N/A');
-    $('#farmerCpTelNo').text(data.farmer?.cp_tel_no || 'N/A');
-    $('#farmerDateOfInterview').text(data.farmer?.date_of_interview || 'N/A');
+ 
 
     // Check and populate the modal with the farm's details
     $('#farmTenurialStatus').text(data.farm?.tenurial_status || 'N/A');
@@ -2938,6 +3318,7 @@ $('#confirmSave').on('click', function() {
             if (response.success) {
                 var successModal = new bootstrap.Modal(document.getElementById('successModal'), {
                         keyboard: false
+
                     });
                     successModal.show(); // Show success modal
                     
@@ -2962,7 +3343,6 @@ $('#confirmSave').on('click', function() {
 
     });
 });
-
 });
 
 
@@ -3124,202 +3504,343 @@ function checkMmbership() {
 
 
 // Function to check agri_district and display barangay and organization inputs accordingly
-function checkAgri() {
-    var agriDistrict = document.getElementById("selectAgri").value;
-    var barangayInput = document.getElementById("barangayInput");
-    var organizationInput = document.getElementById("YesFarmersGroup");
+// function checkAgri() {
+//     var agriDistrict = document.getElementById("selectAgri").value;
+//     var barangayInput = document.getElementById("barangayInput");
+//     var organizationInput = document.getElementById("YesFarmersGroup");
 
-    if (['ayala', 'vitali', 'culianan', 'tumaga', 'manicahan', 'curuan'].includes(agriDistrict)) {
-        barangayInput.style.display = "block"; // Show barangay input
-        populateBarangays(agriDistrict); // Populate barangays based on selected district
-        if (document.getElementById("selectMember").value === "1") {
-            populateOrganizations(agriDistrict); // Populate organizations based on selected district
-        }
-    } else {
-        barangayInput.style.display = "none"; // Hide barangay input
-    }
-}
+//     if (['ayala', 'vitali', 'culianan', 'tumaga', 'manicahan', 'curuan'].includes(agriDistrict)) {
+//         barangayInput.style.display = "block"; // Show barangay input
+//         populateBarangays(agriDistrict); // Populate barangays based on selected district
+//         if (document.getElementById("selectMember").value === "1") {
+//             populateOrganizations(agriDistrict); // Populate organizations based on selected district
+//         }
+//     } else {
+//         barangayInput.style.display = "none"; // Hide barangay input
+//     }
+// }
 
+// $(document).ready(function() {
+//     function populateBarangays(agriDistrict) {
+//         var barangaySelect = document.getElementById("SelectBarangay");
+
+//         // Clear previous options
+//         barangaySelect.innerHTML = '';
+
+//         // AJAX call to get barangays
+//         $.ajax({
+//             url: '/admin-view-Farmers-survey-form',
+//             method: 'GET',
+//             data: { district: agriDistrict, type: 'barangays' },
+//             success: function(response) {
+//                 console.log('Barangays Response:', response);
+
+//                 if (response.length > 0) {
+//                     response.forEach(function(barangay) {
+//                         var option = document.createElement("option");
+//                         option.text = barangay.barangay_name;
+//                         option.value = barangay.barangay_name;
+//                         barangaySelect.appendChild(option);
+//                     });
+//                 } else {
+//                     var noOption = document.createElement("option");
+//                     noOption.text = "No barangays found";
+//                     noOption.disabled = true;
+//                     barangaySelect.appendChild(noOption);
+//                 }
+//             },
+//             error: function(xhr, status, error) {
+//                 console.log("Error fetching barangays:", error);
+//             }
+//         });
+//     }
+
+//     function populateOrganizations(agriDistrict) {
+//         var organizationSelect = document.getElementById("SelectOrganization");
+
+//         // Clear previous options
+//         organizationSelect.innerHTML = '';
+
+//         // AJAX call to get organizations
+//         $.ajax({
+//             url: '/admin-view-Farmers-survey-form',
+//             method: 'GET',
+//             data: { district: agriDistrict, type: 'organizations' },
+//             success: function(response) {
+//                 console.log('Organizations Response:', response);
+
+//                 if (response.length > 0) {
+//                     response.forEach(function(organization) {
+//                         var option = document.createElement("option");
+//                         option.text = organization.organization_name;
+//                         option.value = organization.organization_name;
+//                         organizationSelect.appendChild(option);
+//                     });
+//                 } else {
+//                     var noOption = document.createElement("option");
+//                     noOption.text = "No organizations found";
+//                     noOption.disabled = true;
+//                     organizationSelect.appendChild(noOption);
+//                 }
+//             },
+//             error: function(xhr, status, error) {
+//                 console.log("Error fetching organizations:", error);
+//             }
+//         });
+//     }
+
+//     function removeBarangay() {
+//         var barangaySelect = document.getElementById("SelectBarangay");
+//         var selectedValue = barangaySelect.value;
+
+//         if (selectedValue) {
+//             var confirmRemove = confirm("Are you sure you want to remove this barangay?");
+//             if (confirmRemove) {
+//                 var selectedIndex = barangaySelect.selectedIndex;
+//                 barangaySelect.remove(selectedIndex);
+//             }
+//         }
+//     }
+
+//     function removeOrganization() {
+//         var organizationSelect = document.getElementById("SelectOrganization");
+//         var selectedValue = organizationSelect.value;
+
+//         if (selectedValue) {
+//             var confirmRemove = confirm("Are you sure you want to remove this organization?");
+//             if (confirmRemove) {
+//                 var selectedIndex = organizationSelect.selectedIndex;
+//                 organizationSelect.remove(selectedIndex);
+//             }
+//         }
+//     }
+
+//     // Modal to add new barangay
+//     $('#saveNewBarangay').click(function() {
+//         var newBarangayName = $('#newBarangayName').val(); // Get the input value from modal
+//         if (newBarangayName) {
+//             var barangaySelect = document.getElementById("SelectBarangay");
+//             var existingOption = Array.from(barangaySelect.options).find(option => option.value === newBarangayName);
+
+//             if (!existingOption) {
+//                 // Add new barangay to the dropdown
+//                 var newOption = document.createElement("option");
+//                 newOption.text = newBarangayName;
+//                 newOption.value = newBarangayName;
+//                 barangaySelect.appendChild(newOption);
+
+//                 // Set the new barangay as selected
+//                 barangaySelect.value = newBarangayName;
+
+//                 // Close the modal after adding the barangay
+//                 $('#newBarangayModal').modal('hide');
+//             } else {
+//                 alert("Barangay already exists.");
+//             }
+//         } else {
+//             alert("Please enter a barangay name.");
+//         }
+//     });
+
+//     // Clear input when modal closes
+//     $('#newBarangayModal').on('hidden.bs.modal', function () {
+//         $('#newBarangayName').val('');
+//     });
+
+//     // Modal to add new organization
+//     var saveButton = document.getElementById('addNewOrganization');
+//     var organizationNameInput = document.getElementById('organizationName');
+//     var errorMessage = document.getElementById('error-message');
+//     var organizationSelect = document.getElementById("SelectOrganization");
+
+//     saveButton.addEventListener('click', function () {
+//         var newOrganizationName = organizationNameInput.value.trim();
+
+//         if (newOrganizationName) {
+//             var existingOption = Array.from(organizationSelect.options).find(option => option.value === newOrganizationName);
+
+//             if (!existingOption) {
+//                 // Add new organization to the dropdown
+//                 var newOption = document.createElement("option");
+//                 newOption.text = newOrganizationName;
+//                 newOption.value = newOrganizationName;
+//                 organizationSelect.appendChild(newOption);
+
+//                 // Set the new organization as selected
+//                 organizationSelect.value = newOrganizationName;
+
+//                 // Clear input and error message
+//                 organizationNameInput.value = '';
+//                 errorMessage.classList.add('d-none');
+
+//                 // Close modal
+//                 var modal = bootstrap.Modal.getInstance(document.getElementById('newOrganizationModal'));
+//                 modal.hide();
+//             } else {
+//                 alert("Organization already exists.");
+//             }
+//         } else {
+//             // Show error message
+//             errorMessage.classList.remove('d-none');
+//         }
+//     });
+
+//     // Clear error message on input change
+//     organizationNameInput.addEventListener('input', function () {
+//         if (organizationNameInput.value.trim()) {
+//             errorMessage.classList.add('d-none');
+//         }
+//     });
+
+//     // Attach event listeners for removal buttons
+//     $('#removeBarangay').click(removeBarangay);
+//     $('#removeOrganization').click(removeOrganization);
+
+//     // Call population functions
+//     var agriDistrict = '{{ $agri_district }}'; // Ensure this is dynamically set
+//     populateBarangays(agriDistrict);
+//     populateOrganizations(agriDistrict);
+// });
 $(document).ready(function() {
-    function populateBarangays(agriDistrict) {
-        var barangaySelect = document.getElementById("SelectBarangay");
-
-        // Clear previous options
-        barangaySelect.innerHTML = '';
-
-        // AJAX call to get barangays
+    // Function to fetch AgriDistricts
+    function fetchAgriDistricts() {
         $.ajax({
-            url: '/admin-add-farm/{personalinfos}',
+            url: '/admin-view-Farmers-survey-form', // Route for fetching AgriDistricts
             method: 'GET',
-            data: { district: agriDistrict, type: 'barangays' },
+            data: { type: 'districts' }, // Request districts
             success: function(response) {
-                console.log('Barangays Response:', response);
+                console.log('Received AgriDistricts data:', response);
 
-                if (response.length > 0) {
-                    response.forEach(function(barangay) {
-                        var option = document.createElement("option");
-                        option.text = barangay.barangay_name;
-                        option.value = barangay.barangay_name;
-                        barangaySelect.appendChild(option);
+                if (response.error) {
+                    console.error('Error fetching AgriDistricts:', response.error);
+                    return;
+                }
+
+                if (typeof response === 'object' && Object.keys(response).length > 0) {
+                    $('#districtSelect').empty().append('<option value="" disabled selected>Select AgriDistrict</option>');
+
+                    $.each(response, function(id, district) {
+                        $('#districtSelect').append(new Option(district, id));
                     });
                 } else {
-                    var noOption = document.createElement("option");
-                    noOption.text = "No barangays found";
-                    noOption.disabled = true;
-                    barangaySelect.appendChild(noOption);
+                    console.warn('No AgriDistrict data received or data is empty.');
                 }
             },
-            error: function(xhr, status, error) {
-                console.log("Error fetching barangays:", error);
+            error: function(xhr) {
+                console.error('AJAX request failed. Status:', xhr.status, 'Response:', xhr.responseText);
             }
         });
     }
 
-    function populateOrganizations(agriDistrict) {
-        var organizationSelect = document.getElementById("SelectOrganization");
-
-        // Clear previous options
-        organizationSelect.innerHTML = '';
-
-        // AJAX call to get organizations
+    // Function to fetch Barangays based on selected AgriDistrict
+    function fetchBarangays(districtId, selectElement) {
         $.ajax({
-            url: '/admin-add-farm/{personalinfos}',
+            url: '/admin-view-Farmers-survey-form',
             method: 'GET',
-            data: { district: agriDistrict, type: 'organizations' },
+            data: { type: 'barangays', district: districtId },
             success: function(response) {
-                console.log('Organizations Response:', response);
+                console.log('Received Barangays data:', response);
 
-                if (response.length > 0) {
-                    response.forEach(function(organization) {
-                        var option = document.createElement("option");
-                        option.text = organization.organization_name;
-                        option.value = organization.organization_name;
-                        organizationSelect.appendChild(option);
-                    });
-                } else {
-                    var noOption = document.createElement("option");
-                    noOption.text = "No organizations found";
-                    noOption.disabled = true;
-                    organizationSelect.appendChild(noOption);
+                if (response.error) {
+                    console.error('Error fetching Barangays:', response.error);
+                    return;
                 }
+
+                const $barangaySelect = $(selectElement).closest('.user-details').find('.barangaySelect');
+                $barangaySelect.empty();
+                $barangaySelect.append('<option value="" disabled selected>Select Barangay</option>');
+                $barangaySelect.append('<option value="add">Add New Barangay...</option>');
+
+                $.each(response, function(id, barangay) {
+                    $barangaySelect.append(new Option(barangay, id));
+                });
             },
-            error: function(xhr, status, error) {
-                console.log("Error fetching organizations:", error);
+            error: function(xhr) {
+                console.error('AJAX request failed. Status:', xhr.status, 'Response:', xhr.responseText);
             }
         });
     }
 
-    function removeBarangay() {
-        var barangaySelect = document.getElementById("SelectBarangay");
-        var selectedValue = barangaySelect.value;
+    // Function to fetch Organizations based on selected AgriDistrict
+    function fetchOrganizations(districtId, selectElement) {
+        $.ajax({
+            url: '/admin-view-Farmers-survey-form',
+            method: 'GET',
+            data: { type: 'organizations', district: districtId },
+            success: function(response) {
+                console.log('Received Organizations data:', response);
 
-        if (selectedValue) {
-            var confirmRemove = confirm("Are you sure you want to remove this barangay?");
-            if (confirmRemove) {
-                var selectedIndex = barangaySelect.selectedIndex;
-                barangaySelect.remove(selectedIndex);
+                if (response.error) {
+                    console.error('Error fetching Organizations:', response.error);
+                    return;
+                }
+
+                const $organizationSelect = $(selectElement).closest('.user-details').find('.organizationSelect');
+                $organizationSelect.empty();
+                $organizationSelect.append('<option value="" disabled selected>Select Organization</option>');
+                $organizationSelect.append('<option value="add">Add New Organization...</option>');
+
+                $.each(response, function(id, organization) {
+                    $organizationSelect.append(new Option(organization, id));
+                });
+            },
+            error: function(xhr) {
+                console.error('AJAX request failed. Status:', xhr.status, 'Response:', xhr.responseText);
             }
-        }
+        });
     }
 
-    function removeOrganization() {
-        var organizationSelect = document.getElementById("SelectOrganization");
-        var selectedValue = organizationSelect.value;
+    // Fetch AgriDistricts on page load
+    fetchAgriDistricts();
 
-        if (selectedValue) {
-            var confirmRemove = confirm("Are you sure you want to remove this organization?");
-            if (confirmRemove) {
-                var selectedIndex = organizationSelect.selectedIndex;
-                organizationSelect.remove(selectedIndex);
-            }
-        }
-    }
-
-    // Modal to add new barangay
-    $('#saveNewBarangay').click(function() {
-        var newBarangayName = $('#newBarangayName').val(); // Get the input value from modal
-        if (newBarangayName) {
-            var barangaySelect = document.getElementById("SelectBarangay");
-            var existingOption = Array.from(barangaySelect.options).find(option => option.value === newBarangayName);
-
-            if (!existingOption) {
-                // Add new barangay to the dropdown
-                var newOption = document.createElement("option");
-                newOption.text = newBarangayName;
-                newOption.value = newBarangayName;
-                barangaySelect.appendChild(newOption);
-
-                // Set the new barangay as selected
-                barangaySelect.value = newBarangayName;
-
-                // Close the modal after adding the barangay
-                $('#newBarangayModal').modal('hide');
-            } else {
-                alert("Barangay already exists.");
-            }
+    // Bind change event to AgriDistrict dropdown
+    $(document).on('change', '#districtSelect', function() {
+        const districtId = $(this).val();
+        if (districtId) {
+            fetchBarangays(districtId, this); // Fetch barangays for the selected district
+            fetchOrganizations(districtId, this); // Fetch organizations for the selected district
         } else {
-            alert("Please enter a barangay name.");
+            $(this).closest('.user-details').find('.barangaySelect, .organizationSelect').empty()
+                .append('<option value="" disabled selected>Select Barangay</option>')
+                .append('<option value="" disabled selected>Select Organization</option>');
         }
     });
 
-    // Clear input when modal closes
-    $('#newBarangayModal').on('hidden.bs.modal', function () {
-        $('#newBarangayName').val('');
-    });
-
-    // Modal to add new organization
-    var saveButton = document.getElementById('addNewOrganization');
-    var organizationNameInput = document.getElementById('organizationName');
-    var errorMessage = document.getElementById('error-message');
-    var organizationSelect = document.getElementById("SelectOrganization");
-
-    saveButton.addEventListener('click', function () {
-        var newOrganizationName = organizationNameInput.value.trim();
-
-        if (newOrganizationName) {
-            var existingOption = Array.from(organizationSelect.options).find(option => option.value === newOrganizationName);
-
-            if (!existingOption) {
-                // Add new organization to the dropdown
-                var newOption = document.createElement("option");
-                newOption.text = newOrganizationName;
-                newOption.value = newOrganizationName;
-                organizationSelect.appendChild(newOption);
-
-                // Set the new organization as selected
-                organizationSelect.value = newOrganizationName;
-
-                // Clear input and error message
-                organizationNameInput.value = '';
-                errorMessage.classList.add('d-none');
-
-                // Close modal
-                var modal = bootstrap.Modal.getInstance(document.getElementById('newOrganizationModal'));
-                modal.hide();
-            } else {
-                alert("Organization already exists.");
+    // Bind change event to Barangay dropdowns to add new barangay
+    $(document).on('change', '.barangaySelect', function() {
+        const barangaySelect = this;
+        if (barangaySelect.value === "add") {
+            const newBarangay = prompt("Please enter the name of the barangay:");
+            if (newBarangay) {
+                const existingOption = Array.from(barangaySelect.options).find(option => option.value === newBarangay);
+                if (!existingOption) {
+                    const newOption = document.createElement("option");
+                    newOption.text = newBarangay;
+                    newOption.value = newBarangay;
+                    barangaySelect.appendChild(newOption);
+                    barangaySelect.value = newBarangay;
+                }
             }
-        } else {
-            // Show error message
-            errorMessage.classList.remove('d-none');
         }
     });
 
-    // Clear error message on input change
-    organizationNameInput.addEventListener('input', function () {
-        if (organizationNameInput.value.trim()) {
-            errorMessage.classList.add('d-none');
+    // Bind change event to Organization dropdowns to add new organization
+    $(document).on('change', '.organizationSelect', function() {
+        const organizationSelect = this;
+        if (organizationSelect.value === "add") {
+            const newOrganization = prompt("Please enter the name of the organization:");
+            if (newOrganization) {
+                const existingOption = Array.from(organizationSelect.options).find(option => option.value === newOrganization);
+                if (!existingOption) {
+                    const newOption = document.createElement("option");
+                    newOption.text = newOrganization;
+                    newOption.value = newOrganization;
+                    organizationSelect.appendChild(newOption);
+                    organizationSelect.value = newOrganization;
+                }
+            }
         }
     });
-
-    // Attach event listeners for removal buttons
-    $('#removeBarangay').click(removeBarangay);
-    $('#removeOrganization').click(removeOrganization);
-
-    // Call population functions
-    var agriDistrict = '{{ $agri_district }}'; // Ensure this is dynamically set
-    populateBarangays(agriDistrict);
-    populateOrganizations(agriDistrict);
 });
 
 
@@ -3336,7 +3857,7 @@ $(document).ready(function() {
 
 //     // AJAX call to get organizations
 //     $.ajax({
-//         url: '/admin-add-farm/{personalinfos}'',
+//         url: '/admin-view-Farmers-survey-form',
 //         method: 'GET',
 //         data: { district: agriDistrict, type: 'organizations' },
 //         success: function(response) {
@@ -3434,11 +3955,7 @@ cost_per_ha.addEventListener('input', calculateTotalFertilizerCost);
 calculateTotalFertilizerCost();
   </script>
     
-    <script>
-        function goBack() {
-            window.history.back(); // This will go back to the previous page in the browser history
-        }
-        </script>  
+    
     
     <script>
         // To show the modal
@@ -3465,6 +3982,7 @@ calculateTotalFertilizerCost();
 <!-- Include jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    
 <script>
     document.getElementById('addCropButton').addEventListener('click', function() {
         var cropProfilesSection = document.getElementById('cropProfiles');
@@ -3480,30 +3998,29 @@ calculateTotalFertilizerCost();
         }
     });
     </script>
-{{-- <script>
-    document.addEventListener('click', function(event) {
-        if (event.target.matches('[data-toggle="collapse"]')) {
-            const targetId = event.target.getAttribute('data-target');
-            const targetElement = document.querySelector(targetId);
-            const button = event.target;
-    
-            if (targetElement) {
-                // Scroll to the target element smoothly
-                targetElement.scrollIntoView({ behavior: 'smooth' });
-    
-                // Use Bootstrap's Collapse class to handle the collapse behavior
-                const bsCollapse = new bootstrap.Collapse(targetElement, { toggle: true });
-                if (button.classList.contains('collapsed')) {
-                    // Remove the 'collapsed' class when the collapse is shown
-                    button.classList.remove('collapsed');
-                    button.setAttribute('aria-expanded', 'true');
-                } else {
-                    // Add the 'collapsed' class when the collapse is hidden
-                    button.classList.add('collapsed');
-                    button.setAttribute('aria-expanded', 'false');
-                }
-            }
-        }
+
+<script>
+    // Example for initializing jQuery UI Datepicker
+    $(function() {
+        $("#datepicker").datepicker({
+            dateFormat: "yy-mm-dd" // Adjust format as needed
+        });
     });
-    </script> --}}
+
+    // Example for showing validation errors
+    function showDateOfBirthError(message) {
+        $("#date_of_birth_error").text(message).show();
+    }
+
+    // Example for hiding validation errors
+    function hideDateOfBirthError() {
+        $("#date_of_birth_error").hide();
+    }
+</script>
+
+<script>
+    function goBack() {
+        window.history.back(); // This will go back to the previous page in the browser history
+    }
+    </script> 
   @endsection

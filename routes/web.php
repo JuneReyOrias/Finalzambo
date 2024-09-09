@@ -593,11 +593,9 @@ Route::controller(PersonalInformationsController::class)->group(function () {
     Route::post('/admin-delete-farmprofile/{farmprofiles}',[ FarmProfileController::class,'deletetFarmProfile'])->name('farm_profile.delete');
 
 
-//farm profiles route
-// Route::middleware('auth')->group(function () {
+
     Route::get('/admin-add-farm/{personalinfos}',[FarmProfileController::class ,'FarmProfile'])->name('farm_profile.farm_index');
-    Route::post('/admin-add-farm/{personalinfos}',[FarmProfileController::class, 'store']);
-// });
+    Route::post('/admin-add-farm/{personalinfos}',[FarmProfileController::class, 'saveFarms']);
 
 // fixed cost update, edit,delte for admin 
 Route::get('/admin-view-fixedcost',[FixedCostController::class, 'FixedCostView'])->name('fixed_cost.fixed_create');

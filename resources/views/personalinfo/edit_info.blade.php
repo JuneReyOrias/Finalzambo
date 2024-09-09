@@ -565,35 +565,7 @@
                                             <input type="hidden" class="form-control country l" name="country" id="validationCustom01" value="Philippines" readonly >
                                             <input type="hidden" class="form-control province light-gray-placeholder @error('last_name') is-invalid @enderror" name="province" id="validationCustom01" value="Zamboanga del sur" readonly >
                                             <input type="hidden"name="email" class="form-control city light-gray-placeholder @error('email') is-invalid @enderror" name="city" id="validationCustom01" value="Zamboanga City" readonly >
-                                            <div class="input-box col-md-4">
-                                                <span class="details">Agri-District</span>
-                                                <select class="form-control light-gray-placeholder gray-text @error('agri_district') is-invalid @enderror" name="agri_district" id="selectAgri"  aria-label="Floating label select e">
-                                                    <option value="{{$personalinfos->district}}">{{$personalinfos->district}}</option>
-                                                <option value="{{ $agri_district }}" {{ $agri_district == "ayala" ? 'selected' : '' }}>{{ $agri_district }}</option>
-                                                    
-                                                </select>
-                                            </div>
-
-                                        <div class="input-box col-md-4">
-                                            <span class="details">Barangay</span>
-                                            <div class="d-flex align-items-center">
-                                                <!-- Select dropdown -->
-                                                <select class="form-control barangay custom-select light-gray-placeholder gray-text @error('barangay') is-invalid @enderror" name="barangay" id="SelectBarangay" aria-label="Floating label select e">
-                                                    <option value="{{$personalinfos->barangay}}">{{$personalinfos->barangay}}</option>
-                                                <!-- Options will be dynamically populated based on the selected agri_district -->
-                                                </select>
-
-                                                <!-- Remove Barangay Button with Font Awesome Icon -->
-                                                <button type="button" id="removeBarangay" class="btn btn-outline-danger ms-2 d-flex align-items-center" title="Remove Selected Barangay">
-                                                    <i class="fa fa-trash me-1"></i>
-                                                </button>
-
-                                                <!-- Add New Barangay Button with Font Awesome Icon -->
-                                                <button type="button" class="btn btn-success ms-2 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#newBarangayModal" title="Add New Barangay">
-                                                    <i class="fa fa-plus me-1"></i>
-                                                </button>
-                                            </div>
-                                        </div>
+                                           
                         
                                             <div class="input-box col-md-4">
                                             <span class="details">Home Address</span>
@@ -853,15 +825,27 @@
                                             <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
                                             <h3>c. Association Info</h3>
                                               <div class="user-details">
-                                                <div class="input-box col-md-4" style="display: none;">
+                                                <div class="input-box col-md-4">
                                                     <span class="details">Agri-District</span>
-                                                    <select class="form-control custom-select light-gray-placeholder agri_district @error('agri_district') is-invalid @enderror"  name="agri_district" id="selectAgri" onchange="checkAgri()"  aria-label="Floating label select e">
-                                                    <option disabled>Select Agri-District</option>
-                                                    <option value="{{$agri_district}}" {{$agri_district == "ayala" ? 'selected' : ''}}>{{$agri_district}}</option>
-                               
+                                                    <select class="form-control light-gray-placeholder gray-text @error('agri_district') is-invalid @enderror" name="agri_district"  id="districtSelect"  aria-label="Floating label select e">
+                                                        <option value="" disabled selected>Select AgriDistrict</option>
+                                                        <!-- Add other options as needed -->
                                                     </select>
+                                                </div>
+                                                
+                                              
+            
+                                                    <!-- Barangay Selection -->
+                                                    <div class="input-box col-md-4">
+                                                        <span class="details">Barangay</span>
+                                                        <div class="d-flex align-items-center">
+                                                            <!-- Select dropdown -->
+                                                            <select class="form-control barangay custom-select light-gray-placeholder gray-text barangaySelect @error('barangay') is-invalid @enderror" name="barangay" id="SelectBarangay" aria-label="Floating label select e">
+                                                                <option value="" disabled selected>Select Barangay</option>
+                                                                <option value="add">Add New Barangay...</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                 
                                                         <div class="input-box  col-md-4 " >
                                                           <span class="details">Member of farmer Ass/Org/Coop</span>
                                                             <select class="form-control custom-select light-gray-placeholder gray-text member_ofany_farmers @error('member_ofany_farmers_ass_org_coop') is-invalid @enderror" id="selectMember" onchange="checkMmbership()" name="member_ofany_farmers_ass_org_coop" aria-label="Floating label select e">
@@ -875,22 +859,24 @@
                                                             @enderror
                                                           </div>
                                                           <!-- Organization Selection -->
-                                                            <div class="input-box col-md-4" id="YesFarmersGroup" style="display: none;">
-                                                           <span class="details">Name of Ass/Org/Coop</span>
-                                                             <div class="d-flex align-items-center">
-                                                             <!-- Select dropdown -->
-                                                            <select class="form-control nameof_farmers custom-select light-gray-placeholder gray-text @error('organization') is-invalid @enderror" name="organization" id="SelectOrganization" aria-label="Floating label select e">
-                                                            <option value="{{$personalinfos->nameof_farmers_ass_org_coop}}"></option>
-                                                             <!-- Options will be dynamically populated based on the selected agri_district -->
-                                                             </select>
-                                                       <!-- Remove Organization Button with Font Awesome Icon -->
-                                                        <button type="button" id="removeOrganization" class="btn btn-outline-danger ms-2 d-flex align-items-center" title="Remove Selected Organization">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
+                                                            <!-- Organization Selection -->
+                                    <div class="input-box col-md-4" id="YesFarmersGroup" style="display: none;">
+                                        <span class="details">Name of Ass/Org/Coop</span>
+                                        <div class="d-flex align-items-center">
+                                            <!-- Select dropdown -->
+                                            <select class="organizationSelect form-control nameof_farmers custom-select light-gray-placeholder gray-text @error('organization') is-invalid @enderror" name="organization" id="SelectOrganization" aria-label="Floating label select e">
+                                                <option value="" disabled selected>Select Organization</option>
+                                                <option value="add">Add New Organization...</option>
+                                            </select>
+
+                                            <!-- Remove Organization Button with Font Awesome Icon -->
+                                            {{-- <button type="button" id="removeOrganization" class="btn btn-outline-danger ms-2 d-flex align-items-center" title="Remove Selected Organization">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
 
                                             <!-- Add New Organization Button with Font Awesome Icon -->
                                             <button type="button" class="btn btn-success ms-2 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#newOrganizationModal" title="Add New Organization">
-                                                <i class="fa fa-plus me-1"></i>
+                                                <i class="fa fa-plus me-1"></i> --}}
                                         </div>
                                     </div>
                                 <div class="input-box col-md-4" id="NoFarmersGroup" style="display: none;font-size: 12px">
@@ -937,128 +923,7 @@
             </form>
         </div>
             <!-- Confirmation Modal -->
-            <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="confirmModalLabel"><i class="fas fa-check-circle"></i> Confirm Your Data</h5>
-                    <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="fas fa-times"></i>
-                    </button>
-                    </div>
-                    <div class="modal-body">
-                    <div class="accordion" id="confirmationAccordion">
-                        <!-- Farmer Information Accordion -->
-                        <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingFarmerInfo">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFarmerInfo" aria-expanded="true" aria-controls="collapseFarmerInfo">
-                            <i class="fas fa-user"></i> Farmer Information
-                            </button>
-                        </h2>
-                        <div id="collapseFarmerInfo" class="accordion-collapse collapse show" aria-labelledby="headingFarmerInfo" data-bs-parent="#confirmationAccordion">
-                            <div class="accordion-body">
-                                <ul class="farmer-details">
-                                    <li><strong>First Name:</strong> <span id="farmerFirstname"></span></li>
-                                    <li><strong>Last Name:</strong> <span id="farmerLastname"></span></li>
-                                    <li><strong>Middle Name:</strong> <span id="farmerMiddleName"></span></li>
-                                    <li><strong>Extension Name:</strong> <span id="farmerExtensionName"></span></li>
-                                    <li><strong>Country:</strong> <span id="farmerCountry"></span></li>
-                                    <li><strong>Province:</strong> <span id="farmerProvince"></span></li>
-                                    <li><strong>City:</strong> <span id="farmerCity"></span></li>
-                                    <li><strong>Agri District:</strong> <span id="farmerAgriDistrict"></span></li>
-                                    <li><strong>Barangay:</strong> <span id="farmerBarangay"></span></li>
-                                    <li><strong>Street:</strong> <span id="farmerStreet"></span></li>
-                                    <li><strong>Zip Code:</strong> <span id="farmerZipCode"></span></li>
-                                    <li><strong>Contact Number:</strong> <span id="farmerContactNo"></span></li>
-                                    <li><strong>Sex:</strong> <span id="farmerSex"></span></li>
-                                    <li><strong>Religion:</strong> <span id="farmerReligion"></span></li>
-                                    <li><strong>Date of Birth:</strong> <span id="farmerDateOfBirth"></span></li>
-                                    <li><strong>Place of Birth:</strong> <span id="farmerPlaceOfBirth"></span></li>
-                                    <li><strong>Civil Status:</strong> <span id="farmerCivilStatus"></span></li>
-                                    <li><strong>Name of Legal Spouse:</strong> <span id="farmerNameLegalSpouse"></span></li>
-                                    <li><strong>Number of Children:</strong> <span id="farmerNoOfChildren"></span></li>
-                                    <li><strong>Mother's Maiden Name:</strong> <span id="farmerMothersMaidenName"></span></li>
-                                    <li><strong>Highest Formal Education:</strong> <span id="farmerHighestFormalEducation"></span></li>
-                                    <li><strong>Person with Disability:</strong> <span id="farmerPersonWithDisability"></span></li>
-                                    <li><strong>YESPWD ID Number:</strong> <span id="farmerYespwdIdNo"></span></li>
-                                    <li><strong>NOPWD ID Number:</strong> <span id="farmerNopwdIdNo"></span></li>
-                                    <li><strong>Government Issued ID:</strong> <span id="farmerGovernmentIssuedId"></span></li>
-                                    <li><strong>ID Type:</strong> <span id="farmerIdType"></span></li>
-                                    <li><strong>Additional ID Type:</strong> <span id="farmerAddIdType"></span></li>
-                                    <li><strong>Non-Government ID Types:</strong> <span id="farmerNonGovIdTypes"></span></li>
-                                    <li><strong>Member of Any Farmers' Group:</strong> <span id="farmerMemberOfAnyFarmers"></span></li>
-                                    <li><strong>Name of Farmers' Group:</strong> <span id="farmerNameOfFarmers"></span></li>
-                                    <li><strong>Number of Farmers' Groups:</strong> <span id="farmerNoFarmersGroup"></span></li>
-                                    <li><strong>Additional Farmers' Group:</strong> <span id="farmerAddFarmersGroup"></span></li>
-                                    <li><strong>Contact Person's Name:</strong> <span id="farmerNameContactPerson"></span></li>
-                                    <li><strong>Contact Person's Number:</strong> <span id="farmerCpTelNo"></span></li>
-                                    <li><strong>Date of Interview:</strong> <span id="farmerDateOfInterview"></span></li>
-                                </ul>
-                                
-                                
-                            
-                            </div>
-                        </div>
-                        </div>
-            
-                        <!-- Farm Information Accordion -->
-                        <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingFarmInfo">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFarmInfo" aria-expanded="false" aria-controls="collapseFarmInfo">
-                            <i class="fas fa-tractor"></i> Farm Information
-                            </button>
-                        </h2>
-                        <div id="collapseFarmInfo" class="accordion-collapse collapse" aria-labelledby="headingFarmInfo" data-bs-parent="#confirmationAccordion">
-                            <div class="accordion-body">
-                                <ul class="farm-details">
-                                    <li><strong>Tenurial Status:</strong> <span id="farmTenurialStatus"></span></li>
-                                    <li><strong>Farm Address:</strong> <span id="farmAddress"></span></li>
-                                    <li><strong>Number of Years as Farmer:</strong> <span id="farmYearsAsFarmer"></span></li>
-                                    <li><strong>GPS Longitude:</strong> <span id="farmGpsLongitude"></span></li>
-                                    <li><strong>GPS Latitude:</strong> <span id="farmGpsLatitude"></span></li>
-                                    <li><strong>Total Physical Area (ha):</strong> <span id="farmTotalPhysicalArea"></span></li>
-                                    <li><strong>Total Area Cultivated (ha):</strong> <span id="farmTotalAreaCultivated"></span></li>
-                                    <li><strong>Land Title Number:</strong> <span id="farmLandTitleNo"></span></li>
-                                    <li><strong>Lot Number:</strong> <span id="farmLotNo"></span></li>
-                                    <li><strong>Area Prone To:</strong> <span id="farmAreaProneTo"></span></li>
-                                    <li><strong>Ecosystem:</strong> <span id="farmEcosystem"></span></li>
-                                    <li><strong>RSBA Register:</strong> <span id="farmRsbaRegister"></span></li>
-                                    <li><strong>PCIC Insured:</strong> <span id="farmPcicInsured"></span></li>
-                                    <li><strong>Government Assisted:</strong> <span id="farmGovernmentAssisted"></span></li>
-                                    <li><strong>Source of Capital:</strong> <span id="farmSourceOfCapital"></span></li>
-                                    <li><strong>Remarks:</strong> <span id="farmRemarks"></span></li>
-                                    <li><strong>OCA District Office:</strong> <span id="farmOcaDistrictOffice"></span></li>
-                                    <li><strong>Name of Technicians:</strong> <span id="farmNameTechnicians"></span></li>
-                                    <li><strong>Date of Interview:</strong> <span id="farmDateInterview"></span></li>
-                                </ul>
-                                
-                            </div>
-                        </div>
-                        </div>
-            
-                        <!-- Crops Information Accordion -->
-                        <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingCropsInfo">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCropsInfo" aria-expanded="false" aria-controls="collapseCropsInfo">
-                            <i class="fas fa-seedling"></i> Crops Information
-                            </button>
-                        </h2>
-                        <div id="collapseCropsInfo" class="accordion-collapse collapse" aria-labelledby="headingCropsInfo" data-bs-parent="#confirmationAccordion">
-                            <div class="accordion-body" id="cropAccordionBody">
-                        
-                                
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Cancel</button>
-                    <button type="button" id="confirmSave" class="btn btn-success"><i class="fas fa-save"></i> Confirm and Save</button>
-                    </div>
-                </div>
-                </div>
-            </div>
+           
   
   <!-- Add this CSS for styling -->
   <style>
@@ -3325,285 +3190,348 @@ function checkMmbership() {
 }
 
 
-// Function to check agri_district and display barangay and organization inputs accordingly
-function checkAgri() {
-    var agriDistrict = document.getElementById("selectAgri").value;
-    var barangayInput = document.getElementById("barangayInput");
-    var organizationInput = document.getElementById("YesFarmersGroup");
+// // Function to check agri_district and display barangay and organization inputs accordingly
+// function checkAgri() {
+//     var agriDistrict = document.getElementById("selectAgri").value;
+//     var barangayInput = document.getElementById("barangayInput");
+//     var organizationInput = document.getElementById("YesFarmersGroup");
 
-    if (['ayala', 'vitali', 'culianan', 'tumaga', 'manicahan', 'curuan'].includes(agriDistrict)) {
-        barangayInput.style.display = "block"; // Show barangay input
-        populateBarangays(agriDistrict); // Populate barangays based on selected district
-        if (document.getElementById("selectMember").value === "1") {
-            populateOrganizations(agriDistrict); // Populate organizations based on selected district
-        }
-    } else {
-        barangayInput.style.display = "none"; // Hide barangay input
-    }
-}
-
-$(document).ready(function() {
-    function populateBarangays(agriDistrict) {
-        var barangaySelect = document.getElementById("SelectBarangay");
-
-        // Clear previous options
-        barangaySelect.innerHTML = '';
-
-        // AJAX call to get barangays
-        $.ajax({
-            url: '/admin-view-Farmers-survey-form',
-            method: 'GET',
-            data: { district: agriDistrict, type: 'barangays' },
-            success: function(response) {
-                console.log('Barangays Response:', response);
-
-                if (response.length > 0) {
-                    response.forEach(function(barangay) {
-                        var option = document.createElement("option");
-                        option.text = barangay.barangay_name;
-                        option.value = barangay.barangay_name;
-                        barangaySelect.appendChild(option);
-                    });
-                } else {
-                    var noOption = document.createElement("option");
-                    noOption.text = "No barangays found";
-                    noOption.disabled = true;
-                    barangaySelect.appendChild(noOption);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.log("Error fetching barangays:", error);
-            }
-        });
-    }
-
-    function populateOrganizations(agriDistrict) {
-        var organizationSelect = document.getElementById("SelectOrganization");
-
-        // Clear previous options
-        organizationSelect.innerHTML = '';
-
-        // AJAX call to get organizations
-        $.ajax({
-            url: '/admin-view-Farmers-survey-form',
-            method: 'GET',
-            data: { district: agriDistrict, type: 'organizations' },
-            success: function(response) {
-                console.log('Organizations Response:', response);
-
-                if (response.length > 0) {
-                    response.forEach(function(organization) {
-                        var option = document.createElement("option");
-                        option.text = organization.organization_name;
-                        option.value = organization.organization_name;
-                        organizationSelect.appendChild(option);
-                    });
-                } else {
-                    var noOption = document.createElement("option");
-                    noOption.text = "No organizations found";
-                    noOption.disabled = true;
-                    organizationSelect.appendChild(noOption);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.log("Error fetching organizations:", error);
-            }
-        });
-    }
-
-    function removeBarangay() {
-        var barangaySelect = document.getElementById("SelectBarangay");
-        var selectedValue = barangaySelect.value;
-
-        if (selectedValue) {
-            var confirmRemove = confirm("Are you sure you want to remove this barangay?");
-            if (confirmRemove) {
-                var selectedIndex = barangaySelect.selectedIndex;
-                barangaySelect.remove(selectedIndex);
-            }
-        }
-    }
-
-    function removeOrganization() {
-        var organizationSelect = document.getElementById("SelectOrganization");
-        var selectedValue = organizationSelect.value;
-
-        if (selectedValue) {
-            var confirmRemove = confirm("Are you sure you want to remove this organization?");
-            if (confirmRemove) {
-                var selectedIndex = organizationSelect.selectedIndex;
-                organizationSelect.remove(selectedIndex);
-            }
-        }
-    }
-
-    // Modal to add new barangay
-    $('#saveNewBarangay').click(function() {
-        var newBarangayName = $('#newBarangayName').val(); // Get the input value from modal
-        if (newBarangayName) {
-            var barangaySelect = document.getElementById("SelectBarangay");
-            var existingOption = Array.from(barangaySelect.options).find(option => option.value === newBarangayName);
-
-            if (!existingOption) {
-                // Add new barangay to the dropdown
-                var newOption = document.createElement("option");
-                newOption.text = newBarangayName;
-                newOption.value = newBarangayName;
-                barangaySelect.appendChild(newOption);
-
-                // Set the new barangay as selected
-                barangaySelect.value = newBarangayName;
-
-                // Close the modal after adding the barangay
-                $('#newBarangayModal').modal('hide');
-            } else {
-                alert("Barangay already exists.");
-            }
-        } else {
-            alert("Please enter a barangay name.");
-        }
-    });
-
-    // Clear input when modal closes
-    $('#newBarangayModal').on('hidden.bs.modal', function () {
-        $('#newBarangayName').val('');
-    });
-
-    // Modal to add new organization
-    var saveButton = document.getElementById('addNewOrganization');
-    var organizationNameInput = document.getElementById('organizationName');
-    var errorMessage = document.getElementById('error-message');
-    var organizationSelect = document.getElementById("SelectOrganization");
-
-    saveButton.addEventListener('click', function () {
-        var newOrganizationName = organizationNameInput.value.trim();
-
-        if (newOrganizationName) {
-            var existingOption = Array.from(organizationSelect.options).find(option => option.value === newOrganizationName);
-
-            if (!existingOption) {
-                // Add new organization to the dropdown
-                var newOption = document.createElement("option");
-                newOption.text = newOrganizationName;
-                newOption.value = newOrganizationName;
-                organizationSelect.appendChild(newOption);
-
-                // Set the new organization as selected
-                organizationSelect.value = newOrganizationName;
-
-                // Clear input and error message
-                organizationNameInput.value = '';
-                errorMessage.classList.add('d-none');
-
-                // Close modal
-                var modal = bootstrap.Modal.getInstance(document.getElementById('newOrganizationModal'));
-                modal.hide();
-            } else {
-                alert("Organization already exists.");
-            }
-        } else {
-            // Show error message
-            errorMessage.classList.remove('d-none');
-        }
-    });
-
-    // Clear error message on input change
-    organizationNameInput.addEventListener('input', function () {
-        if (organizationNameInput.value.trim()) {
-            errorMessage.classList.add('d-none');
-        }
-    });
-
-    // Attach event listeners for removal buttons
-    $('#removeBarangay').click(removeBarangay);
-    $('#removeOrganization').click(removeOrganization);
-
-    // Call population functions
-    var agriDistrict = '{{ $agri_district }}'; // Ensure this is dynamically set
-    populateBarangays(agriDistrict);
-    populateOrganizations(agriDistrict);
-});
-
-
-
-
-
-
-// Function to populate organizations based on agri_district
-// function populateOrganizations(agriDistrict) {
-//     var organizationSelect = document.getElementById("SelectOrganization");
-
-//     // Clear previous options
-//     organizationSelect.innerHTML = '';
-
-//     // AJAX call to get organizations
-//     $.ajax({
-//         url: '/admin-view-Farmers-survey-form',
-//         method: 'GET',
-//         data: { district: agriDistrict, type: 'organizations' },
-//         success: function(response) {
-//             console.log('Organizations Response:', response);
-
-//             if (response.length > 0) {
-//                 response.forEach(function(organization) {
-//                     var option = document.createElement("option");
-//                     option.text = organization.organization_name;
-//                     option.value = organization.organization_name;
-//                     organizationSelect.appendChild(option);
-//                 });
-//             } else {
-//                 var noOption = document.createElement("option");
-//                 noOption.text = "No organizations found";
-//                 noOption.disabled = true;
-//                 organizationSelect.appendChild(noOption);
-//             }
-
-//             // Option to add new organization
-//             var addNewOption = document.createElement("option");
-//             addNewOption.text = "Add New Organization";
-//             addNewOption.value = "addNew";
-//             organizationSelect.appendChild(addNewOption);
-//         },
-//         error: function(xhr, status, error) {
-//             console.log("Error fetching organizations:", error);
+//     if (['ayala', 'vitali', 'culianan', 'tumaga', 'manicahan', 'curuan'].includes(agriDistrict)) {
+//         barangayInput.style.display = "block"; // Show barangay input
+//         populateBarangays(agriDistrict); // Populate barangays based on selected district
+//         if (document.getElementById("selectMember").value === "1") {
+//             populateOrganizations(agriDistrict); // Populate organizations based on selected district
 //         }
-//     });
-// }
-
-// // Function to handle the organization selection
-// function handleOrganizationSelection() {
-//     var organizationSelect = document.getElementById("SelectOrganization");
-//     var selectedOption = organizationSelect.value;
-
-//     if (selectedOption === "addNew") {
-//         var newOrganization = prompt("Enter new organization name:");
-//         if (newOrganization !== null && newOrganization !== "") {
-//             // Add the new organization to the dropdown
-//             var option = document.createElement("option");
-//             option.text = newOrganization;
-//             option.value = newOrganization;
-//             organizationSelect.insertBefore(option, organizationSelect.lastChild); // Add option before the last option ("Add New Organization")
-//             // Select the newly added organization
-//             organizationSelect.value = newOrganization;
-//         }
+//     } else {
+//         barangayInput.style.display = "none"; // Hide barangay input
 //     }
 // }
 
-// Call the checkAgri and checkMmbership functions when the page loads
-window.onload = function() {
-    checkAgri();
-    checkMmbership();
-};
+// $(document).ready(function() {
+//     function populateBarangays(agriDistrict) {
+//         var barangaySelect = document.getElementById("SelectBarangay");
 
-// Call the checkAgri function when the agri_district selection changes
-document.getElementById("selectAgri").addEventListener("change", checkAgri);
+//         // Clear previous options
+//         barangaySelect.innerHTML = '';
 
-// Call the handleBarangaySelection function when a barangay is selected
-document.getElementById("SelectBarangay").addEventListener("change", handleBarangaySelection);
+//         // AJAX call to get barangays
+//         $.ajax({
+//             url: '/admin-view-Farmers-survey-form',
+//             method: 'GET',
+//             data: { district: agriDistrict, type: 'barangays' },
+//             success: function(response) {
+//                 console.log('Barangays Response:', response);
 
-// Call the handleOrganizationSelection function when an organization is selected
-document.getElementById("SelectOrganization").addEventListener("change", handleOrganizationSelection);
-  
+//                 if (response.length > 0) {
+//                     response.forEach(function(barangay) {
+//                         var option = document.createElement("option");
+//                         option.text = barangay.barangay_name;
+//                         option.value = barangay.barangay_name;
+//                         barangaySelect.appendChild(option);
+//                     });
+//                 } else {
+//                     var noOption = document.createElement("option");
+//                     noOption.text = "No barangays found";
+//                     noOption.disabled = true;
+//                     barangaySelect.appendChild(noOption);
+//                 }
+//             },
+//             error: function(xhr, status, error) {
+//                 console.log("Error fetching barangays:", error);
+//             }
+//         });
+//     }
+
+//     function populateOrganizations(agriDistrict) {
+//         var organizationSelect = document.getElementById("SelectOrganization");
+
+//         // Clear previous options
+//         organizationSelect.innerHTML = '';
+
+//         // AJAX call to get organizations
+//         $.ajax({
+//             url: '/admin-view-Farmers-survey-form',
+//             method: 'GET',
+//             data: { district: agriDistrict, type: 'organizations' },
+//             success: function(response) {
+//                 console.log('Organizations Response:', response);
+
+//                 if (response.length > 0) {
+//                     response.forEach(function(organization) {
+//                         var option = document.createElement("option");
+//                         option.text = organization.organization_name;
+//                         option.value = organization.organization_name;
+//                         organizationSelect.appendChild(option);
+//                     });
+//                 } else {
+//                     var noOption = document.createElement("option");
+//                     noOption.text = "No organizations found";
+//                     noOption.disabled = true;
+//                     organizationSelect.appendChild(noOption);
+//                 }
+//             },
+//             error: function(xhr, status, error) {
+//                 console.log("Error fetching organizations:", error);
+//             }
+//         });
+//     }
+
+//     function removeBarangay() {
+//         var barangaySelect = document.getElementById("SelectBarangay");
+//         var selectedValue = barangaySelect.value;
+
+//         if (selectedValue) {
+//             var confirmRemove = confirm("Are you sure you want to remove this barangay?");
+//             if (confirmRemove) {
+//                 var selectedIndex = barangaySelect.selectedIndex;
+//                 barangaySelect.remove(selectedIndex);
+//             }
+//         }
+//     }
+
+//     function removeOrganization() {
+//         var organizationSelect = document.getElementById("SelectOrganization");
+//         var selectedValue = organizationSelect.value;
+
+//         if (selectedValue) {
+//             var confirmRemove = confirm("Are you sure you want to remove this organization?");
+//             if (confirmRemove) {
+//                 var selectedIndex = organizationSelect.selectedIndex;
+//                 organizationSelect.remove(selectedIndex);
+//             }
+//         }
+//     }
+
+//     // Modal to add new barangay
+//     $('#saveNewBarangay').click(function() {
+//         var newBarangayName = $('#newBarangayName').val(); // Get the input value from modal
+//         if (newBarangayName) {
+//             var barangaySelect = document.getElementById("SelectBarangay");
+//             var existingOption = Array.from(barangaySelect.options).find(option => option.value === newBarangayName);
+
+//             if (!existingOption) {
+//                 // Add new barangay to the dropdown
+//                 var newOption = document.createElement("option");
+//                 newOption.text = newBarangayName;
+//                 newOption.value = newBarangayName;
+//                 barangaySelect.appendChild(newOption);
+
+//                 // Set the new barangay as selected
+//                 barangaySelect.value = newBarangayName;
+
+//                 // Close the modal after adding the barangay
+//                 $('#newBarangayModal').modal('hide');
+//             } else {
+//                 alert("Barangay already exists.");
+//             }
+//         } else {
+//             alert("Please enter a barangay name.");
+//         }
+//     });
+
+//     // Clear input when modal closes
+//     $('#newBarangayModal').on('hidden.bs.modal', function () {
+//         $('#newBarangayName').val('');
+//     });
+
+//     // Modal to add new organization
+//     var saveButton = document.getElementById('addNewOrganization');
+//     var organizationNameInput = document.getElementById('organizationName');
+//     var errorMessage = document.getElementById('error-message');
+//     var organizationSelect = document.getElementById("SelectOrganization");
+
+//     saveButton.addEventListener('click', function () {
+//         var newOrganizationName = organizationNameInput.value.trim();
+
+//         if (newOrganizationName) {
+//             var existingOption = Array.from(organizationSelect.options).find(option => option.value === newOrganizationName);
+
+//             if (!existingOption) {
+//                 // Add new organization to the dropdown
+//                 var newOption = document.createElement("option");
+//                 newOption.text = newOrganizationName;
+//                 newOption.value = newOrganizationName;
+//                 organizationSelect.appendChild(newOption);
+
+//                 // Set the new organization as selected
+//                 organizationSelect.value = newOrganizationName;
+
+//                 // Clear input and error message
+//                 organizationNameInput.value = '';
+//                 errorMessage.classList.add('d-none');
+
+//                 // Close modal
+//                 var modal = bootstrap.Modal.getInstance(document.getElementById('newOrganizationModal'));
+//                 modal.hide();
+//             } else {
+//                 alert("Organization already exists.");
+//             }
+//         } else {
+//             // Show error message
+//             errorMessage.classList.remove('d-none');
+//         }
+//     });
+
+//     // Clear error message on input change
+//     organizationNameInput.addEventListener('input', function () {
+//         if (organizationNameInput.value.trim()) {
+//             errorMessage.classList.add('d-none');
+//         }
+//     });
+
+//     // Attach event listeners for removal buttons
+//     $('#removeBarangay').click(removeBarangay);
+//     $('#removeOrganization').click(removeOrganization);
+
+//     // Call population functions
+//     var agriDistrict = '{{ $agri_district }}'; // Ensure this is dynamically set
+//     populateBarangays(agriDistrict);
+//     populateOrganizations(agriDistrict);
+// });
+
+
+$(document).ready(function() {
+    // Function to fetch AgriDistricts
+    function fetchAgriDistricts() {
+        $.ajax({
+            url: '/admin-update-personalinfo/{personalinfos}', // Route for fetching AgriDistricts
+            method: 'GET',
+            data: { type: 'districts' }, // Request districts
+            success: function(response) {
+                console.log('Received AgriDistricts data:', response);
+
+                if (response.error) {
+                    console.error('Error fetching AgriDistricts:', response.error);
+                    return;
+                }
+
+                if (typeof response === 'object' && Object.keys(response).length > 0) {
+                    $('#districtSelect').empty().append('<option value={{$personalinfos->agri_district}}"">{{$personalinfos->agri_district}}</option>');
+
+                    $.each(response, function(id, district) {
+                        $('#districtSelect').append(new Option(district, id));
+                    });
+                } else {
+                    console.warn('No AgriDistrict data received or data is empty.');
+                }
+            },
+            error: function(xhr) {
+                console.error('AJAX request failed. Status:', xhr.status, 'Response:', xhr.responseText);
+            }
+        });
+    }
+
+    // Function to fetch Barangays based on selected AgriDistrict
+    function fetchBarangays(districtId, selectElement) {
+        $.ajax({
+            url: '/admin-update-personalinfo/{personalinfos}',
+            method: 'GET',
+            data: { type: 'barangays', district: districtId },
+            success: function(response) {
+                console.log('Received Barangays data:', response);
+
+                if (response.error) {
+                    console.error('Error fetching Barangays:', response.error);
+                    return;
+                }
+
+                const $barangaySelect = $(selectElement).closest('.user-details').find('.barangaySelect');
+                $barangaySelect.empty();
+                $barangaySelect.append('<option value={{$personalinfos->barangay}}"">{{$personalinfos->barangay}}</option>');
+                $barangaySelect.append('<option value="add">Add New Barangay...</option>');
+
+                $.each(response, function(id, barangay) {
+                    $barangaySelect.append(new Option(barangay, id));
+                });
+            },
+            error: function(xhr) {
+                console.error('AJAX request failed. Status:', xhr.status, 'Response:', xhr.responseText);
+            }
+        });
+    }
+
+    // Function to fetch Organizations based on selected AgriDistrict
+    function fetchOrganizations(districtId, selectElement) {
+        $.ajax({
+            url: '/admin-update-personalinfo/{personalinfos}',
+            method: 'GET',
+            data: { type: 'organizations', district: districtId },
+            success: function(response) {
+                console.log('Received Organizations data:', response);
+
+                if (response.error) {
+                    console.error('Error fetching Organizations:', response.error);
+                    return;
+                }
+
+                const $organizationSelect = $(selectElement).closest('.user-details').find('.organizationSelect');
+                $organizationSelect.empty();
+                $organizationSelect.append('<option value={{$personalinfos->nameof_farmers_ass_org_coop}}"">{{$personalinfos->nameof_farmers_ass_org_coop}}</option>');
+                $organizationSelect.append('<option value="add">Add New Organization...</option>');
+
+                $.each(response, function(id, organization) {
+                    $organizationSelect.append(new Option(organization, id));
+                });
+            },
+            error: function(xhr) {
+                console.error('AJAX request failed. Status:', xhr.status, 'Response:', xhr.responseText);
+            }
+        });
+    }
+
+    // Fetch AgriDistricts on page load
+    fetchAgriDistricts();
+
+    // Bind change event to AgriDistrict dropdown
+    $(document).on('change', '#districtSelect', function() {
+        const districtId = $(this).val();
+        if (districtId) {
+            fetchBarangays(districtId, this); // Fetch barangays for the selected district
+            fetchOrganizations(districtId, this); // Fetch organizations for the selected district
+        } else {
+            $(this).closest('.user-details').find('.barangaySelect, .organizationSelect').empty()
+                .append('<option value="" disabled selected>Select Barangay</option>')
+                .append('<option value="" disabled selected>Select Organization</option>');
+        }
+    });
+
+    // Bind change event to Barangay dropdowns to add new barangay
+    $(document).on('change', '.barangaySelect', function() {
+        const barangaySelect = this;
+        if (barangaySelect.value === "add") {
+            const newBarangay = prompt("Please enter the name of the barangay:");
+            if (newBarangay) {
+                const existingOption = Array.from(barangaySelect.options).find(option => option.value === newBarangay);
+                if (!existingOption) {
+                    const newOption = document.createElement("option");
+                    newOption.text = newBarangay;
+                    newOption.value = newBarangay;
+                    barangaySelect.appendChild(newOption);
+                    barangaySelect.value = newBarangay;
+                }
+            }
+        }
+    });
+
+    // Bind change event to Organization dropdowns to add new organization
+    $(document).on('change', '.organizationSelect', function() {
+        const organizationSelect = this;
+        if (organizationSelect.value === "add") {
+            const newOrganization = prompt("Please enter the name of the organization:");
+            if (newOrganization) {
+                const existingOption = Array.from(organizationSelect.options).find(option => option.value === newOrganization);
+                if (!existingOption) {
+                    const newOption = document.createElement("option");
+                    newOption.text = newOrganization;
+                    newOption.value = newOrganization;
+                    organizationSelect.appendChild(newOption);
+                    organizationSelect.value = newOrganization;
+                }
+            }
+        }
+    });
+});
+
 
 
 
@@ -3648,7 +3576,7 @@ calculateTotalFertilizerCost();
   <script src="{{ asset('js/farmer.js') }}"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMstylquYwo8gAuOrkrF5IsN6K8gbgV6I&libraries=drawing,geometry&callback=initMap"></script>
+  
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

@@ -777,119 +777,72 @@
     }
 
 </style>
-
+<!-- Existing Modal -->
 <div class="modal fade" id="farmersModal" tabindex="-1" role="dialog" aria-labelledby="farmersModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="farmersModalLabel">Farmer Data - {{ $selectedCropName }}</h5>
-                <button type="button" class="btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close"> </button>
-                  
-                </button>
+                <h5 class="modal-title" id="farmersModalLabel">Farmers Per District - {{ $selectedCropName }}</h5>
+                <div class="ms-auto">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#farmerInfoModal">View Farmers Information</button>
+                    <button type="button" class="btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
             </div>
-            <div class="modal-body">
-                <div class="accordion" id="farmerDataModal">
+            <div class="modal-body p-0">
+                <!-- Pie Chart and Legends Section -->
+                <div class="d-flex flex-column" style="height: 80vh; width: 100%;">
+                    <!-- Pie Chart Container -->
+                    <div id="pieChartContainer" style="flex: 1; width: 100%;"></div>
 
-                    <!-- Farmer Data Accordion -->
-                    <div class="card">
-                        <div class="card-header" id="headingOne">
-                            <h2 class="mb-0">
-                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    Farmer Data
-                                </button>
-                            </h2>
-                        </div>
-                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#farmerDataModal">
-                            <div class="card-body">
-                                <!-- Farmer District Distribution Table -->
-                                <table class="table table-hover" style="font-size: 0.875rem;">
-                                    <thead>
-                                        <tr>
-                                            <th>District</th>
-                                            <th class="text-end">Number of Farmers</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($distributionFrequency as $districtId => $frequency)
-                                            <tr>
-                                                <td>{{ $districts[$districtId] ?? 'Unknown' }}</td>
-                                                <td class="text-end">{{ number_format($frequency) }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                    <!-- Legends Container -->
+                    <div id="pieChartLegend" class="mt-3" style="width: 100%; max-height: 20vh; overflow-y: auto; padding: 1rem;">
+                        <!-- Legends will be generated and inserted here by the chart library -->
                     </div>
-
-                    <!-- Farmer Information Accordion -->
-                    <div class="card">
-                        <div class="card-header" id="headingTwo">
-                            <h2 class="mb-0">
-                                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    Farmer Information
-                                </button>
-                            </h2>
-                        </div>
-                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#farmerDataModal">
-                            <div class="card-body">
-                                <!-- Detailed Farmers Information Card -->
-                                <div class="card border-0 rounded-3 shadow-sm" style="background: linear-gradient(to right, #b7b9b9, #eff5f6);">
-                                    <div class="card-body" style="height: 300px; overflow-y: auto;">
-                                        <h5 class="mb-3" style="font-size: 1.15rem;">Detailed Farmers Information</h5>
-                                        <div id="farmersTable">
-                                            @include('admin.partials.farmers_table', ['paginatedFarmers' => $paginatedFarmers])
-                                        </div>
-                                    </div>
-                                    <div id="pagination" class="mt-3 text-center">
-                                        <ul class="pagination">
-                                            <li class="page-item">
-                                                <a class="page-link" href="{{ $paginatedFarmers->previousPageUrl() }}">Previous</a>
-                                            </li>
-                                            @foreach ($paginatedFarmers->getUrlRange(max(1, $paginatedFarmers->currentPage() - 1), min($paginatedFarmers->lastPage(), $paginatedFarmers->currentPage() + 1)) as $page => $url)
-                                                <li class="page-item {{ $page == $paginatedFarmers->currentPage() ? 'active' : '' }}">
-                                                    <a class="page-link" href="{{ $url }}">{{ $page }}</a>
-                                                </li>
-                                            @endforeach
-                                            <li class="page-item">
-                                                <a class="page-link" href="{{ $paginatedFarmers->nextPageUrl() }}">Next</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Pie Chart Accordion -->
-                    <div class="card">
-                        <div class="card-header" id="headingThree">
-                            <h2 class="mb-0">
-                                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                    Production Pie Chart
-                                </button>
-                            </h2>
-                        </div>
-                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#farmerDataModal">
-                            <div class="card-body">
-                                <!-- Pie Chart Section -->
-                                <div class="card mb-3">
-                                    <div class="card-body p-0" style="height: 400px; width: 100%;">
-                                        <div id="pieChartContainer" style="height: 100%; width: 100%;"></div>
-                                    </div>
-                                    <div class="card-footer bg-light text-center" style="font-size: 0.8rem;">
-                                        <span class="text-muted">Pie Chart</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+<!-- Modal for Detailed Farmer Information -->
+<div class="modal fade" id="farmerInfoModal" tabindex="-1" role="dialog" aria-labelledby="farmerInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="farmerInfoModalLabel">Detailed Farmers Information</h5>
+                <button type="button" class="btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <!-- Detailed Farmers Information Card -->
+                <div class="card border-0 rounded-3 shadow-sm" style="background: linear-gradient(to right, #b7b9b9, #eff5f6);">
+                    <div class="card-body p-3" style="height: 300px; overflow-y: auto;">
+                        <h5 class="mb-3" style="font-size: 1.15rem;">Farmers Information</h5>
+                        <div id="farmersTable">
+                            @include('admin.partials.farmers_table', ['paginatedFarmers' => $paginatedFarmers])
+                        </div>
+                    </div>
+                    <div id="pagination" class="mt-3 text-center">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $paginatedFarmers->previousPageUrl() }}">Previous</a>
+                            </li>
+                            @foreach ($paginatedFarmers->getUrlRange(max(1, $paginatedFarmers->currentPage() - 1), min($paginatedFarmers->lastPage(), $paginatedFarmers->currentPage() + 1)) as $page => $url)
+                                <li class="page-item {{ $page == $paginatedFarmers->currentPage() ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                </li>
+                            @endforeach
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $paginatedFarmers->nextPageUrl() }}">Next</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 {{-- <div class="modal fade" id="farmerDataModal" tabindex="-1" aria-labelledby="farmerDataModalLabel" aria-hidden="true">
@@ -1685,66 +1638,6 @@ document.addEventListener('DOMContentLoaded', function () {
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 
-    <script>
-//     // Function to format labels
-//     function formatLabel(label) {
-//         return label.replace(/_/g, ' ') // Replace underscores with spaces
-//                     .toLowerCase()     // Convert to lower case
-//                     .replace(/\b\w/g, function (char) { // Capitalize the first letter of each word
-//                         return char.toUpperCase();
-//                     });
-//     }
-
-//     // Function to open the modal and initialize the pie chart
-//     function openModal(cropName) {
-//         // Sample data for pie chart
-//         var distributionFrequency = @json($distributionFrequency);
-//         var districts = @json($districts);
-
-//         // Prepare data for the pie chart
-//         var chartData = [];
-//         for (var districtId in distributionFrequency) {
-//             if (distributionFrequency.hasOwnProperty(districtId)) {
-//                 chartData.push({
-//                     name: districts[districtId] || 'Unknown',
-//                     y: distributionFrequency[districtId]
-//                 });
-//             }
-//         }
-
-//         // Format the labels
-//         var formattedLabels = chartData.map(item => formatLabel(item.name));
-
-//         // Define a color scheme
-//         var colorScheme = ['#FF4560', '#008FFB', '#00E396', '#FEB019', '#FF66C3', '#7E36A8'];
-
-//         // Initialize the pie chart
-//         var options = {
-//             chart: {
-//                 type: 'pie'
-//             },
-//             series: chartData.map(item => item.y),
-//             labels: formattedLabels, // Use formatted labels
-//             colors: colorScheme.slice(0, chartData.length), // Use a subset of colors based on the number of segments
-//             title: {
-//                 text: 'Number of Farmers per District'
-//             },
-//             legend: {
-//                 position: 'bottom', // Position the legend below the pie chart
-//                 horizontalAlign: 'center', // Center-align the legend
-//                 floating: false, // Make sure the legend is not floating
-//                 offsetY: 10 // Adjust the vertical offset if needed
-//             }
-//         };
-
-//         var chart = new ApexCharts(document.querySelector("#pieChartContainer"), options);
-//         chart.render();
-
-//         // Open the modal
-//         var modal = new bootstrap.Modal(document.getElementById('farmerDataModal'));
-//         modal.show();
-//     }
-// </script>
 
     
 <script>
@@ -1993,7 +1886,7 @@ $(document).ready(function () {
         var formattedLabels = chartData.map(item => formatLabel(item.name));
 
         // Define a color scheme
-        var colorScheme = ['#FF4560', '#008FFB', '#00E396', '#FEB019', '#FF66C3', '#7E36A8'];
+        var colorScheme = ['#ff0000', '#55007f', '#ff00ff', '#007872','#ff5500', '#00aa00', '#008FFB'] ;
 
         // Initialize the pie chart
         var options = {
@@ -2022,4 +1915,12 @@ $(document).ready(function () {
         modal.show();
     }
 </script>
+
+<script>
+    document.getElementById('viewFarmersInfoBtn').addEventListener('click', function() {
+        var farmerInfoModal = new bootstrap.Modal(document.getElementById('farmerInfoModal'));
+        farmerInfoModal.show();
+    });
+</script>
+
 @endsection

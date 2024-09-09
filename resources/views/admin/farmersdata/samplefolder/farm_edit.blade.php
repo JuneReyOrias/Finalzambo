@@ -589,37 +589,7 @@
                                     <input type="hidden" class="form-control country l" name="country" id="validationCustom01" value="Philippines" readonly >
                                     <input type="hidden" class="form-control province light-gray-placeholder @error('last_name') is-invalid @enderror" name="province" id="validationCustom01" value="Zamboanga del sur" readonly >
                                     <input type="hidden"name="email" class="form-control city light-gray-placeholder @error('email') is-invalid @enderror" name="city" id="validationCustom01" value="Zamboanga City" readonly >
-                                    <div class="input-box col-md-4">
-                                        <span class="details">Agri-District</span>
-                                        <select class="form-control light-gray-placeholder gray-text @error('agri_district') is-invalid @enderror" name="agri_district"  id="districtSelect"  aria-label="Floating label select e">
-                                            <option value="" disabled selected>Select AgriDistrict</option>
-                                            <!-- Add other options as needed -->
-                                        </select>
-                                    </div>
-                                    
                                   
-
-                                        <!-- Barangay Selection -->
-                                        <div class="input-box col-md-4">
-                                            <span class="details">Barangay</span>
-                                            <div class="d-flex align-items-center">
-                                                <!-- Select dropdown -->
-                                                <select class="form-control barangay custom-select light-gray-placeholder gray-text barangaySelect @error('barangay') is-invalid @enderror" name="barangay" id="SelectBarangay" aria-label="Floating label select e">
-                                                    <option value="" disabled selected>Select Barangay</option>
-                                                    <option value="add">Add New Barangay...</option>
-                                                </select>
-
-                                                <!-- Remove Barangay Button with Font Awesome Icon -->
-                                                {{-- <button type="button" id="removeBarangay" class="btn btn-outline-danger ms-2 d-flex align-items-center" title="Remove Selected Barangay">
-                                                    <i class="fa fa-trash me-1"></i>
-                                                </button>
-
-                                                <!-- Add New Barangay Button with Font Awesome Icon -->
-                                                <button type="button" class="btn btn-success ms-2 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#newBarangayModal" title="Add New Barangay">
-                                                    <i class="fa fa-plus me-1"></i>
-                                                </button> --}}
-                                            </div>
-                                        </div>
 
                      
                                         {{-- <select id="districtSelect" class="form-control">
@@ -938,15 +908,37 @@
                                             <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
                                             <h3>c. Association Info</h3>
                                               <div class="user-details">
-                                                <div class="input-box col-md-4" style="display: none;">
+                                                <div class="input-box col-md-4">
                                                     <span class="details">Agri-District</span>
-                                                    <select class="form-control custom-select light-gray-placeholder agri_district @error('agri_district') is-invalid @enderror"  name="agri_district" id="selectAgri" onchange="checkAgri()"  aria-label="Floating label select e">
-                                                    <option disabled>Select Agri-District</option>
-                                                    <option value="{{$agri_district}}" {{$agri_district == "ayala" ? 'selected' : ''}}>{{$agri_district}}</option>
-                               
+                                                    <select class="form-control light-gray-placeholder gray-text agri_district @error('agri_district') is-invalid @enderror" name="agri_district"  id="districtSelect"  aria-label="Floating label select e">
+                                                        <option value="" disabled selected>Select AgriDistrict</option>
+                                                        <!-- Add other options as needed -->
                                                     </select>
+                                                </div>
+                                                
+                                              
+            
+                                                    <!-- Barangay Selection -->
+                                                    <div class="input-box col-md-4">
+                                                        <span class="details">Barangay</span>
+                                                        <div class="d-flex align-items-center">
+                                                            <!-- Select dropdown -->
+                                                            <select class="form-control barangay custom-select light-gray-placeholder gray-text barangaySelect @error('barangay') is-invalid @enderror" name="barangay" id="SelectBarangay" aria-label="Floating label select e">
+                                                                <option value="" disabled selected>Select Barangay</option>
+                                                                <option value="add">Add New Barangay...</option>
+                                                            </select>
+            
+                                                            <!-- Remove Barangay Button with Font Awesome Icon -->
+                                                            {{-- <button type="button" id="removeBarangay" class="btn btn-outline-danger ms-2 d-flex align-items-center" title="Remove Selected Barangay">
+                                                                <i class="fa fa-trash me-1"></i>
+                                                            </button>
+            
+                                                            <!-- Add New Barangay Button with Font Awesome Icon -->
+                                                            <button type="button" class="btn btn-success ms-2 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#newBarangayModal" title="Add New Barangay">
+                                                                <i class="fa fa-plus me-1"></i>
+                                                            </button> --}}
+                                                        </div>
                                                     </div>
-                                                 
                                                         <div class="input-box  col-md-4 " >
                                                             <span class="details">Member of farmer Ass/Org/Coop</span>
                                                             <select class="form-control custom-select light-gray-placeholder gray-text member_ofany_farmers @error('member_ofany_farmers_ass_org_coop') is-invalid @enderror" id="selectMember" onchange="checkMmbership()" name="member_ofany_farmers_ass_org_coop" aria-label="Floating label select e">
@@ -966,18 +958,19 @@
                                         <span class="details">Name of Ass/Org/Coop</span>
                                         <div class="d-flex align-items-center">
                                             <!-- Select dropdown -->
-                                            <select class="form-control nameof_farmers custom-select light-gray-placeholder gray-text @error('organization') is-invalid @enderror" name="organization" id="SelectOrganization" aria-label="Floating label select e">
-                                                <!-- Options will be dynamically populated based on the selected agri_district -->
+                                            <select class="organizationSelect form-control nameof_farmers custom-select light-gray-placeholder gray-text @error('organization') is-invalid @enderror" name="organization" id="SelectOrganization" aria-label="Floating label select e">
+                                                <option value="" disabled selected>Select Organization</option>
+                                                <option value="add">Add New Organization...</option>
                                             </select>
 
                                             <!-- Remove Organization Button with Font Awesome Icon -->
-                                            <button type="button" id="removeOrganization" class="btn btn-outline-danger ms-2 d-flex align-items-center" title="Remove Selected Organization">
+                                            {{-- <button type="button" id="removeOrganization" class="btn btn-outline-danger ms-2 d-flex align-items-center" title="Remove Selected Organization">
                                                 <i class="fa fa-trash"></i>
                                             </button>
 
                                             <!-- Add New Organization Button with Font Awesome Icon -->
                                             <button type="button" class="btn btn-success ms-2 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#newOrganizationModal" title="Add New Organization">
-                                                <i class="fa fa-plus me-1"></i>
+                                                <i class="fa fa-plus me-1"></i> --}}
                                         </div>
                                     </div>
                                 <div class="input-box col-md-4" id="NoFarmersGroup" style="display: none;font-size: 12px">
@@ -1074,7 +1067,7 @@
                             </div>
                             <div class="input-box col-md-4">
                                 <span class="details">No.of Years as Farmer:</span>
-                                <input type="number" class="form-control light-gray-placeholder no_of_years_as_farmers" name="farm_profiles[0][no_of_years_as_farmers]" id="no_of_years_as_farmers_0" placeholder="Enter no fo years as farmers">
+                                <input type="text" class="form-control light-gray-placeholder no_of_years_as_farmers" name="farm_profiles[0][no_of_years_as_farmers]" id="no_of_years_as_farmers_0" placeholder="Enter no fo years as farmers">
                             </div>
                             <div class="input-box col-md-4">
                                 <span class="details">GPS Longitude:</span>
@@ -1082,7 +1075,7 @@
                               </div>
                               <div class="input-box col-md-4">
                                 <span class="details">GPS Latitude:</span>
-                                <input type="number" class="form-control light-gray-placeholder gps_latitude" name="farm_profiles[0][gps_latitude]" id="gps_latitude_0"placeholder="GPS_latitude" readonly>
+                                <input type="text" class="form-control light-gray-placeholder gps_latitude" name="farm_profiles[0][gps_latitude]" id="gps_latitude_0"placeholder="GPS_latitude" readonly>
                               </div>
                             
                                     <!-- Map Modal -->
@@ -1100,11 +1093,11 @@
                                 <div class="form-row mt-3">
                                     <div class="col">
                                     <label for="modal_latitude">Latitude:</label>
-                                    <input type="number" class="form-control light-gray-placeholder"placeholder="Enter latitude" id="modal_latitude">
+                                    <input type="text" class="form-control light-gray-placeholder"placeholder="Enter latitude" id="modal_latitude">
                                     </div>
                                     <div class="col">
                                     <label for="modal_longitude">Longitude:</label>
-                                    <input type="number" class="form-control light-gray-placeholder"placeholder="Enter longitude" id="modal_longitude">
+                                    <input type="text" class="form-control light-gray-placeholder"placeholder="Enter longitude" id="modal_longitude">
                                     </div>
                                 </div>
                                 </div>
@@ -3294,7 +3287,7 @@ let dataobject = {
 //     }); 
 
 
-// Function to open confirmation modal with data preview
+// // Function to open confirmation modal with data preview
 function openConfirmModal(data) {
     // Check and populate the modal with the farmer's details
     $('#farmerFirstname').text(data.farmer?.first_name || 'N/A');

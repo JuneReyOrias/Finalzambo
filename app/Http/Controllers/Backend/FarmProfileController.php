@@ -110,7 +110,7 @@ class FarmProfileController extends Controller
 
                         // Return the view with the fetched data
                         return view('farm_profile.farm_index', compact('agri_district', 'agri_districts_id', 'admin', 'profile',
-                        'totalRiceProduction','userId','cropVarieties','personalinfos'));
+                        'totalRiceProduction','userId','cropVarieties','personalinfos','userId'));
                     } else {
                         // Handle the case where the user is not found
                         // You can redirect the user or display an error message
@@ -594,13 +594,12 @@ public function Gmap(Request $request)
     //         'success' => 'Data saved successfully!'
     //     ]);
     // }
-    
-    public function store(Request $request)
+    public function saveFarms(Request $request)
     {
     
     
     
-        //   // Farmer info
+          // Farmer info
         //   $farmerdata = $request -> farmer;
     
         //   $existingFarmer = PersonalInformations::where('last_name', $farmerdata['last_name'])
@@ -650,29 +649,29 @@ public function Gmap(Request $request)
         //   $farmerModel ->save();
     
     
-        // // VARIABLES
-        // // VARIABLES
-        // $farmer_id = $farmerModel =1;
-        // // VARIABLES
-        // // VARIABLES
-    
+        // VARIABLES
+        // VARIABLES
+        // $farmer_id = $farmerModel -> id;
+        // VARIABLES
+        // VARIABLES
+        // $farmerModel -> users_id=1;
            // Farm info
           $farms = $request -> farm;
+        //   return $farms;
           $farmModel = new FarmProfile();
     
-          $farmModel -> users_id = 1;
+        //   $farmModel -> users_id =1;
     
-          // FROM USER
-          $farmModel -> agri_districts_id = 1;
+        //   // FROM USER
+        //   $farmModel -> agri_districts_id = 1;
     
     
-        //   $farmModel -> personal_informations_id = $farmer_id;
+        //   $farmModel -> personal_informations_id = 4096;
     
         //   $farmModel -> polygons_id = $farms['polygons_id'];
         //   $farmModel -> agri_districts = $farms['agri_districts'];
-        $farmModel -> users_id = $farms['users_id'];
-        $farmModel -> personal_informations_id = $farms['personalinfo_id'];
-        $farmModel -> agri_districts = $farms['agri_districts'];
+        $farmModel -> personal_informations_id = $farms['personal_info'];
+        $farmModel -> users_id = $farms['user_id'];
           $farmModel -> tenurial_status = $farms['tenurial_status'];
           $farmModel -> farm_address = $farms['farm_address'];
     
@@ -693,13 +692,15 @@ public function Gmap(Request $request)
         //   $farmModel -> oca_district_office =$farmerModel -> district;
           $farmModel -> name_of_field_officer_technician = $farms['name_technicians'];
           $farmModel -> date_interviewed = $farms['date_interview'];
-    
-          $farmModel ->save();
          
+          $farmModel ->save();
+        
         // VARIABLES
         // VARIABLES
         $farm_id = $farmModel -> id;
-        $users_id =  $farmerModel =1;
+
+        // return $farmModel;
+        $users_id =  $farmModel -> users_id;
         // VARIABLES
         // VARIABLES
     
@@ -837,9 +838,9 @@ public function Gmap(Request $request)
                   $variablesModel -> total_variable_cost= $crop['variables']['total_variable_costs'];
                   $variablesModel -> save();
          
-                  return $request;
+                //   return $request;
                 }
-         
+    
        
     
     
@@ -851,9 +852,7 @@ public function Gmap(Request $request)
           return [
               'success' => "Saved to database" // Corrected the syntax here
           ];
-      }  
-  
-  
+      }
     public function ViewFarmProfile(Request $request)
     {
         // Check if the user is authenticated
@@ -1022,11 +1021,11 @@ public function Gmap(Request $request)
                 $data->save();     
                 
             // Redirect back with success message
-            return redirect('/admin-view-Farmers-farm/{personalinfos}')->with('message', 'Farm Profile Data updated successfully');
+            return redirect()->back()->with('message', 'Farm Profile Data updated successfully');
     
     }catch(\Exception $ex){
    
-                dd($ex); // Debugging statement to inspect the exception
+                // dd($ex); // Debugging statement to inspect the exception
                 return redirect('/update-farmprofile/{farmprofiles}')->with('message','Someting went wrong');
                 
             }   

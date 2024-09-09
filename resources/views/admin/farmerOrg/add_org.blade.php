@@ -348,7 +348,7 @@
                           </div> --}}
                         <div class="input-box">
                           <span class="details"> Farmer Org/Coop/Assoc Name</span>
-                          <input type="text" class="form-control light-gray-placeholder @error('org_name') is-invalid @enderror"  name="organization_name"id="selectReligion"onchange="checkReligion()" >
+                          <input type="text" class="form-control light-gray-placeholder @error('org_name') is-invalid @enderror"   placeholder="Enter Farmer Org/Coop/Assoc Name"  name="organization_name"id="selectReligion"onchange="checkReligion()" >
                           @error('org_name')
                           <div class="invalid-feedback">{{ $message }}</div>
                       @enderror

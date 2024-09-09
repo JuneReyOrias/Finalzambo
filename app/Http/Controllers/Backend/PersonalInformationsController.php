@@ -453,7 +453,7 @@ if ($request->hasFile('image') && $request->file('image')->isValid()) {
         }
         
         // edit page for admin
-        public function  PersonalInfoEdit($id)
+        public function  PersonalInfoEdit(Request $request,$id)
         {
             // Check if the user is authenticated
             if (Auth::check()) {
@@ -483,7 +483,66 @@ if ($request->hasFile('image') && $request->file('image')->isValid()) {
                     // Find the farm profile using the fetched farm ID
                     $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
                     $personalinfos= PersonalInformations::find($id);
-              
+               // Handle AJAX requests
+            if ($request->ajax()) {
+                $type = $request->input('type');
+
+                // Handle requests for agri-districts
+                if ($type === 'districts') {
+                    $districts = AgriDistrict::pluck('district', 'district'); // Fetch agri-district names
+                    return response()->json($districts);
+                }
+
+                // Handle requests for barangays based on the selected district
+                if ($type === 'barangays') {
+                    $district = $request->input('district');
+                    if (!$district) {
+                        return response()->json(['error' => 'District is required.'], 400);
+                    }
+                    $barangays = Barangay::where('district', $district)->pluck('barangay_name', 'barangay_name');
+                    return response()->json($barangays);
+                }
+
+                // Handle requests for organizations based on the selected district
+                if ($type === 'organizations') {
+                    $district = $request->input('district');
+                    if (!$district) {
+                        return response()->json(['error' => 'District is required.'], 400);
+                    }
+                    $organizations = FarmerOrg::where('district', $district)->pluck('organization_name', 'organization_name');
+                    return response()->json($organizations);
+                }
+
+                // Handle requests for crop names
+                if ($type === 'crops') {
+                    $crops = CropCategory::pluck('crop_name', 'crop_name');
+                    return response()->json($crops);
+                }
+
+                // Handle requests for crop varieties based on the selected crop name
+                if ($type === 'varieties') {
+                    $cropName = $request->input('crop_name');
+                    if (!$cropName) {
+                        return response()->json(['error' => 'Crop name is required.'], 400);
+                    }
+                    $varieties = Categorize::where('crop_name', $cropName)->pluck('variety_name', 'variety_name');
+                    return response()->json($varieties);
+                }
+
+                // Handle requests for seed names based on the selected variety name
+                if ($type === 'seedname') {
+                    $varietyName = $request->input('variety_name');
+                    if (!$varietyName) {
+                        return response()->json(['error' => 'Variety name is required.'], 400);
+                    }
+                    $seeds = Seed::where('variety_name', $varietyName)->pluck('seed_name', 'seed_name');
+                    return response()->json($seeds);
+                }
+
+                // Invalid request type
+                return response()->json(['error' => 'Invalid type parameter.'], 400);
+            }
+
         
                     
                     $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');

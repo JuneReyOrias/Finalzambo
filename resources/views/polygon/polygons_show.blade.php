@@ -89,7 +89,7 @@
                                             <tr class="table-light">
                                                  
                                                  <td>{{$seed->id}}</td>
-                                                 <td>{{$seed->agri_districts }}</td>
+                                                 <td>{{$seed->agri_districts}}</td>
                                                  <td>{{$seed->poly_name }}</td>
                                                  <td>{{$seed->strokecolor }}</td>
                                                  <td>{{$seed->verone_latitude }}</td>
