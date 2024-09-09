@@ -84,30 +84,8 @@
         
         {{-- <li class="nav-item nav-category">Components</li> --}}
         <li class="nav-item nav-category">Crops</li>
-        
-        <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="collapse" href="#Crops" role="button" aria-expanded="false" aria-controls="uiComponents">
-            {{-- <img src="../assets/logo/livestock.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;"> --}}
-            <img src="../assets/logo/rice.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
-            <span class="link-title"style="margin-left:12px;"> Farmers Crop Report</span>
-            <i class="link-arrow" data-feather="chevron-down"></i>
-          </a>
-          <div class="collapse" id="Crops">
-            <ul class="nav sub-menu"  style="padding-left: 70px;">
-
-              {{-- <li class="nav-item">
-                <a href="{{route('admin.corn.forms.corn_form')}}" class="nav-link">Survey Form</a>
-              </li> --}}
-              <li class="nav-item">
-                <a href="" class="nav-link">All Crops</a>
-              </li>
-
-
-             
-            </ul>
-          </div>
-        </li>
-        {{-- rice
+     
+        {{-- rice --}}
         <li class="nav-item">
           <a class="nav-link" data-bs-toggle="collapse" href="#croprice" role="button" aria-expanded="false" aria-controls="croprice">
             <img src="../assets/logo/rice.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
@@ -144,7 +122,39 @@
                 </li>
               </ul>
             </div>
-      
+            {{-- <a class="nav-link" data-bs-toggle="collapse" href="#forms" role="button" aria-expanded="false" aria-controls="forms">
+              <i class="link-icon" data-feather="inbox"style="margin-left:20px;"></i>
+              <span class="link-title"style="margin-left:50px;">Forms</span>
+              <i class="link-arrow" data-feather="chevron-down"></i>
+            </a>
+            <div class="collapse" id="forms">
+              <ul class="nav sub-menu"style="padding-left:70px;">
+                <li class="nav-item">
+                  <a href="{{route('personalinfo.index')}}" class="nav-link">Rice Survey Form</a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{route('multifile.import')}}" class="nav-link">Multiple Import Form</a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{route('kml.import')}}" class="nav-link">Kml Import</a>
+                </li>
+              </ul>
+            </div> --}}
+            {{-- <a class="nav-link" data-bs-toggle="collapse" href="#farmers" role="button" aria-expanded="false" aria-controls="farmers">
+              <i class="link-icon" data-feather="info" style="margin-left:20px;"></i>
+              <span class="link-title"style="margin-left:50px;">Farmers Info</span>
+              <i class="link-arrow" data-feather="chevron-down"></i>
+            </a> --}}
+            {{-- <div class="collapse" id="farmers">
+              <ul class="nav sub-menu" style="padding-left:70px;">
+                <li class="nav-item">
+                  <a href="{{route('personalinfo.create')}}" class="nav-link">Rice Farmers Info</a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{route('variable_cost.seeds.view')}}" class="nav-link">Variable Cost</a>
+                </li>
+              </ul>
+            </div> --}}
             <a class="nav-link" data-bs-toggle="collapse" href="#charts" role="button" aria-expanded="false" aria-controls="charts">
               <i class="link-icon" data-feather="slack"style="margin-left:20px;"></i>
               <span class="link-title"style="margin-left:50px;">Rice Varieties</span>
@@ -175,7 +185,9 @@
             </div>
           </div>
         </li>
-
+               <!-- Space -->
+               {{-- <li class="nav-item space"></li> --}}
+       {{-- corn --}}
         <li class="nav-item">
           <a class="nav-link" data-bs-toggle="collapse" href="#Corn" role="button" aria-expanded="false" aria-controls="Corn">
             <img src="../assets/logo/corn.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
@@ -210,7 +222,39 @@
                 </li>
               </ul>
             </div>
-
+            {{-- <a class="nav-link" data-bs-toggle="collapse" href="#form" role="button" aria-expanded="false" aria-controls="forms">
+              <i class="link-icon" data-feather="inbox"style="margin-left:25px;"></i>
+              <span class="link-title"style="margin-left:50px;">Forms</span>
+              <i class="link-arrow" data-feather="chevron-down"></i>
+            </a> --}}
+            {{-- <div class="collapse" id="form">
+              <ul class="nav sub-menu"style="padding-left:70px;">
+                <li class="nav-item">
+                  <a href="{{route('admin.corn.forms.corn_form')}}" class="nav-link">Corn Survey Form</a>
+                </li>
+                <li class="nav-item">
+                  <a href="" class="nav-link">Multiple Import Form</a>
+                </li>
+                <li class="nav-item">
+                  <a href="" class="nav-link">Kml Import</a>
+                </li>
+              </ul>
+            </div> --}}
+            {{-- <a class="nav-link" data-bs-toggle="collapse" href="#farmer" role="button" aria-expanded="false" aria-controls="farmers">
+              <i class="link-icon" data-feather="info" style="margin-left:25px;"></i>
+              <span class="link-title"style="margin-left:50px;">Farmers Info</span>
+              <i class="link-arrow" data-feather="chevron-down"></i>
+            </a> --}}
+            {{-- <div class="collapse" id="farmer">
+              <ul class="nav sub-menu"style="padding-left:70px;">
+                <li class="nav-item">
+                  <a href="{{route('admin.corn.farmersInfo.information')}}" class="nav-link">Corn Farmers Info</a>
+                </li>
+                <li class="nav-item">
+                  <a href="" class="nav-link">Variable Cost</a>
+                </li>
+              </ul>
+            </div> --}}
             <a class="nav-link" data-bs-toggle="collapse" href="#chart" role="button" aria-expanded="false" aria-controls="charts">
               <i class="link-icon" data-feather="slack"style="margin-left:25px;"></i>
               <span class="link-title"style="margin-left:50px;">Corn Varieties</span>
@@ -241,7 +285,9 @@
             </div>
           </div>
         </li>
-     
+         <!-- Space -->
+         {{-- <li class="nav-item space"></li> --}}
+         {{-- coconut --}}
          <li class="nav-item">
           <a class="nav-link" data-bs-toggle="collapse" href="#Coconut" role="button" aria-expanded="false" aria-controls="Coconut">
             <img src="../assets/logo/coconut.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white; ">
@@ -276,7 +322,39 @@
                 </li>
               </ul>
             </div>
-          
+            {{-- <a class="nav-link" data-bs-toggle="collapse" href="#formcoco" role="button" aria-expanded="false" aria-controls="forms">
+              <i class="link-icon" data-feather="inbox"style="margin-left:25px;"></i>
+              <span class="link-title"style="margin-left:50px;">Forms</span>
+              <i class="link-arrow" data-feather="chevron-down"></i>
+            </a> --}}
+            {{-- <div class="collapse" id="formcoco">
+              <ul class="nav sub-menu"style="padding-left:70px;">
+                <li class="nav-item">
+                  <a href="{{route('admin.corn.forms.corn_form')}}" class="nav-link">Coconut Survey Form</a>
+                </li>
+                <li class="nav-item">
+                  <a href="" class="nav-link">Multiple Import Form</a>
+                </li>
+                <li class="nav-item">
+                  <a href="" class="nav-link">Kml Import</a>
+                </li>
+              </ul>
+            </div> --}}
+            {{-- <a class="nav-link" data-bs-toggle="collapse" href="#farmercoco" role="button" aria-expanded="false" aria-controls="farmers">
+              <i class="link-icon" data-feather="info"style="margin-left:25px;"></i>
+              <span class="link-title"style="margin-left:50px;">Farmers Info</span>
+              <i class="link-arrow" data-feather="chevron-down"></i>
+            </a> --}}
+            {{-- <div class="collapse" id="farmercoco">
+              <ul class="nav sub-menu"style="padding-left:70px;">
+                <li class="nav-item">
+                  <a href="{{route('admin.corn.farmersInfo.information')}}" class="nav-link">Coconut Farmer Info</a>
+                </li>
+                <li class="nav-item">
+                  <a href="" class="nav-link">Variable Cost</a>
+                </li>
+              </ul>
+            </div> --}}
             <a class="nav-link" data-bs-toggle="collapse" href="#chartcoco" role="button" aria-expanded="false" aria-controls="charts">
               <i class="link-icon" data-feather="slack"style="margin-left:25px;"></i>
               <span class="link-title"style="margin-left:50px;">Coconut Varieties</span>
@@ -300,11 +378,13 @@
                 <li class="nav-item">
                   <a href="{{route('admin.corn.production.reportsproduce')}}" class="nav-link">Coconut</a>
                 </li>
-            
+                {{-- <li class="nav-item">
+                  <a href="{{route('admin.rice_varieties.rice_varietydistrict')}}" class="nav-link">Upland Corn</a>
+                </li> --}}
               </ul>
             </div>
           </div>
-        </li> --}}
+        </li>
 
      
     
