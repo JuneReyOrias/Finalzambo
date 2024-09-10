@@ -167,14 +167,14 @@
                           
                                                 <td>
                                                    
-                                                     <a href="{{route('admin.farmerOrg.edit_org',  $org->id)}}" title="Edit Student"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
+                                                    <a href="{{route('admin.farmerOrg.edit_org',  $org->id)}}" title="Edit Student"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
                                         
-                                                     <form  action="{{ route('polygon.delete', $org->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
-                                                    @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm" title="Delete Student" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
-                                                    </form> 
-                                                    
+                                                    <form  action="{{ route('admin.farmerOrg.delete', $org->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
+                                                   @csrf
+                                                       @method('DELETE')
+                                                       <button type="submit" class="btn btn-danger btn-sm" title="Delete Student" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                                                   </form> 
+                                                   
                                                 </td>
                                         </tr>
                                         @endforeach
