@@ -413,6 +413,8 @@
   <div class="row g-2">
 
 <!-- HTML for Cards and Modal -->
+
+<!-- Card for Total Number of Farmers -->
 <div class="col-md-2 stretch-card" onclick="openModal('{{ $selectedCropName }}')">
     <div class="card custom-card bg text-white mb-3">
         <div class="card-body">
@@ -428,120 +430,74 @@
         </div>
     </div>
 </div>
-<!-- Modal Structure -->
 
-<div class="modal fade" id="farmerDataModal" tabindex="-1" aria-labelledby="farmerDataModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content rounded-4 shadow-lg">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title" id="farmerDataModalLabel">Farmers Data and Analytics</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- Modal for Farmers Per District -->
+<div class="modal fade" id="farmersModal" tabindex="-1" role="dialog" aria-labelledby="farmersModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="farmersModalLabel">Farmers Per District - {{ $selectedCropName }}</h5>
+                <div class="ms-auto">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#farmerInfoModal">View Farmers Information</button>
+                    <button type="button" class="btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
             </div>
-            <div class="modal-body">
-                <div class="accordion" id="farmerDataAccordion">
+            <div class="modal-body p-0">
+                <!-- Pie Chart and Legends Section -->
+                <div class="d-flex flex-column" style="height: 100%; width: 100%;">
+                    <!-- Pie Chart Container -->
+                    <div id="pieChartContainer" style="flex: 1; width: 100%;"></div>
 
-                    <!-- Farmers Analytics Table Section -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingFarmersAnalytics" style=" linear-gradient(to right, #e0f7fa, #b2ebf2);">
-                                    <div class="card-body">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFarmersAnalytics" aria-expanded="true" aria-controls="collapseFarmersAnalytics">
-                                <i class="fas fa-table"></i> Farmers Distribution
-                            </button>
-                        </h2>
-                        <div id="collapseFarmersAnalytics" class="accordion-collapse collapse" aria-labelledby="headingFarmersAnalytics" data-bs-parent="#farmerDataAccordion">
-                            <div class="accordion-body">
-                                <div class="card border-0 rounded-3 shadow-sm" style="background: linear-gradient(to right, #e0f7fa, #b2ebf2);">
-                                    <div class="card-body" style="height: 300px; overflow-y: auto;">
-                                        <h5 class="mb-3" style="font-size: 1.15rem;">Analytics for {{ $totalFarms }}</h5>
-                                        <table class="table table-hover" style="font-size: 0.875rem;">
-                                            <thead>
-                                                <tr>
-                                                    <th>District</th>
-                                                    <th class="text-end">Number of Farmers</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($distributionFrequency as $districtId => $frequency)
-                                                    <tr>
-                                                        <td>{{ $districts[$districtId] ?? 'Unknown' }}</td>
-                                                        <td class="text-end">{{ number_format($frequency) }}</td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="card-footer bg-light text-center" style="font-size: 1rem;">
-                                        <span class="text-muted">Farmers Distribution</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Detailed Farmers Information Section -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingDetailedInfo">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetailedInfo" aria-expanded="true" aria-controls="collapseDetailedInfo">
-                                <i class="fas fa-info-circle"></i> Detailed Farmers Information
-                            </button>
-                        </h2>
-                        <div id="collapseDetailedInfo" class="accordion-collapse collapse" aria-labelledby="headingDetailedInfo" data-bs-parent="#farmerDataAccordion">
-                            <div class="accordion-body">
-                                <div class="card border-0 rounded-3 shadow-sm" style="background: linear-gradient(to right, #b7b9b9, #eff5f6);">
-                                    <div class="card-body" style="height: 300px; overflow-y: auto;">
-                                        <h5 class="mb-3" style="font-size: 1.15rem;">Detailed Farmers Information</h5>
-                                        <div id="farmersTable">
-                                            @include('admin.partials.farmers_table', ['paginatedFarmers' => $paginatedFarmers])
-                                        </div>
-                                    </div>
-                                    <div id="pagination" class="mt-3 text-center">
-                                        <ul class="pagination justify-content-center">
-                                            <li class="page-item">
-                                                <a class="page-link" href="{{ $paginatedFarmers->previousPageUrl() }}">Previous</a>
-                                            </li>
-                                            @foreach ($paginatedFarmers->getUrlRange(max(1, $paginatedFarmers->currentPage() - 1), min($paginatedFarmers->lastPage(), $paginatedFarmers->currentPage() + 1)) as $page => $url)
-                                                <li class="page-item {{ $page == $paginatedFarmers->currentPage() ? 'active' : '' }}">
-                                                    <a class="page-link" href="{{ $url }}">{{ $page }}</a>
-                                                </li>
-                                            @endforeach
-                                            <li class="page-item">
-                                                <a class="page-link" href="{{ $paginatedFarmers->nextPageUrl() }}">Next</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                     <!-- Pie Chart Section -->
-                     <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingPieChart">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePieChart" aria-expanded="true" aria-controls="collapsePieChart">
-                                <i class="fas fa-chart-pie"></i> Pie Chart
-                            </button>
-                        </h2>
-                        <div id="collapsePieChart" class="accordion-collapse collapse" aria-labelledby="headingPieChart" data-bs-parent="#farmerDataAccordion">
-                            <div class="accordion-body">
-                                <div class="row justify-content-center mb-4">
-                                    <div class="col-12">
-                                        <div class="card border-0 rounded-3 shadow-sm" style="background: linear-gradient(to right, #f8cdda, #f4a2c1);">
-                                            <div class="card-body p-0" style="height: 400px; width: 100%;">
-                                                <div id="pieChartContainer" style="height: 100%; width: 100%;"></div>
-                                            </div>
-                                            <div class="card-footer bg-light text-center" style="font-size: 0.8rem;">
-                                                <span class="text-muted">Pie Chart</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <!-- Legends Container -->
+                    <div id="pieChartLegend" class="mt-3" style="width: 100%; max-height: 20vh; overflow-y: auto; padding: 1rem; bottom:10px;">
+                        <!-- Legends will be generated and inserted here by the chart library -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Modal for Detailed Farmers Information -->
+<div class="modal fade" id="farmerInfoModal" tabindex="-1" role="dialog" aria-labelledby="farmerInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="farmerInfoModalLabel">Detailed Farmers Information</h5>
+                <button type="button" class="btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Detailed Farmers Information Card -->
+                <div class="card border-0 rounded-3 shadow-sm" style="background: linear-gradient(to right, #b7b9b9, #eff5f6);">
+                    <div class="card-body" style="height: 1000%;width:100%; overflow-y: auto;">
+                        <div id="farmersTable">
+                            @include('admin.partials.farmers_table', ['paginatedFarmers' => $paginatedFarmers])
+                        </div>
+                    </div>
+                    <div id="pagination" class="mt-3 text-center">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $paginatedFarmers->previousPageUrl() }}">Previous</a>
+                            </li>
+                            @foreach ($paginatedFarmers->getUrlRange(max(1, $paginatedFarmers->currentPage() - 1), min($paginatedFarmers->lastPage(), $paginatedFarmers->currentPage() + 1)) as $page => $url)
+                                <li class="page-item {{ $page == $paginatedFarmers->currentPage() ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                </li>
+                            @endforeach
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $paginatedFarmers->nextPageUrl() }}">Next</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 
 
 
@@ -1279,7 +1235,7 @@ document.addEventListener('DOMContentLoaded', function () {
         chart.render();
 
         // Open the modal
-        var modal = new bootstrap.Modal(document.getElementById('farmerDataModal'));
+        var modal = new bootstrap.Modal(document.getElementById('farmersModal'));
         modal.show();
     }
 </script>
@@ -1466,6 +1422,14 @@ $(document).ready(function () {
                 }
             });
         });
+    });
+</script>
+
+
+<script>
+    document.getElementById('viewFarmersInfoBtn').addEventListener('click', function() {
+        var farmerInfoModal = new bootstrap.Modal(document.getElementById('farmerInfoModal'));
+        farmerInfoModal.show();
     });
 </script>
 
