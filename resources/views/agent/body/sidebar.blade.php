@@ -99,7 +99,7 @@
               <a href="{{route('admin.corn.forms.corn_form')}}" class="nav-link">Survey Form</a>
             </li> --}}
             <li class="nav-item">
-              <a href="" class="nav-link">Crops</a>
+              <a href="{{route('agent.CropReport.all_crops')}}" class="nav-link">Crops</a>
             </li>
 
 

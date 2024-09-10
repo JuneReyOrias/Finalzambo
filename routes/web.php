@@ -46,7 +46,8 @@ use App\Models\AgriDistrict;
 */
 
 
-
+//agent access all  cropsreport
+Route::get('/agent-all-crops-report',[AgentController ::class,'AgentAllCrops'])->name('agent.CropReport.all_crops');
 // all crops
 Route::get('/admin-all-crops-report',[FarmProfileController ::class,'AllCrops'])->name('admin.cropsreport.all_crops');
 // Crop Variety
