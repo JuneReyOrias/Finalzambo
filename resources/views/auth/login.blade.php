@@ -64,7 +64,7 @@
               
 							<div class="row">
                 <div class="col-md-4 pe-md-0">
-                  <div class="auth-side-wrapper"  style=" background-image: url(Upload/rice.JPG);">
+                  <div class="auth-side-wrapper"  style=" background-image: url(Upload/rice.jpg);">
 
                   </div>
                 </div>
