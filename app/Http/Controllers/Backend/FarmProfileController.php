@@ -24,9 +24,10 @@ use App\Models\Seed;
 use App\Models\User;
 use App\Models\Crop;
 use App\Models\VariableCost;
-use Illuminause Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Pagination\Paginator;
 use Carbon\Carbon;
-use Illuminate\Pagination\LengthAwarePaginator;te\Support\Facades\Storage;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class FarmProfileController extends Controller
 {
