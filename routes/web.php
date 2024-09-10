@@ -106,7 +106,7 @@ Route::get('/admin-view-General-Farmers',[AdminController::class,'GenFarmers'])-
  Route::get('/admin-view-farmer-org',[AdminController::class,'viewfarmersOrg'])->name('admin.farmerOrg.view_orgs');
  Route::get('/admin-edit-farmer-org/{farmerOrg}',[AdminController::class,'EditOrg'])->name('admin.farmerOrg.edit_org');
  Route::post('/admin-edit-farmer-org/{farmerOrg}',[AdminController::class,'updateFarmerOrg']);
- Route::post('/admin-edit-farmer-org/{farmerOrg}',[AdminController::class,'deleteFarmerOrg']);
+ Route::delete('/admin-delete-farmer-org/{farmerOrg}',[AdminController::class,'deleteFarmerOrg'])->name('admin.farmerOrg.delete');
 
     // admin  add barangay form
     Route::get('/admin-add-barangay',[AdminController::class,'barangayForm'])->name('admin.barangay.add_form');

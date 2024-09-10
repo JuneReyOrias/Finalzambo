@@ -3589,6 +3589,7 @@ public function CornSave(Request $request)
                 }
 
                 
+                
                 public function updateFarmerOrg(Request $request,$id
                 )
                 {
@@ -3604,40 +3605,41 @@ public function CornSave(Request $request)
                         $organization->organization_name =$request->organization_name;
                        
                         // $organization->altitude =$request->altitude;
-                        dd($organization);
+                        // dd($organization);
                         $organization->save();
-                        return redirect('/admin-view-farmer-org')->with('message','Farmer Organization Deleted successsfully');
+                        return redirect('/admin-view-farmer-org')->with('message','Farmer Organization updated successsfully');
                     
                     }
                     catch(\Exception $ex){
-                        dd($ex); // Debugging statement to inspect the exception
+                        // dd($ex); // Debugging statement to inspect the exception
                         return redirect('/admin-view-farmer-org')->with('message','Someting went wrong');
                         
                     }   
                 }
 
                                             // deleting personal informations
-                        public function infodelete($id) {
+                        public function deleteFarmerOrg($id) {
                             try {
                                 // Find the personal information by ID
-                                $personalinformations = PersonalInformations::find($id);
+                                $organization = FarmerOrg::find($id);
 
                                 // Check if the personal information exists
-                                if (!$personalinformations) {
-                                    return redirect()->back()->with('error', 'Personal information not found');
+                                if (!$organization) {
+                                    return redirect()->back()->with('error', 'Farmer Organization not found');
                                 }
 
                                 // Delete the personal information data from the database
-                                $personalinformations->delete();
+                                $organization->delete();
 
                                 // Redirect back with success message
-                                return redirect()->back()->with('message', 'Personal information deleted successfully');
+                                return redirect()->back()->with('message', 'Farmer Organization deleted successfully');
 
                             } catch (\Exception $e) {
                                 // Handle any exceptions and redirect back with error message
-                                return redirect()->back()->with('error', 'Error deleting personal information: ' . $e->getMessage());
+                                return redirect()->back()->with('error', 'Error deleting Farmer Organization: ' . $e->getMessage());
                             }
                         }
+
 
 
 
