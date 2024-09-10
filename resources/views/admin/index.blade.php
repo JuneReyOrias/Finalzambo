@@ -302,6 +302,45 @@
     background-color: #f8f9fa;
 }
 
+
+/* Ensure modal header is flex and items are centered */
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Space between title and buttons */
+    flex-wrap: wrap; /* Allows wrapping of elements */
+}
+
+/* Style for modal title */
+.modal-title {
+    font-size: 1.25rem; /* Default font size for larger screens */
+    margin: 0;
+    flex: 1; /* Allow title to take up available space */
+}
+
+/* Style for buttons */
+.modal-header .btn {
+    margin-top: 0;
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 320px) { /* For mobile phones */
+    .modal-title {
+        font-size:0.9rem; /* Slightly smaller font size */
+        text-align: center; /* Center title text on small screens */
+        margin-bottom: 0.5rem; /* Add space below title */
+    }
+
+    .modal-header {
+        flex-direction: column; /* Stack items vertically on smaller screens */
+        align-items: center; /* Center align items */
+    }
+
+    .modal-header .btn {
+        margin-top: 0.5rem; /* Add space between buttons on small screens */
+    }
+}
+
   
 </style>
 
@@ -435,13 +474,20 @@
 <div class="modal fade" id="farmersModal" tabindex="-1" role="dialog" aria-labelledby="farmersModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="farmersModalLabel">Farmers Per District - {{ $selectedCropName }}</h5>
-                <div class="ms-auto">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#farmerInfoModal">View Farmers Information</button>
-                    <button type="button" class="btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+           <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="farmersModalLabel">Farmers Per District - {{ $selectedCropName }}</h5>
+                    <div class="ms-auto d-flex align-items-center">
+                        <!-- Eye Icon Button with Tooltip -->
+                        <button type="button" class="btn btn-light me-2" data-bs-toggle="modal" data-bs-target="#farmerInfoModal" title="View Farmers Information">
+                            <i class="fa fa-eye"> Farmers</i>
+                        </button>
+                        <!-- Close Button -->
+                        <button type="button" class="btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
                 </div>
-            </div>
+
+
             <div class="modal-body p-0">
                 <!-- Pie Chart and Legends Section -->
                 <div class="d-flex flex-column" style="height: 100%; width: 100%;">
@@ -458,37 +504,46 @@
     </div>
 </div>
 
-<!-- Modal for Detailed Farmers Information -->
 <div class="modal fade" id="farmerInfoModal" tabindex="-1" role="dialog" aria-labelledby="farmerInfoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-success text-white">
                 <h5 class="modal-title" id="farmerInfoModalLabel">Detailed Farmers Information</h5>
-                <button type="button" class="btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button"class="btn-close btn-light border border-2 border-white shadow-sm" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <!-- Detailed Farmers Information Card -->
-                <div class="card border-0 rounded-3 shadow-sm" style="background: linear-gradient(to right, #b7b9b9, #eff5f6);">
-                    <div class="card-body" style="height: 1000%;width:100%; overflow-y: auto;">
-                        <div id="farmersTable">
-                            @include('admin.partials.farmers_table', ['paginatedFarmers' => $paginatedFarmers])
+            <div class="modal-body d-flex flex-column justify-content-center align-items-center" style="max-height: calc(100vh - 200px); overflow-y: auto;">
+                <div class="accordion w-100" id="farmerAccordion">
+                    <!-- Accordion Item 1 -->
+                    <div class="accordion-item border-0">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button bg-secondary text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Farmers Table
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#farmerAccordion">
+                            <div class="accordion-body bg-light d-flex flex-column justify-content-center align-items-center">
+                                <div id="farmersTable" class="w-100 table-responsive">
+                                    @include('admin.partials.farmers_table', ['paginatedFarmers' => $paginatedFarmers])
+                                </div>
+                                <div id="pagination" class="mt-3 text-center">
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ $paginatedFarmers->previousPageUrl() }}">Previous</a>
+                                        </li>
+                                        @foreach ($paginatedFarmers->getUrlRange(max(1, $paginatedFarmers->currentPage() - 1), min($paginatedFarmers->lastPage(), $paginatedFarmers->currentPage() + 1)) as $page => $url)
+                                            <li class="page-item {{ $page == $paginatedFarmers->currentPage() ? 'active' : '' }}">
+                                                <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                            </li>
+                                        @endforeach
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ $paginatedFarmers->nextPageUrl() }}">Next</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div id="pagination" class="mt-3 text-center">
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link" href="{{ $paginatedFarmers->previousPageUrl() }}">Previous</a>
-                            </li>
-                            @foreach ($paginatedFarmers->getUrlRange(max(1, $paginatedFarmers->currentPage() - 1), min($paginatedFarmers->lastPage(), $paginatedFarmers->currentPage() + 1)) as $page => $url)
-                                <li class="page-item {{ $page == $paginatedFarmers->currentPage() ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ $url }}">{{ $page }}</a>
-                                </li>
-                            @endforeach
-                            <li class="page-item">
-                                <a class="page-link" href="{{ $paginatedFarmers->nextPageUrl() }}">Next</a>
-                            </li>
-                        </ul>
-                    </div>
+                    <!-- Additional Accordion Items can be added here -->
                 </div>
             </div>
         </div>
