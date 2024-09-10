@@ -328,20 +328,33 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        
+                        <!-- Home Image Slider -->
+    <div class="input-box">
+        <span class="details">Home Slider Image</span>
+        <input type="file" 
+               class="light-gray-placeholder @error('home_imageslider') is-invalid @enderror" 
+               name="home_imageslider" 
+               id="homeImageSlider"
+               accept="image/*" 
+               onchange="checkHomeImageSlider()">
+        @error('home_imageslider')
+        <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
                            
-                          <div class="input-box">
-                            <span class="details">Agri Logo</span>
-                            <input type="file" 
-                                   class="light-gray-placeholder @error('agri_logo') is-invalid @enderror" 
-                                   name="agri_logo" 
-                                   id="agriLogo"
-                                   accept="image/*" 
-                                   onchange="checkAgriLogo()">
-                            @error('agri_logo')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+    <!-- Agri Logo -->
+    <div class="input-box">
+        <span class="details">Agri Logo</span>
+        <input type="file" 
+               class="light-gray-placeholder @error('agri_logo') is-invalid @enderror" 
+               name="agri_logo" 
+               id="agriLogo"
+               accept="image/*" 
+               onchange="checkAgriLogo()">
+        @error('agri_logo')
+        <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
                      
                         <div class="input-box">
                             <span class="details">Feauture Header</span>
@@ -977,5 +990,26 @@ function checkReligion() {
             }
         });
     });
+
+
+    function checkHomeImageSlider() {
+    var fileInput = document.getElementById('homeImageSlider');
+    var file = fileInput.files[0];
+    if (file) {
+        // You can add more validation or display a preview here
+        console.log("Home slider image selected: " + file.name);
+    }
+}
+
+function checkAgriLogo() {
+    var fileInput = document.getElementById('agriLogo');
+    var file = fileInput.files[0];
+    if (file) {
+        // You can add more validation or display a preview here
+        console.log("Agri logo image selected: " + file.name);
+    }
+}
 </script>
+
+
 @endsection

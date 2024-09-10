@@ -276,7 +276,7 @@
               
 
             <div class="content">
-            <form id="multi-step-form" action{{url('Newhomepage')}} method="post">
+            <form id="multi-step-form" action{{url('SavePage')}} method="post">
                 @csrf
                 <div >
 
@@ -292,109 +292,90 @@
             @enderror
               </div>
          
-                <!-- Step 1 -->
-                <div id="step-1" class="form_1">
-             
-         
-                    <h3>Create Homepage</h3><br>
-                    <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
-        
-                    <div class="user-details">
-                        
-                        <div class="input-box">
-                            <span class="details">Home Title</span>
-                            <input type="text" class="form-control light-gray-placeholder @error('home_title') is-invalid @enderror" placeholder="home title" name="home_title"id="selectReligion"onchange="checkReligion()" >
-                            @error('home_title')
-                            <div class="invalid-feedback">{{ $message }}</div>
+              <div id="step-1" class="form_1">
+                <h3>Create Homepage</h3><br>
+                <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
+            
+                <div class="user-details">
+                    <div class="input-box">
+                        <span class="details">Home Title</span>
+                        <input type="text" class="form-control light-gray-placeholder @error('home_title') is-invalid @enderror" value="{{$Page->home_title}}" placeholder="Home title" name="home_title" id="selectReligion" onchange="checkReligion()">
+                        @error('home_title')
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                          </div>
-                          <div class="input-box">
-                            <span class="details">Home Description</span>
-                            <textarea type="text" class="form-control light-gray-placeholder @error('home_description') is-invalid @enderror"placeholder="home description"  name="home_description"id="selectReligion"onchange="checkReligion()" > </textarea>
-                            @error('home_description')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                    </div>
+            
+                    <div class="input-box">
+                        <span class="details">Home Description</span>
+                        <textarea class="form-control light-gray-placeholder @error('home_description') is-invalid @enderror" placeholder="Home description" name="home_description" id="selectReligion" onchange="checkReligion()">{{$Page->home_description}}</textarea>
+                        @error('home_description')
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                          </div>
-                          <div class="input-box">
-                            <span class="details" style="background-color: white; padding: 0 5px;">Home Logo</span>
-                            <input type="file" 
-                            class=" light-gray-placeholder @error('home_logo') is-invalid @enderror input-white-bg" 
-                            name="home_logo" 
-                            id="homeLogo"
-                            accept="image/*" 
-                            onchange="checkHomeLogo()">
-                     
-                            @error('home_logo')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        
-                           
-                          <div class="input-box">
-                            <span class="details">Agri Logo</span>
-                            <input type="file" 
-                                   class="light-gray-placeholder @error('agri_logo') is-invalid @enderror" 
-                                   name="agri_logo" 
-                                   id="agriLogo"
-                                   accept="image/*" 
-                                   onchange="checkAgriLogo()">
-                            @error('agri_logo')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                     
-                        <div class="input-box">
-                            <span class="details">Feauture Header</span>
-                            <input type="text" class="form-control light-gray-placeholder @error('feature_header') is-invalid @enderror"placeholder="feauture header"  name="feature_header"id="selectReligion"onchange="checkReligion()" >
-                            @error('feature_header')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                    </div>
+            
+                    <div class="input-box">
+                        <span class="details" style="background-color: white; padding: 0 5px;">Home Logo</span>
+                        <input type="file" class="light-gray-placeholder @error('home_logo') is-invalid @enderror input-white-bg" name="home_logo" id="homeLogo" accept="image/*" onchange="checkHomeLogo()">
+                        @error('home_logo')
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                          </div>
-                       
-                          <div class="input-box">
-                            <span class="details">Feauture description</span>
-                            <textarea  type="text" class="form-control light-gray-placeholder @error('feature_description') is-invalid @enderror"placeholder="feauture description"  name="feature_description"id="selectReligion"onchange="checkReligion()" ></textarea>
-                            @error('feature_description')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                    </div>
+            
+                    <div class="input-box">
+                        <span class="details">Home slider Image</span>
+                        <input type="file" class="light-gray-placeholder @error('home_imageslider') is-invalid @enderror" name="home_imageslider" id="agriLogo" accept="image/*" onchange="checkAgriLogo()">
+                        @error('home_imageslider')
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                          </div>
-                        
-                          <div class="input-box">
-                            <span class="details">Agri-Feauture</span>
-                            <input type="text" class="form-control light-gray-placeholder @error('agri_features') is-invalid @enderror"placeholder="agri-feauture"  name="agri_features"id="selectReligion"onchange="checkReligion()" >
-                            @error('agri_features')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                    </div>
+            
+                    <div class="input-box">
+                        <span class="details">Agri Logo</span>
+                        <input type="file" class="light-gray-placeholder @error('agri_logo') is-invalid @enderror" name="agri_logo" id="agriLogo" accept="image/*" onchange="checkAgriLogo()">
+                        @error('agri_logo')
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                          </div>
-
-                          <div class="input-box">
-                            <span class="details">Agri-description</span>
-                            <textarea type="text" class="form-control light-gray-placeholder @error('feature_description') is-invalid @enderror"placeholder="agri-description"  name="feature_description"id="selectReligion"onchange="checkReligion()" ></textarea>
-                            @error('feature_description')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                    </div>
+            
+                    <div class="input-box">
+                        <span class="details">Feature Header</span>
+                        <input type="text" class="form-control light-gray-placeholder @error('feature_header') is-invalid @enderror" value="{{$Page->feature_header}}" placeholder="Feature header" name="feature_header" id="selectReligion" onchange="checkReligion()">
+                        @error('feature_header')
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                          </div>
-
-                      </div>
-                      <div class="form_1_btns">
-                       
-                        <a  href="{{route('landing-page.view_homepage')}}"button class="btn btn-secondary btn_back mr-2">Back</button></a>
-                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
+            
+                    <div class="input-box">
+                        <span class="details">Feature Description</span>
+                        <textarea class="form-control light-gray-placeholder @error('feature_description') is-invalid @enderror" placeholder="Feature description" name="feature_description" id="selectReligion" onchange="checkReligion()">{{$Page->feature_description}}</textarea>
+                        @error('feature_description')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+            
+                    <div class="input-box">
+                        <span class="details">Agri-Feature</span>
+                        <input type="text" class="form-control light-gray-placeholder @error('agri_features') is-invalid @enderror" value="{{$Page->agri_features}}" placeholder="Agri-feature" name="agri_features" id="selectReligion" onchange="checkReligion()">
+                        @error('agri_features')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+            
+                    <div class="input-box">
+                        <span class="details">Agri-Description</span>
+                        <textarea class="form-control light-gray-placeholder @error('agri_description') is-invalid @enderror" placeholder="Agri-description" name="agri_description" id="selectReligion" onchange="checkReligion()">{{$Page->agri_description}}</textarea>
+                        @error('agri_description')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
-
             
-                          
-                            
-                          </div>
-                     
-            
-                          <div class="form_3_btns" style="display: none;">
-
-                            <button type="button" class="btn btn-secondary btn_back mr-2">Back</button>
+                <div class="form_1_btns">
+                    <a href="{{route('landing-page.view_homepage')}}" class="btn btn-secondary btn_back mr-2">Back</a>
                     <button type="submit" class="btn btn-success">Submit</button>
                 </div>
             </div>
+            
             </form>
                 </div>
             </div>

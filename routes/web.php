@@ -46,15 +46,9 @@ use App\Models\AgriDistrict;
 */
 
 
-// Route::get('home/', function () {
-//     return view('home');
-// });
 
-// Route::get('user/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard'); 
-
-
+// all crops
+Route::get('/admin-all-crops-report',[FarmProfileController ::class,'AllCrops'])->name('admin.cropsreport.all_crops');
 // Crop Variety
 Route::get('/admin-add-crop-variety',[PolygonController ::class,'AddVariety'])->name('admin.variety.add_variety');
 Route::post('/admin-add-crop-variety',[PolygonController ::class,'SaveVariety']);
