@@ -20,13 +20,6 @@
       </li>
       <li class="nav-item nav-category">Agri-Map</li>
      
-    {{-- <li class="nav-item">
-      <a href="{{route('map.arcmap')}}" class="nav-link"> 
-          <i class="link-icon" data-feather="map"></i>
-          <span class="link-title">ZamboAgriMap</span>
-        </a>
-      </li>  --}}
-      <li class="nav-item space"></li>
    
       <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#crop" role="button" aria-expanded="false" aria-controls="uiComponents">
@@ -51,602 +44,69 @@
           </ul>
         </div>
       </li>
-      <li class="nav-item space"></li>
+      <li class="nav-item nav-category">Farmers Data</li>
       <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#livestocks" role="button" aria-expanded="false" aria-controls="uiComponents">
-          <img src="../assets/logo/livestock.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
-          <span class="link-title"style="margin-left:12px;"> Livestock</span>
+        <a class="nav-link" data-bs-toggle="collapse" href="#farmersData" role="button" aria-expanded="false" aria-controls="uiComponents">
+          {{-- <img src="../assets/logo/wheat.png" alt="farmersData Icon" style="width: 20px; height: 20px; color: white;"> --}}
+          <span class="link-title" style="margin-left: 12px;"> Farmers Info</span>
           <i class="link-arrow" data-feather="chevron-down"></i>
         </a>
-        <div class="collapse" id="livestocks">
-          <ul class="nav sub-menu">
+        <div class="collapse" id="farmersData">
+          <ul class="nav sub-menu" style="padding-left: 70px;">
+            {{-- <li class="nav-item">
+              <a href="{{route('personalinfo.create')}}" class="nav-link">Farmers</a>
+            </li> --}}
             <li class="nav-item">
-              <a href="{{route('agent.agri.chickenmap')}}" class="nav-link">Chicken</a>
-            </li>
-            <li class="nav-item">
-              <a href="{{route('agent.agri.hogsmap')}}" class="nav-link">Hogs</a>
+              <a href="" class="nav-link">Farmers</a>
             </li>
            
-            
           </ul>
         </div>
       </li>
+   <li class="nav-item">
+          <a class="nav-link" data-bs-toggle="collapse" href="#Forms" role="button" aria-expanded="false" aria-controls="uiComponents">
+            {{-- <img src="../assets/logo/livestock.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;"> --}}
+            <span class="link-title"style="margin-left:12px;"> Forms</span>
+            <i class="link-arrow" data-feather="chevron-down"></i>
+          </a>
+          <div class="collapse" id="Forms">
+            <ul class="nav sub-menu"  style="padding-left: 70px;">
+
+              {{-- <li class="nav-item">
+                <a href="{{route('admin.corn.forms.corn_form')}}" class="nav-link">Survey Form</a>
+              </li> --}}
+              <li class="nav-item">
+                <a href="" class="nav-link">Survey Form</a>
+              </li>
+
+
+             
+            </ul>
+          </div>
+        </li>
       {{-- <li class="nav-item nav-category">Components</li> --}}
       <li class="nav-item nav-category">Crops</li>
-      <li class="nav-item space"></li>
-      {{-- rice --}}
       <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#croprice" role="button" aria-expanded="false" aria-controls="croprice">
+        <a class="nav-link" data-bs-toggle="collapse" href="#Farmer" role="button" aria-expanded="false" aria-controls="uiComponents">
           <img src="../assets/logo/rice.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
-
-          <span class="link-title"style="margin-left:12px;">Rice</span>
+          <span class="link-title"style="margin-left:12px;"> Farmer Crops </span>
           <i class="link-arrow" data-feather="chevron-down"></i>
         </a>
-        <div class="collapse" id="croprice">
-          <a class="nav-link" data-bs-toggle="collapse" href="#report" role="button" aria-expanded="false" aria-controls="report">
-            <img src="../assets/logo/report.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
+        <div class="collapse" id="Farmer">
+          <ul class="nav sub-menu"  style="padding-left: 70px;">
 
-            <span class="link-title"style="margin-left:12px;">Reports/Agri-Districts</span>
-            <i class="link-arrow" data-feather="chevron-down"></i>
-          </a>
-          <div class="collapse" id="report">
-            <ul class="nav sub-menu">
-              <li class="nav-item">
-                <a href="{{route('agent.agriDistricts.ayala_farmers')}}" class="nav-link">Ayala Rice Farmers</a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('agent.agriDistricts.tumaga_farmers')}}" class="nav-link">Tumaga Rice Farmers</a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('agent.agriDistricts.culianan_farmers')}}" class="nav-link">Culianan Rice Farmers</a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('agent.agriDistricts.manicahan_farmers')}}" class="nav-link">Manicahan Rice Farmers</a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('agent.agriDistricts.curuan_farmers')}}" class="nav-link">Curuan Rice Farmers</a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('agent.agriDistricts.vitali_farmers')}}" class="nav-link">Vitali Rice Farmers</a>
-              </li>
-            </ul>
-          </div>
-          <a class="nav-link" data-bs-toggle="collapse" href="#forms" role="button" aria-expanded="false" aria-controls="forms">
-            <i class="link-icon" data-feather="inbox"></i>
-            <span class="link-title">Forms</span>
-            <i class="link-arrow" data-feather="chevron-down"></i>
-          </a>
-          <div class="collapse" id="forms">
-            <ul class="nav sub-menu">
-              <li class="nav-item">
-                <a href="{{route('agent.personal_info.add_info')}}" class="nav-link">Rice Survey Form</a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('agent.mutipleFile.import_excelFile')}}" class="nav-link">Multiple Import Form</a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('kml.agent_kml_import')}}" class="nav-link">Kml Import</a>
-              </li>
-            </ul>
-          </div>
-          <a class="nav-link" data-bs-toggle="collapse" href="#farmers" role="button" aria-expanded="false" aria-controls="farmers">
-            <i class="link-icon" data-feather="info"></i>
-            <span class="link-title">Farmers Information</span>
-            <i class="link-arrow" data-feather="chevron-down"></i>
-          </a>
-          <div class="collapse" id="farmers">
-            <ul class="nav sub-menu">
-              <li class="nav-item">
-                <a href="{{route('agent.personal_info.view_infor')}}" class="nav-link">Rice Farmer Info</a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('agent.variablecost.seed.show_seeds_data')}}" class="nav-link">Rice Farmer Variable Cost</a>
-              </li>
-            </ul>
-          </div>
-          <a class="nav-link" data-bs-toggle="collapse" href="#charts" role="button" aria-expanded="false" aria-controls="charts">
-            <i class="link-icon" data-feather="slack"></i>
-            <span class="link-title">Rice Varieties</span>
-            <i class="link-arrow" data-feather="chevron-down"></i>
-          </a>
-          <div class="collapse" id="charts">
-            <ul class="nav sub-menu">
-              <li class="nav-item">
-                <a href="{{route('agent.riceVariety.inbred_variety')}}" class="nav-link">Rice Varieties/District</a>
-              </li>
-            </ul>
-          </div>
+            {{-- <li class="nav-item">
+              <a href="{{route('admin.corn.forms.corn_form')}}" class="nav-link">Survey Form</a>
+            </li> --}}
+            <li class="nav-item">
+              <a href="" class="nav-link">Crops</a>
+            </li>
 
-          <a class="nav-link" data-bs-toggle="collapse" href="#Ricecharts" role="button" aria-expanded="false" aria-controls="charts">
-            <img src="../assets/logo/graph.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
-            <span class="link-title"style="margin-left:12px;">Rice Crop Production</span>
-            <i class="link-arrow" data-feather="chevron-down"></i>
-          </a>
-          <div class="collapse" id="Ricecharts">
-            <ul class="nav sub-menu">
-              <li class="nav-item">
-                <a href="{{route('agent.cropProductions.rice_crop')}}" class="nav-link">RiceField</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">Upland Rice</a>
-              </li>
-            </ul>
-          </div>
+
+           
+          </ul>
         </div>
       </li>
-      <li class="nav-item space"></li>
-     {{-- corn --}}
-      <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#Corn" role="button" aria-expanded="false" aria-controls="Corn">
-          <img src="../assets/logo/corn.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
-          <span class="link-title" style="margin-left:12px;">Corn</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="Corn">
-          <a class="nav-link" data-bs-toggle="collapse" href="#reports" role="button" aria-expanded="false" aria-controls="report">
-            <img src="../assets/logo/report.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
-            <span class="link-title"style="margin-left:12px;">Reports/Agri-Districts</span>
-            <i class="link-arrow" data-feather="chevron-down"></i>
-          </a>
-          <div class="collapse" id="reports">
-            <ul class="nav sub-menu">
-              <li class="nav-item">
-                <a href="{{route('agent.corn.districtreport.ayala')}}" class="nav-link">Ayala Corn Farmers</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">Tumaga Corn Farmers</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">Culianan Corn Farmers</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">Manicahan Corn Farmers</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">Curuan Corn Farmers</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">Vitali Corn Farmers</a>
-              </li>
-            </ul>
-          </div>
-          <a class="nav-link" data-bs-toggle="collapse" href="#form" role="button" aria-expanded="false" aria-controls="forms">
-            <i class="link-icon" data-feather="inbox"></i>
-            <span class="link-title">Forms</span>
-            <i class="link-arrow" data-feather="chevron-down"></i>
-          </a>
-          <div class="collapse" id="form">
-            <ul class="nav sub-menu">
-              <li class="nav-item">
-                <a href="{{route('agent.corn.forms.corn_form')}}" class="nav-link">Corn Survey Form</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">Multiple Import Form</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">Kml Import</a>
-              </li>
-            </ul>
-          </div>
-          <a class="nav-link" data-bs-toggle="collapse" href="#farmer" role="button" aria-expanded="false" aria-controls="farmers">
-            <i class="link-icon" data-feather="info"></i>
-            <span class="link-title">Farmers Information</span>
-            <i class="link-arrow" data-feather="chevron-down"></i>
-          </a>
-          <div class="collapse" id="farmer">
-            <ul class="nav sub-menu">
-              <li class="nav-item">
-                <a href="{{route('agent.corn.farmersInfo.information')}}" class="nav-link">Corn Farmer Info</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">Corn Farmer Variable Cost</a>
-              </li>
-            </ul>
-          </div>
-          <a class="nav-link" data-bs-toggle="collapse" href="#chart" role="button" aria-expanded="false" aria-controls="charts">
-            <i class="link-icon" data-feather="slack"></i>
-            <span class="link-title">Corn Varieties</span>
-            <i class="link-arrow" data-feather="chevron-down"></i>
-          </a>
-          <div class="collapse" id="chart">
-            <ul class="nav sub-menu">
-              <li class="nav-item">
-                <a href="{{route('agent.corn.variety.varieties')}}" class="nav-link">Corn Varieties/District</a>
-              </li>
-            </ul>
-          </div>
-
-          <a class="nav-link" data-bs-toggle="collapse" href="#corncharts" role="button" aria-expanded="false" aria-controls="charts">
-            <img src="../assets/logo/graph.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
-            <span class="link-title"style="margin-left:12px;">Corn Crop Production</span>
-            <i class="link-arrow" data-feather="chevron-down"></i>
-          </a>
-          <div class="collapse" id="corncharts">
-            <ul class="nav sub-menu">
-              <li class="nav-item">
-                <a href="{{route('agent.corn.production.reportsproduce')}}" class="nav-link">CornField</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">Upland Corn</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </li>
-      <li class="nav-item space"></li>
-       {{-- coconut --}}
-       <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#Coconut" role="button" aria-expanded="false" aria-controls="Coconut">
-          <img src="../assets/logo/coconut.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
-          <span class="link-title"style="margin-left:12px;">Coconut</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="Coconut">
-          <a class="nav-link" data-bs-toggle="collapse" href="#reportscoco" role="button" aria-expanded="false" aria-controls="report">
-            <img src="../assets/logo/report.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
-            <span class="link-title"style="margin-left:12px;">Reports/Agri-Districts</span>
-            <i class="link-arrow" data-feather="chevron-down"></i>
-          </a>
-          <div class="collapse" id="reportscoco">
-            <ul class="nav sub-menu">
-              <li class="nav-item">
-                <a href="{{route('agent.corn.districtreport.ayala')}}" class="nav-link">Ayala Coconut Farmers</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">Tumaga Coconut Farmers</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">Culianan Coconut Farmers</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">Manicahan Coconut Farmers</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">Curuan Coconut Farmers</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">Vitali Coconut Farmers</a>
-              </li>
-            </ul>
-          </div>
-          <a class="nav-link" data-bs-toggle="collapse" href="#formcoco" role="button" aria-expanded="false" aria-controls="forms">
-            <i class="link-icon" data-feather="inbox"></i>
-            <span class="link-title">Forms</span>
-            <i class="link-arrow" data-feather="chevron-down"></i>
-          </a>
-          <div class="collapse" id="formcoco">
-            <ul class="nav sub-menu">
-              <li class="nav-item">
-                <a href="{{route('agent.corn.forms.corn_form')}}" class="nav-link">Coconut Survey Form</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">Multiple Import Form</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">Kml Import</a>
-              </li>
-            </ul>
-          </div>
-          <a class="nav-link" data-bs-toggle="collapse" href="#farmercoco" role="button" aria-expanded="false" aria-controls="farmers">
-            <i class="link-icon" data-feather="info"></i>
-            <span class="link-title">Farmers Information</span>
-            <i class="link-arrow" data-feather="chevron-down"></i>
-          </a>
-          <div class="collapse" id="farmercoco">
-            <ul class="nav sub-menu">
-              <li class="nav-item">
-                <a href="{{route('agent.corn.farmersInfo.information')}}" class="nav-link">Coconut Farmer Info</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">Coconut Farmer Variable Cost</a>
-              </li>
-            </ul>
-          </div>
-          <a class="nav-link" data-bs-toggle="collapse" href="#chartcoco" role="button" aria-expanded="false" aria-controls="charts">
-            <i class="link-icon" data-feather="slack"></i>
-            <span class="link-title">Coconut Varieties</span>
-            <i class="link-arrow" data-feather="chevron-down"></i>
-          </a>
-          <div class="collapse" id="chartcoco">
-            <ul class="nav sub-menu">
-              <li class="nav-item">
-                <a href="{{route('agent.corn.variety.varieties')}}" class="nav-link">Coconut Varieties/District</a>
-              </li>
-            </ul>
-          </div>
-
-          <a class="nav-link" data-bs-toggle="collapse" href="#corncharts" role="button" aria-expanded="false" aria-controls="charts">
-            <img src="../assets/logo/graph.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
-            <span class="link-title"style="margin-left:12px;">Coconut Production</span>
-            <i class="link-arrow" data-feather="chevron-down"></i>
-          </a>
-          <div class="collapse" id="corncharts">
-            <ul class="nav sub-menu">
-              <li class="nav-item">
-                <a href="{{route('agent.corn.production.reportsproduce')}}" class="nav-link">Coconut</a>
-              </li>
-              {{-- <li class="nav-item">
-                <a href="{{route('admin.rice_varieties.rice_varietydistrict')}}" class="nav-link">Upland Corn</a>
-              </li> --}}
-            </ul>
-          </div>
-        </div>
-      </li>
-      <li class="nav-item space"></li>
     {{--  livestock  --}}
-    <li class="nav-item nav-category">Livestock</li>
-    <li class="nav-item space"></li>
-    {{-- chicken --}}
-    <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#chicken" role="button" aria-expanded="false" aria-controls="chicken">
-        <img src="../assets/logo/chicken.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
-        <span class="link-title"style="margin-left:12px;">Chicken</span>
-        <i class="link-arrow" data-feather="chevron-down"></i>
-      </a>
-      <div class="collapse" id="chicken">
-        <a class="nav-link" data-bs-toggle="collapse" href="#report" role="button" aria-expanded="false" aria-controls="report">
-          <img src="../assets/logo/report.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
-          <span class="link-title"style="margin-left:12px;">Reports/Agri-Districts</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="report">
-          <ul class="nav sub-menu">
-            <li class="nav-item">
-              <a href="{{route('agent.corn.districtreport.ayala')}}" class="nav-link">Ayala Chicken Farmers</a>
-            </li>
-            <li class="nav-item">
-              <a href="" class="nav-link">Tumaga Chicken Farmers</a>
-            </li>
-            <li class="nav-item">
-              <a href="" class="nav-link">Culianan Chicken Farmers</a>
-            </li>
-            <li class="nav-item">
-              <a href="" class="nav-link">Manicahan Chicken Farmers</a>
-            </li>
-            <li class="nav-item">
-              <a href="" class="nav-link">Curuan Chicken Farmers</a>
-            </li>
-            <li class="nav-item">
-              <a href="" class="nav-link">Vitali Chicken Farmers</a>
-            </li>
-          </ul>
-        </div>
-        <a class="nav-link" data-bs-toggle="collapse" href="#forms" role="button" aria-expanded="false" aria-controls="forms">
-          <i class="link-icon" data-feather="inbox"></i>
-          <span class="link-title">Forms</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="forms">
-          <ul class="nav sub-menu">
-            <li class="nav-item">
-              <a href="{{route('agent.corn.forms.corn_form')}}" class="nav-link">Chicken Survey Form</a>
-            </li>
-            <li class="nav-item">
-              <a href="" class="nav-link">Multiple Import Form</a>
-            </li>
-            <li class="nav-item">
-              <a href="" class="nav-link">Kml Import</a>
-            </li>
-          </ul>
-        </div>
-        <a class="nav-link" data-bs-toggle="collapse" href="#farmers" role="button" aria-expanded="false" aria-controls="farmers">
-          <i class="link-icon" data-feather="info"></i>
-          <span class="link-title">Farmers Information</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="farmers">
-          <ul class="nav sub-menu">
-            <li class="nav-item">
-              <a href="{{route('agent.corn.farmersInfo.information')}}" class="nav-link">Chicken Farmer Info</a>
-            </li>
-            <li class="nav-item">
-              <a href="" class="nav-link">Chicken Farmer Variable Cost</a>
-            </li>
-          </ul>
-        </div>
-        {{-- <a class="nav-link" data-bs-toggle="collapse" href="#charts" role="button" aria-expanded="false" aria-controls="charts">
-          <i class="link-icon" data-feather="slack"></i>
-          <span class="link-title">Chicken Varieties</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="charts">
-          <ul class="nav sub-menu">
-            <li class="nav-item">
-              <a href="{{route('admin.rice_varieties.rice_varietydistrict')}}" class="nav-link">Rice Varieties/District</a>
-            </li>
-          </ul>
-        </div> --}}
-
-        <a class="nav-link" data-bs-toggle="collapse" href="#Ricecharts" role="button" aria-expanded="false" aria-controls="charts">
-          <img src="../assets/logo/graph.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
-          <span class="link-title"style="margin-left:12px;">Chicken Production</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="Ricecharts">
-          <ul class="nav sub-menu">
-            <li class="nav-item">
-              <a href="{{route('agent.corn.production.reportsproduce')}}" class="nav-link">Chicken</a>
-            </li>
-            {{-- <li class="nav-item">
-              <a href="{{route('admin.crop_production.rice_crops')}}" class="nav-link">Upland Rice</a>
-            </li> --}}
-          </ul>
-        </div>
-      </div>
-    </li>
-    <li class="nav-item space"></li>
-   {{-- hog --}}
-    <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#Hogs" role="button" aria-expanded="false" aria-controls="Hogs">
-        <img src="../assets/logo/pig.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
-        <span class="link-title"style="margin-left:12px;">Hogs</span>
-        <i class="link-arrow" data-feather="chevron-down"></i>
-      </a>
-      <div class="collapse" id="Hogs">
-        <a class="nav-link" data-bs-toggle="collapse" href="#reportshog" role="button" aria-expanded="false" aria-controls="report">
-          <img src="../assets/logo/report.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
-          <span class="link-title"style="margin-left:12px;">Reports/Agri-Districts</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="reportshog">
-          <ul class="nav sub-menu">
-            <li class="nav-item">
-              <a href="{{route('agent.corn.districtreport.ayala')}}" class="nav-link">Ayala hog Farmers</a>
-            </li>
-            <li class="nav-item">
-              <a href="" class="nav-link">Tumaga hog Farmers</a>
-            </li>
-            <li class="nav-item">
-              <a href="" class="nav-link">Culianan hog Farmers</a>
-            </li>
-            <li class="nav-item">
-              <a href="" class="nav-link">Manicahan hog Farmers</a>
-            </li>
-            <li class="nav-item">
-              <a href="" class="nav-link">Curuan hog Farmers</a>
-            </li>
-            <li class="nav-item">
-              <a href="" class="nav-link">Vitali hog Farmers</a>
-            </li>
-          </ul>
-        </div>
-        <a class="nav-link" data-bs-toggle="collapse" href="#formhog" role="button" aria-expanded="false" aria-controls="forms">
-          <i class="link-icon" data-feather="inbox"></i>
-          <span class="link-title">Forms</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="formhog">
-          <ul class="nav sub-menu">
-            <li class="nav-item">
-              <a href="{{route('agent.corn.forms.corn_form')}}" class="nav-link">hog Survey Form</a>
-            </li>
-            <li class="nav-item">
-              <a href="" class="nav-link">Multiple Import Form</a>
-            </li>
-            <li class="nav-item">
-              <a href="" class="nav-link">Kml Import</a>
-            </li>
-          </ul>
-        </div>
-        <a class="nav-link" data-bs-toggle="collapse" href="#farmerhog" role="button" aria-expanded="false" aria-controls="farmers">
-          <i class="link-icon" data-feather="info"></i>
-          <span class="link-title">Farmers Information</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="farmerhog">
-          <ul class="nav sub-menu">
-            <li class="nav-item">
-              <a href="{{route('agent.corn.farmersInfo.information')}}" class="nav-link">hog Farmer Info</a>
-            </li>
-            <li class="nav-item">
-              <a href="" class="nav-link">hog Farmer Variable Cost</a>
-            </li>
-          </ul>
-        </div>
-        {{-- <a class="nav-link" data-bs-toggle="collapse" href="#charthog" role="button" aria-expanded="false" aria-controls="charts">
-          <i class="link-icon" data-feather="slack"></i>
-          <span class="link-title">hog Varieties</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="charthog">
-          <ul class="nav sub-menu">
-            <li class="nav-item">
-              <a href="{{route('admin.rice_varieties.rice_varietydistrict')}}" class="nav-link">hog Varieties/District</a>
-            </li>
-          </ul>
-        </div> --}}
-
-        <a class="nav-link" data-bs-toggle="collapse" href="#hogcharts" role="button" aria-expanded="false" aria-controls="charts">
-          <img src="../assets/logo/graph.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
-          <span class="link-title"style="margin-left:12px;">hog Production</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="corncharts">
-          <ul class="nav sub-menu">
-            <li class="nav-item">
-              <a href="{{route('agent.corn.production.reportsproduce')}}" class="nav-link">hogs</a>
-            </li>
-            {{-- <li class="nav-item">
-              <a href="{{route('admin.rice_varieties.rice_varietydistrict')}}" class="nav-link">Upland Corn</a>
-            </li> --}}
-          </ul>
-        </div>
-      </div>
-    </li>
-    
-
-      
- 
-      {{-- <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#authPages" role="button" aria-expanded="false" aria-controls="authPages">
-          <i class="link-icon" data-feather="unlock"></i>
-          <span class="link-title">Authentication</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="authPages">
-          <ul class="nav sub-menu">
-            <li class="nav-item">
-              <a href="admin_login" class="nav-link">Login</a>
-            </li>
-            <li class="nav-item">
-              <a href="pages/auth/register.html" class="nav-link">Register</a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#errorPages" role="button" aria-expanded="false" aria-controls="errorPages">
-          <i class="link-icon" data-feather="cloud-off"></i>
-          <span class="link-title">Error</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="errorPages">
-          <ul class="nav sub-menu">
-            <li class="nav-item">
-              <a href="pages/error/404.html" class="nav-link">404</a>
-            </li>
-            <li class="nav-item">
-              <a href="pages/error/500.html" class="nav-link">500</a>
-            </li>
-          </ul>
-        </div>
-      </li> --}}
-      <!--<li class="nav-item nav-category">Docs</li>
-      <li class="nav-item">
-        <a href="https://www.nobleui.com/html/documentation/docs.html" target="_blank" class="nav-link">
-          <i class="link-icon" data-feather="hash"></i>
-          <span class="link-title">Documentation</span>
-        </a>
-      </li>-->
-    </ul>
-  </div>
+   
 </nav>
-<script>
-  $(document).ready(function() {
-    $('#croprice .collapse').on('shown.bs.collapse', function () {
-    $(this).prev('.nav-link').addClass('active');
-    }).on('hidden.bs.collapse', function () {
-    $(this).prev('.nav-link').removeClass('active');
-    });
-  
-    $('#croprice').on('shown.bs.collapse', function () {
-    // Prevent adding active class to the "Rice" link
-    $('a[href="#croprice"]').removeClass('active');
-    });
-  });
-  </script>
-
-<script>
-$(document).ready(function() {
-  $('#chicken .collapse').on('shown.bs.collapse', function () {
-  $(this).prev('.nav-link').addClass('active');
-  }).on('hidden.bs.collapse', function () {
-  $(this).prev('.nav-link').removeClass('active');
-  });
-
-  $('#chicken').on('shown.bs.collapse', function () {
-  // Prevent adding active class to the "Rice" link
-  $('a[href="#chicken"]').removeClass('active');
-  });
-});
-</script>

@@ -35,47 +35,279 @@ use App\Http\Controllers\Backend\PersonalInformationsController;
 use App\Models\Transport;
 use Carbon\Carbon;
 use Illuminate\Pagination\Paginator;
-
+use Illuminate\Pagination\LengthAwarePaginator;
+use App\Models\Crop;
 class AgentController extends Controller
 {
 
 
 
  
-    public function AgentDashboard()
-    {
-        // Check if the user is authenticated
-        if (Auth::check()) {
-            // User is authenticated, proceed with retrieving the user's ID
-            $userId = Auth::id();
-    
-            // Find the user based on the retrieved ID
-            $agent = User::find($userId);
-    
-            if ($agent) {
-                // Assuming you have additional logic to fetch dashboard data
-                $totalfarms = FarmProfile::count();
-                $totalAreaPlanted = FarmProfile::sum('total_physical_area');
-                $totalAreaYield = FarmProfile::sum('yield_kg_ha');
-                $totalCost = VariableCost::sum('total_variable_cost');
-    
-                $yieldPerAreaPlanted = ($totalAreaPlanted != 0) ? $totalAreaYield / $totalAreaPlanted : 0;
-                $averageCostPerAreaPlanted = ($totalAreaPlanted != 0) ? $totalCost / $totalAreaPlanted : 0;
-                $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-                // Return the view with dashboard data
-                return view('agent.agent_index', compact('totalRiceProduction','agent', 'totalfarms', 'totalAreaPlanted', 'totalAreaYield', 'totalCost', 'yieldPerAreaPlanted', 'averageCostPerAreaPlanted'));
-            } else {
-                // Handle the case where the user is not found
-                // You can redirect the user or display an error message
-                return redirect()->route('login')->with('error', 'User not found.');
+        public function AgentDashboard(Request $request)
+{
+    if (Auth::check()) {
+        $userId = Auth::id();
+        $agent = User::find($userId);
+
+        if ($agent) {
+            // Fetch filter inputs
+            $selectedCropName = $request->input('crop_name', ''); // Default to empty for "All Crops"
+            $selectedDateFrom = $request->input('dateFrom', '');
+            $selectedDateTo = $request->input('dateTo', '');
+            $selectedDistrict = $request->input('district', ''); // New input for district
+
+            // Fetch distinct crops and districts from the database
+            $crops = Crop::distinct()->pluck('crop_name');
+            $districts = AgriDistrict::distinct()->pluck('district');
+
+            // Initialize queries for filtering
+            $farmProfilesQuery = FarmProfile::query();
+            $variableCostQuery = VariableCost::query();
+            $lastProductionDatasQuery = LastProductionDatas::query();
+
+            // Apply filtering based on selected crop name
+            if ($selectedCropName) {
+                $farmProfilesQuery->whereHas('crops', function ($query) use ($selectedCropName) {
+                    $query->where('crop_name', $selectedCropName);
+                });
+
+                $variableCostQuery->whereHas('lastProductionData.cropFarms.crop', function ($query) use ($selectedCropName) {
+                    $query->where('crop_name', $selectedCropName);
+                });
+
+                $lastProductionDatasQuery->whereHas('cropFarms.crop', function ($query) use ($selectedCropName) {
+                    $query->where('crop_name', $selectedCropName);
+                });
             }
-        } else {
-            // Handle the case where the user is not authenticated
-            // Redirect the user to the login page
-            return redirect()->route('login');
+
+            // Apply filtering based on selected district
+            if ($selectedDistrict) {
+                $farmProfilesQuery->whereHas('agriDistrict', function ($query) use ($selectedDistrict) {
+                    $query->where('district', $selectedDistrict);
+                });
+
+                $variableCostQuery->whereHas('lastProductionData.cropFarms.farmProfile.agriDistrict', function ($query) use ($selectedDistrict) {
+                    $query->where('district', $selectedDistrict);
+                });
+
+                $lastProductionDatasQuery->whereHas('cropFarms.farmProfile.agriDistrict', function ($query) use ($selectedDistrict) {
+                    $query->where('district', $selectedDistrict);
+                });
+            }
+
+            // Apply filtering based on date range
+            if ($selectedDateFrom && $selectedDateTo) {
+                $lastProductionDatasQuery->whereBetween('date_harvested', [$selectedDateFrom, $selectedDateTo]);
+            }
+
+            // Calculate totals based on the filtered results
+            $totalFarms = $farmProfilesQuery->count();
+            $totalAreaPlanted = $farmProfilesQuery->sum('total_physical_area');
+            $totalAreaYield = $farmProfilesQuery->sum('yield_kg_ha');
+            $totalCost = $variableCostQuery->sum('total_variable_cost');
+            $yieldPerAreaPlanted = ($totalAreaPlanted != 0) ? $totalAreaYield / $totalAreaPlanted : 0;
+            $averageCostPerAreaPlanted = ($totalAreaPlanted != 0) ? $totalCost / $totalAreaPlanted : 0;
+            $totalRiceProductionInKg = $lastProductionDatasQuery->sum('yield_tons_per_kg');
+            $totalRiceProduction = $totalRiceProductionInKg / 100000; // Convert to tons
+
+            // Fetch crop farms based on selected crop name and district
+            $cropFarmsQuery = Crop::with('farmProfile.agriDistrict', 'lastProductionData');
+
+            if ($selectedCropName) {
+                $cropFarmsQuery->where('crop_name', $selectedCropName);
+            }
+
+            $cropFarms = $cropFarmsQuery->get();
+
+            // Initialize arrays for chart data
+            $yieldPerDistrict = [];
+            $typeVarietyCountsPerDistrict = [];
+            $dateRange = [];
+
+            foreach ($cropFarms as $cropFarm) {
+                $districtName = $cropFarm->farmProfile->agriDistrict->district ?? 'Not specified';
+
+                if ($selectedDistrict && $districtName !== $selectedDistrict) {
+                    continue; // Skip if the district does not match the selected one
+                }
+
+                if (!isset($yieldPerDistrict[$districtName])) {
+                    $yieldPerDistrict[$districtName] = 0;
+                }
+
+                if (!isset($typeVarietyCountsPerDistrict[$districtName])) {
+                    $typeVarietyCountsPerDistrict[$districtName] = [
+                        'Inbred' => 0,
+                        'Hybrid' => 0,
+                        'Not specified' => 0,
+                    ];
+                }
+
+                foreach ($cropFarm->lastProductionData as $productionData) {
+                    $harvestDate = $productionData->date_harvested;
+                    $yield = $productionData->yield_tons_per_kg;
+
+                    if ($selectedDateFrom && $selectedDateTo && ($harvestDate < $selectedDateFrom || $harvestDate > $selectedDateTo)) {
+                        continue; // Skip if the harvest date is outside the selected date range
+                    }
+
+                    $yieldPerDistrict[$districtName] += $yield;
+                    $dateRange[] = $harvestDate;
+                }
+
+                $typeOfVarietyPlanted = $cropFarm->type_of_variety_planted ?? 'Not specified';
+
+                if (!isset($typeVarietyCountsPerDistrict[$districtName][$typeOfVarietyPlanted])) {
+                    $typeVarietyCountsPerDistrict[$districtName][$typeOfVarietyPlanted] = 0;
+                }
+
+                $typeVarietyCountsPerDistrict[$districtName][$typeOfVarietyPlanted]++;
+            }
+
+            // Prepare data for pie chart
+            $pieChartData = [
+                'labels' => array_keys($yieldPerDistrict),
+                'series' => array_values($yieldPerDistrict),
+            ];
+
+            // Prepare data for bar chart
+            // $barChartData = [];
+            // foreach ($typeVarietyCountsPerDistrict as $district => $varieties) {
+            //     $barChartData[] = [
+            //         'name' => $district,
+            //         'data' => array_values($varieties)
+            //     ];
+            // }
+            // Populate the bar chart data with proper names
+         // Function to format names to proper names if they are not already
+         function formatLabel($label) {
+            return ucwords(str_replace('_', ' ', strtolower($label)));
         }
+        $formattedDistricts = $districts->map(function ($district) {
+            return formatLabel($district);
+        });
+                // Transform data to include formatted names
+foreach ($typeVarietyCountsPerDistrict as $district => $varieties) {
+    // Format the district name
+    $formattedDistrictName = formatLabel($district);
+
+    // Alternatively, use the formatted name if it's in the list
+    $districtName = $formattedDistricts->contains($formattedDistrictName) ? $formattedDistrictName : 'Not Specified';
+
+    $barChartData[] = [
+        'name' => $districtName,
+        'data' => array_values($varieties)
+    ];
+}
+            // Initialize an array to hold total rice production per district
+            $totalRiceProductionPerDistrict = [];
+
+            // Calculate total rice production for each district
+            foreach ($cropFarms as $cropFarm) {
+                $districtName = $cropFarm->farmProfile->agriDistrict->district ?? 'Not specified';
+
+                if (!isset($totalRiceProductionPerDistrict[$districtName])) {
+                    $totalRiceProductionPerDistrict[$districtName] = 0;
+                }
+
+                foreach ($cropFarm->lastProductionData as $productionData) {
+                    $yield = $productionData->yield_tons_per_kg;
+                    $totalRiceProductionPerDistrict[$districtName] += $yield;
+                }
+            }
+
+            // Prepare data for pie chart
+      
+            // Prepare data for pie chart showing total rice production per district
+            $pieChartDatas = [
+                'labels' => array_keys($totalRiceProductionPerDistrict),
+                'series' => array_values($totalRiceProductionPerDistrict),
+            ];
+
+
+            // Determine date range
+            $dateRange = array_unique($dateRange);
+            sort($dateRange);
+            $minDate = $dateRange[0] ?? '';
+            $maxDate = end($dateRange) ?? '';
+
+
+         // Fetch the count of farms per district
+    $distributionFrequency = $farmProfilesQuery
+    ->select('agri_districts_id', DB::raw('count(*) as total'))
+    ->groupBy('agri_districts_id')
+    ->pluck('total', 'agri_districts_id');
+
+// Fetch district names
+$districts = AgriDistrict::whereIn('id', $distributionFrequency->keys())->pluck('district', 'id');
+
+// Fetch farmers information grouped by district
+$farmProfiles = FarmProfile::with('personalInformation', 'agriDistrict')
+    ->when($selectedDistrict, function ($query, $selectedDistrict) {
+        $query->whereHas('agriDistrict', function ($query) use ($selectedDistrict) {
+            $query->where('district', $selectedDistrict);
+        });
+    })
+    ->get();
+
+// Group farmers by district and structure their information
+$groupedFarmers = $farmProfiles->groupBy(function ($farmProfile) {
+    return $farmProfile->agriDistrict->district ?? 'Unknown';
+})->mapWithKeys(function ($group, $district) {
+    return [
+        $district => $group->map(function ($farmProfile) {
+            return [
+                'first_name' => $farmProfile->personalInformation->first_name ?? 'N/A',
+                'last_name' => $farmProfile->personalInformation->last_name ?? 'N/A',
+                'organization' => $farmProfile->personalInformation->nameof_farmers_ass_org_coop ?? 'N/A',
+            ];
+        })
+    ];
+});
+
+// Flatten the grouped farmers data for pagination
+$flatFarmers = $groupedFarmers->flatMap(function ($farmers, $district) {
+    return $farmers->map(function ($farmer) use ($district) {
+        return array_merge($farmer, ['district' => $district]);
+    });
+});
+
+// Implement pagination
+$currentPage = Paginator::resolveCurrentPage();
+$perPage = 5; // Number of items per page
+$paginatedFarmers = new LengthAwarePaginator(
+    $flatFarmers->forPage($currentPage, $perPage),
+    $flatFarmers->count(),
+    $perPage,
+    $currentPage,
+    ['path' => Paginator::resolveCurrentPath()]
+);
+
+if ($request->ajax()) {
+    $farmersTable = view('agent.partials.farmers_table', compact('paginatedFarmers'))->render();
+    $paginationLinks = view('agent.partials.pagination', compact('paginatedFarmers'))->render(); // Assuming you place the pagination markup in this view
+
+    return response()->json([
+        'farmers' => $farmersTable,
+        'pagination' => $paginationLinks,
+    ]);
+}
+
+
+            
+            return view('agent.agent_index', compact(
+                'totalFarms', 'totalAreaPlanted', 'totalAreaYield', 'totalCost', 'yieldPerAreaPlanted',
+                'averageCostPerAreaPlanted', 'totalRiceProduction', 'pieChartData', 'barChartData',
+                'selectedCropName', 'selectedDateFrom', 'selectedDateTo', 'crops', 'districts', 'selectedDistrict',
+                'minDate', 'maxDate', 'agent', 'pieChartDatas','distributionFrequency','flatFarmers','paginatedFarmers'
+            ));
+        } else {
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    } else {
+        return redirect()->route('login');
     }
-    
+}
 
     public function agentlog(Request $request)
     {
