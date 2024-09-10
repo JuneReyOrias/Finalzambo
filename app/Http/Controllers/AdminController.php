@@ -3364,7 +3364,7 @@ public function CornSave(Request $request)
                             
                             $barangay= Barangay::find($id);
                             $barangay->users_id = $request->users_id;
-                            $barangay->agri_districts_id =$request->agri_districts_id ;
+                            $barangay->district =$request->district ;
                             $barangay->barangay_name =$request->barangay_name;
                            
                             // $barangay->altitude =$request->altitude;

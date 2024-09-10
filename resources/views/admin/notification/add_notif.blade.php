@@ -440,10 +440,9 @@
                             @csrf
                             <input type="hidden" name="user_type" value="agent">
                             <div class="user-details d-flex">
-                                <div class="input-box flex-fill">
-                                    <label for="agent_sender_id">Sender ID</label>
+                            
                                     <input type="hidden" name="sender_id" value="{{ $userId }}">
-                                </div>
+                          
                                 <div class="input-box flex-fill">
                                     <label for="agent_id">Agent</label>
                                     <select class="form-control" name="receiver_id" id="agent_id">
