@@ -90,7 +90,7 @@ Route::get('/admin-view-General-Farmers',[AdminController::class,'GenFarmers'])-
  Route::post('/admin-add-homepage',[LandingPageController::class,'SavePage']);
  Route::get('/admin-edit-homepage/{Page}',[LandingPageController::class,'editHomepage'])->name('landing-page.edit_homepage');
  Route::post('/admin-edit-homepage/{Page}',[LandingPageController::class,'editSave']);
- Route::post('/admin-delete-homepage/{Page}',[LandingPageController::class,'DeletePage'])->name('landing-page.delete');
+ Route::Delete('/admin-delete-homepage/{Page}',[LandingPageController::class,'DeletePage'])->name('landing-page.delete');
 
 
 //  notification

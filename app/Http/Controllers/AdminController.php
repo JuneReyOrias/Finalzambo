@@ -3229,7 +3229,7 @@ public function CornSave(Request $request)
                     $barangay->barangay_name =$request->barangay_name;
                    
                     // $barangay->altitude =$request->altitude;
-                    dd($barangay);
+                    // dd($barangay);
                     $barangay->save();
                     return redirect('/admin-view-barangays')->with('message','barangay added successsfully');
                 
