@@ -3215,6 +3215,31 @@ public function CornSave(Request $request)
             }
 
 
+            // public function newBarangay(Request $request)
+            // {
+            //     try{
+                
+            //         // $data= $request->validated([]);
+            //         // $data= $request->all();
+        
+                    
+            //         $barangay= new Barangay;
+            //         $barangay->users_id = $request->users_id;
+            //         $barangay->district =$request->district ;
+            //         $barangay->barangay_name =$request->barangay_name;
+                   
+            //         // $barangay->altitude =$request->altitude;
+            //         // dd($barangay);
+            //         $barangay->save();
+            //         return redirect('/admin-view-barangays')->with('message','barangay added successsfully');
+                
+            //     }
+            //     catch(\Exception $ex){
+            //         dd($ex); // Debugging statement to inspect the exception
+            //         return redirect('/admin-view-barangays')->with('message','Someting went wrong');
+                    
+            //     }   
+            // }
             public function newBarangay(Request $request)
             {
                 try{
