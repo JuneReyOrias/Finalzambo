@@ -17,7 +17,10 @@ class FixedCost extends Model
          'cost_per_ha',
          'total_amount'
     ];
-
+    public function cropFarm()
+    {
+        return $this->belongsTo(Crop::class, 'crops_farms_id');
+    }
 
     public function personalInformations()
 {

@@ -46,10 +46,83 @@ use App\Models\AgriDistrict;
 */
 
 
+// Route::get('home/', function () {
+//     return view('home');
+// });
+
+// Route::get('user/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard'); 
+
+
+
+
+
+// agent accent all farners
+Route::get('/agent-view-farmers',[AgentController ::class,'ViewFarmers'])->name('agent.FarmerInfo.farmers_view');
+Route::get('/agent-edit-farmers/{personalinfos}',[AgentController ::class,'FarmersInfoEdit'])->name('agent.FarmerInfo.crudfarmer.edit');
+Route::post('/agent-edit-farmers/{personalinfos}',[AgentController ::class,'StoreFarmers']);
+Route::post('/agent-delete-farmers/{personalinfos}',[AgentController ::class,'DeleteFarmers'])->name('agent.FarmerInfo.crudfarmer.delete');
+
+// farms access
+Route::get('/agent-view-farms/{personalinfos}',[AgentController ::class,'ViewFarms'])->name('agent.FarmerInfo.farm_view');
+Route::get('/agent-add-farms/{personalinfos}',[AgentController ::class,'NewAddFarms'])->name('agent.FarmInfo.crudFarm.add');
+Route::post('/agent-add-farms/{personalinfos}',[AgentController ::class,'StoreNewFarms']);
+Route::get('/agent-edit-farms/{personalinfos}',[AgentController ::class,'ViewEditFarms'])->name('agent.FarmInfo.crudFarm.edit');
+Route::post('/agent-edit-farms/{personalinfos}',[AgentController ::class,'EditFarms']);
+Route::Delete('/agent-delete-farms/{personalinfos}',[AgentController ::class,'DeleteFarm'])->name('agent.FarmInfo.crudFarm.delete');
+
+// agent access Farmer-Crops
+Route::get('/agent-view-farmer-crops/{farmData}',[AgentController ::class,'ViewFarmerCrops'])->name('agent.FarmerInfo.crops_view');
+Route::get('/agent-add-farmer-crops/{farmData}',[AgentController ::class,'ViewAddCrops'])->name('agent.FarmerInfo.CrudCrop.add');
+Route::post('/agent-add-farmer-crops/{farmData}',[AgentController ::class,'SaveNewCrop']);
+Route::get('/agent-edit-farmer-crops/{farmData}',[AgentController ::class,'EditCrops'])->name('agent.FarmerInfo.CrudCrop.edit');
+Route::post('/agent-edit-farmer-crops/{farmData}',[AgentController ::class,'UpdatedCrop']);
+Route::delete('/agent-delete-farmer-crops/{farmData}',[AgentController ::class,'DeletingCrops'])->name('agent.FarmerInfo.CrudCrop.delete');
+
+// agent access Production Crop
+Route::get('/agent-view-farmer-production/{cropData}',[AgentController ::class,'FarmerProduction'])->name('agent.FarmerInfo.production_view');
+Route::get('/agent-add-farmer-production/{cropData}',[AgentController ::class,'viewCropProduction'])->name('agent.FarmerInfo.product.new_data');
+Route::post('/agent-add-farmer-production/{cropData}',[AgentController ::class,'storeProduction']);
+Route::get('/agent-edit-farmer-production/{cropData}',[AgentController ::class,'EditProductionCrops'])->name('agent.FarmerInfo.product.edit');
+Route::post('/agent-edit-farmer-production/{cropData}',[AgentController ::class,'UpdatedProduction']);
+Route::delete('/agent-delete-farmer-production/{cropData}',[AgentController ::class,'DeleteProduction'])->name('agent.FarmerInfo.product.delete');
+
+
+//  AGENT ACCESS fIX COST CROP
+Route::get('/agent-add-farmer-fixed-cost/{cropData}',[AgentController ::class,'viewFixedCost'])->name('agent.FarmerInfo.fixed.add_view');
+Route::post('/agent-add-farmer-fixed-cost/{cropData}',[AgentController ::class,'storeFixedCost']);
+Route::get('/agent-edit-farmer-fixed-cost/{cropData}',[AgentController ::class,'EditFixedCost'])->name('agent.FarmerInfo.fixed.edit_view');
+Route::post('/agent-edit-farmer-fixed-cost/{cropData}',[AgentController ::class,'UpdatedFixedCost']);
+Route::delete('/agent-delete-farmer-fixed-cost/{cropData}',[AgentController ::class,'DeleteFixedCost'])->name('agent.FarmerInfo.fixed.delete');
+
+// agent access machineries
+Route::get('/agent-edit-farmer-machineries-cost/{cropData}',[AgentController ::class,'EditMachine'])->name('agent.FarmerInfo.machineries.edit_view');
+Route::post('/agent-edit-farmer-machineries-cost/{cropData}',[AgentController ::class,'UpdateMachine']);
+Route::delete('/agent-delete-farmer-machineries-cost/{cropData}',[AgentController ::class,'Delete'])->name('agent.FarmerInfo.machineries.delete');
+
+// agent access variable
+Route::get('/agent-edit-farmer-variable-cost/{cropData}',[AgentController ::class,'EditVariable'])->name('agent.FarmerInfo.variable.edit');
+Route::post('/agent-edit-farmer-variable-cost/{cropData}',[AgentController ::class,'UpdateVariable']);
+Route::delete('/agent-delete-farmer-variable-cost/{cropData}',[AgentController ::class,'DeleteVariable'])->name('agent.FarmerInfo.variable.delete');
+
+// agent access Solds
+Route::get('/agent-add-farmer-Production-sold/{cropData}',[AgentController ::class,'AddSolds'])->name('agent.FarmerInfo.Solds.add');
+Route::post('/agent-add-farmer-Production-sold/{cropData}',[AgentController ::class,'StoreSolds']);
+Route::get('/agent-edit-farmer-Production-sold/{cropData}',[AgentController ::class,'EditSolds'])->name('agent.FarmerInfo.Solds.edit');
+Route::post('/agent-edit-farmer-Production-sold/{cropData}',[AgentController ::class,'UpdateSolds']);
+Route::delete('/agent-delete-farmer-Production-sold/{cropData}',[AgentController ::class,'DeleteSolds'])->name('agent.FarmerInfo.Solds.delete');
+
+//agent access farmer Survey form
+Route::get('/agent-crops-survey-form',[AgentController ::class,'ViewSurveyForm'])->name('agent.SurveyForm.new_farmer');
+Route::post('/agent-crops-survey-form',[AgentController ::class,'AgentSurveyForm']);
+
 //agent access all  cropsreport
 Route::get('/agent-all-crops-report',[AgentController ::class,'AgentAllCrops'])->name('agent.CropReport.all_crops');
-// all crops
+
+// admin access all  cropsreport
 Route::get('/admin-all-crops-report',[FarmProfileController ::class,'AllCrops'])->name('admin.cropsreport.all_crops');
+
 // Crop Variety
 Route::get('/admin-add-crop-variety',[PolygonController ::class,'AddVariety'])->name('admin.variety.add_variety');
 Route::post('/admin-add-crop-variety',[PolygonController ::class,'SaveVariety']);
@@ -57,7 +130,7 @@ Route::get('/admin-edit-crop-variety/{variety}',[PolygonController ::class,'edit
 Route::post('/admin-edit-crop-variety/{variety}',[PolygonController ::class,'UpdateVariety']);
 Route::post('/admin-delete-crop-variety/{variety}',[PolygonController ::class,'DeleteVariety'])->name('admin.variety.delete');
 
-// view production
+// view crop
 Route::get('/admin-add-crop-farms/{farmData}',[FarmProfileController ::class,'cropsnewfarm'])->name('admin.farmersdata.cropsdata.add_crop');
 Route::post('/admin-add-crop-farms/{farmData}',[FarmProfileController ::class,'saveCropfarm']);
 Route::get('/admin-edit-crop-farms/{farmData}',[FarmProfileController ::class,'CropEdit'])->name('admin.farmersdata.cropsdata.edit_crops');
@@ -90,7 +163,7 @@ Route::get('/admin-view-General-Farmers',[AdminController::class,'GenFarmers'])-
  Route::post('/admin-add-homepage',[LandingPageController::class,'SavePage']);
  Route::get('/admin-edit-homepage/{Page}',[LandingPageController::class,'editHomepage'])->name('landing-page.edit_homepage');
  Route::post('/admin-edit-homepage/{Page}',[LandingPageController::class,'editSave']);
- Route::Delete('/admin-delete-homepage/{Page}',[LandingPageController::class,'DeletePage'])->name('landing-page.delete');
+ Route::delete('/admin-delete-homepage/{Page}',[LandingPageController::class,'DeletePage'])->name('landing-page.delete');
 
 
 //  notification

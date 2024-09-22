@@ -72,4 +72,7 @@ class LastProductionDatas extends Model
     // {
     //     return $this->hasMany(Crop::class, 'crops_farms_id');
     // }
+
+
+
 }

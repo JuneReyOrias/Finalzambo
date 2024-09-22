@@ -47,7 +47,7 @@
       <li class="nav-item nav-category">Farmers Data</li>
       <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#farmersData" role="button" aria-expanded="false" aria-controls="uiComponents">
-          {{-- <img src="../assets/logo/wheat.png" alt="farmersData Icon" style="width: 20px; height: 20px; color: white;"> --}}
+          <img src="../assets/logo/wheat.png" alt="farmersData Icon" style="width: 20px; height: 20px; color: white;">
           <span class="link-title" style="margin-left: 12px;"> Farmers Info</span>
           <i class="link-arrow" data-feather="chevron-down"></i>
         </a>
@@ -57,7 +57,7 @@
               <a href="{{route('personalinfo.create')}}" class="nav-link">Farmers</a>
             </li> --}}
             <li class="nav-item">
-              <a href="" class="nav-link">Farmers</a>
+              <a href="{{route('agent.FarmerInfo.farmers_view')}}" class="nav-link">Farmers</a>
             </li>
            
           </ul>
@@ -65,7 +65,7 @@
       </li>
    <li class="nav-item">
           <a class="nav-link" data-bs-toggle="collapse" href="#Forms" role="button" aria-expanded="false" aria-controls="uiComponents">
-            {{-- <img src="../assets/logo/livestock.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;"> --}}
+            <img src="../assets/logo/online-survey.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
             <span class="link-title"style="margin-left:12px;"> Forms</span>
             <i class="link-arrow" data-feather="chevron-down"></i>
           </a>
@@ -76,7 +76,7 @@
                 <a href="{{route('admin.corn.forms.corn_form')}}" class="nav-link">Survey Form</a>
               </li> --}}
               <li class="nav-item">
-                <a href="" class="nav-link">Survey Form</a>
+                <a href="{{route('agent.SurveyForm.new_farmer')}}" class="nav-link">Survey Form</a>
               </li>
 
 

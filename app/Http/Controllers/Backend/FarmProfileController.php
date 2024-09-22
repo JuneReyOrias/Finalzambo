@@ -26,7 +26,10 @@ use App\Models\Crop;
 use App\Models\VariableCost;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Pagination\Paginator;
+
+
 use Carbon\Carbon;
+
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class FarmProfileController extends Controller
@@ -601,64 +604,8 @@ public function Gmap(Request $request)
     {
     
     
-    
-          // Farmer info
-        //   $farmerdata = $request -> farmer;
-    
-        //   $existingFarmer = PersonalInformations::where('last_name', $farmerdata['last_name'])
-        //   ->where('first_name', $farmerdata['first_name'])
-        //   ->where('mothers_maiden_name', $farmerdata['mothers_maiden_name'])
-        //   ->where('date_of_birth', $farmerdata['date_of_birth'])
-        //   ->first();
-    
-        //   if ($existingFarmer) {
-        //       return response()->json([
-        //           'error' => 'A record with this last name, first name, mother\'s maiden name, and date of birth already exists.'
-        //       ], 400); // Send a 400 Bad Request status code
-        //   }
-        //   $farmerModel = new PersonalInformations();
-        //   $farmerModel -> users_id = $farmerdata['users_id'];
-        //   $farmerModel -> first_name = $farmerdata['first_name'];
-        //   $farmerModel -> middle_name= $farmerdata['middle_name'];
-        //   $farmerModel -> last_name= $farmerdata['last_name'];
-        //   $farmerModel -> extension_name = $farmerdata['extension_name'];
-        //   $farmerModel -> country= $farmerdata['country'];
-        //   $farmerModel -> province= $farmerdata['province'];
-        //   $farmerModel -> city = $farmerdata['city'];
-        //   $farmerModel -> district= $farmerdata['agri_district'];
-        //   $farmerModel -> barangay= $farmerdata['barangay'];
-        //   $farmerModel -> street= $farmerdata['street'];
-        //   $farmerModel -> zip_code= $farmerdata['zip_code'];
-        //   $farmerModel -> sex= $farmerdata['sex'];
-        //   $farmerModel -> religion = $farmerdata['religion'];
-        //   $farmerModel -> date_of_birth= $farmerdata['date_of_birth'];
-        //   $farmerModel -> place_of_birth= $farmerdata['place_of_birth'];
-        //   $farmerModel -> contact_no = $farmerdata['contact_no'];
-        //   $farmerModel -> civil_status= $farmerdata['civil_status'];
-        //   $farmerModel -> name_legal_spouse= $farmerdata['name_legal_spouse'];
-        //   $farmerModel -> no_of_children = $farmerdata['no_of_children'];
-        //   $farmerModel -> mothers_maiden_name= $farmerdata['mothers_maiden_name'];
-        //   $farmerModel -> highest_formal_education= $farmerdata['highest_formal_education'];
-        //   $farmerModel -> person_with_disability = $farmerdata['person_with_disability'];
-        //   $farmerModel -> pwd_id_no= $farmerdata['YEspwd_id_no'];
-        //   $farmerModel -> government_issued_id= $farmerdata['government_issued_id'];
-        //   $farmerModel -> id_type = $farmerdata['id_type'];
-        //   $farmerModel -> gov_id_no= $farmerdata['add_Idtype'];
-        //   $farmerModel -> member_ofany_farmers_ass_org_coop= $farmerdata['member_ofany_farmers'];
-        //   $farmerModel -> nameof_farmers_ass_org_coop = $farmerdata['nameof_farmers'];
-        //   $farmerModel -> name_contact_person= $farmerdata['name_contact_person'];
-        //   $farmerModel -> cp_tel_no= $farmerdata['cp_tel_no'];
-        //   $farmerModel -> date_interview= $farmerdata['date_of_interviewed'];
-        //   $farmerModel ->save();
-    
-    
-        // VARIABLES
-        // VARIABLES
-        // $farmer_id = $farmerModel -> id;
-        // VARIABLES
-        // VARIABLES
-        // $farmerModel -> users_id=1;
-           // Farm info
+
+
           $farms = $request -> farm;
         //   return $farms;
           $farmModel = new FarmProfile();
@@ -915,7 +862,7 @@ public function Gmap(Request $request)
     }
     
     
-    // agent farm profile update data view
+    //farm profile update data view
     public function EditFarmProfile($id)
     {
         // Check if the user is authenticated
@@ -1571,7 +1518,7 @@ public function farmdelete($id) {
     }
 
 
-    
+
     public function AllCrops(Request $request)
 {
     if (Auth::check()) {
@@ -1824,7 +1771,7 @@ if ($request->ajax()) {
 
 
             
-            return view('admin.cropsreport.all_crops', compact(
+            return view('admin.CropReport.all_crops', compact(
                 'totalFarms', 'totalAreaPlanted', 'totalAreaYield', 'totalCost', 'yieldPerAreaPlanted',
                 'averageCostPerAreaPlanted', 'totalRiceProduction', 'pieChartData', 'barChartData',
                 'selectedCropName', 'selectedDateFrom', 'selectedDateTo', 'crops', 'districts', 'selectedDistrict',
@@ -1838,4 +1785,8 @@ if ($request->ajax()) {
     }
 }
 
+
+
 }
+
+
