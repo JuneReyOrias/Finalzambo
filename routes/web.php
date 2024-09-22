@@ -57,6 +57,13 @@ use App\Models\AgriDistrict;
 
 
 
+Route::get('/dashboard', function () {
+    if (Auth::check()) {
+        return view('dashboard'); // User is authenticated, show dashboard
+    }
+
+    return redirect()->route('login')->with('error', 'Please log in to access the dashboard.'); // Redirect to login if not authenticated
+});
 
 // agent accent all farners
 Route::get('/agent-view-farmers',[AgentController ::class,'ViewFarmers'])->name('agent.FarmerInfo.farmers_view');
