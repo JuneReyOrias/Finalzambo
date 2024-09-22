@@ -893,7 +893,7 @@
 
 <script>
     function resetFilters() {
-        window.location.href = '{{ route("admin.dashb") }}'; // Redirect to the dashboard route with no filters applied
+        window.location.href = '{{ route("agent.agent_index") }}'; // Redirect to the dashboard route with no filters applied
     }
 </script>
 <script>
