@@ -233,37 +233,7 @@
             <div class="modal-body">
                 <!-- Farmer Details -->
         
-                <div class="col-md-9">
-                    <!-- Farmer Information -->
-                    @php
-                    // Check if the formatName function is not already defined
-                    if (!function_exists('formatName')) {
-                        function formatName($name) {
-                            return ucwords(strtolower(trim($name))); // Converts to "Title Case"
-                        }
-                    }
-                    
-                    // Create an array to track unique personal_informations_id
-                    $uniqueFarmers = [];
-                @endphp
-            
-                <!-- Check if $farmData is not empty -->
-              
-                   
-                        <!-- Check if personalInformation relation is loaded and the ID is unique -->
-                        @if($personalinformation && !in_array($personalinformation->id, $uniqueFarmers))
-                            <h5 for="personainfo">
-                                Farmer: 
-                                <!-- Apply the formatName function to first_name and last_name -->
-                                {{ formatName($personalinformation->first_name) . ' ' . formatName($personalinformation->last_name) }}
-                            </h5>
-                            
-                          
-                        @endif
-                   
-               
-                </div>
-            
+                
 
                 <!-- Production Data -->
                 <div class="container mt-4">
