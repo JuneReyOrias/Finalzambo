@@ -231,38 +231,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Farmer Details -->
-        
-                {{-- <div class="col-md-9">
-                    <!-- Farmer Information -->
-                    @php
-                    // Check if the formatName function is not already defined
-                    if (!function_exists('formatName')) {
-                        function formatName($name) {
-                            return ucwords(strtolower(trim($name))); // Converts to "Title Case"
-                        }
-                    }
-                    
-                    // Create an array to track unique personal_informations_id
-                    $uniqueFarmers = [];
-                @endphp
-            
-                <!-- Check if $farmData is not empty -->
-              
-                   
-                        <!-- Check if personalInformation relation is loaded and the ID is unique -->
-                        @if($personalinfos && !in_array($personalinfos->id, $uniqueFarmers))
-                            <h5 for="personainfo">
-                                Farmer: 
-                                <!-- Apply the formatName function to first_name and last_name -->
-                                {{ formatName($personalinfos->first_name) . ' ' . formatName($personalinfos->last_name) }}
-                            </h5>
-                            
-                          
-                        @endif
-                   
-               
-                </div> --}}
+          
             
 
                 <!-- Production Data -->
