@@ -233,7 +233,6 @@
             <div class="modal-body">
              
            
-            
 
                 <!-- Production Data -->
                 <div class="container mt-4">
