@@ -233,7 +233,7 @@
             <div class="modal-body">
                 <!-- Farmer Details -->
         
-                <div class="col-md-9">
+                {{-- <div class="col-md-9">
                     <!-- Farmer Information -->
                     @php
                     // Check if the formatName function is not already defined
@@ -251,18 +251,18 @@
               
                    
                         <!-- Check if personalInformation relation is loaded and the ID is unique -->
-                        @if($personalinformation && !in_array($personalinformation->id, $uniqueFarmers))
+                        @if($personalinfos && !in_array($personalinfos->id, $uniqueFarmers))
                             <h5 for="personainfo">
                                 Farmer: 
                                 <!-- Apply the formatName function to first_name and last_name -->
-                                {{ formatName($personalinformation->first_name) . ' ' . formatName($personalinformation->last_name) }}
+                                {{ formatName($personalinfos->first_name) . ' ' . formatName($personalinfos->last_name) }}
                             </h5>
                             
                           
                         @endif
                    
                
-                </div>
+                </div> --}}
             
 
                 <!-- Production Data -->

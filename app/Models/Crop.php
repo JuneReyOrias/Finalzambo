@@ -20,6 +20,7 @@ class Crop extends Model
         'crop_type_soil',
         'crop_description',
     ];
+    
      // Relationship with CropFarm
      public function cropFarm()
      {
