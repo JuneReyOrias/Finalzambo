@@ -48,7 +48,16 @@ use Exception;
 class AdminController extends Controller
 {
    
-
+ // Constructor to apply no-cache headers to all methods in this controller
+ public function __construct()
+ {
+     $this->middleware(function ($request, $next) {
+         // Prevent caching of the page
+         return $next($request)->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                               ->header('Pragma', 'no-cache')
+                               ->header('Expires', '0');
+     });
+ }
         public function AdminLogout(Request $request)
     {
         Auth::guard('web')->logout();
@@ -67,7 +76,10 @@ class AdminController extends Controller
         $admin = User::find($userId);
 
         if ($admin) {
-            // Fetch filter inputs
+            Auth::logout();
+            return redirect()->route('login')->with('error', 'User not found. Please log in again.');
+        }
+            
             $selectedCropName = $request->input('crop_name', ''); // Default to empty for "All Crops"
             $selectedDateFrom = $request->input('dateFrom', '');
             $selectedDateTo = $request->input('dateTo', '');
@@ -318,11 +330,11 @@ if ($request->ajax()) {
                 'selectedCropName', 'selectedDateFrom', 'selectedDateTo', 'crops', 'districts', 'selectedDistrict',
                 'minDate', 'maxDate', 'admin', 'pieChartDatas','distributionFrequency','flatFarmers','paginatedFarmers'
             ));
-        } else {
-            return redirect()->route('login')->with('error', 'User not found.');
-        }
-    } else {
-        return redirect()->route('login');
+    //     } else {
+    //         return redirect()->route('login')->with('error', 'User not found.');
+    //     }
+    // } else {
+    //     return redirect()->route('login');
     }
 }
 
