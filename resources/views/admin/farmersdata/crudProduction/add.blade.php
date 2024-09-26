@@ -2499,7 +2499,7 @@ const csrfToken = $('input[name="_token"]').attr('value');
 
     // Send the AJAX request
     $.ajax({
-        url: '/admin-add-productions/{cropData}',
+        url: '/admin-add-Farmers-productions/{cropData}',
         method: 'POST',
         contentType: 'application/json', // Set content type for JSON
         data: JSON.stringify(dataobject), // Attach the prepared data here
