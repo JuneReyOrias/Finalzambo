@@ -51,7 +51,7 @@ class RegisterRequest extends FormRequest
                 'unique:'.User::class,
             ],
             
-            'agri_district'=>[
+            'district'=>[
                 'required',
                 'string',
                 'max:50',
