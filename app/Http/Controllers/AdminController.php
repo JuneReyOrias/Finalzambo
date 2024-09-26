@@ -953,7 +953,7 @@ public function newAccounts()
            return redirect()->route('login');
        }
    }
-            //create new accounts
+            //create new accounts  //create new accounts
             public function NewUsers(RegisterRequest $request){
                 try{
                     // dd($request->all());
@@ -964,7 +964,7 @@ public function newAccounts()
                     $user->first_name = $request['first_name'];
                     $user->last_name = $request['last_name'];
                     $user->email = $request['email'];
-                    $user->agri_district = $request['agri_district'];
+                    $user->district = $request['district'];
                     $user->password = bcrypt($request['password']); // Hash the password for security
                     $user->role = $request['role'];
                     // dd($user);
@@ -1112,7 +1112,7 @@ public function newAccounts()
                 $data->first_name = $request['first_name'];
                 $data->last_name = $request['last_name'];
                 $data->email = $request['email'];
-                $data->agri_district = $request['agri_district'];
+                $data->district = $request['district'];
                 // $data->password = bcrypt($request['password']); // Hash the password for security
                 $data->role = $request['role'];
                 // dd($data);
@@ -1124,7 +1124,7 @@ public function newAccounts()
             } catch (Exception $e) {
             //    dd($e);
             // Handle any exceptions and redirect back with error message
-            return redirect('/edit-accounts/{users}')->with('error', 'Error updating product: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error updating product: ' . $e->getMessage());
             }
             }
 

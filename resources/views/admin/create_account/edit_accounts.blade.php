@@ -55,15 +55,15 @@
                       @enderror
                         </div>
                         <div class="input-box">
-                          <label class="details"for="agri_district">Agri-District</label>
-                          <select class="form-control @error('agri_district') is-invalid @enderror"  name="agri_district"id="validationCustom01" aria-label="Floating label select e">
-                            <option value="{{$users->agri_district}}">{{$users->agri_district}}</option>
-                            <option value="Ayala Distict" {{ old('agri_district') == 'Ayala Distict' ? 'selected' : '' }}>Ayala Distict</option>
-                            <option value="Tumaga District" {{ old('agri_district') == 'Tumaga District' ? 'selected' : '' }}>Tumaga District</option>
-                            <option value="Culianan District " {{ old('agri_district') == 'Culianan District' ? 'selected' : '' }}>Culianan District</option>
-                            <option value="Manicahan District" {{ old('agri_district') == 'Manicahan District' ? 'selected' : '' }}>Manicahan District</option>
-                            <option value="Curuan District" {{ old('agri_district') == 'Curuan District' ? 'selected' : '' }}>Curuan District</option>
-                            <option value="Vitali District" {{ old('agri_district') == 'Vitali District' ? 'selected' : '' }}>Vitali District</option>
+                          <label class="details"for="district">Agri-District</label>
+                          <select class="form-control @error('district') is-invalid @enderror"  name="district"id="validationCustom01" aria-label="Floating label select e">
+                            <option value="{{$users->district}}">{{$users->district}}</option>
+                            <option value="Ayala Distict" {{ old('district') == 'Ayala Distict' ? 'selected' : '' }}>Ayala Distict</option>
+                            <option value="Tumaga District" {{ old('district') == 'Tumaga District' ? 'selected' : '' }}>Tumaga District</option>
+                            <option value="Culianan District " {{ old('district') == 'Culianan District' ? 'selected' : '' }}>Culianan District</option>
+                            <option value="Manicahan District" {{ old('district') == 'Manicahan District' ? 'selected' : '' }}>Manicahan District</option>
+                            <option value="Curuan District" {{ old('district') == 'Curuan District' ? 'selected' : '' }}>Curuan District</option>
+                            <option value="Vitali District" {{ old('district') == 'Vitali District' ? 'selected' : '' }}>Vitali District</option>
                           </select>
                         </div>
                         {{-- <div class="input-box">

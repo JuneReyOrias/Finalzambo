@@ -56,17 +56,17 @@
                         </div>
                         <div class="input-box">
                           <span class="details">Agri-District</span>
-                          <select class="form-control @error('agri_district') is-invalid @enderror"  name="agri_district"id="validationCustom01" aria-label="Floating label select e">
+                          <select class="form-control @error('district') is-invalid @enderror"  name="district"id="validationCustom01" aria-label="Floating label select e">
                             <option selected disabled>Select Agri-District</option>
-                            <option value="ayala" {{ old('agri_district') == 'ayala' ? 'selected' : '' }}>Ayala Distict</option>
-                            <option value="tumaga" {{ old('agri_district') == 'tumaga' ? 'selected' : '' }}>Tumaga District</option>
-                            <option value="culianan" {{ old('agri_district') == 'culianan' ? 'selected' : '' }}>Culianan District</option>
-                            <option value="manicahan" {{ old('agri_district') == 'manicahan' ? 'selected' : '' }}>Manicahan District</option>
-                            <option value="curuan" {{ old('agri_district') == 'curuan' ? 'selected' : '' }}>Curuan District</option>
-                            <option value="vitali" {{ old('agri_district') == 'vitali' ? 'selected' : '' }}>Vitali District</option>
+                            <option value="ayala" {{ old('district') == 'ayala' ? 'selected' : '' }}>Ayala Distict</option>
+                            <option value="tumaga" {{ old('district') == 'tumaga' ? 'selected' : '' }}>Tumaga District</option>
+                            <option value="culianan" {{ old('district') == 'culianan' ? 'selected' : '' }}>Culianan District</option>
+                            <option value="manicahan" {{ old('district') == 'manicahan' ? 'selected' : '' }}>Manicahan District</option>
+                            <option value="curuan" {{ old('district') == 'curuan' ? 'selected' : '' }}>Curuan District</option>
+                            <option value="vitali" {{ old('district') == 'vitali' ? 'selected' : '' }}>Vitali District</option>
                           </select>
                         </div>
-                        <div class="input-box">
+                        {{-- <div class="input-box">
                           <span class="details">Password</span>
                           <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="Enter your password" autocomplete="new-password" value="{{ old('password') }}" >
                           @error('password')
@@ -80,7 +80,24 @@
                           @error('confirm_password')
                           <div class="invalid-feedback">{{ $message }}</div>
                           @enderror
-                        </div>
+                        </div> --}}
+
+                        <div class="input-box">
+                          <span class="details">Password</span>
+                          <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="password" autocomplete="current-password" placeholder="Password" value="{{ old('password') }}">
+                          @error('password')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                          @enderror
+                      </div>
+                      
+                      <div class="input-box">
+                          <span class="details">Confirm Password</span>
+                          <input type="password" name="confirm_password" class="form-control @error('confirm_password') is-invalid @enderror" id="confirm_password" autocomplete="current-confirm_password" placeholder="Confirm Password" value="{{ old('confirm_password') }}" onkeyup="checkPasswordMatch();">
+                          @error('confirm_password')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                          @enderror
+                          <div id="passwordMismatch" class="text-danger" style="display: none;">Passwords do not match.</div>
+                      </div>
                         <div class="input-box">
                           <span class="details">Role</span>
                           <select class="form-select" name="role"id="validationCustom01" aria-label="Floating label select e">
@@ -96,7 +113,7 @@
                       <button type="submit"  class="btn btn-outline-success">
                         Sign up
                       </button>
-
+                      <a  href="{{route('admin.create_account.display_users')}}"button  class="btn btn-success ">Back</button></a></p>
                     </form>
                   </div>
                 </div>
