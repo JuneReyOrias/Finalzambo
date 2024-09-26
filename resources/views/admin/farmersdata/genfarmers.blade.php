@@ -36,14 +36,14 @@
                     <!-- Your card content here -->
                     <div class="tabs">
                         <input type="radio" name="tabs" id="personainfo" checked="checked">
-                        <label for="personainfo">Personal Info</label>
+                        <label for="personainfo">Farmers</label>
                         <div class="tab">
                             
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <div class="input-group mb-3">
                                     <h5 for="personainfo">I.Personal Information</h5>
                                 </div>
-                                <a href="{{route("admin.farmersdata.samplefolder.farm_edit")}}" title="Add farm">
+                                <a href="{{route("admin.farmersdata.samplefolder.farm_edit")}}" title="Add Farmer">
                                     <button class="btn btn-success btn-sm">
                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                     </button>
@@ -66,25 +66,13 @@
                     
                                             <th>#</th>
                                             <th class="custom-cell">Farmer Name</th>
-                                            <th class="custom-cell">Sex</th>
-                                            <th class="custom-cell">civil <p>status</p></th>
+                                        
                                             <th class="custom-cell">Home Address</th>
                                            <th class="custom-cell">date of <p> birth</p></th>
                                            <th class="custom-cell">place of <p> birth</p></th>
-                                           <th class="custom-cell">No. of<p> Children</p></th>
-                                           <th class="custom-cell">contact no.</th>
-                                           
-                                          
-                                          
-                                       
-                                        
-                                       
+                                     
+
                                          
-                                           <th class="custom-cell">government <p>issued id</p></th>
-                                          
-                                           <th class="custom-cell">gov id no</th>
-                                          
-                                           <th class="custom-cell">name of farmers ass/org/coop</th>
                                           
                                         
                                            <th class="custom-cell">Action</th>
@@ -124,21 +112,9 @@
                                     ?>
 
                                 </td>
-                                <td class="custom-cell">
-                                  @if ($personalinformation->sex && $personalinformation->sex != 'N/A')
-                                      {{ $personalinformation->sex }}
-                                  @else
-                                      
-                                  @endif
-                              </td>
+                                
 
-                              <td class="custom-cell">
-                                @if ($personalinformation->civil_status && strtolower($personalinformation->civil_status) != 'n/a')
-                                    {{ $personalinformation->civil_status }}
-                                @else
-                                    
-                                @endif
-                            </td>
+                            
                                 <td class="custom-cell">
                                     @if ($personalinformation->barangay || $personalinformation->agri_district || $personalinformation->city)
                                         {{ $personalinformation->barangay ?? 'N/A' }}, {{ $personalinformation->agri_district ?? 'N/A' }}, {{ $personalinformation->city ?? 'N/A' }}
@@ -171,126 +147,36 @@
                                     
                                     @endif
                                 </td>
-                                <td class="custom-cell">
-                                  @if ($personalinformation->no_of_children && strtolower($personalinformation->no_of_children) != 'n/a')
-                                      {{ $personalinformation->no_of_children }}
-                                  @else
-                                      
-                                  @endif
-                              </td>
-                                <td class="custom-cell">
-                                    @if ($personalinformation->contact_no && strtolower($personalinformation->contact_no) != 'n/a')
-                                        {{ $personalinformation->contact_no }}
-                                    @else
-                                    
-                                    @endif
-                                </td>
-                               
-                            {{-- <td class="custom-cell">
-                                @if ($personalinformation->name_legal_spouse && strtolower($personalinformation->name_legal_spouse) != 'n/a')
-                                    {{ $personalinformation->name_legal_spouse }}
-                                @else
-                                
-                                @endif
-                            </td> --}}
-                           
-                        {{-- <td class="custom-cell">
-                            @if ($personalinformation->mothers_maiden_name && strtolower($personalinformation->mothers_maiden_name) != 'n/a')
-                                {{ $personalinformation->mothers_maiden_name }}
-                            @else
-                            
-                            @endif
-                        </td>
+                             
+                             
+
+                
+
+               
+
                         <td class="custom-cell">
-                            @if ($personalinformation->highest_formal_education && strtolower($personalinformation->highest_formal_education) != 'n/a')
-                                {{ $personalinformation->highest_formal_education }}
-                            @else
-                            
-                            @endif
-                        </td> --}}
-                        {{-- <td class="custom-cell">
-                        @if ($personalinformation->person_with_disability && strtolower($personalinformation->person_with_disability) != 'n/a')
-                            {{ $personalinformation->person_with_disability }}
-                        @else
-                            
-                        @endif
-                    </td> --}}
-
-                    <td class="custom-cell">
-                        @if ($personalinformation->government_issued_id && strtolower($personalinformation->government_issued_id) != 'n/a')
-                            {{ $personalinformation->government_issued_id }}
-                        @else
-                        
-                        @endif
-                    </td>
-                    {{-- <td class="custom-cell">
-                    @if ($personalinformation->government_issued_id && strtolower($personalinformation->government_issued_id) != 'n/a')
-                        {{ $personalinformation->government_issued_id }}
-                    @else
-                        
-                    @endif --}}
-                    {{-- </td>
-                    <td class="custom-cell">
-                    @if ($personalinformation->id_type && strtolower($personalinformation->id_type) != 'n/a')
-                        {{ $personalinformation->id_type }}
-                    @else
-                    
-                    @endif
-                    </td> --}}
-                    <td class="custom-cell">
-                    @if ($personalinformation->gov_id_no && strtolower($personalinformation->gov_id_no) != 'n/a')
-                        {{ $personalinformation->gov_id_no }}
-                    @else
-                    
-                    @endif
-                    </td>
-                    {{-- <td class="custom-cell">
-                    @if ($personalinformation->member_ofany_farmers_ass_org_coop && strtolower($personalinformation->member_ofany_farmers_ass_org_coop) != 'n/a')
-                        {{ $personalinformation->member_ofany_farmers_ass_org_coop }}
-                    @else
-                    
-                    @endif
-                    </td> --}}
-
-                    <td class="custom-cell">
-                    @if ($personalinformation->nameof_farmers_ass_org_coop && strtolower($personalinformation->nameof_farmers_ass_org_coop) != 'n/a')
-                        {{ $personalinformation->nameof_farmers_ass_org_coop }}
-                    @else
-                    
-                    @endif
-                    </td>
-{{-- 
-                    <td class="custom-cell">
-                    @if ($personalinformation->name_contact_person && strtolower($personalinformation->name_contact_person) != 'n/a')
-                        {{ $personalinformation->name_contact_person }}
-                    @else
-                    
-                    @endif
-                    </td>
-                    <td class="custom-cell">
-                    @if ($personalinformation->cp_tel_no && strtolower($personalinformation->cp_tel_no) != 'n/a')
-                        {{ $personalinformation->cp_tel_no }}
-                    @else
-                    
-                    @endif
-                    </td> --}}
-                    <td class="custom-cell">
-                      <a href="{{ route('admin.farmersdata.farm', $personalinformation->id) }}" title="View farm">
-                          <button class="btn btn-success btn-sm">
-                            <i class="fa fa-eye" aria-hidden="true"></i>
-                          </button>
-                      </a>
-                      <a href="{{ route('personalinfo.edit_info', $personalinformation->id) }}" title="View farmer">
-                          <button class="btn btn-primary btn-sm">
-                              <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                          </button>
-                      </a>
-                      <form action="{{ route('personalinfo.delete', $personalinformation->id) }}" method="post" accept-charset="UTF-8" style="display:inline">
-                          {{ csrf_field() }}
-                          <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm('Confirm delete?')">
-                              <i class="fa fa-trash-o" aria-hidden="true"></i>
-                          </button>
-                      </form>
+                            <a href="{{ route('admin.farmersdata.farm', $personalinformation->id) }}" title="View farm">
+                                <button class="btn btn-success btn-sm">
+                                  <i class="fa fa-eye" aria-hidden="true"></i>
+                                </button>
+                            </a>
+                      <a href="javascript:void(0);" class="viewfarmerBtn" data-bs-toggle="modal" title="View farmer" data-bs-target="#farmerModal" data-id="{{ $personalinformation->id }}">
+                        <button class="btn btn-warning btn-sm" style="border-color: #54d572;">
+                            <img src="../assets/logo/farmer.png" alt="Crop Icon" style="width: 20px; height: 20px;" class="me-1">
+                            <i class="fas fa-rice" aria-hidden="true"></i>
+                        </button>
+                    </a>
+                    <a href="{{ route('personalinfo.edit_info', $personalinformation->id) }}" title="View farmer">
+                        <button class="btn btn-primary btn-sm">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        </button>
+                    </a>
+                    <form action="{{ route('personalinfo.delete', $personalinformation->id) }}" method="post" accept-charset="UTF-8" style="display:inline">
+                        {{ csrf_field() }}
+                        <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm('Confirm delete?')">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        </button>
+                    </form>
                   </td>
                   
                    </tr>
@@ -327,6 +213,143 @@
         </div>
     </div>
 </div>
+
+
+{{-- farmt --}}
+<div class="modal fade" id="farmerModal" tabindex="-1" aria-labelledby="farmerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header text-white">
+                <h5 class="modal-title" id="farmerModalLabel">Farmer Data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+             
+           
+              <!-- Full Name Display -->
+              <div class="container mt-3">
+                <h6 class="fw-bold">Full Name: <span id="full_name" class="text-primary"></span></h6>
+                <h6 class="text-secondary mb-3">Age: <span id="age"></span></h6> <!-- Age display here -->
+            </div>
+
+                <!-- Production Data -->
+                <div class="container mt-4">
+                    <h6 class="fw-bold mb-3">Farmer info Details</h6>
+                    
+                    </ul><div class="accordion" id="machineryAccordion">
+                        <!-- Plowing Accordion -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="plowingHeading">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#plowingCollapse" aria-expanded="true" aria-controls="plowingCollapse">
+                                    a.  Contact and Demographic  Info
+                                </button>
+                            </h2>
+                            <div id="plowingCollapse" class="accordion-collapse collapse show" aria-labelledby="plowingHeading" data-bs-parent="#machineryAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled farmer-details">
+
+                                      
+                                        {{-- <li><strong>Date of Birth:</strong> <span id="date_of_birth"></span></li> --}}
+                                        <li><strong>Mother's Maiden Name:</strong> <span id="mothers_maiden_name"></span></li>
+                                        <li><strong>Agri-District:</strong> <span id="district"></span></li>
+                                        <li><strong>Barangay:</strong> <span id="barangay"></span></li>
+                                        <li><strong>Country:</strong> <span id="country"></span></li>
+                                        <li><strong>Province:</strong> <span id="province"></span></li>
+                                        <li><strong>City:</strong> <span id="city"></span></li>
+                                        <li><strong>Home Address:</strong> <span id="home_address"></span></li>
+                                        <li><strong>Street:</strong> <span id="street"></span></li>
+                                        <li><strong>Zip Code:</strong> <span id="zip_code"></span></li>
+                                        
+                                        <li><strong>Contact:</strong> <span id="contact_no"></span></li>
+                                        <li><strong>Sex/Gender:</strong> <span id="sex"></span></li>
+
+                                        <li><strong>Religion:</strong> <span id="religion"></span></li>
+                                        <li><strong>Place Of Birth:</strong> <span id="place_of_birth"></span></li>
+                                        <li><strong>Civil Status:</strong> <span id="civil_status"></span></li>
+                                        <li><strong>Name of Spouse</strong> <span id="name_legal_spouse"></span></li>
+                                      
+                                        <li><strong>No. of Children:</strong> <span id="no_of_children"></span></li>
+                                        <li><strong>Highest Formal Education:</strong> <span id="highest_formal_education"></span></li>
+                                        <li><strong>Person with Disability:</strong> <span id="person_with_disability"></span></li>
+                                        <li><strong>PWD ID No.:</strong> <span id="pwd_id_no"></span></li>
+                                        <li><strong>Government Issued Id:</strong> <span id="government_issued_id"></span></li>
+                                        <li><strong>Gov ID Type.:</strong> <span id="id_type"></span></li>
+                                        <li><strong>Gov ID no.:</strong> <span id="gov_id_no"></span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    
+                      
+                    
+                        <!-- Harvesting Accordion -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="harvestingHeading">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#harvestingCollapse" aria-expanded="false" aria-controls="harvestingCollapse">
+                                    b.  Association  Info
+                                </button>
+                            </h2>
+                            <div id="harvestingCollapse" class="accordion-collapse collapse" aria-labelledby="harvestingHeading" data-bs-parent="#machineryAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled farmer-details">
+                                        <li><strong>Member OF farmer Org/Asso/Coop:</strong> <span id="member_ofany_farmers_ass_org_coop"></span></li>
+                                        <li><strong>Name of farmer Org/Asso/Coop:</strong> <span id="nameof_farmers_ass_org_coop"></span></li>
+                                        <li><strong>Name of Contact Person:</strong> <span id="name_contact_person"></span></li>
+                                        <li><strong>Cellphone/Tel.#:</strong> <span id="cp_tel_no"></span></li>
+                                        <li><strong>Date of Interview::</strong> <span id="date_interview"></span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        
+                       
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    /* Modal Content Styling */
+   .modal-content {
+       border-radius: .5rem;
+       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+   }
+   
+   /* Farmer Details Styling */
+   .farmer-details {
+       list-style: none;
+       padding: 0;
+       margin: 0;
+   }
+   
+   .farmer-details li {
+       margin-bottom: .5rem;
+       padding: .5rem 0;
+       border-bottom: 1px solid #e9ecef;
+   }
+   
+   .farmer-details li strong {
+       font-weight: 600;
+   }
+   
+   .farmer-details li span {
+       color: #ffffff;
+       background-color: #6c757d; /* Gray background */
+       padding: 2px 6px; /* Adds some space around the text */
+       border-radius: 4px; /* Rounded corners for a nice effect */
+   }
+   
+   /* Container Styling */
+   .container {
+       margin-bottom: 1.5rem;
+   }
+   </style>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const searchInput = document.getElementById('searchInput');
@@ -356,5 +379,133 @@
             showAllForm.submit();
         });
     });
+
+
+
+    // Function to fetch and display Variable cost Cost data
+    $(document).on('click', '.viewfarmerBtn', function() {
+    var id = $(this).data('id'); // Get the ID from the data attribute
+   FarmerData(id); // Fetch data and show the modal
+});
+
+$(document).on('click', '.viewfarmerBtn', function() {
+    var id = $(this).data('id'); // Get the ID from the data attribute
+   FarmerData(id); // Fetch data and show the modal
+});
+
+function FarmerData(id) {
+    $.ajax({
+        url: '/admin-update-personalinfo/' + id, // Adjust the URL to match your route
+        type: 'GET',
+        dataType: 'json',
+        data: { type: 'personalinfos' }, // Send type parameter for AJAX request
+        success: function(response) {
+            if (response.error) {
+                alert(response.error); // Display error message if provided
+            } else {
+                // Populate the modal with the fetched data
+                $('#first_name').text(response.first_name || 'N/A');
+                $('#middle_name').text(response.middle_name || 'N/A');
+                $('#last_name').text(response.last_name || 'N/A');
+                $('#extension_name').text(response.extension_name || 'N/A');
+
+                // Function to capitalize the first letter of each word
+                function capitalizeFirstLetter(string) {
+                    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+                }
+
+                // Concatenate full name with proper capitalization
+                let fullName = [
+                    response.first_name, 
+                    response.middle_name, 
+                    response.last_name, 
+                    response.extension_name
+                ]
+                .filter(Boolean)
+                .map(name => capitalizeFirstLetter(name)) // Capitalize each name part
+                .join(' ')
+                .trim();
+
+                // If all fields are empty, set 'N/A'
+                if (!fullName) {
+                    fullName = 'N/A';
+                }
+
+                // Display the concatenated and formatted full name
+                $('#full_name').text(fullName);
+
+                            // Display Age
+                var dateOfBirth = response.date_of_birth ? new Date(response.date_of_birth) : null;
+                if (dateOfBirth) {
+                    var age = calculateAge(dateOfBirth);
+                    $('#age').text(age + ' years old');
+                } else {
+                    $('#age').text('N/A');
+                }
+
+                $('#mothers_maiden_name').text(response.mothers_maiden_name || 'N/A');
+                $('#district').text(response.district || 'N/A');
+                $('#barangay').text(response.barangay || 'N/A');
+              
+
+              
+                $('#country').text(response.country || 'N/A');
+                $('#province').text(response.province || 'N/A');
+                $('#city').text(response.city || 'N/A');
+
+                $('#home_address').text(response.home_address || 'N/A');
+                $('#street').text(response.street || 'N/A');
+
+                $('#zip_code').text(response.zip_code || 'N/A');
+                $('#contact_no').text(response.contact_no || 'N/A');
+                $('#sex').text(response.sex || 'N/A');
+
+                $('#religion').text(response.religion || 'N/A');
+                $('#place_of_birth').text(response.place_of_birth || 'N/A');
+              
+
+                $('#civil_status').text(response.civil_status || 'N/A');
+                $('#name_legal_spouse').text(response.name_legal_spouse || 'N/A');
+                $('#no_of_children').text(response.no_of_children || 'N/A');
+
+                $('#highest_formal_education').text(response.highest_formal_education || 'N/A');
+                $('#street').text(response.street || 'N/A');
+
+                $('#person_with_disability').text(response.person_with_disability || 'N/A');
+                $('#pwd_id_no').text(response.pwd_id_no || 'N/A');
+                $('#government_issued_id').text(response.government_issued_id || 'N/A');
+
+                $('#id_type').text(response.id_type || 'N/A');
+                $('#gov_id_no').text(response.gov_id_no || 'N/A');
+
+                
+                $('#member_ofany_farmers_ass_org_coop').text(response.member_ofany_farmers_ass_org_coop || 'N/A');
+                $('#nameof_farmers_ass_org_coop').text(response.nameof_farmers_ass_org_coop || 'N/A');
+                $('#name_contact_person').text(response.name_contact_person || 'N/A');
+
+                $('#cp_tel_no').text(response.cp_tel_no || 'N/A');
+                $('#date_interview').text(response.date_interview || 'N/A');
+            }
+        },
+        error: function(xhr) {
+            console.error('Error fetching data:', xhr.responseText);
+            alert('An error occurred: ' + xhr.statusText); // Provide user-friendly error message
+        }
+    });
+    // Function to calculate age based on date of birth
+function calculateAge(dateOfBirth) {
+    var today = new Date();
+    var age = today.getFullYear() - dateOfBirth.getFullYear();
+    var monthDifference = today.getMonth() - dateOfBirth.getMonth();
+    
+    // If the birth date hasn't happened yet this year, subtract one year from age
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < dateOfBirth.getDate())) {
+        age--;
+    }
+    
+    return age;
+}
+}
+
   </script>
 @endsection

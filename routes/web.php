@@ -33,7 +33,8 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\UserAccountController;
 use App\Models\AgriDistrict;
-
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -50,16 +51,25 @@ use App\Models\AgriDistrict;
 //     return view('home');
 // });
 
-// Route::get('user/dashboard', function () {
+// Route::get('dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard'); 
 
+// Route::get('dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified',])->name('dashboard');
+// Protected route with auth middleware
+
+Route::get('/dashboard', function () {
+    if (Auth::check()) {
+        return view('dashboard'); // User is authenticated, show dashboard
+    }
+
+    return redirect()->route('login')->with('error', 'Please log in to access the dashboard.'); // Redirect to login if not authenticated
+});
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
 
-
-Route::get('dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified',])->name('dashboard');
 
 // agent accent all farners
 Route::get('/agent-view-farmers',[AgentController ::class,'ViewFarmers'])->name('agent.FarmerInfo.farmers_view');
@@ -138,20 +148,54 @@ Route::get('/admin-add-crop-farms/{farmData}',[FarmProfileController ::class,'cr
 Route::post('/admin-add-crop-farms/{farmData}',[FarmProfileController ::class,'saveCropfarm']);
 Route::get('/admin-edit-crop-farms/{farmData}',[FarmProfileController ::class,'CropEdit'])->name('admin.farmersdata.cropsdata.edit_crops');
 Route::post('/admin-edit-crop-farms/{farmData}',[FarmProfileController ::class,'Updatecrop']);
-Route::get('/admin-delete-crop-farms/{farmData}',[FarmProfileController ::class,'Deletecropfarm'])->name('admin.farmersdata.cropsdata.edit_crops');
+Route::get('/admin-delete-crop-farms/{farmData}',[FarmProfileController ::class,'Deletecropfarm'])->name('admin.farmersdata.cropsdata.delete');
 
-// view production
+// view admin survey
 Route::get('/admin-view-Farmers-survey-form',[PersonalInformationsController ::class,'samplefolder'])->name('admin.farmersdata.samplefolder.farm_edit');
 Route::post('/admin-view-Farmers-survey-form',[PersonalInformationsController ::class,'test']);
-Route::get('/admin-edit-crop-farms/{farmData}',[FarmProfileController ::class,'CropEdit'])->name('admin.farmersdata.cropsdata.delete');
+// Route::get('/admin-edit-crop-farms/{farmData}',[FarmProfileController ::class,'CropEdit'])->name('admin.farmersdata.cropsdata.delete');
 
 
 
-// view production
+// admin view production
 Route::get('/admin-view-Farmers-productions/{cropData}',[PersonalInformationsController ::class,'productionview'])->name('admin.farmersdata.production');
+Route::get('/admin-add-Farmers-productions/{cropData}',[PersonalInformationsController ::class,'productionAdd'])->name('admin.farmersdata.crudProduction.add');
+Route::post('/admin-add-Farmers-productions/{cropData}',[PersonalInformationsController ::class,'productionSave']);
+Route::get('/admin-edit-Farmers-productions/{cropData}',[PersonalInformationsController ::class,'productionEdit'])->name('admin.farmersdata.crudProduction.edit');
+Route::post('/admin-edit-Farmers-productions/{cropData}',[PersonalInformationsController ::class,'productionUpdate']);
+Route::delete('/admin-delete-Farmers-productions/{cropData}',[PersonalInformationsController ::class,'productiondelete'])->name('admin.farmersdata.crudProduction.delete');
+
+// admin fixed cost
+Route::get('/admin-add-Farmers-fixedCost/{cropData}',[PersonalInformationsController ::class,'fixedAdd'])->name('admin.farmersdata.CrudFixed.add');
+Route::post('/admin-add-Farmers-fixedCost/{cropData}',[PersonalInformationsController ::class,'fixedSave']);
+Route::get('/admin-edit-Farmers-fixedCost/{cropData}',[PersonalInformationsController ::class,'fixedEdit'])->name('admin.farmersdata.CrudFixed.edit');
+Route::post('/admin-edit-Farmers-fixedCost/{cropData}',[PersonalInformationsController ::class,'fixedUpdate']);
+Route::delete('/admin-delete-Farmers-fixedCost/{cropData}',[PersonalInformationsController ::class,'fixeddelete'])->name('admin.farmersdata.CrudFixed.delete');
 
 
-// view crop
+// admin machineries
+Route::get('/admin-add-Farmers-Machineries-Cost/{cropData}',[PersonalInformationsController ::class,'AddMachinerie'])->name('admin.farmersdata.CrudMachineries.add');
+Route::post('/admin-add-Farmers-Machineries-Cost/{cropData}',[PersonalInformationsController ::class,'MachineriesSave']);
+Route::get('/admin-edit-Farmers-Machineries-Cost/{cropData}',[PersonalInformationsController ::class,'MachineriesEdit'])->name('admin.farmersdata.CrudMachineries.edit');
+Route::post('/admin-edit-Farmers-Machineries-Cost/{cropData}',[PersonalInformationsController ::class,'MachineriesUpdate']);
+Route::delete('/admin-delete-Farmers-Machineries-Cost/{cropData}',[PersonalInformationsController ::class,'Machineriesdelete'])->name('admin.farmersdata.CrudMachineries.delete');
+
+// admin variables 
+
+Route::get('/admin-add-Farmers-Variable-Cost/{cropData}',[PersonalInformationsController ::class,'AddVariable'])->name('admin.farmersdata.CrudVariable.add');
+Route::post('/admin-add-Farmers-Variable-Cost/{cropData}',[PersonalInformationsController ::class,'VariableSave']);
+Route::get('/admin-edit-Farmers-Variable-Cost/{cropData}',[PersonalInformationsController ::class,'VariableEdit'])->name('admin.farmersdata.CrudVariable.edit');
+Route::post('/admin-edit-Farmers-Variable-Cost/{cropData}',[PersonalInformationsController ::class,'VariableUpdate']);
+Route::delete('/admin-delete-Farmers-Variable-Cost/{cropData}',[PersonalInformationsController ::class,'Variabledelete'])->name('admin.farmersdata.CrudVariable.delete');
+
+// admin Solds
+Route::get('/admin-add-Farmers-Solds-Cost/{cropData}',[PersonalInformationsController ::class,'AddSolds'])->name('admin.farmersdata.CrudSolds.add');
+Route::post('/admin-add-Farmers-Solds-Cost/{cropData}',[PersonalInformationsController ::class,'SoldsSave']);
+Route::get('/admin-edit-Farmers-Solds-Cost/{cropData}',[PersonalInformationsController ::class,'SoldsEdit'])->name('admin.farmersdata.CrudSolds.edit');
+Route::post('/admin-edit-Farmers-Solds-Cost/{cropData}',[PersonalInformationsController ::class,'SoldsUpdate']);
+Route::delete('/admin-delete-Farmers-Solds-Cost/{cropData}',[PersonalInformationsController ::class,'Soldsdelete'])->name('admin.farmersdata.CrudSolds.delete');
+
+// view crops
 Route::get('/admin-view-Farmers-crop/{farmData}',[PersonalInformationsController ::class,'cropview'])->name('admin.farmersdata.crop');
 
 // view farm
@@ -659,9 +703,9 @@ Route::controller(PersonalInformationsController::class)->group(function () {
 
     // farmers edit, view and delte of farm profile info by admin
     Route::get('/admin-view-farmprofile',[ FarmProfileController::class,'ViewFarmProfile'])->name('farm_profile.farminfo_view');
-    Route::get('/admin-update-farmprofile/{farmprofiles}',[ FarmProfileController::class,'EditFarmProfile'])->name('farm_profile.farm_edit');
-    Route::post('/admin-update-farmprofile/{farmprofiles}',[ FarmProfileController::class,'UpdateFarmProfiles']);
-    Route::post('/admin-delete-farmprofile/{farmprofiles}',[ FarmProfileController::class,'deletetFarmProfile'])->name('farm_profile.delete');
+    Route::get('/admin-update-farmprofile/{personalinfos}',[ FarmProfileController::class,'EditFarmProfile'])->name('farm_profile.farm_edit');
+    Route::post('/admin-update-farmprofile/{personalinfos}',[ FarmProfileController::class,'UpdateFarmProfiles']);
+    Route::post('/admin-delete-farmprofile/{personalinfos}',[ FarmProfileController::class,'deletetFarmProfile'])->name('farm_profile.delete');
 
 
 

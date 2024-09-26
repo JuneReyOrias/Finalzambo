@@ -1,6 +1,7 @@
 @extends('admin.dashb')
 
 @section('admin')
+
     @extends('layouts._footer-script')
     @extends('layouts._head')
     
@@ -480,453 +481,7 @@
 
                                   
                                         
-                                        <div class="step farmer-info" id="step2">
-                                            <h2>Step 1: Personal Information</h2><br>
-                                            <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
-                                    <h3>b. Contact & Demographic Info</h3>
-                                    <div class="user-details">
-                                    {{-- <div >
-                                    <span class="details"></span>
-                                    <input type="hidden" class="form-control country l" name="country" id="validationCustom01" value="Philippines" readonly >
-                                    @error('first_name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    </div>
-                                    <div >
-                                    <span class="details"></span>
-                                    <input type="hidden" class="form-control province light-gray-placeholder @error('last_name') is-invalid @enderror" name="province" id="validationCustom01" value="Zamboanga del sur" readonly >
-                                    @error('last_name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    </div> --}}
-                                    {{-- <div >
-                                    <span class="details"></span>
-                                    <input type="hidden"name="email" class="form-control city light-gray-placeholder @error('email') is-invalid @enderror" name="city" id="validationCustom01" value="Zamboanga City" readonly >
-                                    @error('email')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    </div> --}}
-                                    <input type="hidden" class="form-control country l" name="country" id="validationCustom01" value="Philippines" readonly >
-                                    <input type="hidden" class="form-control province light-gray-placeholder @error('last_name') is-invalid @enderror" name="province" id="validationCustom01" value="Zamboanga del sur" readonly >
-                                    <input type="hidden"name="email" class="form-control city light-gray-placeholder @error('email') is-invalid @enderror" name="city" id="validationCustom01" value="Zamboanga City" readonly >
-                                  
-
-                     
-                                        {{-- <select id="districtSelect" class="form-control">
-                                            <option value="" disabled selected>Select AgriDistrict</option>
-                                        </select>
-                                        
-                                        <select class="barangaySelect form-control">
-                                            <option value="" disabled selected>Select Barangay</option>
-                                            <option value="add">Add New Barangay...</option>
-                                        </select>
-                                        
-                                        <select class="organizationSelect form-control">
-                                            <option value="" disabled selected>Select Organization</option>
-                                            <option value="add">Add New Organization...</option>
-                                        </select>
-                                         --}}
-
-
-
                                     
-                                 
-                                   
-                    <div class="input-box col-md-4">
-                        <span class="details">Street</span>
-                        <input type="text" name="street" id="street" class="form-control street light-gray-placeholder @error('street') is-invalid @enderror" placeholder="Street" autocomplete="new-password" value="{{ old('street') }}">
-                        @error('street')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                                    <div class="input-box col-md-4">
-                                    <span class="details">Zip Code</span>
-                                    <select class="form-control light-gray-placeholder zip_code @error('zip_code') is-invalid @enderror"  name="zip_code"id="validationCustom01" aria-label="Floating label select e">
-                                   
-                                    <option selected value="7000" {{ old('zip_code') == '7000' ? 'selected' : '' }}>7000</option>
-
-                                    </select>
-                                    </div>
-                                    <div class="input-box col-md-4">
-                                    <span class="details">Contact No.</span>
-                                    <input type="number" name="contact_no" id="contact_no" class="form-control contact_no light-gray-placeholder @error('contact_no') is-invalid @enderror"placeholder="Contact no." autocomplete="new-password" value="{{ old('contact_no') }}" >
-                                    @error('contact_no')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    </div>
-                                    <div class="input-box col-md-4">
-                                        <span class="details">Sex</span>
-                                        <div class="d-flex align-items-center">
-                                            <select class="form-control custom-select sex light-gray-placeholder @error('sex') is-invalid @enderror" name="sex" id="selectSex" aria-label="Floating label select e" onchange="handleSexChange()">
-                                                <option value="" disabled selected>Select</option>
-                                                <option value="male" {{ old('sex') == 'male' ? 'selected' : '' }}>Male</option>
-                                                <option value="female" {{ old('sex') == 'female' ? 'selected' : '' }}>Female</option>
-                                                <option value="Others" {{ old('sex') == 'Others' ? 'selected' : '' }}>Others (optional)</option>
-                                            </select>
-                                            <!-- Button section for removing custom entries -->
-                                            <button type="button" id="removeSexButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeSex()">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                        @error('sex')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    
-                                    
-                                    
-                                   
-                                  
-                                    <div class="input-box col-md-4">
-                                        <span class="details">Religion</span>
-                                        <div class="d-flex align-items-center">
-                                            <select class="form-control custom-select religion" id="selectReligion" onchange="checkReligion()">
-                                                <option class="form-control light-gray-placeholder"selected disabled>Select Religion</option>
-                                                <option value="Roman Catholic" {{ old('religion') == 'Roman Catholic' ? 'selected' : '' }}>Roman Catholic</option>
-                                                <option value="Iglesia Ni Cristo" {{ old('religion') == 'Iglesia Ni Cristo' ? 'selected' : '' }}>Iglesia Ni Cristo</option>
-                                                <option value="Seventh-day Adventist" {{ old('religion') == 'Seventh-day Adventist' ? 'selected' : '' }}>Seventh-day Adventist</option>
-                                                <option value="Islam" {{ old('religion') == 'Islam' ? 'selected' : '' }}>Islam</option>
-                                                <option value="Born Again CHurch" {{ old('religion') == 'Born Again CHurch' ? 'selected' : '' }}>Born Again CHurch</option>
-                                                <option value="N/A" {{ old('religion') == 'N/A' ? 'selected' : '' }}>N/A</option>
-                                                <option value="other" {{ old('religion') == 'other' ? 'selected' : '' }}>other</option>
-                                               
-                                            </select>
-                                            <button type="button" id="removeReligionButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeReligion()">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                        
-                                    </div>
-                                    
-                                    
-                              
-                                  
-                                    
-                                    <div class="input-box col-md-4">
-                                        <span class="details">Place of Birth</span>
-                                        <div class="d-flex align-items-center">
-                                            <select class="form-control custom-select light-gray-placeholder place_of_birth" name="place_of_birth" id="selectPlaceBirth" onchange="checkPlaceBirth()" aria-label="Floating label select e">
-                                                <option selected disabled>Select</option>
-                                                <option value="Zamboanga City" {{ old('place_of_birth') == 'Zamboanga City' ? 'selected' : '' }}>Zamboanga City</option>
-                                                <option value="Basilan Province" {{ old('place_of_birth') == 'Basilan Province' ? 'selected' : '' }}>Basilan Province</option>
-                                                <option value="Vitali,ZC" {{ old('place_of_birth') == 'Vitali,ZC' ? 'selected' : '' }}>Vitali,ZC</option>
-                                                <option value="Limaong,ZC" {{ old('place_of_birth') == 'Limaong,ZC' ? 'selected' : '' }}>Limaong,ZC</option>
-                                                <option value="Cotabato" {{ old('place_of_birth') == 'Cotabato' ? 'selected' : '' }}>Cotabato</option>
-                                                <option value="South Cotabato" {{ old('place_of_birth') == 'South Cotabato' ? 'selected' : '' }}>South Cotabato</option>
-                                                <option value="Bunguiao, Zc" {{ old('place_of_birth') == 'Bunguiao, Zc' ? 'selected' : '' }}>Bunguiao, ZC</option>
-                                                <option value="Manicahan,Zc" {{ old('place_of_birth') == 'Manicahan,Zc' ? 'selected' : '' }}>Manicahan, ZC</option>
-                                                <option value="Negros Occidental" {{ old('place_of_birth') == 'Negros Occidental' ? 'selected' : '' }}>Negros Occidental</option>
-                                                <option value="Mercedes, ZC" {{ old('place_of_birth') == 'Mercedes, ZC' ? 'selected' : '' }}>Mercedes, ZC</option>
-                                                <option value="Curuan, ZC" {{ old('place_of_birth') == 'Curuan, ZC' ? 'selected' : '' }}>Curuan, ZC</option>
-                                                <option value="Boalan, Zc" {{ old('place_of_birth') == 'Boalan, Zc' ? 'selected' : '' }}>Boalan, ZC</option>
-                                                <option value="Guiwan, Zc" {{ old('place_of_birth') == 'Guiwan, Zc' ? 'selected' : '' }}>Guiwan, ZC</option>
-                                                <option value="Cabatangan, Zc" {{ old('place_of_birth') == 'Cabatangan, Zc' ? 'selected' : '' }}>Cabatangan, ZC</option>
-                                                <option value="Tugbungan, Zc" {{ old('place_of_birth') == 'Tugbungan, Zc' ? 'selected' : '' }}>Tugbungan, ZC</option>
-                                                <option value="Talabaan, Zc" {{ old('place_of_birth') == 'Talabaan, Zc' ? 'selected' : '' }}>Talabaan, ZC</option>
-                                                <option value="Culianan, Zc" {{ old('place_of_birth') == 'Culianan, Zc' ? 'selected' : '' }}>Culianan, ZC</option>
-                                                <option value="Ayala, Zc" {{ old('place_of_birth') == 'Ayala, Zc' ? 'selected' : '' }}>Ayala, ZC</option>
-                                                <option value="Add Place of Birth" {{ old('place_of_birth') == 'Add Place of Birth' ? 'selected' : '' }}>Add new</option>
-                                            </select>
-                                            <button type="button" id="removePlaceBirthButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removePlaceBirth()">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                        <div id="PlaceBirthInputField" style="display: none;">
-                                            <!-- Input field for new place of birth names -->
-                                        </div>
-                                    </div>
-                                    
-
-                                   
-                                    <div class="input-box col-md-4">
-                                    <span class="details">Civil Status</span>
-                                    <select class="form-control custom-select light-gray-placeholder civil_status"  name="civil_status"id="selectCivil"onchange="checkCivil()"  aria-label="Floating label select e">
-                                        <option selected  disabled>Select</option>
-                                        <option  value="Single" {{ old('civil_status') == 'Single' ? 'selected' : '' }}>Single</option>
-                                        <option value="Maried" {{ old('civil_status') == 'Maried' ? 'selected' : '' }}>Maried</option>
-                                        <option value="Divorced" {{ old('civil_status') == 'Divorced' ? 'selected' : '' }}>Divorced</option>
-                                        <option value="Widow" {{ old('civil_status') == 'Widow' ? 'selected' : '' }}>Widow</option>
-                                       
-                                      </select>
-                                    </div>
-
-                                    <div class="input-box col-md-4" id="MariedInputSelected" style="display: none;">
-                                        <span class="details">Name of Spouse:</span>
-                                        <input type="text" id="MariedInputSelected" name="name_legal_spouse" class="form-control name_legal_spouse light-gray-placeholder @error('mothers_maiden_name') is-invalid @enderror" placeholder="Name of spouse" autocomplete="new-password" value="{{ old('mothers_maiden_name') }}" onkeypress="return blockSymbolsAndNumbers(event)">
-                                        @error('mothers_maiden_name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                        <div class="input-box col-md-4"id="SinWidDevInput"  style="display: none;">
-                                            <span class="details">Name of Spouse:</span>
-                                            {{-- <input type="text"id="MariedInputSelected" name="name_legal_spouse"class="form-control name_legal_spouse light-gray-placeholder @error('mothers_maiden_name') is-invalid @enderror" placeholder="Mother's Maiden Name" autocomplete="new-password" value="{{ old('mothers_maiden_name') }}" >
-                                            --}}
-                                            <select class="form-control light-gray-placeholder @error('name_legal_spouse') is-invalid @enderror" name="name_legal_spouse"id="selectFgroups"onchange="checkfarmGroup()" aria-label="Floating label select e">
-                                           
-                                                <option selected value="N/A" {{ old('name_legal_spouse') == 'N/A' ? 'selected' : '' }}>N/A</option>
-                                                
-                                                
-                                              
-                                              </select>
-                                            </div>
-                                            <div class="input-box col-md-4">
-                                                <span class="details">No. of Children</span>
-                                                <div class="d-flex align-items-center">
-                                                    <select class="form-control no_of_children light-gray-placeholder @error('no_of_children') is-invalid @enderror" name="no_of_children" id="childrenSelect" onchange="checkChildren()" aria-label="Floating label select e">
-                                                        <option selected disabled>Select</option>
-                                                        <option value="1" {{ old('no_of_children') == '1' ? 'selected' : '' }}>1</option>
-                                                        <option value="2" {{ old('no_of_children') == '2' ? 'selected' : '' }}>2</option>
-                                                        <option value="3" {{ old('no_of_children') == '3' ? 'selected' : '' }}>3</option>
-                                                        <option value="4" {{ old('no_of_children') == '4' ? 'selected' : '' }}>4</option>
-                                                        <option value="5" {{ old('no_of_children') == '5' ? 'selected' : '' }}>5</option>
-                                                        <option value="N/A" {{ old('no_of_children') == 'N/A' ? 'selected' : '' }}>N/A</option>
-                                                        <option value="Add" {{ old('no_of_children') == 'Add' ? 'selected' : '' }}>Add</option>
-                                                    </select>
-                                                    <button type="button" id="removeChildrenButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeChildren()">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                                <div id="ChildrenInputField" style="display: none;">
-                                                    <!-- Input field for new number of children names -->
-                                                </div>
-                                            </div>
-                                          
-                                            
-                                    <div class="input-box col-md-4">
-                                        <span class="details">Highest Formal Education</span>
-                                        <div class="d-flex align-items-center">
-                                            <select class="form-control light-gray-placeholder highest_formal_education @error('highest_formal_education') is-invalid @enderror" name="highest_formal_education" id="selectEduc" onchange="checkFormalEduc()" aria-label="Floating label select e">
-                                                <option selected disabled>Select</option>
-                                                <option  value="No Formal Education" {{ old('highest_formal_education') == 'No Formal Education' ? 'selected' : '' }}>No Formal Education</option>
-                                                <option value="Primary Education" {{ old('highest_formal_education') == 'Primary Education' ? 'selected' : '' }}>Primary Education</option>
-                                                <option value="Secondary Education" {{ old('highest_formal_education') == 'Secondary Education' ? 'selected' : '' }}>Secondary Education</option>
-                                                <option value="Vocational Training" {{ old('highest_formal_education') == 'Vocational Training' ? 'selected' : '' }}>Vocational Training</option>
-                                                <option value="Bachelors Degree" {{ old('highest_formal_education') == 'Bachelors Degree' ? 'selected' : '' }}>Bachelor's Degree</option>
-                                                <option value="Masters Degree" {{ old('highest_formal_education') == 'Masters Degree' ? 'selected' : '' }}>Master's Degree</option>
-                                                <option value="Doctorate" {{ old('highest_formal_education') == 'Doctorate' ? 'selected' : '' }}>Doctorate</option>
-                                                <option value="Other" {{ old('highest_formal_education') == 'Other' ? 'selected' : '' }}>Other</option>
-                                                <option value="Add" {{ old('highest_formal_education') == 'Add' ? 'selected' : '' }}>Add</option>
-                                            </select>
-                                            <button type="button" id="removeEducationButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeFormalEduc()">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                        <div id="EducationInputField" style="display: none;">
-                                            <!-- Input field for new education names -->
-                                        </div>
-                                    </div>
-                                    
-                                       {{-- add new form --}}
-                                {{-- <div class="input-box col-md-4" id="otherformInputContainer" style="display: none;">
-                                    <label for="add_formEduc">add prefer:</label>
-                                    <input type="text" id="otherformInputContainer" name="add_formEduc" value="military" class="form-control light-gray-placeholder add_formEduc" placeholder="enter highest formal education">
-                                </div> --}}
-      
-                                    <div class="input-box col-md-4">
-                                    <span class="details">Person with Disability</span>
-
-                                        <select class="form-control light-gray-placeholder person_with_disability @error('person_with_disability') is-invalid @enderror" name="person_with_disability"id="selectPWD"onchange="checkPWD()" aria-label="Floating label select e">
-                                        <option selected  disabled>Select</option>
-                                    <option value="1" {{ old('person_with_disability') == 'Yes' ? 'selected' : '' }}>Yes</option>
-                                    <option value="0" {{ old('person_with_disability') == 'No' ? 'selected' : '' }}>No</option>
-
-
-                                    </select>
-                                    </div>
-
-                                    <div class="input-box col-md-4"id="YesInputSelected" style="display: none;" >
-                                    <span class="details">PWD ID No.</span>
-                                    <input type="number" name="pwd_id_no" id="YesInputSelected" class="form-control YEspwd_id_no light-gray-placeholder @error('pwd_id_no') is-invalid @enderror" placeholder="Mother's Maiden Name" autocomplete="new-password" value="{{ old('pwd_id_no') }}" >
-                                    @error('pwd_id_no')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    </div>
-
-
-                                    <div class="input-box col-md-4" id="NoInputSelected" style="display: none;">
-                                    <span class="details">PWD ID No</span>
-                                    <select class="form-control Nopwd_id_no $('select.YEspwd_id_no').val(), @error('pwd_id_no') is-invalid @enderror" name="pwd_id_no"id="selectFgroups"onchange="checkfarmGroup()" aria-label="Floating label select e">
-                                 
-                                    <option selected value="N/A" {{ old('pwd_id_no') == 'N/A' ? 'selected' : '' }}>N/A</option>
-
-
-
-                                    </select>
-                                    </div>
-
-
-                                    <div class="input-box col-md-4">
-                                    <span class="details">Government Issued ID</span>
-                                    <select class="form-control government_issued_id @error('government_issued_id') is-invalid @enderror"  name="government_issued_id"id="selectGov"onchange="CheckGoverniD()" aria-label="Floating label select e">
-                                    <option selected  disabled>Select</option>
-                                    <option value="Yes" {{ old('government_issued_id') == 'Yes' ? 'selected' : '' }}>Yes</option>
-                                    <option value="No" {{ old('government_issued_id') == 'No' ? 'selected' : '' }}>No</option>
-
-                                    </select>
-                                    </div>
-
-                                    <div class="input-box col-md-4" id="iDtypeSelected" style="display: none;">
-                                        <span class="details">Gov ID Type</span>
-                                        <div class="d-flex align-items-center">
-                                            <select class="form-control id_type custom-select @error('id_type') is-invalid @enderror" name="id_type" id="selectIDType" onchange="checkIDtype()" aria-label="Floating label select e">
-                                                <option selected  disabled>Select</option>
-                                                <option value="Driver License" {{ old('id_type') == 'Driver License' ? 'selected' : '' }}>Driver License</option>
-                                                <option value="Passport" {{ old('id_type') == 'Passport' ? 'selected' : '' }}>Passport</option>
-                                                <option value="Postal ID" {{ old('id_type') == 'Postal ID' ? 'selected' : '' }}>Postal ID</option>
-                                                <option value="Phylsys ID" {{ old('id_type') == 'Phylsys ID' ? 'selected' : '' }}>Phylsys ID</option>
-                                                <option value="PRC ID" {{ old('id_type') == 'PRC ID' ? 'selected' : '' }}>PRC ID</option>
-                                                <option value="Brgy. ID" {{ old('id_type') == 'Brgy. ID' ? 'selected' : '' }}>Brgy. ID</option>
-                                                <option value="Voters ID" {{ old('id_type') == 'Voters ID' ? 'selected' : '' }}>Voters ID</option>
-                                                <option value="Senior ID" {{ old('id_type') == 'Senior ID' ? 'selected' : '' }}>Senior ID</option>
-                                                <option value="PhilHealth ID" {{ old('id_type') == 'PhilHealth ID' ? 'selected' : '' }}>PhilHealth ID</option>
-                                                <option value="Tin ID" {{ old('id_type') == 'Tin ID' ? 'selected' : '' }}>Tin ID</option>
-                                                <option value="BIR ID" {{ old('id_type') == 'BIR ID' ? 'selected' : '' }}>BIR ID</option>
-                                                <option value="N/A" {{ old('id_type') == 'N/A' ? 'selected' : '' }}>N/A</option>
-                                                <option value="addNew" {{ old('id_type') == 'addNew' ? 'selected' : '' }}>Other ID Type</option>
-                                            </select>
-                                            <button type="button" id="removeIDButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeIDType()">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                        @error('id_type')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    
-                                    <div class="input-box col-md-4"  id="idNoInput" style="display: none;">
-                                    <span class="details">Gov-ID no.</span>
-                                    <input type="number" name="add_Idtype" id="add_Idtype" class="form-control add_Idtype light-gray-placeholder @error('add_Idtype') is-invalid @enderror" placeholder="gov. id no" autocomplete="new-password" value="{{ old('add_Idtype') }}" >
-                                    @error('add_Idtype')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    </div>
-                                    {{-- <div class="input-box col-md-4" id="NoSelected" style="display: none;">
-                                        <label for="OthersInput">Non-Gov-ID Type:</label>
-                                        <input type="text" id="OthersInput" class="form-control placeholder-text @error('gov_id_no') is-invalid @enderror"name="add_Idtype" id="validationCustom02" placeholder="Enter gov-id type"  value="{{ old('gov_id_no') }}">
-                                        @error('gov_id_no')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    </div> --}}
-                                    <div class="input-box col-md-4"  id="NoSelected" style="display: none;">
-                                    <span class="details">Non-Gov ID</span>
-                                    <input type="text" name="id_types" id="non_gov_id_types" class="form-control non_gov_id_types light-gray-placeholder @error('id_types') is-invalid @enderror" placeholder="non-gov id" autocomplete="new-password" value="{{ old('id_types') }}" >
-                                    @error('id_types')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    </div>
-
-                                    </div>
-                                            <!-- Add other personal information fields -->
-                                            <button type="button" class="btn btn-primary" onclick="previousStep()">Previous</button>
-                                            <button type="button" class="btn btn-success" id="nextButton" onclick="nextStep()">Next</button>
-                                        </div>
-
-                                        {{-- farmers info last part --}}
-                                        <div class="step farmer-info" id="step1.3">
-                                            <h2>Step 1: Personal Information</h2><br>
-                                            <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
-                                            <h3>c. Association Info</h3>
-                                              <div class="user-details">
-                                                <div class="input-box col-md-4">
-                                                    <span class="details">Agri-District</span>
-                                                    <select class="form-control light-gray-placeholder gray-text agri_district @error('agri_district') is-invalid @enderror" name="agri_district"  id="districtSelect"  aria-label="Floating label select e">
-                                                        <option value="" disabled selected>Select AgriDistrict</option>
-                                                        <!-- Add other options as needed -->
-                                                    </select>
-                                                </div>
-                                                
-                                              
-            
-                                                    <!-- Barangay Selection -->
-                                                    <div class="input-box col-md-4">
-                                                        <span class="details">Barangay</span>
-                                                        <div class="d-flex align-items-center">
-                                                            <!-- Select dropdown -->
-                                                            <select class="form-control barangay custom-select light-gray-placeholder gray-text barangaySelect @error('barangay') is-invalid @enderror" name="barangay" id="SelectBarangay" aria-label="Floating label select e">
-                                                                <option value="" disabled selected>Select Barangay</option>
-                                                                <option value="add">Add New Barangay...</option>
-                                                            </select>
-            
-                                                            <!-- Remove Barangay Button with Font Awesome Icon -->
-                                                            {{-- <button type="button" id="removeBarangay" class="btn btn-outline-danger ms-2 d-flex align-items-center" title="Remove Selected Barangay">
-                                                                <i class="fa fa-trash me-1"></i>
-                                                            </button>
-            
-                                                            <!-- Add New Barangay Button with Font Awesome Icon -->
-                                                            <button type="button" class="btn btn-success ms-2 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#newBarangayModal" title="Add New Barangay">
-                                                                <i class="fa fa-plus me-1"></i>
-                                                            </button> --}}
-                                                        </div>
-                                                    </div>
-                                                        <div class="input-box  col-md-4 " >
-                                                            <span class="details">Member of farmer Ass/Org/Coop</span>
-                                                            <select class="form-control custom-select light-gray-placeholder gray-text member_ofany_farmers @error('member_ofany_farmers_ass_org_coop') is-invalid @enderror" id="selectMember" onchange="checkMmbership()" name="member_ofany_farmers_ass_org_coop" aria-label="Floating label select e">
-                                                                <option selected  disabled>Select</option>
-                                                                <option value="1" {{('member_ofany_farmers_ass_org_coop') == 1 ? 'selected' : '' }}>Yes</option>
-                                                                <option value="0" {{ ('member_ofany_farmers_ass_org_coop') == 0 ? 'selected' : '' }}>No</option>
-                                                            </select>
-                                                            @error('member_ofany_farmers_ass_org_coop')
-                                                            <div class="invalid-feedback">{{ $message }}</div>
-                                                            @enderror
-                                                          </div>
-                  
-                    
-
-                                <!-- Organization Selection -->
-                                    <div class="input-box col-md-4" id="YesFarmersGroup" style="display: none;">
-                                        <span class="details">Name of Ass/Org/Coop</span>
-                                        <div class="d-flex align-items-center">
-                                            <!-- Select dropdown -->
-                                            <select class="organizationSelect form-control nameof_farmers custom-select light-gray-placeholder gray-text @error('organization') is-invalid @enderror" name="organization" id="SelectOrganization" aria-label="Floating label select e">
-                                                <option value="" disabled selected>Select Organization</option>
-                                                <option value="add">Add New Organization...</option>
-                                            </select>
-
-                                            <!-- Remove Organization Button with Font Awesome Icon -->
-                                            {{-- <button type="button" id="removeOrganization" class="btn btn-outline-danger ms-2 d-flex align-items-center" title="Remove Selected Organization">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-
-                                            <!-- Add New Organization Button with Font Awesome Icon -->
-                                            <button type="button" class="btn btn-success ms-2 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#newOrganizationModal" title="Add New Organization">
-                                                <i class="fa fa-plus me-1"></i> --}}
-                                        </div>
-                                    </div>
-                                <div class="input-box col-md-4" id="NoFarmersGroup" style="display: none;font-size: 12px">
-                                    <span class="details">Name of Farmers Ass/Org/Coop</span>
-                                    <select class="form-control NoFarmersGroup @error('nameof_farmers_ass_org_coop') is-invalid @enderror" name="nameof_farmers_ass_org_coop"id="selectFgroups"onchange="checkfarmGroup()" aria-label="Floating label select e">
-                                       
-                                        <option selected value="N/A" {{ old('nameof_farmers_ass_org_coop') == 'N/A' ? 'selected' : '' }}>N/A</option> 
-                          </select>
-                      </div>
-                    
-                     
-                      <div class="input-box col-md-4">
-                        <span class="details">Name of Contact Person</span>
-                        <input type="text" class="form-control light-gray-placeholder name_contact_person @error('name_contact_person') is-invalid @enderror" name="name_contact_person" placeholder="Enter name of contact person" value="{{ old('name_contact_person') }}" id="contactPersonInput" onkeypress="return blockSymbolsAndNumbers(event)">
-                        @error('name_contact_person')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                      <div class="input-box col-md-4">
-                        <span class="details">Celphone/Tel.no</span>
-                        <input type="number" class="form-control cp_tel_no light-gray-placeholder @error('cp_tel_no') is-invalid @enderror" name="cp_tel_no" placeholder="Enter your cp tel no"value="{{ old('cp_tel_no') }}" >
-                        @error('cp_tel_no')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                      </div>
-                   
-                    
-                    
-                    
-                    
-                    </div>
-                                           
-                                            <!-- Add other personal information fields -->
-                                            <button type="button" class="btn btn-primary" onclick="previousStep()">Previous</button>
-                                            <button type="button" class="btn btn-success"  id="nextButton" onclick="nextStep()">Next</button>
-                                        </div>
 
 <!-- Step 1: Farm Profile -->
 <div class="step active farm-info" id="step2">
@@ -960,7 +515,7 @@
                                 {{-- <label class="detail">Tenurial Status:</label> --}}
                                 <div class="d-flex align-items-center">
                                     <select class="form-control custom-select light-gray-placeholder placeholder-text tenurial_status @error('tenurial_status') is-invalid @enderror" name="tenurial_status" id="selectTenurialStatus" onchange="checkTenurial()" aria-label="label select e">
-                                        <option selected disabled>Select</option>
+                                        <option value="">Select</option>
                                         <option  value="Owner" {{ old('tenurial_status') == 'Owner' ? 'selected' : '' }}>Owner</option>
                                         <option value="Owner Tiller" {{ old('tenurial_status') == 'Owner Tiller' ? 'selected' : '' }}>Owner Tiller</option>
                                         <option value="Tenant" {{ old('tenurial_status') == 'Tenant' ? 'selected' : '' }}>Tenant</option>
@@ -1040,13 +595,13 @@
                             </div>
                             <div class="input-box col-md-4">
                                 <span class="details">Lot No:</span>
-                                <input type="text" class="form-control light-gray-placeholder lot_no" name="farm_profiles[0][lot_no]"value="445.54" id="lot_no_0" placeholder="Enter lot no" value="{{old('lot_no')}}">
+                                <input type="text" class="form-control light-gray-placeholder lot_no" name="farm_profiles[0][lot_no]" id="lot_no_0" placeholder="Enter lot no" value="{{old('lot_no')}}">
                             </div>
                             <div class="input-box col-md-4">
                                 <span class="details">Area Prone To:</span>
                                 <div class="d-flex align-items-center">
                                     <select class="form-control custom-select light-gray-placeholder area_prone_to placeholder-text @error('area_prone_to') is-invalid @enderror" id="selectedAreaprone" onchange="checkProne()" name="area_prone_to" aria-label="Floating label select e">
-                                        <option selected disabled>Select</option>
+                                        <option value="">Select</option>
                                         <option  value="Flood" {{ old('area_prone_to') == 'Flood' ? 'selected' : '' }}>Flood</option>
                                         <option value="Drought" {{ old('area_prone_to') == 'Drought' ? 'selected' : '' }}>Drought</option>
                                         <option value="Saline" {{ old('area_prone_to') == 'Saline' ? 'selected' : '' }}>Saline</option>
@@ -1070,7 +625,7 @@
                                 <span class="details">Ecosystem:</span>
                                 <div class="d-flex align-items-center">
                                     <select class="form-control custom-select light-gray-placeholder ecosystem placeholder-text @error('ecosystem') is-invalid @enderror" id="selectedEcosystem" onchange="checkEcosystem()" name="ecosystem" aria-label="Floating label select e">
-                                        <option selected disabled>Select</option>
+                                        <option value="">Select</option>
                                         <option value="Lowland Rain Fed" {{ old('ecosystem') == 'Lowland Rain Fed' ? 'selected' : '' }}>Lowland Rain Fed</option>
                                         <option value="Lowland Irrigated" {{ old('ecosystem') == 'Lowland Irrigated' ? 'selected' : '' }}>Lowland Irrigated</option>
                                         <option value="Add ecosystem" {{ old('ecosystem') == 'Add ecosystem' ? 'selected' : '' }}>Add</option>
@@ -1108,8 +663,8 @@
                                 <span class="details">PCIC Insured:</span>
                                 
                                 <select class="form-control custom-select light-gray-placeholder pcic_insured placeholder-text @error('pcic_insured') is-invalid @enderror" id="pcic_insured" name="pcic_insured" aria-label="Floating label select e">
-                                    <option selected disabled>Select</option>
-                                    <option  alue="Yes" {{ old('pcic_insured') == 'Yes' ? 'selected' : '' }}>Yes</option>
+                                    <option value="">Select</option>
+                                    <option  value="Yes" {{ old('pcic_insured') == 'Yes' ? 'selected' : '' }}>Yes</option>
                                     <option value="No" {{ old('pcic_insured') == 'No' ? 'selected' : '' }}>No</option>
                               
                                   </select>
@@ -1119,6 +674,7 @@
                            
                                 <select class="form-control custom-select light-gray-placeholder government_assisted placeholder-text @error('government_assisted') is-invalid @enderror" id="government_assisted" name="government_assisted" aria-label="Floating label select e">
                                     <option selected class="light-gray-placeholder"  disabled>Select</option>
+
                                     <option value="Yes" {{ old('government_assisted') == 'Yes' ? 'selected' : '' }}>Yes</option>
                                     <option value="No" {{ old('government_assisted') == 'No' ? 'selected' : '' }}>No</option>
                               
@@ -1129,7 +685,7 @@
                                 <span class="details">Source of Capital:</span>
                                 <div class="d-flex align-items-center">
                                     <select class="form-control custom-select light-gray-placeholder source_of_capital placeholder-text @error('source_of_capital') is-invalid @enderror" id="selectedSourceCapital" onchange="checkSourceCapital()" name="source_of_capital" aria-label="Floating label select e">
-                                        <option selected disabled>Select</option>
+                                        <option value="">Select</option>
                                         <option value="Own" {{ old('source_of_capital') == 'Own' ? 'selected' : '' }}>Own</option>
                                         <option value="Loan" {{ old('source_of_capital') == 'Loan' ? 'selected' : '' }}>Loan</option>
                                         <option value="Financed" {{ old('source_of_capital') == 'Financed' ? 'selected' : '' }}>Financed</option>
@@ -1521,7 +1077,7 @@
   </style>
   
 <!-- Success Modal -->
-<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+<div class="modal fade" id="successCropModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -1532,11 +1088,7 @@
           <p>Your data has been successfully added.</p>
         </div>
         <div class="modal-footer">
-          {{-- <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button> --}}
-          <button type="button" class="btn btn-primary" class="btn btn-success" onclick="goBack()">Famer Frofile</button>
-          {{-- <a href="{{route('admin.farmersdata.samplefolder.farm_edit')}}" class="btn btn-success">Famer Frofile</a>
-            <!-- Link to proceed to another page -->
-            <a href="{{route('admin.farmersdata.genfarmers')}}" class="btn btn-success">Proceed to Farmer Info</a> --}}
+            <a href="{{ route('admin.farmersdata.farm', $personalinfos->id) }}" class="btn btn-success">Proceed to Farm Data</a>
         </div>
       </div>
     </div>
@@ -1544,49 +1096,11 @@
   
   
 
-  
-  {{-- <!-- Success Modal -->
-<!-- Success Modal -->
-<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content shadow-lg">
-            <div class="modal-header border-0">
-                <h5 class="modal-title" id="successModalLabel">Success</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- Success message will be displayed here -->
-            </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="proceedToNextStep()">Proceed</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Error Modal -->
-<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content shadow-lg">
-            <div class="modal-header border-0">
-                <h5 class="modal-title" id="errorModalLabel">Error</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="errorModalBody">
-                <!-- Error message will be displayed here -->
-            </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+ 
 
 
   
   
-   --}}
 
 
  <!-- Modal for Adding New Barangay -->
@@ -1656,17 +1170,28 @@
                     </div>
                     </div>
                 </div> 
+                <!-- Modal Structure -->
+<div id="cropModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Add Crop</h2>
+        <input type="text" id="cropName" class="form-control" placeholder="Crop Name" required>
+        <button type="button" class="btn btn-primary" id="confirmAddCropButton">Add Crop</button>
+    </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     let cropCounter = 0;
     let availableNumbers = [];
     let cropsInfo = [];
-  
-
+    const submitButton = document.getElementById('submitButton');
+    const cropContainer = document.getElementById('cropProfiles');
+    const addCropButton = document.getElementById('addCropButton');
     function fetchCropNames() {
     $.ajax({
-        url: '/admin-view-Farmers-survey-form',
+        url: '/admin-add-farm/{personalinfos}',
         method: 'GET',
         data: { type: 'crops' },
         success: function(response) {
@@ -1707,7 +1232,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Function to fetch crop varieties based on selected crop name
 function fetchCropVarieties(cropId, selectElement) {
     $.ajax({
-        url: '/admin-view-Farmers-survey-form',
+        url: '/admin-add-farm/{personalinfos}',
         method: 'GET',
         data: { type: 'varieties', crop_name: cropId },
         success: function(response) {
@@ -1764,59 +1289,9 @@ $(document).on('change', '.crop_variety', function() {
 });
 
 
-// Function to fetch crop varieties based on selected crop name
-// function fetchCropSeeds(varietyId, selectElement) {
-//     $.ajax({
-//         url: '/admin-view-Farmers-survey-form',
-//         method: 'GET',
-//         data: { type: 'seedname', variety_name: varietyId },
-//         success: function(response) {
-//             if (response.error) {
-//                 console.error('Error fetching crop seeds:', response.error);
-//                 return;
-//             }
-
-//             // Console log the fetched seed data
-//             console.log('Fetched seed data:', response);
-
-//             const $seedSelect = $(selectElement).closest('.crop-section').find('.seed_name');
-//             $seedSelect.empty();
-//             $seedSelect.append('<option value="" disabled selected>Select Seed</option>');
-            
-//             // Add fetched seed options
-//             $.each(response, function(id, seed) {
-//                 $seedSelect.append(new Option(seed, id));
-//             });
-
-          
-//         },
-//         error: function(xhr) {
-//             console.error('AJAX request failed. Status:', xhr.status, 'Response:', xhr.responseText);
-//         }
-//     });
-// }
-
-
-
-// // Bind change event to variety name dropdowns
-// $(document).on('change', '.crop_variety', function() {
-//     const varietyId = $(this).val();
-//     if (varietyId) {
-//         fetchCropSeeds(varietyId, this);
-//     } else {
-//         // Clear the seed dropdown if no variety is selected
-//         $(this).closest('.crop-section').find('.seed_name').empty().append('<option value="" disabled selected>Select Seed</option>');
-//           // Prompt for new seed name
-//           var newSeedName = prompt("Please enter a new seed name:");
-//             if (newSeedName) {
-//                 var newSeedId = 'new_' + Date.now(); // Generate a unique ID for the new option
-//                 $seedSelect.append(new Option(newSeedName, newSeedId));
-//             }
-//     }
-// });
 function fetchCropSeeds(varietyId, selectElement) {
     $.ajax({
-        url: '/admin-view-Farmers-survey-form',
+        url: '/admin-add-farm/{personalinfos}',
         method: 'GET',
         data: { type: 'seedname', variety_name: varietyId },
         success: function(response) {
@@ -1861,6 +1336,7 @@ $(document).on('change', '.crop_variety', function() {
 
 $(document).on('change', '.seed_name', function() {
     const $seedSelect = $(this);
+    
     const selectedValue = $seedSelect.val();
     const cropCounter = $seedSelect.attr('id').split('_').pop();
 
@@ -1936,15 +1412,15 @@ $(document).ready(function() {
                         <!-- Crop Fields -->
                          <div class="input-box col-md-4">
                               
-                                  <label for="crop_name_${cropCounter}">Crop Name</label>
-                                <select class="form-control crop_name" id="crop_name_${cropCounter}">
+                                 <span class="details">Crop Name</span>
+                                <select class="form-control crop_name" id="crop_name_${cropCounter}" required>
                                    
                                 </select>
                             </div>
                             <div class="input-box col-md-4">
-                                <label for="crop_variety_${cropCounter}">Crop Variety:</label>
+                                 <span class="details">Crop Variety:</span>
                                 <div class="d-flex align-items-center">
-                                    <select class="form-control crop_variety" id="crop_variety_${cropCounter}" onchange="checkCropVariety(${cropCounter})">
+                                    <select class="form-control crop_variety" id="crop_variety_${cropCounter}" onchange="checkCropVariety(${cropCounter})"required>
                                         
                                         <option value="add">Add(optional)</option>
                                     </select>
@@ -1956,27 +1432,27 @@ $(document).ready(function() {
 
 
                             <div class="input-box col-md-4">
-                                <label for="preferred_variety_${cropCounter}">Preferred Variety:</label>
-                                <input type="text" class="form-control preferred_variety" name="crop_profiles[${cropCounter}][preferred_variety]" id="preferred_variety_${cropCounter}" placeholder="Enter preferred variety">
+                                  <span class="details">Preferred Variety(optional):</span>
+                                <input type="text" class="form-control prferred_variety" name="crop_profiles[${cropCounter}][preferred_variety]" id="preferred_variety_${cropCounter}" placeholder="Enter preferred variety">
                             </div>
 
                               <div class="input-box col-md-4">
-                                <label for="no_of_cropping_per_year_${cropCounter}">No. of cropping/year:</label>
+                                 <span class="details">No. of cropping/year:</span>
                                 <input type="number" class="form-control no_crop_year" name="crop_profiles[${cropCounter}][no_of_cropping_per_year]"placeholder="no of cropping/year" id="no_of_cropping_per_year_${cropCounter}">
                             </div>
                             <div class="input-box col-md-4">
-                                <label for="planting_schedule_wetseason_${cropCounter}">Planting Schedule (Wet Season):</label>
+                                  <span class="details">Planting Schedule (Wet Season):</label>
                                 <input type="text" class="form-control wet_season" name="crop_profiles[${cropCounter}][planting_schedule_wetseason]"  id="datepicker_${cropCounter}" placeholder="Planting schedule"
                                     value="{{ old('plant_schedule_wetseason') }}" data-input='true'>
                             </div>
                              <div class="input-box col-md-4">
-                                <label for="planting_schedule_dryseason_${cropCounter}">Planting Schedule (Dry Season):</label>
+                                <span class="details">Planting Schedule (Dry Season):</span>
                                 <input type="text" class="form-control dry_season" name="crop_profiles[${cropCounter}][planting_schedule_dryseason]"placeholder="Planting schedule"  id="datepicker_${cropCounter}">
                             </div>
                            
 
                                <div class="input-box col-md-4">
-                                <label for="yield_kg_ha_${cropCounter}">Yield Kg/Tons:</label>
+                                <span class="details">Yield Kg/Tons:</span>
                                 <input type="number" class="form-control yield_kg_ha" name="crop_profiles[${cropCounter}][yield_kg_ha]"placeholder="Yield Kg/Tons" id="yield_kg_ha_${cropCounter}">
                             </div>
                         </div>
@@ -1999,19 +1475,19 @@ $(document).ready(function() {
                                            <div class="user-details">
                                         <!-- Production Fields -->
                                         <div class="input-box col-md-4"">
-                                            <label for="seeds_typed_used_${cropCounter}">Seed type Used:</label>
+                                              <span class="details">Seed type Used:</span>
                                             <input type="text" class="form-control seed-type" name="crop_profiles[${cropCounter}][seeds_typed_used]" placeholder=" Enter Seed type used" id="seeds_typed_used_${cropCounter}" onkeypress="return blockSymbolsAndNumbers(event)">
                                         </div>
                                           <div class="input-box col-md-4"">
-                                            <label for="seeds_used_in_kg_${cropCounter}">Seeds used in kg:</label>
+                                           <span class="details">Seeds used in kg:</span>
                                             <input type="number" class="form-control seed-used" name="crop_profiles[${cropCounter}][seeds_used_in_kg]"placeholder=" Enter Seed used in kg" id="seeds_used_in_kg_${cropCounter}">
                                             
                                             </div>
                                   <div class="input-box col-md-4">
-                                        <label for="seed_source_${cropCounter}">Seed Source:</label>
+                                       <span class="details">Seed Source:</span>
                                         <div class="d-flex align-items-center">
                                             <select class="form-control custom-select light-gray-placeholder seed-source placeholder-text @error('seed_source') is-invalid @enderror" id="seed_source_${cropCounter}" onchange="checkSeedSource(${cropCounter})" name="seed_source" aria-label="Floating label select e">
-                                                <option selected disabled>Select</option>
+                                                <option value="">Select</option>
                                                 <option value="Government Subsidy" {{ old('seed_source') == 'Government Subsidy' ? 'selected' : '' }}>Government Subsidy</option>
                                                 <option value="Traders" {{ old('seed_source') == 'Traders' ? 'selected' : '' }}>Traders</option>
                                                 <option value="Own" {{ old('seed_source') == 'Own' ? 'selected' : '' }}>Own</option>
@@ -2026,21 +1502,35 @@ $(document).ready(function() {
                                         @enderror
                                     </div>
 
-                                         <div class="input-box col-md-4"">
-                                            <label for="unit_${cropCounter}">Unit:</label>
-                                            <input type="text" class="form-control unit" name="crop_profiles[${cropCounter}][unit]"placeholder=" Enter unit" id="unit_${cropCounter}" onkeypress="return blockSymbolsAndNumbers(event)">
-                                        </div>
+                                       
+                                        <div class="input-box col-md-4">
+                                    <span class="details">Unit:</span>
+                                    <div class="d-flex align-items-center">
+                                        <select class="form-control custom-select light-gray-placeholder unit placeholder-text @error('unit') is-invalid @enderror" id="unit" name="unit" onchange="Unit()">
+                                            <option value="">Select</option>
+                                            <option value="tons" {{ old('unit') == 'tons' ? 'selected' : '' }}>tons</option>
+                                            <option value="kg" {{ old('unit') == 'kg' ? 'selected' : '' }}>kg</option>
+                                          
+                                        </select>
+                                        <button type="button" id="removeUnitButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeUnit()">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                    @error('unit')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                                           <div class="input-box col-md-4"">
-                                            <label for="no_of_fertilizer_used_in_bags_${cropCounter}">no of fertilizer used in bags:</label>
-                                            <input type="number" class="form-control fertilized-used" name="crop_profiles[${cropCounter}][no_of_fertilizer_used_in_bags]" id="no_of_fertilizer_used_in_bags_${cropCounter}">
+                                           <span class="details">no of fertilizer used in bags:</span>
+                                            <input type="number" class="form-control fertilized-used" name="crop_profiles[${cropCounter}][no_of_fertilizer_used_in_bags]"placeholder="Enter no of fertilizer used in bags" id="no_of_fertilizer_used_in_bags_${cropCounter}">
                                         </div>
                                          <div class="input-box col-md-4"">
-                                            <label for="no_of_pesticides_used_in_l_per_kg_${cropCounter}">no of pesticides used in L/KG:</label>
-                                            <input type="number" class="form-control pesticides-used" name="crop_profiles[${cropCounter}][no_of_pesticides_used_in_l_per_kg]" placeholder="no of cropping/year" id="no_of_pesticides_used_in_l_per_kg_${cropCounter}">
+                                          <span class="details">no of pesticides used in L/KG:</span>
+                                            <input type="number" class="form-control pesticides-used" name="crop_profiles[${cropCounter}][no_of_pesticides_used_in_l_per_kg]" placeholder=" Enter no of cropping/year" id="no_of_pesticides_used_in_l_per_kg_${cropCounter}">
                                         </div>
                                         <div class="input-box col-md-4"">
-                                            <label for="no_of_insecticides_used_in_l_${cropCounter}">no of insecticides used in L/KG:</label>
-                                            <input type="number" class="form-control insecticides-used" name="crop_profiles[${cropCounter}][no_of_insecticides_used_in_l_]" placeholder="no of cropping/year" id="no_of_insecticides_used_in_l_${cropCounter}">
+                                            <span class="details">no of insecticides used in L/KG:</span>
+                                            <input type="number" class="form-control insecticides-used" name="crop_profiles[${cropCounter}][no_of_insecticides_used_in_l_]" placeholder="Enter no of cropping/year" id="no_of_insecticides_used_in_l_${cropCounter}">
                                         </div>
                                         
                                            
@@ -2049,21 +1539,21 @@ $(document).ready(function() {
                                     <h3>b. Crop Planting Details</h3>
                                         <div class="user-details">
                                             <div class="input-box col-md-4">
-                                            <label for="area_planted_${cropCounter}">Area Planted:</label>
-                                            <input type="number" class="form-control area-planted" name="crop_profiles[${cropCounter}][area_planted]" placeholder="Area Planted" >
+                                            <span class="details">Area Planted:</span>
+                                            <input type="number" class="form-control area-planted" name="crop_profiles[${cropCounter}][area_planted]" placeholder="Enter Area Planted" >
                                         </div>
 
                                          <div class="input-box col-md-4">
-                                            <label for="date_planted_${cropCounter}">Date Planted:</label>
+                                          <span class="details">Date Planted:</span>
                                             <input type="text" class="form-control date-planted" name="crop_profiles[${cropCounter}][date_planted]" placeholder="Date Planted"  id="datepicker_${cropCounter}">
                                         </div>
                                     <div class="input-box col-md-4">
-                                            <label for="date_planted_${cropCounter}">Date Harvested:</label>
+                                            <span class="details">Date Harvested:</span>
                                             <input type="text" class="form-control date-harvested" name="crop_profiles[${cropCounter}][date_planted]" placeholder="Date harvested"  id="datepicker_${cropCounter}">
                                         </div>
                                          <div class="input-box col-md-4">
-                                            <label for="yield_tons_per_kg_${cropCounter}">Yield Kg/Tons:</label>
-                                            <input type="number" class="form-control yield-kg" name="crop_profiles[${cropCounter}][yield_tons_per_kg]"value="23.56" placeholder="Yield Kg/Tons" id="yield_tons_per_kg_${cropCounter}">
+                                            <span class="details">Yield Kg/Tons:</span>
+                                            <input type="number" class="form-control yield-kg" name="crop_profiles[${cropCounter}][yield_tons_per_kg]" placeholder="Yield Kg/Tons" id="yield_tons_per_kg_${cropCounter}">
                                         </div>
                                          
  </div>
@@ -2099,13 +1589,14 @@ $(document).ready(function() {
                                              <div class="user-details">
                                         <!-- Fixed Cost Fields -->
                                        <div class="input-box col-md-4">
-                                        <label for="particular_${cropCounter}">Particular:</label>
+                                        <span class="details">Particular:</span>
                                         <div class="d-flex align-items-center">
                                             <select class="form-control custom-select light-gray-placeholder particular @error('particular') is-invalid @enderror" 
                                                     name="crop_profiles[${cropCounter}][particular]" 
                                                     id="particular_${cropCounter}" 
                                                     onchange="checkParticular(${cropCounter})" 
                                                     aria-label="label select e">
+                                                    <option value="">Select</option>
                                                 <option selected value="Land Rental Cost" {{ old('particular') == 'Land Rental Cost' ? 'selected' : '' }}>Land Rental Cost</option>
                                                 <option value="Land Ownership Cost" {{ old('particular') == 'Land Ownership Cost' ? 'selected' : '' }}>Land Ownership Cost</option>
                                                 <option value="Equipment Costs" {{ old('particular') == 'Equipment Costs' ? 'selected' : '' }}>Equipment Costs</option>
@@ -2127,32 +1618,35 @@ $(document).ready(function() {
                                          
                                           
                                       
-                                    <div class="input-box col-md-4">
-                                        <label for="no_of_ha_${cropCounter}">No. of Has</label>
-                                        <input type="number" class="form-control light-gray-placeholder no-has @error('gross_income_palay') is-invalid @enderror"
-                                            name="no_of_ha_${cropCounter}" id="no_of_ha_${cropCounter}" placeholder="Enter No. of Has" value="{{ old('no_of_ha') }}">
-                                        @error('gross_income_palay')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                               <div class="input-box col-md-4">
+                                   <span class="details">No. of Has</span>
+                                    <input type="number" class="form-control light-gray-placeholder no-has @error('gross_income_palay') is-invalid @enderror"
+                                        name="no_of_ha_${cropCounter}" id="no_of_ha_${cropCounter}" placeholder="Enter No. of Has" 
+                                        value="{{ old('no_of_ha') }}" oninput="calculateTotalAmount(${cropCounter})">
+                                    @error('gross_income_palay')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-                                    <div class="input-box col-md-4">
-                                        <label for="cost_per_ha_${cropCounter}">Cost/Has (PHP)</label>
-                                        <input type="number" class="form-control light-gray-placeholder cost-has @error('gross_income_rice') is-invalid @enderror"
-                                            name="cost_per_ha_${cropCounter}" id="cost_per_ha_${cropCounter}"placeholder="Enter Cost/Has" value="{{ old('cost_per_ha') }}">
-                                        @error('gross_income_rice')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                                <div class="input-box col-md-4">
+                                   <span class="details">Cost/Has (PHP)</span>
+                                    <input type="number" class="form-control light-gray-placeholder cost-has @error('gross_income_rice') is-invalid @enderror"
+                                        name="cost_per_ha_${cropCounter}" id="cost_per_ha_${cropCounter}" placeholder="Enter Cost/Has" 
+                                        value="{{ old('cost_per_ha') }}" oninput="calculateTotalAmount(${cropCounter})">
+                                    @error('gross_income_rice')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-                                    <div class="input-box col-md-4">
-                                        <label for="total_amount_${cropCounter}">Total Amount PHP</label>
-                                        <input type="number" class="form-control light-gray-placeholder total-amount @error('gross_income_rice') is-invalid @enderror"
-                                            name="total_amount_${cropCounter}" id="total_amount_${cropCounter}" placeholder="Enter total amount"  value="{{ old('total_amount') }}">
-                                        @error('gross_income_rice')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                                <div class="input-box col-md-4">
+                                   <span class="details">Total Amount (PHP)</span>
+                                    <input type="number" class="form-control light-gray-placeholder total-amount @error('gross_income_rice') is-invalid @enderror"
+                                        name="total_amount_${cropCounter}" id="total_amount_${cropCounter}" placeholder="Enter total amount"  
+                                        value="{{ old('total_amount') }}" readonly>
+                                    @error('gross_income_rice')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
 ;
                                    
@@ -2184,7 +1678,7 @@ $(document).ready(function() {
                                                             id="selectPlowing_${cropCounter}" 
                                                             onchange="checkPlowing(${cropCounter})" 
                                                             aria-label="label select e">
-                                                        <option selected disabled>Select</option>
+                                                        <option value="">Select</option>
                                                         <option value="Hand Tractor" {{ old('plowing-machine_${cropCounter}') == 'Hand Tractor' ? 'selected' : '' }}>Hand Tractor</option>
                                                         <option value="Four-Wheel Tractors" {{ old('plowing-machine_${cropCounter}') == 'Four-Wheel Tractors' ? 'selected' : '' }}>Four-Wheel Tractors</option>
                                                         <option value="Compact Tractors" {{ old('plowing-machine_${cropCounter}') == 'Compact Tractors' ? 'selected' : '' }}>Compact Tractors</option>
@@ -2211,7 +1705,7 @@ $(document).ready(function() {
                                                         id="selectPlowingStatus_${cropCounter}" 
                                                         onchange="checkPlowingStatus(${cropCounter})" 
                                                         aria-label="label select e">
-                                                    <option selected disabled>Select</option>
+                                                    <option value="">Select</option>
                                                     <option  value="Own" {{ old('plo_ownership_status_${cropCounter}') == 'Own' ? 'selected' : '' }}>Own</option>
                                                     <option value="Rent" {{ old('plo_ownership_status_${cropCounter}') == 'Rent' ? 'selected' : '' }}>Rent</option>
                                                     <option value="Other" {{ old('plo_ownership_status_${cropCounter}') == 'Other' ? 'selected' : '' }}>Other(Optional)</option>
@@ -2225,29 +1719,35 @@ $(document).ready(function() {
                                             @enderror
                                         </div>
 
-                       
-                                    <div class="input-box col-md-4">
+                                     <div class="input-box col-md-4">
                                         <span class="details">No. of Plowing</span>
-                                        <input type="number" class="form-control light-gray-placeholder no_of_plowing @error('last_name') is-invalid @enderror"name="no_of_plowing_${cropCounter}" id="noPlowing" placeholder="Enter no. of plowing" value="{{ old('no_of_plowing') }}" >
+                                        <input type="number" class="form-control light-gray-placeholder no_of_plowing @error('last_name') is-invalid @enderror"
+                                            name="no_of_plowing_${cropCounter}" id="noPlowing_${cropCounter}" placeholder="Enter no. of plowing" 
+                                            value="{{ old('no_of_plowing') }}" oninput="calculateTotalPlowingCost(${cropCounter})">
                                         @error('last_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                        </div>
+                                        @enderror
+                                    </div>
+
                                     <div class="input-box col-md-4">
                                         <span class="details">Cost per Plowing</span>
-                                        <input type="number" class="form-control light-gray-placeholder cost_per_plowing @error('plowing_cost') is-invalid @enderror"name="plowing_cost_${cropCounter}" id="plowingperCostInput" placeholder="Enter plowing per cost" value="{{ old('plowing_cost') }}">
+                                        <input type="number" class="form-control light-gray-placeholder cost_per_plowing @error('plowing_cost') is-invalid @enderror"
+                                            name="plowing_cost_${cropCounter}" id="plowingperCostInput_${cropCounter}" placeholder="Enter plowing per cost" 
+                                            value="{{ old('plowing_cost') }}" oninput="calculateTotalPlowingCost(${cropCounter})">
                                         @error('last_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    </div>
-                                
-                                        <div class="input-box col-md-4">
-                                            <span class="details">Total Plowing Cost</span>
-                                            <input type="number" class="form-control light-gray-placeholder plowing_cost @error('last_name') is-invalid @enderror"name="plowing_cost_${cropCounter}" id="plowingCostInput" placeholder="Enter plowing cost" value="{{ old('plowing_cost') }}">
-                                            @error('last_name')
-                                            <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
-                                        </div>
+                                    </div>
+
+                                    <div class="input-box col-md-4">
+                                        <span class="details">Total Plowing Cost</span>
+                                        <input type="number" class="form-control light-gray-placeholder plowing_cost @error('last_name') is-invalid @enderror"
+                                            name="total_plowing_cost_${cropCounter}" id="plowingCostInput_${cropCounter}" placeholder="Total plowing cost" 
+                                            value="{{ old('plowing_cost') }}" readonly>
+                                        @error('last_name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                         
                                 </div>
 
@@ -2263,7 +1763,7 @@ $(document).ready(function() {
                                         id="selectHarrowing_${cropCounter}" 
                                         onchange="checkHarrowing(${cropCounter})" 
                                         aria-label="label select e">
-                                    <option selected disabled>Select</option>
+                                    <option value="">Select</option>
                                     <option value="Hand Tractor" {{ old('harrowing_machineries_used_${cropCounter}') == 'Hand Tractor' ? 'selected' : '' }}>Hand Tractor</option>
                                     <option value="Four-Wheel Tractors" {{ old('harrowing_machineries_used_${cropCounter}') == 'Four-Wheel Tractors' ? 'selected' : '' }}>Four-Wheel Tractors</option>
                                     <option value="Compact Tractors" {{ old('harrowing_machineries_used_${cropCounter}') == 'Compact Tractors' ? 'selected' : '' }}>Compact Tractors</option>
@@ -2289,7 +1789,7 @@ $(document).ready(function() {
                                             id="selectOwnershipStatus_${cropCounter}" 
                                             onchange="checkOwnershipStatus(${cropCounter})" 
                                             aria-label="label select e">
-                                        <option selected disabled>Select</option>
+                                        <option value="">Select</option>
                                         <option value="Own" {{ old('harro_ownership_status_${cropCounter}') == 'Own' ? 'selected' : '' }}>Own</option>
                                         <option value="Rent" {{ old('harro_ownership_status_${cropCounter}') == 'Rent' ? 'selected' : '' }}>Rent</option>
                                         <option value="Other" {{ old('harro_ownership_status_${cropCounter}') == 'Other' ? 'selected' : '' }}>Other</option>
@@ -2304,28 +1804,35 @@ $(document).ready(function() {
                             </div>
 
        
-                            <div class="input-box col-md-4">
-                                <span class="details">No. of Harrowing </span>
-                                <input type="number" class="form-control light-gray-placeholder no_of_harrowing @error('last_name') is-invalid @enderror"name="no_of_harrowing_${cropCounter}" id="noHarrowing" placeholder="Enter no. of harrowing" value="{{ old('no_of_harrowing') }}" >
-                                @error('last_name')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                         <div class="input-box col-md-4">
+                            <span class="details">No. of Harrowing</span>
+                            <input type="number" class="form-control light-gray-placeholder no_of_harrowing @error('last_name') is-invalid @enderror"
+                                name="no_of_harrowing_${cropCounter}" id="noHarrowing_${cropCounter}" placeholder="Enter no. of harrowing" 
+                                value="{{ old('no_of_harrowing') }}" oninput="calculateTotalHarrowingCost(${cropCounter})">
+                            @error('last_name')
+                            <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">Cost per Harrowing </span>
-                                <input type="number" class="form-control light-gray-placeholder cost_per_harrowing @error('plowing_cost') is-invalid @enderror"name="harrowing_cost_${cropCounter}" id="costPerHarrowingInput" placeholder="Enter no. of harrowing">
-                                @error('last_name')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                        </div>
+
+                        <div class="input-box col-md-4">
+                            <span class="details">Cost per Harrowing</span>
+                            <input type="number" class="form-control light-gray-placeholder cost_per_harrowing @error('plowing_cost') is-invalid @enderror"
+                                name="harrowing_cost_${cropCounter}" id="costPerHarrowingInput_${cropCounter}" placeholder="Enter cost per harrowing" 
+                                value="{{ old('harrowing_cost') }}" oninput="calculateTotalHarrowingCost(${cropCounter})">
+                            @error('last_name')
+                            <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                                </div>
-                    
-                                <div class="input-box col-md-4">
-                                <span class="details">Total Harrowing</span>
-                                <input type="number" class="form-control light-gray-placeholder harrowing_cost_total @error('harrowing_cost_total') is-invalid @enderror"name="harrowing_cost_${cropCounter}" id="harrowingCostInput" placeholder="Enter harrowing cost">
-                                @error('last_name')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                        </div>
+
+                        <div class="input-box col-md-4">
+                            <span class="details">Total Harrowing Cost</span>
+                            <input type="number" class="form-control light-gray-placeholder harrowing_cost_total @error('harrowing_cost_total') is-invalid @enderror"
+                                name="total_harrowing_cost_${cropCounter}" id="harrowingCostInput_${cropCounter}" placeholder="Total harrowing cost" 
+                                value="{{ old('harrowing_cost_total') }}" readonly>
+                            @error('last_name')
+                            <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                                </div>
+                        </div>
                         
                         </div>
 
@@ -2340,7 +1847,7 @@ $(document).ready(function() {
                                             id="selectHarvestingMachine_${cropCounter}" 
                                             onchange="checkHarvestingMachine(${cropCounter})" 
                                             aria-label="label select e">
-                                        <option selected disabled>Select</option>
+                                        <option value="">Select</option>
                                         <option value="Hand Tractor" {{ old('Harvesting_machineries_used_${cropCounter}') == 'Hand Tractor' ? 'selected' : '' }}>Hand Tractor</option>
                                         <option value="Four-Wheel Tractors" {{ old('Harvesting_machineries_used_${cropCounter}') == 'Four-Wheel Tractors' ? 'selected' : '' }}>Four-Wheel Tractors</option>
                                         <option value="Compact Tractors" {{ old('Harvesting_machineries_used_${cropCounter}') == 'Compact Tractors' ? 'selected' : '' }}>Compact Tractors</option>
@@ -2365,7 +1872,7 @@ $(document).ready(function() {
                                             id="selectHarvestOwnership_${cropCounter}" 
                                             onchange="checkHarvestOwnership(${cropCounter})" 
                                             aria-label="label select e">
-                                        <option selected disabled>Select</option>
+                                        <option value="">Select</option>
                                         <option value="Own" {{ old('harro_ownership_status_${cropCounter}') == 'Own' ? 'selected' : '' }}>Own</option>
                                         <option value="Rent" {{ old('harro_ownership_status_${cropCounter}') == 'Rent' ? 'selected' : '' }}>Rent</option>
                                         <option value="Other" {{ old('harro_ownership_status_${cropCounter}') == 'Other' ? 'selected' : '' }}>Other</option>
@@ -2379,28 +1886,36 @@ $(document).ready(function() {
                                 @enderror
                             </div>
 
-                            <div class="input-box col-md-4">
-                                <span class="details">No. of Harvesting </span>
-                                <input type="number" class="form-control light-gray-placeholder no_of_Harvesting @error('last_name') is-invalid @enderror"name="no_of_Harvesting_${cropCounter}" id="noHarvesting" placeholder="Enter no. of Harvesting" value="{{ old('no_of_Harvesting') }}" >
-                                @error('last_name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                            </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">Cost per Harvesting </span>
-                                <input type="number" class="form-control light-gray-placeholder cost_per_Harvesting @error('plowing_cost') is-invalid @enderror"name="Harvesting_cost_${cropCounter}" id="costPerHarvestingInput" placeholder="Enter no. of Harvesting">
-                                @error('last_name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                         <div class="input-box col-md-4">
+                                    <span class="details">No. of Harvesting</span>
+                                    <input type="number" class="form-control light-gray-placeholder no_of_Harvesting @error('last_name') is-invalid @enderror"
+                                        name="no_of_Harvesting_${cropCounter}" id="noHarvesting_${cropCounter}" placeholder="Enter no. of Harvesting" 
+                                        value="{{ old('no_of_Harvesting') }}" oninput="calculateTotalHarvestingCost(${cropCounter})">
+                                    @error('last_name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                    
+
                                 <div class="input-box col-md-4">
-                                <span class="details">Total Harvesting</span>
-                                <input type="number" class="form-control light-gray-placeholder Harvesting_cost_total @error('Harvesting_cost_total') is-invalid @enderror"name="harrowing_cost_${cropCounter}" id="harrowingCostInput" placeholder="Enter Harvesting cost">
-                                @error('last_name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                                    <span class="details">Cost per Harvesting</span>
+                                    <input type="number" class="form-control light-gray-placeholder cost_per_Harvesting @error('plowing_cost') is-invalid @enderror"
+                                        name="Harvesting_cost_${cropCounter}" id="costPerHarvestingInput_${cropCounter}" placeholder="Enter cost per harvesting" 
+                                        value="{{ old('Harvesting_cost') }}" oninput="calculateTotalHarvestingCost(${cropCounter})">
+                                    @error('last_name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
+
+                                <div class="input-box col-md-4">
+                                    <span class="details">Total Harvesting Cost</span>
+                                    <input type="number" class="form-control light-gray-placeholder Harvesting_cost_total @error('Harvesting_cost_total') is-invalid @enderror"
+                                        name="total_harvesting_cost_${cropCounter}" id="harvestingCostInput_${cropCounter}" placeholder="Total harvesting cost" 
+                                        value="{{ old('Harvesting_cost_total') }}" readonly>
+                                    @error('last_name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
                         
                         </div>
 
@@ -2415,7 +1930,7 @@ $(document).ready(function() {
                                             id="selectPostHarvestMachine_${cropCounter}" 
                                             onchange="checkPostHarvestMachine(${cropCounter})" 
                                             aria-label="label select e">
-                                        <option selected disabled>Select</option>
+                                        <option value="">Select</option>
                                         <option value="Hand Tractor" {{ old('postharvest_machineries_used_${cropCounter}') == 'Hand Tractor' ? 'selected' : '' }}>Hand Tractor</option>
                                         <option value="Four-Wheel Tractors" {{ old('postharvest_machineries_used_${cropCounter}') == 'Four-Wheel Tractors' ? 'selected' : '' }}>Four-Wheel Tractors</option>
                                         <option value="Compact Tractors" {{ old('postharvest_machineries_used_${cropCounter}') == 'Compact Tractors' ? 'selected' : '' }}>Compact Tractors</option>
@@ -2441,7 +1956,7 @@ $(document).ready(function() {
                                             id="selectPostHarvestMachineries_${cropCounter}" 
                                             onchange="checkPostHarvestMachineries(${cropCounter})" 
                                             aria-label="label select e">
-                                            <option selected disabled>Select</option>
+                                            <option value="">Select</option>
                                         <option value="Own" {{ old('postharvest_machineries_used_${cropCounter}') == 'Own' ? 'selected' : '' }}>Own</option>
                                         <option value="Rent" {{ old('postharvest_machineries_used_${cropCounter}') == 'Rent' ? 'selected' : '' }}>Rent</option>
                                         <option value="Other" {{ old('postharvest_machineries_used_${cropCounter}') == 'Other' ? 'selected' : '' }}>Other</option>
@@ -2454,22 +1969,25 @@ $(document).ready(function() {
 
        
                             
-                        <div class="input-box col-md-4">
-                            <span class="details">PostHarvest Cost: </span>
-                            <input type="number" class="form-control light-gray-placeholder postharvestCost @error('last_name') is-invalid @enderror"name="'post_harvest_cost_${cropCounter}" id="postHarvestCostInput" placeholder="Enter no. of postharvest cost" value="{{ old('no_of_harrowing') }}" >
+                       <div class="input-box col-md-4">
+                            <span class="details">Post-Harvest Cost</span>
+                            <input type="number" class="form-control light-gray-placeholder postharvestCost @error('last_name') is-invalid @enderror"
+                                name="post_harvest_cost_${cropCounter}" id="postHarvestCostInput_${cropCounter}" placeholder="Enter post-harvest cost" 
+                                value="{{ old('post_harvest_cost') }}" oninput="calculateTotalMachineryCost(${cropCounter})">
                             @error('last_name')
                             <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                            @enderror
                         </div>
-                     
-   
-             <div class="input-box col-md-4">
-               <span class="details">Total Cost for Machineries</span>
-               <input type="number" class="form-control light-gray-placeholder total_cost_for_machineries @error('total_cost_for_machineries') is-invalid @enderror"name="total_cost_for_machineriest_${cropCounter}" id="totalCostInput"  placeholder="Enter total expenses" value="{{ old('total_cost_for_machineries') }}">
-               @error('last_name')
-               <div class="invalid-feedback">{{ $message }}</div>
-           @enderror
-             </div>
+
+                        <div class="input-box col-md-4">
+                            <span class="details">Total Cost for Machineries</span>
+                            <input type="number" class="form-control light-gray-placeholder total_cost_for_machineries @error('total_cost_for_machineries') is-invalid @enderror"
+                                name="total_cost_for_machineries_${cropCounter}" id="totalCostInput_${cropCounter}" placeholder="Enter total expenses" 
+                                value="{{ old('total_cost_for_machineries') }}" readonly>
+                            @error('last_name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
        
        </div>
                                     </div>
@@ -2504,49 +2022,77 @@ $(document).ready(function() {
                                             </div>
                                         </div>
                                                     
-                                          <div class="input-box col-md-4" >
-                                              <span class="details">Unit</span>
-                                              <input type="text" class="form-control light-gray-placeholder unit"  name="unit_${cropCounter}" id="validationCustom01" placeholder="Enter unit" value="{{ old('unit') }}" onkeypress="return blockSymbolsAndNumbers(event)">
-                                            
-                                            </div>
+                                         <div class="input-box col-md-4">
+                                    <span class="details">Unit:</span>
+                                    <div class="d-flex align-items-center">
+                                        <select class="form-control custom-select light-gray-placeholder unit placeholder-text @error('unit') is-invalid @enderror" id="unit" name="unit" onchange="Unit()">
+                                            <option value="">Select</option>
+                                            <option value="tons" {{ old('unit') == 'tons' ? 'selected' : '' }}>tons</option>
+                                            <option value="kg" {{ old('unit') == 'kg' ? 'selected' : '' }}>kg</option>
+                                            <option value="Add" {{ old('unit') == 'Add' ? 'selected' : '' }}>Add</option>
+                                        </select>
+                                        <button type="button" id="removeUnitButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeUnit()">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                    @error('unit')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+
                                   
-                                            <div class="input-box col-md-4" >
-                                              <span class="details">Quantity </span>
-                                              <input type="number"class="form-control light-gray-placeholder quantity"  name="quantity_${cropCounter}" id="quantityInput" placeholder="Enter quantity" value="{{ old('quantity') }}"  >
-                                            
+                                        <div class="input-box col-md-4">
+                                                <span class="details">Quantity</span>
+                                                <input type="number" class="form-control light-gray-placeholder quantity" 
+                                                    name="quantity_${cropCounter}" id="quantityInput_${cropCounter}" 
+                                                    placeholder="Enter quantity" value="{{ old('quantity') }}" 
+                                                    oninput="calculateTotalSeedCost(${cropCounter})">
                                             </div>
-                                  
-                                            <div class="input-box col-md-4" >
-                                              <span class="details">Unit Price(PHP)</span>
-                                              <input type="number"class="form-control light-gray-placeholder unit_price_seed"  name="unit_price_${cropCounter}" id="unitPriceInput" placeholder="Enter unit price" value="{{ old('unit_price') }}" >
-                                            
+
+                                            <div class="input-box col-md-4">
+                                                <span class="details">Unit Price (PHP)</span>
+                                                <input type="number" class="form-control light-gray-placeholder unit_price_seed" 
+                                                    name="unit_price_${cropCounter}" id="unitPriceInput_${cropCounter}" 
+                                                    placeholder="Enter unit price" value="{{ old('unit_price') }}" 
+                                                    oninput="calculateTotalSeedCost(${cropCounter})">
                                             </div>
-                                            <div class="input-box col-md-4" >
-                                              <span class="details">Total Seed Cost(PHP)</span>
-                                              <input type="number"class="form-control light-gray-placeholder total_seed_cost"  name="total_seed_cost_${cropCounter}" id="totalSeedCostInput" placeholder="Enter total seed cost" value="{{ old('total_seed_cost') }}">
-                                            
+
+                                            <div class="input-box col-md-4">
+                                                <span class="details">Total Seed Cost (PHP)</span>
+                                                <input type="number" class="form-control light-gray-placeholder total_seed_cost" 
+                                                    name="total_seed_cost_${cropCounter}" id="totalSeedCostInput_${cropCounter}" 
+                                                    placeholder="Enter total seed cost" value="{{ old('total_seed_cost') }}" readonly>
                                             </div>
+
                                           </div>
                                           <br>
                                             <h3>b. Labor</h3><br>
                                   
                                             <div class="user-details">
-                                            <div class="input-box col-md-4" >
-                                              <span class="details">No of Person</span>
-                                              <input type="number"class="form-control light-gray-placeholder no_of_person"name="no_of_person" id="quantityInput" placeholder="Enter no_of_person" value="{{ old('no_of_person') }}">
-                                            
+                                        <div class="input-box col-md-4">
+                                                <span class="details">No of Person</span>
+                                                <input type="number" class="form-control light-gray-placeholder no_of_person" 
+                                                    name="no_of_person_${cropCounter}" id="noOfPersonInput_${cropCounter}" 
+                                                    placeholder="Enter number of persons" value="{{ old('no_of_person') }}" 
+                                                    oninput="calculateTotalLaborCost(${cropCounter})">
                                             </div>
-                                  
-                                            <div class="input-box col-md-4" >
-                                              <span class="details">Rate per Person</span>
-                                              <input type="number"class="form-control light-gray-placeholder rate_per_person" name="rate_per_person_${cropCounter}" id="unitPriceInput" placeholder="Enter rate/person" value="{{ old('rate_per_person') }}" >
-                                            
+
+                                            <div class="input-box col-md-4">
+                                                <span class="details">Rate per Person</span>
+                                                <input type="number" class="form-control light-gray-placeholder rate_per_person" 
+                                                    name="rate_per_person_${cropCounter}" id="ratePerPersonInput_${cropCounter}" 
+                                                    placeholder="Enter rate per person" value="{{ old('rate_per_person') }}" 
+                                                    oninput="calculateTotalLaborCost(${cropCounter})">
                                             </div>
-                                            <div class="input-box col-md-4" >
-                                              <span class="details">Total Labor Cost</span>
-                                              <input type="number"class="form-control light-gray-placeholder total_labor_cost" name="total_labor_cost_${cropCounter}" id="totalLaborCostInput" placeholder="Enter total labor cost" value="{{ old('total_labor_cost') }}" >
-                                            
+
+                                            <div class="input-box col-md-4">
+                                                <span class="details">Total Labor Cost</span>
+                                                <input type="number" class="form-control light-gray-placeholder total_labor_cost" 
+                                                    name="total_labor_cost_${cropCounter}" id="totalLaborCostInput_${cropCounter}" 
+                                                    placeholder="Enter total labor cost" value="{{ old('total_labor_cost') }}" readonly>
                                             </div>
+
                                       </div>
 
                               <h3>c. Fertilizers </h3>
@@ -2559,7 +2105,7 @@ $(document).ready(function() {
                                             id="selectNameOfFertilizer_${cropCounter}" 
                                             onchange="checkNameOfFertilizer(${cropCounter})" 
                                             aria-label="label select e">
-                                        <option selected disabled>Select</option>
+                                        <option value="">Select</option>
                                         <option value="Nitrogen Fertilizers" {{ old('name_of_fertilizer_${cropCounter}') == 'Nitrogen Fertilizers' ? 'selected' : '' }}>Nitrogen Fertilizers</option>
                                         <option value="Phosphorus Fertilizers" {{ old('name_of_fertilizer_${cropCounter}') == 'Phosphorus Fertilizers' ? 'selected' : '' }}>Phosphorus Fertilizers</option>
                                         <option value="Potassium Fertilizers" {{ old('name_of_fertilizer_${cropCounter}') == 'Potassium Fertilizers' ? 'selected' : '' }}>Potassium Fertilizers</option>
@@ -2577,26 +2123,31 @@ $(document).ready(function() {
                             </div>
                                         
              
-              
-                      <div class="input-box col-md-4" >
-                          <span class="details">No. of Sacks</span>
-                          <input type="text" id="HybridNameInputField" class="form-control light-gray-placeholder no_ofsacks" name="no_ofsacks_${cropCounter}" id="no_ofsacks" placeholder="Enter no of sacks" value="{{ old('no_ofsacks') }}" >
-                        
-                        </div>
-              
-                        <div class="input-box col-md-4" >
-                          <span class="details">Unit Price per sacks(PHP) </span>
-                          <input type="text"class="form-control light-gray-placeholder unitprice_per_sacks
-                          "value="45"   name="unit_${cropCounter}" id="unitprice_per_sacks" placeholder="Enter unit price/sacks" value="{{ old('unitprice_per_sacks') }}"  >
-                        
-                        </div>
-              
-                        
-                        <div class="input-box col-md-4" >
-                          <span class="details">Total Cost Fertilizers(PHP)</span>
-                          <input type="text"class="form-control light-gray-placeholder total_cost_fertilizers" name="total_cost_fertilizers_${cropCounter}" id="total_cost_fertilizers" placeholder="Enter total cost" value="{{ old('total_cost_fertilizers') }}" >
-                        
-                        </div>
+                               <div class="input-box col-md-4">
+                                    <span class="details">No. of Sacks</span>
+                                    <input type="number" class="form-control light-gray-placeholder no_ofsacks" 
+                                        name="no_ofsacks_${cropCounter}" id="noOfSacksInput_${cropCounter}" 
+                                        placeholder="Enter no of sacks" value="{{ old('no_ofsacks') }}" 
+                                        oninput="calculateTotalFertilizerCost(${cropCounter})">
+                                </div>
+
+                                <div class="input-box col-md-4">
+                                    <span class="details">Unit Price per Sack (PHP)</span>
+                                    <input type="number" class="form-control light-gray-placeholder unitprice_per_sacks" 
+                                        name="unit_${cropCounter}" id="unitPricePerSackInput_${cropCounter}" 
+                                        placeholder="Enter unit price per sack" value="{{ old('unitprice_per_sacks') }}" 
+                                        oninput="calculateTotalFertilizerCost(${cropCounter})">
+                                </div>
+
+                                <div class="input-box col-md-4">
+                                    <span class="details">Total Cost of Fertilizers (PHP)</span>
+                                    <input type="number" class="form-control light-gray-placeholder total_cost_fertilizers" 
+                                        name="total_cost_fertilizers_${cropCounter}" id="totalFertilizerCostInput_${cropCounter}" 
+                                        placeholder="Enter total cost" value="{{ old('total_cost_fertilizers') }}" readonly>
+                                </div>
+
+
+
                       </div>
                       <br>
                         <h3>d. Pesticides</h3><br>
@@ -2611,7 +2162,7 @@ $(document).ready(function() {
                                         id="selectPesticideName_${cropCounter}" 
                                         onchange="checkPesticideName(${cropCounter})" 
                                         aria-label="Floating label select e">
-                                    <option selected disabled>Select</option>
+                                    <option value="">Select</option>
                                     <option value="Glyphosate" {{ old('pesticides_name_${cropCounter}') == 'Glyphosate' ? 'selected' : '' }}>Glyphosate</option>
                                     <option value="Malathion" {{ old('pesticides_name_${cropCounter}') == 'Malathion' ? 'selected' : '' }}>Malathion</option>
                                     <option value="Diazinon" {{ old('pesticides_name_${cropCounter}') == 'Diazinon' ? 'selected' : '' }}>Diazinon</option>
@@ -2629,22 +2180,29 @@ $(document).ready(function() {
                         </div>
 
               
-                        <div class="input-box col-md-4" >
-                          <span class="details">Number of L or kg</span>
-                          <input type="number"class="form-control light-gray-placeholder no_of_l_kg"name="no_of_l_kg_${cropCounter}" id="no_of_l_kg" placeholder="Enter no of L or Kg" value="{{ old('no_of_l_kg') }}" >
-                        
-                        </div>
-              
-                        <div class="input-box col-md-4" >
-                          <span class="details">Unit Price of Pesticides(PHP)</span>
-                          <input type="number"class="form-control light-gray-placeholder unitprice_ofpesticides"value="456"  name="unitprice_ofpesticides_${cropCounter}" id="unitprice_ofpesticides" placeholder="Enter unit price pesticides" value="{{ old('unitprice_ofpesticides') }}" >
-                        
-                        </div>
-                        <div class="input-box col-md-4" >
-                          <span class="details">Total Cost Pesticides(PHP)</span>
-                          <input type="number"class="form-control light-gray-placeholder total_cost_pesticides" value="3456" name="total_cost_pesticides_${cropCounter}" id="total_cost_pesticides" placeholder="Enter total cost" value="{{ old('total_cost_pesticides') }}">
-                        
-                        </div>
+                       <div class="input-box col-md-4">
+                                <span class="details">Number of L or kg</span>
+                                <input type="number" class="form-control light-gray-placeholder no_of_l_kg" 
+                                    name="no_of_l_kg_${cropCounter}" id="noOfLKgInput_${cropCounter}" 
+                                    placeholder="Enter no of L or Kg" value="{{ old('no_of_l_kg') }}" 
+                                    oninput="calculateTotalPesticideCost(${cropCounter})">
+                            </div>
+
+                            <div class="input-box col-md-4">
+                                <span class="details">Unit Price of Pesticides (PHP)</span>
+                                <input type="number" class="form-control light-gray-placeholder unitprice_ofpesticides" 
+                                    name="unitprice_ofpesticides_${cropCounter}" id="unitPriceOfPesticidesInput_${cropCounter}" 
+                                    placeholder="Enter unit price of pesticides" value="{{ old('unitprice_ofpesticides') }}" 
+                                    oninput="calculateTotalPesticideCost(${cropCounter})">
+                            </div>
+
+                            <div class="input-box col-md-4">
+                                <span class="details">Total Cost of Pesticides (PHP)</span>
+                                <input type="number" class="form-control light-gray-placeholder total_cost_pesticides" 
+                                    name="total_cost_pesticides_${cropCounter}" id="totalCostPesticidesInput_${cropCounter}" 
+                                    placeholder="Enter total cost" value="{{ old('total_cost_pesticides') }}" readonly>
+                            </div>
+
                   </div>
               
                   <h3>e. Transport & Variable Cost Total</h3><br>
@@ -2656,21 +2214,27 @@ $(document).ready(function() {
                   
                   </div>
               
-                  <div class="input-box col-md-4" >
-                    <span class="details">Total DeliveryCost(PHP)</span>
-                    <input type="number"class="form-control light-gray-placeholder Total_DeliveryCost" value="3435" name="total_transport_per_deliverycost_${cropCounter}" id="totalLaborCostInput" placeholder="Enter total transport cost" value="{{ old('total_transport_per_deliverycost') }}" >
-                  
-                  </div>
-                  <div class="input-box col-md-4" >
-                    <span class="details">Total Machineries Fuel Cost</span>
-                    <input type="number"class="form-control light-gray-placeholder total_machinery_fuel_cost"value="4564" name="total_machinery_fuel_cost_${cropCounter}" id="total_machinery_fuel_cost" placeholder="Enter total fuel cost" value="{{ old('total_machinery_fuel_cost') }}" >
-                  
-                  </div>
-              
-                  <div class="input-box col-md-4" >
-                      <span class="details">Total Variable Cost</span>
-                      <input type="number"class="form-control light-gray-placeholder total_variable_costs"value="8943" name="total_variable_cost_${cropCounter}" id="total_variable_cost" placeholder="Enter total variable cost" value="{{ old('total_variable_cost') }}"  >
-                    
+                <div class="input-box col-md-4">
+                        <span class="details">Total Delivery Cost (PHP)</span>
+                        <input type="number" class="form-control light-gray-placeholder Total_DeliveryCost" 
+                            name="total_transport_per_deliverycost_${cropCounter}" id="totalDeliveryCostInput_${cropCounter}" 
+                            placeholder="Enter total transport cost" value="{{ old('total_transport_per_deliverycost') }}" 
+                            oninput="calculateTotalVariableCost(${cropCounter})">
+                    </div>
+
+                    <div class="input-box col-md-4">
+                        <span class="details">Total Machineries Fuel Cost</span>
+                        <input type="number" class="form-control light-gray-placeholder total_machinery_fuel_cost" 
+                            name="total_machinery_fuel_cost_${cropCounter}" id="totalMachineryFuelCostInput_${cropCounter}" 
+                            placeholder="Enter total fuel cost" value="{{ old('total_machinery_fuel_cost') }}" 
+                            oninput="calculateTotalVariableCost(${cropCounter})">
+                    </div>
+
+                    <div class="input-box col-md-4">
+                        <span class="details">Total Variable Cost</span>
+                        <input type="number" class="form-control light-gray-placeholder total_variable_costs" 
+                            name="total_variable_cost_${cropCounter}" id="totalVariableCostInput_${cropCounter}" 
+                            placeholder="Enter total variable cost" value="{{ old('total_variable_cost') }}" readonly>
                     </div>
               </div>
 
@@ -2683,10 +2247,14 @@ $(document).ready(function() {
             </div>
         `;
 
+       
 
                 // Append the new crop section
                 $('#cropsContainer').append(cropHtml);
 
+
+
+            
 // Initialize crop names for the new crop section
 fetchCropNames();
 // Initial call to add listeners for the first section
@@ -2720,18 +2288,145 @@ $('#cropsContainer').on('change', '.crop_name', function() {
 
 
 });
+submitButton.addEventListener('click', function() {
+        // Scroll to the Add Crop button
+        addCropButton.scrollIntoView({ behavior: 'smooth' });
+        openModal();
+    });
+function calculateTotalAmount(cropCounter) {
+    const noOfHa = parseFloat(document.getElementById(`no_of_ha_${cropCounter}`).value) || 0;
+    const costPerHa = parseFloat(document.getElementById(`cost_per_ha_${cropCounter}`).value) || 0;
+    const totalAmountField = document.getElementById(`total_amount_${cropCounter}`);
+
+    // Calculate total amount
+    const totalAmount = noOfHa * costPerHa;
+
+    // Update the total amount field
+    totalAmountField.value = totalAmount.toFixed(2); // Format to 2 decimal places}
+}
+
+function calculateTotalPlowingCost(cropCounter) {
+    const noOfPlowing = parseFloat(document.getElementById(`noPlowing_${cropCounter}`).value) || 0;
+    const costPerPlowing = parseFloat(document.getElementById(`plowingperCostInput_${cropCounter}`).value) || 0;
+    const totalPlowingCostField = document.getElementById(`plowingCostInput_${cropCounter}`);
+
+    // Calculate total plowing cost
+    const totalPlowingCost = noOfPlowing * costPerPlowing;
+
+    // Update the total plowing cost field
+    totalPlowingCostField.value = totalPlowingCost.toFixed(2); // Format to 2 decimal places
+}
+
+function calculateTotalHarrowingCost(cropCounter) {
+    const noOfHarrowing = parseFloat(document.getElementById(`noHarrowing_${cropCounter}`).value) || 0;
+    const costPerHarrowing = parseFloat(document.getElementById(`costPerHarrowingInput_${cropCounter}`).value) || 0;
+    const totalHarrowingCostField = document.getElementById(`harrowingCostInput_${cropCounter}`);
+
+    // Calculate total harrowing cost
+    const totalHarrowingCost = noOfHarrowing * costPerHarrowing;
+
+    // Update the total harrowing cost field
+    totalHarrowingCostField.value = totalHarrowingCost.toFixed(2); // Format to 2 decimal places
+}
 
 
-    
+function calculateTotalHarvestingCost(cropCounter) {
+    const noOfHarvesting = parseFloat(document.getElementById(`noHarvesting_${cropCounter}`).value) || 0;
+    const costPerHarvesting = parseFloat(document.getElementById(`costPerHarvestingInput_${cropCounter}`).value) || 0;
+    const totalHarvestingCostField = document.getElementById(`harvestingCostInput_${cropCounter}`);
+
+    // Calculate total harvesting cost
+    const totalHarvestingCost = noOfHarvesting * costPerHarvesting;
+
+    // Update the total harvesting cost field
+    totalHarvestingCostField.value = totalHarvestingCost.toFixed(2); // Format to 2 decimal places
+}
+
+
+function calculateTotalMachineryCost(cropCounter) {
+    const plowingCost = parseFloat(document.getElementById(`plowingCostInput_${cropCounter}`).value) || 0;
+    const harrowingCost = parseFloat(document.getElementById(`harrowingCostInput_${cropCounter}`).value) || 0;
+    const harvestingCost = parseFloat(document.getElementById(`harvestingCostInput_${cropCounter}`).value) || 0;
+    const postHarvestCost = parseFloat(document.getElementById(`postHarvestCostInput_${cropCounter}`).value) || 0;
+
+    // Calculate total machinery cost
+    const totalMachineryCost = plowingCost + harrowingCost + harvestingCost + postHarvestCost;
+
+    // Update the total cost field
+    document.getElementById(`totalCostInput_${cropCounter}`).value = totalMachineryCost.toFixed(2); // Format to 2 decimal places
+}
+
+
+function calculateTotalSeedCost(cropCounter) {
+    const quantity = parseFloat(document.getElementById(`quantityInput_${cropCounter}`).value) || 0;
+    const unitPrice = parseFloat(document.getElementById(`unitPriceInput_${cropCounter}`).value) || 0;
+
+    // Calculate total seed cost
+    const totalSeedCost = quantity * unitPrice;
+
+    // Update the total seed cost field
+    document.getElementById(`totalSeedCostInput_${cropCounter}`).value = totalSeedCost.toFixed(2); // Format to 2 decimal places
+}
+
+function calculateTotalLaborCost(cropCounter) {
+    const noOfPerson = parseFloat(document.getElementById(`noOfPersonInput_${cropCounter}`).value) || 0;
+    const ratePerPerson = parseFloat(document.getElementById(`ratePerPersonInput_${cropCounter}`).value) || 0;
+
+    // Calculate total labor cost
+    const totalLaborCost = noOfPerson * ratePerPerson;
+
+    // Update the total labor cost field
+    document.getElementById(`totalLaborCostInput_${cropCounter}`).value = totalLaborCost.toFixed(2); // Format to 2 decimal places
+}
+
+function calculateTotalFertilizerCost(cropCounter) {
+    const noOfSacks = parseFloat(document.getElementById(`noOfSacksInput_${cropCounter}`).value) || 0;
+    const unitPricePerSack = parseFloat(document.getElementById(`unitPricePerSackInput_${cropCounter}`).value) || 0;
+
+    // console.log(`No. of Sacks: ${noOfSacks}, Unit Price per Sack: ${unitPricePerSack}`); // Debugging
+
+    const totalCostFertilizers = noOfSacks * unitPricePerSack;
+
+    document.getElementById(`totalFertilizerCostInput_${cropCounter}`).value = totalCostFertilizers.toFixed(2);
+}
+
+
+
+function calculateTotalPesticideCost(cropCounter) {
+    const noOfLKg = parseFloat(document.getElementById(`noOfLKgInput_${cropCounter}`).value) || 0;
+    const unitPriceOfPesticides = parseFloat(document.getElementById(`unitPriceOfPesticidesInput_${cropCounter}`).value) || 0;
+
+    // Calculate the total cost
+    const totalPesticideCost = noOfLKg * unitPriceOfPesticides;
+
+    // Update the total cost field
+    document.getElementById(`totalCostPesticidesInput_${cropCounter}`).value = totalPesticideCost.toFixed(2); // Format to 2 decimal places
+}
+
+function calculateTotalVariableCost(cropCounter) {
+    // Get the values from each input field
+    const totalSeedCost = parseFloat(document.getElementById(`totalSeedCostInput_${cropCounter}`).value) || 0;
+    const totalLaborCost = parseFloat(document.getElementById(`totalLaborCostInput_${cropCounter}`).value) || 0;
+    const totalFertilizerCost = parseFloat(document.getElementById(`totalFertilizerCostInput_${cropCounter}`).value) || 0;
+    const totalPesticideCost = parseFloat(document.getElementById(`totalCostPesticidesInput_${cropCounter}`).value) || 0;
+    const totalDeliveryCost = parseFloat(document.getElementById(`totalDeliveryCostInput_${cropCounter}`).value) || 0;
+    const totalMachineryFuelCost = parseFloat(document.getElementById(`totalMachineryFuelCostInput_${cropCounter}`).value) || 0;
+
+    // Calculate total variable cost
+    const totalVariableCost = totalSeedCost + totalLaborCost + totalFertilizerCost + totalPesticideCost + totalDeliveryCost + totalMachineryFuelCost;
+
+    // Update the total variable cost input field
+    document.getElementById(`totalVariableCostInput_${cropCounter}`).value = totalVariableCost.toFixed(2); // Format to 2 decimal places
+}
+
 // Track available sale numbers for each crop
-
-let saleCounter= 0;
+let saleCounter = 0;
 let saleAvailableNumbersMap = [];
 let saleCounterMap = [{}];
 
 // Function to add a sale
 function addSale(cropCounter) {
-    //Initialize available numbers and sale counter if not present for this crop
+    // Initialize available numbers and sale counter if not present for this crop
     if (!saleAvailableNumbersMap[cropCounter]) {
         saleAvailableNumbersMap[cropCounter] = [];
         saleCounterMap[cropCounter] = 0;
@@ -2741,10 +2436,8 @@ function addSale(cropCounter) {
 
     // Check if there are available numbers to reuse
     if (saleAvailableNumbersMap[cropCounter].length > 0) {
-        // Use the lowest available sale number
         saleCounter = saleAvailableNumbersMap[cropCounter].shift();
     } else {
-        // Increment sale counter if no available numbers
         saleCounter = saleCounterMap[cropCounter]++;
     }
 
@@ -2758,19 +2451,22 @@ function addSale(cropCounter) {
             </div>
             <div class="input-box col-md-3">
                 <label for="measurement_${cropCounter}_${saleCounter}">Measurement/unit:</label>
-                <input type="text" class="form-control light-gray-placeholder measurement"  name="crop_profiles[${cropCounter}][sales][${saleCounter}][measurement]" id="measurement_${cropCounter}_${saleCounter}" placeholder="Enter measurement">
+                <select class="form-control measurement" name="crop_profiles[${cropCounter}][sales][${saleCounter}][measurement]" id="measurement_${cropCounter}_${saleCounter}" onchange="convertMeasurement(${cropCounter}, ${saleCounter})">
+                    <option value="kg">kg</option>
+                    <option value="tons">tons</option>
+                </select>
             </div>
             <div class="input-box col-md-3">
                 <label for="unit_price_per_kg_${cropCounter}_${saleCounter}">Unit Price/kg:</label>
-                <input type="text" class="form-control light-gray-placeholder unit_price_sold"  name="crop_profiles[${cropCounter}][sales][${saleCounter}][unit_price]" id="unit_price_per_kg_${cropCounter}_${saleCounter}" placeholder="Enter unit price">
+                <input type="number" class="form-control light-gray-placeholder unit_price_sold" name="crop_profiles[${cropCounter}][sales][${saleCounter}][unit_price]" id="unit_price_per_kg_${cropCounter}_${saleCounter}" placeholder="Enter unit price" oninput="calculateGrossIncome(${cropCounter}, ${saleCounter})" onkeypress="return isNumberKey(event)">
             </div>
             <div class="input-box col-md-3">
                 <label for="quantity_${cropCounter}_${saleCounter}">Quantity:</label>
-                <input type="text" class="form-control light-gray-placeholder quantity"  name="crop_profiles[${cropCounter}][sales][${saleCounter}][quantity]" id="quantity_${cropCounter}_${saleCounter}" placeholder="Enter quantity">
+                <input type="number" class="form-control light-gray-placeholder quantity" name="crop_profiles[${cropCounter}][sales][${saleCounter}][quantity]" id="quantity_${cropCounter}_${saleCounter}" placeholder="Enter quantity" oninput="calculateGrossIncome(${cropCounter}, ${saleCounter})" onkeypress="return isNumberKey(event)">
             </div>
             <div class="input-box col-md-3">
                 <label for="gross_income_${cropCounter}_${saleCounter}">Gross Income:</label>
-                <input type="text" class="form-control light-gray-placeholder gross_income" name="crop_profiles[${cropCounter}][sales][${saleCounter}][gross_income]" id="gross_income_${cropCounter}_${saleCounter}" placeholder="Enter gross income">
+                <input type="number" class="form-control light-gray-placeholder gross_income" name="crop_profiles[${cropCounter}][sales][${saleCounter}][gross_income]" id="gross_income_${cropCounter}_${saleCounter}" placeholder="Gross income" readonly>
             </div>
             <div class="remove-button-container">
                 <button type="button" class="btn btn-danger remove-sale-btn" onclick="removeSale(${cropCounter}, ${saleCounter})">Remove Sale</button>
@@ -2778,9 +2474,25 @@ function addSale(cropCounter) {
         </div>
     `;
 
-   
     salesSection.insertAdjacentHTML('beforeend', newSaleEntry);
     updateRemoveButtonVisibility(cropCounter);
+}
+
+// Function to convert measurement and update quantity
+function convertMeasurement(cropCounter, saleCounter) {
+    const measurement = document.getElementById(`measurement_${cropCounter}_${saleCounter}`).value;
+    const quantityField = document.getElementById(`quantity_${cropCounter}_${saleCounter}`);
+    let quantity = parseFloat(quantityField.value) || 0;
+
+    // Convert tons to kilograms if the selected unit is tons
+    if (measurement === 'tons') {
+        quantityField.value = (quantity * 1000).toFixed(2); // Convert tons to kg
+    } else if (measurement === 'kg') {
+        quantityField.value = quantity.toFixed(2); // Keep the value as is
+    }
+
+    // Recalculate gross income after conversion
+    calculateGrossIncome(cropCounter, saleCounter);
 }
 
 // Function to remove a sale
@@ -2811,10 +2523,31 @@ function updateRemoveButtonVisibility(cropCounter) {
     });
 }
 
+// Function to calculate gross income based on unit price and quantity
+function calculateGrossIncome(cropCounter, saleCounter) {
+    const unitPrice = parseFloat(document.getElementById(`unit_price_per_kg_${cropCounter}_${saleCounter}`).value) || 0;
+    const quantity = parseFloat(document.getElementById(`quantity_${cropCounter}_${saleCounter}`).value) || 0;
+    
+    const grossIncomeField = document.getElementById(`gross_income_${cropCounter}_${saleCounter}`);
+    const grossIncome = unitPrice * quantity;
+
+    grossIncomeField.value = isNaN(grossIncome) ? '' : grossIncome.toFixed(2);
+}
+
+// Function to allow only numbers and a decimal point
+function isNumberKey(evt) {
+    const charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode !== 46) {
+        return false; // Allow only numbers and decimal point
+    }
+    return true;
+}
+
 // Initial setup: Hide remove button if only one sale entry exists
 document.querySelectorAll('[id^="salesSection_"]').forEach(section => {
     updateRemoveButtonVisibility(section.id.split('_')[1]);
 });
+
 
 </script>
 
@@ -3135,7 +2868,7 @@ let dataobject = {
 
 //     // Send the AJAX request
 //     $.ajax({
-//         url: '/admin-add-farm/{personalinfos}',
+//         url: '/agent-add-farmer-crops/{farmData}',
 //         method: 'POST',
 //         contentType: 'application/json', // Set content type for JSON
 //         data: JSON.stringify(dataobject), // Attach the prepared data here
@@ -3156,144 +2889,301 @@ let dataobject = {
 //         }
 //     }); 
 
-
-// // Function to open confirmation modal with data preview
 function openConfirmModal(data) {
-    // Check and populate the modal with the farmer's details
+    // Check if there are any crops added
+    const cropSections = document.querySelectorAll('.crop-section'); // Adjust this selector
+
+    if (cropSections.length > 0) {
+        // Clear previous crop info from the modal
+        $('#cropAccordionBody').empty();
+
+        // Populate the modal with the farmer's details
+        $('#farmTenurialStatus').text(data.farm?.tenurial_status || 'N/A');
+        $('#farmAddress').text(data.farm?.farm_address || 'N/A');
+        $('#farmYearsAsFarmer').text(data.farm?.no_of_years_as_farmers || 'N/A');
+        $('#farmGpsLongitude').text(data.farm?.gps_longitude || 'N/A');
+        $('#farmGpsLatitude').text(data.farm?.gps_latitude || 'N/A');
+        $('#farmTotalPhysicalArea').text(data.farm?.total_physical_area_has || 'N/A');
+        $('#farmTotalAreaCultivated').text(data.farm?.total_area_cultivated_has || 'N/A');
+        $('#farmLandTitleNo').text(data.farm?.land_title_no || 'N/A');
+        $('#farmLotNo').text(data.farm?.lot_no || 'N/A');
+        $('#farmAreaProneTo').text(data.farm?.area_prone_to || 'N/A');
+        $('#farmEcosystem').text(data.farm?.ecosystem || 'N/A');
+        $('#farmRsbaRegister').text(data.farm?.rsba_register || 'N/A');
+        $('#farmPcicInsured').text(data.farm?.pcic_insured || 'N/A');
+        $('#farmGovernmentAssisted').text(data.farm?.government_assisted || 'N/A');
+        $('#farmSourceOfCapital').text(data.farm?.source_of_capital || 'N/A');
+        $('#farmRemarks').text(data.farm?.remarks || 'N/A');
+        $('#farmOcaDistrictOffice').text(data.farm?.oca_district_office || 'N/A');
+        $('#farmNameTechnicians').text(data.farm?.name_technicians || 'N/A');
+        $('#farmDateInterview').text(data.farm?.date_interview || 'N/A');
+
+        // Loop through the crops and populate individual crop details in list format
+        data.crops.forEach(function(crop, index) {
+            let cropHtml = `
+                <div class="crop-info">
+                    <h3>Crop ${index + 1}</h3><br>
+                    <div class="detail-grid">
+                        <div class="detail-row">
+                            <h4>Crop Information:</h4><br>
+                            <ul class="list-unstyled">
+                                <li><strong>Crop Name:</strong> <span>${crop.crop_name || 'N/A'}</span></li>
+                                <li><strong>Crop Variety:</strong> <span>${crop.variety.type_variety || 'N/A'}</span></li>
+                                <li><strong>Preferred Variety:</strong> <span>${crop.variety.preferred || 'N/A'}</span></li>
+                                <li><strong>Wet Season:</strong> <span>${crop.variety.wet_season || 'N/A'}</span></li>
+                                <li><strong>Dry Season:</strong> <span>${crop.variety.dry_season || 'N/A'}</span></li>
+                                <li><strong>Number of Cropping Years:</strong> <span>${crop.variety.no_cropping_year || 'N/A'}</span></li>
+                                <li><strong>Yield (kg/ha):</strong> <span>${crop.variety.yield_kg_ha || 'N/A'}</span></li>
+                            </ul>
+                        </div>
+                        <div class="detail-row">
+                            <h4>Production Details:</h4>
+                            <ul class="list-unstyled">
+                                <li><strong>Seed Type:</strong> <span>${crop.production.seedtype || 'N/A'}</span></li>
+                                <li><strong>Seed Used:</strong> <span>${crop.production.seedUsed || 'N/A'}</span></li>
+                                <li><strong>Seed Source:</strong> <span>${crop.production.seedSource || 'N/A'}</span></li>
+                                <li><strong>Unit:</strong> <span>${crop.production.unit || 'N/A'}</span></li>
+                                <li><strong>Fertilizer Used:</strong> <span>${crop.production.fertilizedUsed || 'N/A'}</span></li>
+                                <li><strong>Pesticides Used:</strong> <span>${crop.production.pesticidesUsed || 'N/A'}</span></li>
+                                <li><strong>Insecticides Used:</strong> <span>${crop.production.insecticide || 'N/A'}</span></li>
+                                <li><strong>Area Planted:</strong> <span>${crop.production.areaPlanted || 'N/A'}</span></li>
+                                <li><strong>Date Planted:</strong> <span>${crop.production.datePlanted || 'N/A'}</span></li>
+                                <li><strong>Date Harvested:</strong> <span>${crop.production.Dateharvested || 'N/A'}</span></li>
+                                <li><strong>Yield (kg):</strong> <span>${crop.production.yieldkg || 'N/A'}</span></li>
+                            </ul>
+                        </div>
+                        <div class="detail-row">
+                            <h4>Fixed Costs:</h4>
+                            <ul class="list-unstyled">
+                                <li><strong>Particular:</strong> <span>${crop.fixedCost.particular || 'N/A'}</span></li>
+                                <li><strong>Number of Hectares:</strong> <span>${crop.fixedCost.no_of_has || 'N/A'}</span></li>
+                                <li><strong>Cost per Hectare:</strong> <span>${crop.fixedCost.costperHas || 'N/A'}</span></li>
+                                <li><strong>Total Fixed Cost:</strong> <span>${crop.fixedCost.TotalFixed || 'N/A'}</span></li>
+                            </ul>
+                        </div>
+                        <div class="detail-row">
+                            <h4>Machineries:</h4>
+                            <ul class="list-unstyled">
+                                <li><strong>Plowing Machine:</strong> <span>${crop.machineries.PlowingMachine || 'N/A'}</span></li>
+                                <li><strong>Plow Status:</strong> <span>${crop.machineries.plow_status || 'N/A'}</span></li>
+                                <li><strong>Number of Plowing:</strong> <span>${crop.machineries.no_of_plowing || 'N/A'}</span></li>
+                                <li><strong>Cost per Plowing:</strong> <span>${crop.machineries.cost_per_plowing || 'N/A'}</span></li>
+                                <li><strong>Plowing Cost:</strong> <span>${crop.machineries.plowing_cost || 'N/A'}</span></li>
+                                <li><strong>Harrow Machine:</strong> <span>${crop.machineries.harro_machine || 'N/A'}</span></li>
+                                <li><strong>Harrow Ownership Status:</strong> <span>${crop.machineries.harro_ownership_status || 'N/A'}</span></li>
+                                <li><strong>Number of Harrowing:</strong> <span>${crop.machineries.no_of_harrowing || 'N/A'}</span></li>
+                                <li><strong>Cost per Harrowing:</strong> <span>${crop.machineries.cost_per_harrowing || 'N/A'}</span></li>
+                                <li><strong>Harrowing Cost Total:</strong> <span>${crop.machineries.harrowing_cost_total || 'N/A'}</span></li>
+                                <li><strong>Harvest Machine:</strong> <span>${crop.machineries.harvest_machine || 'N/A'}</span></li>
+                                <li><strong>Harvest Ownership Status:</strong> <span>${crop.machineries.harvest_ownership_status || 'N/A'}</span></li>
+                                <li><strong>Number of Harvesting:</strong> <span>${crop.machineries.no_of_Harvesting || 'N/A'}</span></li>
+                                <li><strong>Cost per Harvesting:</strong> <span>${crop.machineries.cost_per_Harvesting || 'N/A'}</span></li>
+                                <li><strong>Harvesting Cost Total:</strong> <span>${crop.machineries.Harvesting_cost_total || 'N/A'}</span></li>
+                                <li><strong>Postharvest Machine:</strong> <span>${crop.machineries.postharves_machine || 'N/A'}</span></li>
+                                <li><strong>Postharvest Ownership Status:</strong> <span>${crop.machineries.postharvestCost || 'N/A'}</span></li>
+                                <li><strong>Postharvest Cost:</strong> <span>${crop.machineries.total_cost_for_machineries || 'N/A'}</span></li>
+                            </ul>
+                        </div>
+                        <div class="detail-row">
+                            <h4>Variable Costs:</h4>
+                            <ul class="list-unstyled">
+                                <li><strong>Seed Name:</strong> <span>${crop.variables.seed_name || 'N/A'}</span></li>
+                                        <li><strong>Unit:</strong> <span>${crop.variables.unit || 'N/A'}</span></li>
+                                        <li><strong>Quantity:</strong> <span>${crop.variables.quantity || 'N/A'}</span></li>
+                                        <li><strong>Unit Price Seed:</strong> <span>${crop.variables.unit_price_seed || 'N/A'}</span></li>
+                                        <li><strong>Total Seed Cost:</strong> <span>${crop.variables.total_seed_cost || 'N/A'}</span></li>
+                                        <li><strong>Number of Persons:</strong> <span>${crop.variables.no_of_person || 'N/A'}</span></li>
+                                        <li><strong>Rate per Person:</strong> <span>${crop.variables.rate_per_person || 'N/A'}</span></li>
+                                        <li><strong>Total Labor Cost:</strong> <span>${crop.variables.total_labor_cost || 'N/A'}</span></li>
+                                        <li><strong>Name of Fertilizer:</strong> <span>${crop.variables.name_of_fertilizer || 'N/A'}</span></li>
+                                        <li><strong>Number of Sacks:</strong> <span>${crop.variables.no_ofsacks || 'N/A'}</span></li>
+                                        <li><strong>Unit Price per Sack:</strong> <span>${crop.variables.unitprice_per_sacks || 'N/A'}</span></li>
+                                        <li><strong>Total Cost of Fertilizers:</strong> <span>${crop.variables.total_cost_fertilizers || 'N/A'}</span></li>
+                                        <li><strong>Pesticides Name:</strong> <span>${crop.variables.pesticides_name || 'N/A'}</span></li>
+                                        <li><strong>Number of Liters/Kgs:</strong> <span>${crop.variables.no_of_l_kg || 'N/A'}</span></li>
+                                        <li><strong>Unit Price of Pesticides:</strong> <span>${crop.variables.unitprice_ofpesticides || 'N/A'}</span></li>
+                                        <li><strong>Total Cost of Pesticides:</strong> <span>${crop.variables.total_cost_pesticides || 'N/A'}</span></li>
+                                    
+                                        <li><strong>Type of Vehicle:</strong> <span>${crop.variables.type_of_vehicle || 'N/A'}</span></li>
+                                        <li><strong>Total DeliveryCost:</strong> <span>${crop.variables.Total_DeliveryCost || 'N/A'}</span></li>
+                                        <li><strong>Total machinery fuel cost:</strong> <span>${crop.variables.total_machinery_fuel_cost || 'N/A'}</span></li>
+                                        <li><strong>Total Variable Costs:</strong> <span>${crop.variables.total_variable_costs || 'N/A'}</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            `;
+            // Append the crop info HTML to the modal
+            $('#cropAccordionBody').append(cropHtml);
+        });
+
+        // Open the modal
+        $('#confirmModal').modal('show');
+    } else {
+        alert("Please add at least one crop before proceeding.");
+        // Optionally, scroll to or focus on the crop addition section
+        const cropAddSection = document.querySelector('#cropAddSection'); // Adjust the selector
+        if (cropAddSection) {
+            cropAddSection.scrollIntoView({ behavior: 'smooth' });
+            // You could also add focus or highlight the section
+        }
+    }
+}
+
+// // // Function to open confirmation modal with data preview
+// function openConfirmModal(data) {
+//      // Check if there are any crops added
+//                 const cropSections = document.querySelectorAll('.crop-section'); // Adjust this selector
+
+//             if (cropSections.length > 0) {
+//                 // Open the modal with the provided data
+//                 $('#confirmModal').modal('show');
+//                 // Pass the data to the modal as needed
+//             } else {
+//                 alert("Please add at least one crop before proceeding.");
+//                 // Optionally, scroll to or focus on the crop addition section
+//                 const cropAddSection = document.querySelector('#cropAddSection'); // Adjust the selector
+//                 if (cropAddSection) {
+//                     cropAddSection.scrollIntoView({ behavior: 'smooth' });
+//                     // You could also add focus or highlight the section
+//                 }
+//             }
+//     // Check and populate the modal with the farmer's details
  
 
-    // Check and populate the modal with the farm's details
-    $('#farmTenurialStatus').text(data.farm?.tenurial_status || 'N/A');
-    $('#farmAddress').text(data.farm?.farm_address || 'N/A');
-    $('#farmYearsAsFarmer').text(data.farm?.no_of_years_as_farmers || 'N/A');
-    $('#farmGpsLongitude').text(data.farm?.gps_longitude || 'N/A');
-    $('#farmGpsLatitude').text(data.farm?.gps_latitude || 'N/A');
-    $('#farmTotalPhysicalArea').text(data.farm?.total_physical_area_has || 'N/A');
-    $('#farmTotalAreaCultivated').text(data.farm?.total_area_cultivated_has || 'N/A');
-    $('#farmLandTitleNo').text(data.farm?.land_title_no || 'N/A');
-    $('#farmLotNo').text(data.farm?.lot_no || 'N/A');
-    $('#farmAreaProneTo').text(data.farm?.area_prone_to || 'N/A');
-    $('#farmEcosystem').text(data.farm?.ecosystem || 'N/A');
-    $('#farmRsbaRegister').text(data.farm?.rsba_register || 'N/A');
-    $('#farmPcicInsured').text(data.farm?.pcic_insured || 'N/A');
-    $('#farmGovernmentAssisted').text(data.farm?.government_assisted || 'N/A');
-    $('#farmSourceOfCapital').text(data.farm?.source_of_capital || 'N/A');
-    $('#farmRemarks').text(data.farm?.remarks || 'N/A');
-    $('#farmOcaDistrictOffice').text(data.farm?.oca_district_office || 'N/A');
-    $('#farmNameTechnicians').text(data.farm?.name_technicians || 'N/A');
-    $('#farmDateInterview').text(data.farm?.date_interview || 'N/A');
+//     // Check and populate the modal with the farm's details
+//     $('#farmTenurialStatus').text(data.farm?.tenurial_status || 'N/A');
+//     $('#farmAddress').text(data.farm?.farm_address || 'N/A');
+//     $('#farmYearsAsFarmer').text(data.farm?.no_of_years_as_farmers || 'N/A');
+//     $('#farmGpsLongitude').text(data.farm?.gps_longitude || 'N/A');
+//     $('#farmGpsLatitude').text(data.farm?.gps_latitude || 'N/A');
+//     $('#farmTotalPhysicalArea').text(data.farm?.total_physical_area_has || 'N/A');
+//     $('#farmTotalAreaCultivated').text(data.farm?.total_area_cultivated_has || 'N/A');
+//     $('#farmLandTitleNo').text(data.farm?.land_title_no || 'N/A');
+//     $('#farmLotNo').text(data.farm?.lot_no || 'N/A');
+//     $('#farmAreaProneTo').text(data.farm?.area_prone_to || 'N/A');
+//     $('#farmEcosystem').text(data.farm?.ecosystem || 'N/A');
+//     $('#farmRsbaRegister').text(data.farm?.rsba_register || 'N/A');
+//     $('#farmPcicInsured').text(data.farm?.pcic_insured || 'N/A');
+//     $('#farmGovernmentAssisted').text(data.farm?.government_assisted || 'N/A');
+//     $('#farmSourceOfCapital').text(data.farm?.source_of_capital || 'N/A');
+//     $('#farmRemarks').text(data.farm?.remarks || 'N/A');
+//     $('#farmOcaDistrictOffice').text(data.farm?.oca_district_office || 'N/A');
+//     $('#farmNameTechnicians').text(data.farm?.name_technicians || 'N/A');
+//     $('#farmDateInterview').text(data.farm?.date_interview || 'N/A');
 
-    // Clear previous crop info from the modal
-    $('#cropAccordionBody').empty();
+//     // Clear previous crop info from the modal
+//     $('#cropAccordionBody').empty();
 
-// Loop through the crops and populate individual crop details in list format
-data.crops.forEach(function(crop, index) {
-    let cropHtml = `
-      <div class="crop-info">
-    <h3>Crop ${index + 1}</h3><br>
-    <div class="detail-grid">
-        <div class="detail-row">
-            <h4>Crop Information:</h4><br>
-            <ul class="list-unstyled">
-                <li><strong>Crop Name:</strong> <span>${crop.crop_name || 'N/A'}</span></li>
-                <li><strong>Crop Variety:</strong> <span>${crop.variety.type_variety || 'N/A'}</span></li>
-                <li><strong>Preferred Variety:</strong> <span>${crop.variety.preferred || 'N/A'}</span></li>
-                <li><strong>Wet Season:</strong> <span>${crop.variety.wet_season || 'N/A'}</span></li>
-                <li><strong>Dry Season:</strong> <span>${crop.variety.dry_season || 'N/A'}</span></li>
-                <li><strong>Number of Cropping Years:</strong> <span>${crop.variety.no_cropping_year || 'N/A'}</span></li>
-                <li><strong>Yield (kg/ha):</strong> <span>${crop.variety.yield_kg_ha || 'N/A'}</span></li>
-            </ul>
-        </div>
+// // Loop through the crops and populate individual crop details in list format
+// data.crops.forEach(function(crop, index) {
+//     let cropHtml = `
+//       <div class="crop-info">
+//     <h3>Crop ${index + 1}</h3><br>
+//     <div class="detail-grid">
+//         <div class="detail-row">
+//             <h4>Crop Information:</h4><br>
+//             <ul class="list-unstyled">
+//                 <li><strong>Crop Name:</strong> <span>${crop.crop_name || 'N/A'}</span></li>
+//                 <li><strong>Crop Variety:</strong> <span>${crop.variety.type_variety || 'N/A'}</span></li>
+//                 <li><strong>Preferred Variety:</strong> <span>${crop.variety.preferred || 'N/A'}</span></li>
+//                 <li><strong>Wet Season:</strong> <span>${crop.variety.wet_season || 'N/A'}</span></li>
+//                 <li><strong>Dry Season:</strong> <span>${crop.variety.dry_season || 'N/A'}</span></li>
+//                 <li><strong>Number of Cropping Years:</strong> <span>${crop.variety.no_cropping_year || 'N/A'}</span></li>
+//                 <li><strong>Yield (kg/ha):</strong> <span>${crop.variety.yield_kg_ha || 'N/A'}</span></li>
+//             </ul>
+//         </div>
 
-        <div class="detail-row">
-            <h4>Production Details:</h4>
-            <ul class="list-unstyled">
-                <li><strong>Seed Type:</strong> <span>${crop.production.seedtype || 'N/A'}</span></li>
-                <li><strong>Seed Used:</strong> <span>${crop.production.seedUsed || 'N/A'}</span></li>
-                <li><strong>Seed Source:</strong> <span>${crop.production.seedSource || 'N/A'}</span></li>
-                <li><strong>Unit:</strong> <span>${crop.production.unit || 'N/A'}</span></li>
-                <li><strong>Fertilizer Used:</strong> <span>${crop.production.fertilizedUsed || 'N/A'}</span></li>
-                <li><strong>Pesticides Used:</strong> <span>${crop.production.pesticidesUsed || 'N/A'}</span></li>
-                <li><strong>Insecticides Used:</strong> <span>${crop.production.insecticide || 'N/A'}</span></li>
-                <li><strong>Area Planted:</strong> <span>${crop.production.areaPlanted || 'N/A'}</span></li>
-                <li><strong>Date Planted:</strong> <span>${crop.production.datePlanted || 'N/A'}</span></li>
-                <li><strong>Date Harvested:</strong> <span>${crop.production.Dateharvested || 'N/A'}</span></li>
-                <li><strong>Yield (kg):</strong> <span>${crop.production.yieldkg || 'N/A'}</span></li>
-            </ul>
-        </div>
+//         <div class="detail-row">
+//             <h4>Production Details:</h4>
+//             <ul class="list-unstyled">
+//                 <li><strong>Seed Type:</strong> <span>${crop.production.seedtype || 'N/A'}</span></li>
+//                 <li><strong>Seed Used:</strong> <span>${crop.production.seedUsed || 'N/A'}</span></li>
+//                 <li><strong>Seed Source:</strong> <span>${crop.production.seedSource || 'N/A'}</span></li>
+//                 <li><strong>Unit:</strong> <span>${crop.production.unit || 'N/A'}</span></li>
+//                 <li><strong>Fertilizer Used:</strong> <span>${crop.production.fertilizedUsed || 'N/A'}</span></li>
+//                 <li><strong>Pesticides Used:</strong> <span>${crop.production.pesticidesUsed || 'N/A'}</span></li>
+//                 <li><strong>Insecticides Used:</strong> <span>${crop.production.insecticide || 'N/A'}</span></li>
+//                 <li><strong>Area Planted:</strong> <span>${crop.production.areaPlanted || 'N/A'}</span></li>
+//                 <li><strong>Date Planted:</strong> <span>${crop.production.datePlanted || 'N/A'}</span></li>
+//                 <li><strong>Date Harvested:</strong> <span>${crop.production.Dateharvested || 'N/A'}</span></li>
+//                 <li><strong>Yield (kg):</strong> <span>${crop.production.yieldkg || 'N/A'}</span></li>
+//             </ul>
+//         </div>
 
-        <div class="detail-row">
-            <h4>Fixed Costs:</h4>
-            <ul class="list-unstyled">
-                <li><strong>Particular:</strong> <span>${crop.fixedCost.particular || 'N/A'}</span></li>
-                <li><strong>Number of Hectares:</strong> <span>${crop.fixedCost.no_of_has || 'N/A'}</span></li>
-                <li><strong>Cost per Hectare:</strong> <span>${crop.fixedCost.costperHas || 'N/A'}</span></li>
-                <li><strong>Total Fixed Cost:</strong> <span>${crop.fixedCost.TotalFixed || 'N/A'}</span></li>
-            </ul>
-        </div>
+//         <div class="detail-row">
+//             <h4>Fixed Costs:</h4>
+//             <ul class="list-unstyled">
+//                 <li><strong>Particular:</strong> <span>${crop.fixedCost.particular || 'N/A'}</span></li>
+//                 <li><strong>Number of Hectares:</strong> <span>${crop.fixedCost.no_of_has || 'N/A'}</span></li>
+//                 <li><strong>Cost per Hectare:</strong> <span>${crop.fixedCost.costperHas || 'N/A'}</span></li>
+//                 <li><strong>Total Fixed Cost:</strong> <span>${crop.fixedCost.TotalFixed || 'N/A'}</span></li>
+//             </ul>
+//         </div>
 
-        <div class="detail-row">
-            <h4>Machineries:</h4>
-            <ul class="list-unstyled">
-                <li><strong>Plowing Machine:</strong> <span>${crop.machineries.PlowingMachine || 'N/A'}</span></li>
-                <li><strong>Plow Status:</strong> <span>${crop.machineries.plow_status || 'N/A'}</span></li>
-                <li><strong>Number of Plowing:</strong> <span>${crop.machineries.no_of_plowing || 'N/A'}</span></li>
-                <li><strong>Cost per Plowing:</strong> <span>${crop.machineries.cost_per_plowing || 'N/A'}</span></li>
-                <li><strong>Plowing Cost:</strong> <span>${crop.machineries.plowing_cost || 'N/A'}</span></li>
-                <li><strong>Harrow Machine:</strong> <span>${crop.machineries.harro_machine || 'N/A'}</span></li>
-                <li><strong>Harrow Ownership Status:</strong> <span>${crop.machineries.harro_ownership_status || 'N/A'}</span></li>
-                <li><strong>Number of Harrowing:</strong> <span>${crop.machineries.no_of_harrowing || 'N/A'}</span></li>
-                <li><strong>Cost per Harrowing:</strong> <span>${crop.machineries.cost_per_harrowing || 'N/A'}</span></li>
-                <li><strong>Harrowing Cost Total:</strong> <span>${crop.machineries.harrowing_cost_total || 'N/A'}</span></li>
-                <li><strong>Harvest Machine:</strong> <span>${crop.machineries.harvest_machine || 'N/A'}</span></li>
-                <li><strong>Harvest Ownership Status:</strong> <span>${crop.machineries.harvest_ownership_status || 'N/A'}</span></li>
-                <li><strong>Number of Harvesting:</strong> <span>${crop.machineries.no_of_Harvesting || 'N/A'}</span></li>
-                <li><strong>Cost per Harvesting:</strong> <span>${crop.machineries.cost_per_Harvesting || 'N/A'}</span></li>
-                <li><strong>Harvesting Cost Total:</strong> <span>${crop.machineries.Harvesting_cost_total || 'N/A'}</span></li>
-                <li><strong>Postharvest Machine:</strong> <span>${crop.machineries.postharves_machine || 'N/A'}</span></li>
-                <li><strong>Postharvest Ownership Status:</strong> <span>${crop.machineries.postharvestCost || 'N/A'}</span></li>
-                <li><strong>Postharvest Cost:</strong> <span>${crop.machineries.total_cost_for_machineries || 'N/A'}</span></li>
-            </ul>
-        </div>
+//         <div class="detail-row">
+//             <h4>Machineries:</h4>
+//             <ul class="list-unstyled">
+//                 <li><strong>Plowing Machine:</strong> <span>${crop.machineries.PlowingMachine || 'N/A'}</span></li>
+//                 <li><strong>Plow Status:</strong> <span>${crop.machineries.plow_status || 'N/A'}</span></li>
+//                 <li><strong>Number of Plowing:</strong> <span>${crop.machineries.no_of_plowing || 'N/A'}</span></li>
+//                 <li><strong>Cost per Plowing:</strong> <span>${crop.machineries.cost_per_plowing || 'N/A'}</span></li>
+//                 <li><strong>Plowing Cost:</strong> <span>${crop.machineries.plowing_cost || 'N/A'}</span></li>
+//                 <li><strong>Harrow Machine:</strong> <span>${crop.machineries.harro_machine || 'N/A'}</span></li>
+//                 <li><strong>Harrow Ownership Status:</strong> <span>${crop.machineries.harro_ownership_status || 'N/A'}</span></li>
+//                 <li><strong>Number of Harrowing:</strong> <span>${crop.machineries.no_of_harrowing || 'N/A'}</span></li>
+//                 <li><strong>Cost per Harrowing:</strong> <span>${crop.machineries.cost_per_harrowing || 'N/A'}</span></li>
+//                 <li><strong>Harrowing Cost Total:</strong> <span>${crop.machineries.harrowing_cost_total || 'N/A'}</span></li>
+//                 <li><strong>Harvest Machine:</strong> <span>${crop.machineries.harvest_machine || 'N/A'}</span></li>
+//                 <li><strong>Harvest Ownership Status:</strong> <span>${crop.machineries.harvest_ownership_status || 'N/A'}</span></li>
+//                 <li><strong>Number of Harvesting:</strong> <span>${crop.machineries.no_of_Harvesting || 'N/A'}</span></li>
+//                 <li><strong>Cost per Harvesting:</strong> <span>${crop.machineries.cost_per_Harvesting || 'N/A'}</span></li>
+//                 <li><strong>Harvesting Cost Total:</strong> <span>${crop.machineries.Harvesting_cost_total || 'N/A'}</span></li>
+//                 <li><strong>Postharvest Machine:</strong> <span>${crop.machineries.postharves_machine || 'N/A'}</span></li>
+//                 <li><strong>Postharvest Ownership Status:</strong> <span>${crop.machineries.postharvestCost || 'N/A'}</span></li>
+//                 <li><strong>Postharvest Cost:</strong> <span>${crop.machineries.total_cost_for_machineries || 'N/A'}</span></li>
+//             </ul>
+//         </div>
 
-        <div class="detail-row">
-            <h4>Variable Costs:</h4>
-            <ul class="list-unstyled">
-                <li><strong>Seed Name:</strong> <span>${crop.variables.seed_name || 'N/A'}</span></li>
-                <li><strong>Unit:</strong> <span>${crop.variables.unit || 'N/A'}</span></li>
-                <li><strong>Quantity:</strong> <span>${crop.variables.quantity || 'N/A'}</span></li>
-                <li><strong>Unit Price Seed:</strong> <span>${crop.variables.unit_price_seed || 'N/A'}</span></li>
-                <li><strong>Total Seed Cost:</strong> <span>${crop.variables.total_seed_cost || 'N/A'}</span></li>
-                <li><strong>Number of Persons:</strong> <span>${crop.variables.no_of_person || 'N/A'}</span></li>
-                <li><strong>Rate per Person:</strong> <span>${crop.variables.rate_per_person || 'N/A'}</span></li>
-                <li><strong>Total Labor Cost:</strong> <span>${crop.variables.total_labor_cost || 'N/A'}</span></li>
-                <li><strong>Name of Fertilizer:</strong> <span>${crop.variables.name_of_fertilizer || 'N/A'}</span></li>
-                <li><strong>Number of Sacks:</strong> <span>${crop.variables.no_ofsacks || 'N/A'}</span></li>
-                <li><strong>Unit Price per Sack:</strong> <span>${crop.variables.unit_price_per_sack || 'N/A'}</span></li>
-                <li><strong>Total Cost of Fertilizers:</strong> <span>${crop.variables.total_cost_fertilizers || 'N/A'}</span></li>
-                <li><strong>Pesticides Name:</strong> <span>${crop.variables.pesticides_name || 'N/A'}</span></li>
-                <li><strong>Number of Liters/Kgs:</strong> <span>${crop.variables.no_of_liters || 'N/A'}</span></li>
-                <li><strong>Unit Price of Pesticides:</strong> <span>${crop.variables.unit_price_of_pesticides || 'N/A'}</span></li>
-                <li><strong>Total Cost of Pesticides:</strong> <span>${crop.variables.total_cost_of_pesticides || 'N/A'}</span></li>
-                <li><strong>Insecticides Name:</strong> <span>${crop.variables.insecticides_name || 'N/A'}</span></li>
-                <li><strong>Number of Liters/Kgs:</strong> <span>${crop.variables.no_of_liters_insecticides || 'N/A'}</span></li>
-                <li><strong>Unit Price of Insecticides:</strong> <span>${crop.variables.unit_price_of_insecticides || 'N/A'}</span></li>
-                <li><strong>Total Cost of Insecticides:</strong> <span>${crop.variables.total_cost_insecticides || 'N/A'}</span></li>
-                <li><strong>Total Variable Costs:</strong> <span>${crop.variables.total_variable_cost || 'N/A'}</span></li>
-            </ul>
-        </div>
-    </div>
- <br>
-</div>
+//         <div class="detail-row">
+//             <h4>Variable Costs:</h4>
+//             <ul class="list-unstyled">
+//                 <li><strong>Seed Name:</strong> <span>${crop.variables.seed_name || 'N/A'}</span></li>
+//                 <li><strong>Unit:</strong> <span>${crop.variables.unit || 'N/A'}</span></li>
+//                 <li><strong>Quantity:</strong> <span>${crop.variables.quantity || 'N/A'}</span></li>
+//                 <li><strong>Unit Price Seed:</strong> <span>${crop.variables.unit_price_seed || 'N/A'}</span></li>
+//                 <li><strong>Total Seed Cost:</strong> <span>${crop.variables.total_seed_cost || 'N/A'}</span></li>
+//                 <li><strong>Number of Persons:</strong> <span>${crop.variables.no_of_person || 'N/A'}</span></li>
+//                 <li><strong>Rate per Person:</strong> <span>${crop.variables.rate_per_person || 'N/A'}</span></li>
+//                 <li><strong>Total Labor Cost:</strong> <span>${crop.variables.total_labor_cost || 'N/A'}</span></li>
+//                 <li><strong>Name of Fertilizer:</strong> <span>${crop.variables.name_of_fertilizer || 'N/A'}</span></li>
+//                 <li><strong>Number of Sacks:</strong> <span>${crop.variables.no_ofsacks || 'N/A'}</span></li>
+//                 <li><strong>Unit Price per Sack:</strong> <span>${crop.variables.unitprice_per_sacks || 'N/A'}</span></li>
+//                 <li><strong>Total Cost of Fertilizers:</strong> <span>${crop.variables.total_cost_fertilizers || 'N/A'}</span></li>
+//                 <li><strong>Pesticides Name:</strong> <span>${crop.variables.pesticides_name || 'N/A'}</span></li>
+//                 <li><strong>Number of Liters/Kgs:</strong> <span>${crop.variables.no_of_l_kg || 'N/A'}</span></li>
+//                 <li><strong>Unit Price of Pesticides:</strong> <span>${crop.variables.unitprice_ofpesticides || 'N/A'}</span></li>
+//                 <li><strong>Total Cost of Pesticides:</strong> <span>${crop.variables.total_cost_pesticides || 'N/A'}</span></li>
+              
+//                 <li><strong>Type of Vehicle:</strong> <span>${crop.variables.type_of_vehicle || 'N/A'}</span></li>
+//                 <li><strong>Total DeliveryCost:</strong> <span>${crop.variables.Total_DeliveryCost || 'N/A'}</span></li>
+//                 <li><strong>Total machinery fuel cost:</strong> <span>${crop.variables.total_machinery_fuel_cost || 'N/A'}</span></li>
+//                 <li><strong>Total Variable Costs:</strong> <span>${crop.variables.total_variable_costs || 'N/A'}</span></li>
+//             </ul>
+//         </div>
+//     </div>
+//  <br>
+// </div>
 
-    `;
+//     `;
 
-    // Append the crop info HTML to the modal
-    $('#cropAccordionBody').append(cropHtml);
-});
+//     // Append the crop info HTML to the modal
+//     $('#cropAccordionBody').append(cropHtml);
+// });
 
-    $('#confirmModal').modal('show');
-}
+//     $('#confirmModal').modal('show');
+// }
 
 
 
@@ -3316,7 +3206,7 @@ $('#confirmSave').on('click', function() {
         success: function(response) {
             console.log(response);
             if (response.success) {
-                var successModal = new bootstrap.Modal(document.getElementById('successModal'), {
+                var successModal = new bootstrap.Modal(document.getElementById('successCropModal'), {
                         keyboard: false
 
                     });
@@ -3503,209 +3393,12 @@ function checkMmbership() {
 }
 
 
-// Function to check agri_district and display barangay and organization inputs accordingly
-// function checkAgri() {
-//     var agriDistrict = document.getElementById("selectAgri").value;
-//     var barangayInput = document.getElementById("barangayInput");
-//     var organizationInput = document.getElementById("YesFarmersGroup");
 
-//     if (['ayala', 'vitali', 'culianan', 'tumaga', 'manicahan', 'curuan'].includes(agriDistrict)) {
-//         barangayInput.style.display = "block"; // Show barangay input
-//         populateBarangays(agriDistrict); // Populate barangays based on selected district
-//         if (document.getElementById("selectMember").value === "1") {
-//             populateOrganizations(agriDistrict); // Populate organizations based on selected district
-//         }
-//     } else {
-//         barangayInput.style.display = "none"; // Hide barangay input
-//     }
-// }
-
-// $(document).ready(function() {
-//     function populateBarangays(agriDistrict) {
-//         var barangaySelect = document.getElementById("SelectBarangay");
-
-//         // Clear previous options
-//         barangaySelect.innerHTML = '';
-
-//         // AJAX call to get barangays
-//         $.ajax({
-//             url: '/admin-view-Farmers-survey-form',
-//             method: 'GET',
-//             data: { district: agriDistrict, type: 'barangays' },
-//             success: function(response) {
-//                 console.log('Barangays Response:', response);
-
-//                 if (response.length > 0) {
-//                     response.forEach(function(barangay) {
-//                         var option = document.createElement("option");
-//                         option.text = barangay.barangay_name;
-//                         option.value = barangay.barangay_name;
-//                         barangaySelect.appendChild(option);
-//                     });
-//                 } else {
-//                     var noOption = document.createElement("option");
-//                     noOption.text = "No barangays found";
-//                     noOption.disabled = true;
-//                     barangaySelect.appendChild(noOption);
-//                 }
-//             },
-//             error: function(xhr, status, error) {
-//                 console.log("Error fetching barangays:", error);
-//             }
-//         });
-//     }
-
-//     function populateOrganizations(agriDistrict) {
-//         var organizationSelect = document.getElementById("SelectOrganization");
-
-//         // Clear previous options
-//         organizationSelect.innerHTML = '';
-
-//         // AJAX call to get organizations
-//         $.ajax({
-//             url: '/admin-view-Farmers-survey-form',
-//             method: 'GET',
-//             data: { district: agriDistrict, type: 'organizations' },
-//             success: function(response) {
-//                 console.log('Organizations Response:', response);
-
-//                 if (response.length > 0) {
-//                     response.forEach(function(organization) {
-//                         var option = document.createElement("option");
-//                         option.text = organization.organization_name;
-//                         option.value = organization.organization_name;
-//                         organizationSelect.appendChild(option);
-//                     });
-//                 } else {
-//                     var noOption = document.createElement("option");
-//                     noOption.text = "No organizations found";
-//                     noOption.disabled = true;
-//                     organizationSelect.appendChild(noOption);
-//                 }
-//             },
-//             error: function(xhr, status, error) {
-//                 console.log("Error fetching organizations:", error);
-//             }
-//         });
-//     }
-
-//     function removeBarangay() {
-//         var barangaySelect = document.getElementById("SelectBarangay");
-//         var selectedValue = barangaySelect.value;
-
-//         if (selectedValue) {
-//             var confirmRemove = confirm("Are you sure you want to remove this barangay?");
-//             if (confirmRemove) {
-//                 var selectedIndex = barangaySelect.selectedIndex;
-//                 barangaySelect.remove(selectedIndex);
-//             }
-//         }
-//     }
-
-//     function removeOrganization() {
-//         var organizationSelect = document.getElementById("SelectOrganization");
-//         var selectedValue = organizationSelect.value;
-
-//         if (selectedValue) {
-//             var confirmRemove = confirm("Are you sure you want to remove this organization?");
-//             if (confirmRemove) {
-//                 var selectedIndex = organizationSelect.selectedIndex;
-//                 organizationSelect.remove(selectedIndex);
-//             }
-//         }
-//     }
-
-//     // Modal to add new barangay
-//     $('#saveNewBarangay').click(function() {
-//         var newBarangayName = $('#newBarangayName').val(); // Get the input value from modal
-//         if (newBarangayName) {
-//             var barangaySelect = document.getElementById("SelectBarangay");
-//             var existingOption = Array.from(barangaySelect.options).find(option => option.value === newBarangayName);
-
-//             if (!existingOption) {
-//                 // Add new barangay to the dropdown
-//                 var newOption = document.createElement("option");
-//                 newOption.text = newBarangayName;
-//                 newOption.value = newBarangayName;
-//                 barangaySelect.appendChild(newOption);
-
-//                 // Set the new barangay as selected
-//                 barangaySelect.value = newBarangayName;
-
-//                 // Close the modal after adding the barangay
-//                 $('#newBarangayModal').modal('hide');
-//             } else {
-//                 alert("Barangay already exists.");
-//             }
-//         } else {
-//             alert("Please enter a barangay name.");
-//         }
-//     });
-
-//     // Clear input when modal closes
-//     $('#newBarangayModal').on('hidden.bs.modal', function () {
-//         $('#newBarangayName').val('');
-//     });
-
-//     // Modal to add new organization
-//     var saveButton = document.getElementById('addNewOrganization');
-//     var organizationNameInput = document.getElementById('organizationName');
-//     var errorMessage = document.getElementById('error-message');
-//     var organizationSelect = document.getElementById("SelectOrganization");
-
-//     saveButton.addEventListener('click', function () {
-//         var newOrganizationName = organizationNameInput.value.trim();
-
-//         if (newOrganizationName) {
-//             var existingOption = Array.from(organizationSelect.options).find(option => option.value === newOrganizationName);
-
-//             if (!existingOption) {
-//                 // Add new organization to the dropdown
-//                 var newOption = document.createElement("option");
-//                 newOption.text = newOrganizationName;
-//                 newOption.value = newOrganizationName;
-//                 organizationSelect.appendChild(newOption);
-
-//                 // Set the new organization as selected
-//                 organizationSelect.value = newOrganizationName;
-
-//                 // Clear input and error message
-//                 organizationNameInput.value = '';
-//                 errorMessage.classList.add('d-none');
-
-//                 // Close modal
-//                 var modal = bootstrap.Modal.getInstance(document.getElementById('newOrganizationModal'));
-//                 modal.hide();
-//             } else {
-//                 alert("Organization already exists.");
-//             }
-//         } else {
-//             // Show error message
-//             errorMessage.classList.remove('d-none');
-//         }
-//     });
-
-//     // Clear error message on input change
-//     organizationNameInput.addEventListener('input', function () {
-//         if (organizationNameInput.value.trim()) {
-//             errorMessage.classList.add('d-none');
-//         }
-//     });
-
-//     // Attach event listeners for removal buttons
-//     $('#removeBarangay').click(removeBarangay);
-//     $('#removeOrganization').click(removeOrganization);
-
-//     // Call population functions
-//     var agriDistrict = '{{ $agri_district }}'; // Ensure this is dynamically set
-//     populateBarangays(agriDistrict);
-//     populateOrganizations(agriDistrict);
-// });
 $(document).ready(function() {
     // Function to fetch AgriDistricts
     function fetchAgriDistricts() {
         $.ajax({
-            url: '/admin-view-Farmers-survey-form', // Route for fetching AgriDistricts
+            url: '/admin-add-farm/{personalinfos}', // Route for fetching AgriDistricts
             method: 'GET',
             data: { type: 'districts' }, // Request districts
             success: function(response) {
@@ -3735,7 +3428,7 @@ $(document).ready(function() {
     // Function to fetch Barangays based on selected AgriDistrict
     function fetchBarangays(districtId, selectElement) {
         $.ajax({
-            url: '/admin-view-Farmers-survey-form',
+            url: '/admin-add-farm/{personalinfos}',
             method: 'GET',
             data: { type: 'barangays', district: districtId },
             success: function(response) {
@@ -3764,7 +3457,7 @@ $(document).ready(function() {
     // Function to fetch Organizations based on selected AgriDistrict
     function fetchOrganizations(districtId, selectElement) {
         $.ajax({
-            url: '/admin-view-Farmers-survey-form',
+            url: '/admin-add-farm/{personalinfos}',
             method: 'GET',
             data: { type: 'organizations', district: districtId },
             success: function(response) {
@@ -3848,112 +3541,10 @@ $(document).ready(function() {
 
 
 
-// Function to populate organizations based on agri_district
-// function populateOrganizations(agriDistrict) {
-//     var organizationSelect = document.getElementById("SelectOrganization");
-
-//     // Clear previous options
-//     organizationSelect.innerHTML = '';
-
-//     // AJAX call to get organizations
-//     $.ajax({
-//         url: '/admin-view-Farmers-survey-form',
-//         method: 'GET',
-//         data: { district: agriDistrict, type: 'organizations' },
-//         success: function(response) {
-//             console.log('Organizations Response:', response);
-
-//             if (response.length > 0) {
-//                 response.forEach(function(organization) {
-//                     var option = document.createElement("option");
-//                     option.text = organization.organization_name;
-//                     option.value = organization.organization_name;
-//                     organizationSelect.appendChild(option);
-//                 });
-//             } else {
-//                 var noOption = document.createElement("option");
-//                 noOption.text = "No organizations found";
-//                 noOption.disabled = true;
-//                 organizationSelect.appendChild(noOption);
-//             }
-
-//             // Option to add new organization
-//             var addNewOption = document.createElement("option");
-//             addNewOption.text = "Add New Organization";
-//             addNewOption.value = "addNew";
-//             organizationSelect.appendChild(addNewOption);
-//         },
-//         error: function(xhr, status, error) {
-//             console.log("Error fetching organizations:", error);
-//         }
-//     });
-// }
-
-// // Function to handle the organization selection
-// function handleOrganizationSelection() {
-//     var organizationSelect = document.getElementById("SelectOrganization");
-//     var selectedOption = organizationSelect.value;
-
-//     if (selectedOption === "addNew") {
-//         var newOrganization = prompt("Enter new organization name:");
-//         if (newOrganization !== null && newOrganization !== "") {
-//             // Add the new organization to the dropdown
-//             var option = document.createElement("option");
-//             option.text = newOrganization;
-//             option.value = newOrganization;
-//             organizationSelect.insertBefore(option, organizationSelect.lastChild); // Add option before the last option ("Add New Organization")
-//             // Select the newly added organization
-//             organizationSelect.value = newOrganization;
-//         }
-//     }
-// }
-
-// Call the checkAgri and checkMmbership functions when the page loads
-window.onload = function() {
-    checkAgri();
-    checkMmbership();
-};
-
-// Call the checkAgri function when the agri_district selection changes
-document.getElementById("selectAgri").addEventListener("change", checkAgri);
-
-// Call the handleBarangaySelection function when a barangay is selected
-document.getElementById("SelectBarangay").addEventListener("change", handleBarangaySelection);
-
-// Call the handleOrganizationSelection function when an organization is selected
-document.getElementById("SelectOrganization").addEventListener("change", handleOrganizationSelection);
-  
-
-
-
   </script>
   
 
-  <script>
 
-// Get references to the input fields
-const no_of_ha = document.getElementById('no_of_ha');
-const cost_per_ha = document.getElementById('cost_per_ha');
-const total_amount = document.getElementById('total_amount');
-
-// Function to calculate and display the total cost
-function calculateTotalFertilizerCost() {
-    const quantity = parseFloat(no_of_ha.value) || 0;
-    const unitPrice = parseFloat(cost_per_ha.value) || 0;
-
-    const totalFertilizerCost = quantity * unitPrice;
-
-    // Display the total fertilizer cost in the input field
-    total_amount.value = totalFertilizerCost.toFixed(2); // You can adjust the text of decimal places as needed
-}
-
-// Calculate the total fertilizer cost whenever the quantity or unit price changes
-no_of_ha.addEventListener('input', calculateTotalFertilizerCost);
-cost_per_ha.addEventListener('input', calculateTotalFertilizerCost);
-
-// Initial calculation when the page loads
-calculateTotalFertilizerCost();
-  </script>
     
     
     
@@ -4022,5 +3613,28 @@ calculateTotalFertilizerCost();
     function goBack() {
         window.history.back(); // This will go back to the previous page in the browser history
     }
+    document.getElementById('addNewOrganization').addEventListener('click', function() {
+    // Get values of required fields
+    const cropName = document.getElementById(`crop_name_${cropCounter}`).value;
+    const cropVariety = document.getElementById(`crop_variety_${cropCounter}`).value;
+
+    // Validate fields
+    if (!cropName || cropName === "") {
+        alert('Crop Name is required.');
+        document.getElementById(`crop_name_${cropCounter}`).scrollIntoView({ behavior: 'smooth' });
+        return; // Prevent further action
+    }
+    
+    if (!cropVariety || cropVariety === "") {
+        alert('Crop Variety is required.');
+        document.getElementById(`crop_variety_${cropCounter}`).scrollIntoView({ behavior: 'smooth' });
+        return; // Prevent further action
+    }
+
+    // Proceed with saving the organization and adding the crop
+    // Your code to save the organization and crop goes here
+});
+
+
     </script> 
   @endsection

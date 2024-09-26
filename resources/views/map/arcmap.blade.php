@@ -1,7 +1,7 @@
 
 @extends('admin.dashb')
 @section('admin') 
-@extends('layouts.auth')
+
 
 <div class="page-content">
 <nav class="page-breadcrumb">

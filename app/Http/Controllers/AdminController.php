@@ -48,7 +48,16 @@ use Exception;
 class AdminController extends Controller
 {
    
-
+ // Constructor to apply no-cache headers to all methods in this controller
+ public function __construct()
+ {
+     $this->middleware(function ($request, $next) {
+         // Prevent caching of the page
+         return $next($request)->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                               ->header('Pragma', 'no-cache')
+                               ->header('Expires', '0');
+     });
+ }
         public function AdminLogout(Request $request)
     {
         Auth::guard('web')->logout();
@@ -67,6 +76,7 @@ class AdminController extends Controller
         $admin = User::find($userId);
 
         if ($admin) {
+            
             // Fetch filter inputs
             $selectedCropName = $request->input('crop_name', ''); // Default to empty for "All Crops"
             $selectedDateFrom = $request->input('dateFrom', '');
@@ -187,16 +197,7 @@ class AdminController extends Controller
                 'series' => array_values($yieldPerDistrict),
             ];
 
-            // Prepare data for bar chart
-            // $barChartData = [];
-            // foreach ($typeVarietyCountsPerDistrict as $district => $varieties) {
-            //     $barChartData[] = [
-            //         'name' => $district,
-            //         'data' => array_values($varieties)
-            //     ];
-            // }
-            // Populate the bar chart data with proper names
-         // Function to format names to proper names if they are not already
+          
          function formatLabel($label) {
             return ucwords(str_replace('_', ' ', strtolower($label)));
         }
@@ -309,14 +310,113 @@ if ($request->ajax()) {
         'pagination' => $paginationLinks,
     ]);
 }
+// Calculate the total area planted per district
+$totalAreaPlantedPerDistrict = $farmProfilesQuery
+    ->select('agri_districts_id', DB::raw('sum(total_physical_area) as total_area_planted'))
+    ->groupBy('agri_districts_id')
+    ->pluck('total_area_planted', 'agri_districts_id');
+
+// Fetch district names for the calculated totals
+$districtNames = AgriDistrict::whereIn('id', $totalAreaPlantedPerDistrict->keys())->pluck('district', 'id');
+
+// Combine the district names with their respective total area planted
+$totalAreaPlantedByDistrict = $districtNames->map(function ($districtName, $districtId) use ($totalAreaPlantedPerDistrict) {
+    return [
+        'district' => $districtName,
+        'total_area_planted' => $totalAreaPlantedPerDistrict[$districtId],
+    ];
+})->values(); // Use values() to re-index the array
+
+if ($request->ajax()) {
+    // Prepare the response data
+    $response = [
+        'districts' => $totalAreaPlantedByDistrict->pluck('district')->toArray(),
+        'areas' => $totalAreaPlantedByDistrict->pluck('total_area_planted')->map(function($area) {
+            return round($area, 2); // Round each area to 2 decimal places
+        })->toArray()
+    ];
 
 
-            
+
+    // Return the response as JSON
+    return response()->json($response);
+}
+// Calculate the total area yield per district
+$totalAreaYieldPerDistrict = $farmProfilesQuery
+    ->select('agri_districts_id', DB::raw('sum(yield_kg_ha) as total_areaYIELD'))
+    ->groupBy('agri_districts_id')
+    ->pluck('total_areaYIELD', 'agri_districts_id');
+
+// Fetch district names for the calculated totals
+$districtNames = AgriDistrict::whereIn('id', $totalAreaYieldPerDistrict->keys())->pluck('district', 'id');
+
+// Combine the district names with their respective total area yield
+$totalAreaYieldPerDistricts = $districtNames->map(function ($districtName, $districtId) use ($totalAreaYieldPerDistrict) {
+    return [
+        'district' => $districtName,
+        'total_areaYIELD' => $totalAreaYieldPerDistrict[$districtId], // Correctly using $totalAreaYieldPerDistrict here
+    ];
+})->values(); // Use values() to re-index the array
+
+
+       // Calculate the total area yield per district
+$totalAreaYieldPerDistrict = $farmProfilesQuery
+->select('agri_districts_id', DB::raw('sum(yield_kg_ha) as total_areaYIELD'))
+->groupBy('agri_districts_id')
+->pluck('total_areaYIELD', 'agri_districts_id');
+
+// Calculate the total area planted per district
+$totalAreaPlantedPerDistrict = $farmProfilesQuery
+->select('agri_districts_id', DB::raw('sum(total_physical_area) as total_areaPLANTED'))
+->groupBy('agri_districts_id')
+->pluck('total_areaPLANTED', 'agri_districts_id');
+
+// Fetch district names for the calculated totals
+$districtNames = AgriDistrict::whereIn('id', $totalAreaYieldPerDistrict->keys())->pluck('district', 'id');
+
+// Combine the district names with their respective total area yield and planted, and calculate yield per area planted
+$totalAreaYieldPerDistrictss= $districtNames->map(function ($districtName, $districtId) use ($totalAreaYieldPerDistrict, $totalAreaPlantedPerDistrict) {
+// Fetch the total area yield and planted for each district
+$totalAreaYield = $totalAreaYieldPerDistrict[$districtId] ?? 0;
+$totalAreaPlanted = $totalAreaPlantedPerDistrict[$districtId] ?? 0;
+
+// Calculate yield per area planted (avoid division by zero)
+$yieldPerAreaPlanted = ($totalAreaPlanted != 0) ? $totalAreaYield / $totalAreaPlanted : 0;
+
+return [
+    'district' => $districtName,
+    'total_areaYIELD' => $totalAreaYield,
+    'total_areaPLANTED' => $totalAreaPlanted,
+    'yieldPerAreaPlanted' => $yieldPerAreaPlanted, // Added yield per area planted
+];
+})->values();
+ // Use values() to re-index the array
+
+// // Calculate the total area planted per district
+// $totalCostPerDISTRICT = $variableCostQuery
+//     ->select('agri_districts_id', DB::raw('sum(total_variable_cost) as variable_cost'))
+//     ->groupBy('agri_districts_id')
+//     ->pluck('variable_cost', 'agri_districts_id');
+
+// // Fetch district names for the calculated totals
+// $districtNames = AgriDistrict::whereIn('id', $totalAreaPlantedPerDistrict->keys())->pluck('district', 'id');
+
+// // Combine the district names with their respective total area planted
+// $totalAreaPlantedByDistrict = $districtNames->map(function ($districtName, $districtId) use ($totalAreaPlantedPerDistrict) {
+//     return [
+//         'district' => $districtName,
+//         'variable_cost' => $totalAreaPlantedPerDistrict[$districtId],
+//     ];
+// })->values(); // Use values() to re-index the array
+
+
+ 
             return view('admin.index', compact(
                 'totalFarms', 'totalAreaPlanted', 'totalAreaYield', 'totalCost', 'yieldPerAreaPlanted',
                 'averageCostPerAreaPlanted', 'totalRiceProduction', 'pieChartData', 'barChartData',
                 'selectedCropName', 'selectedDateFrom', 'selectedDateTo', 'crops', 'districts', 'selectedDistrict',
-                'minDate', 'maxDate', 'admin', 'pieChartDatas','distributionFrequency','flatFarmers','paginatedFarmers'
+                'minDate', 'maxDate', 'admin', 'pieChartDatas','distributionFrequency','flatFarmers','paginatedFarmers',
+                'totalAreaPlantedByDistrict','totalAreaYieldPerDistricts','totalAreaYieldPerDistrictss'
             ));
         } else {
             return redirect()->route('login')->with('error', 'User not found.');
@@ -325,7 +425,13 @@ if ($request->ajax()) {
         return redirect()->route('login');
     }
 }
-
+// Method to check if resources exist
+protected function resourcesExist($cropName, $district)
+{
+    $cropExists = Crop::where('crop_name', $cropName)->exists();
+    $districtExists = AgriDistrict::where('district', $district)->exists();
+    return $cropExists && $districtExists;
+}
 
 //   public function adminDashb(Request $request)
 // {
@@ -3215,31 +3321,6 @@ public function CornSave(Request $request)
             }
 
 
-            // public function newBarangay(Request $request)
-            // {
-            //     try{
-                
-            //         // $data= $request->validated([]);
-            //         // $data= $request->all();
-        
-                    
-            //         $barangay= new Barangay;
-            //         $barangay->users_id = $request->users_id;
-            //         $barangay->district =$request->district ;
-            //         $barangay->barangay_name =$request->barangay_name;
-                   
-            //         // $barangay->altitude =$request->altitude;
-            //         // dd($barangay);
-            //         $barangay->save();
-            //         return redirect('/admin-view-barangays')->with('message','barangay added successsfully');
-                
-            //     }
-            //     catch(\Exception $ex){
-            //         dd($ex); // Debugging statement to inspect the exception
-            //         return redirect('/admin-view-barangays')->with('message','Someting went wrong');
-                    
-            //     }   
-            // }
             public function newBarangay(Request $request)
             {
                 try{
@@ -3254,7 +3335,6 @@ public function CornSave(Request $request)
                     $barangay->barangay_name =$request->barangay_name;
                    
                     // $barangay->altitude =$request->altitude;
-                    // dd($barangay);
                     $barangay->save();
                     return redirect('/admin-view-barangays')->with('message','barangay added successsfully');
                 
@@ -3614,7 +3694,6 @@ public function CornSave(Request $request)
                 }
 
                 
-                
                 public function updateFarmerOrg(Request $request,$id
                 )
                 {
@@ -3664,7 +3743,6 @@ public function CornSave(Request $request)
                                 return redirect()->back()->with('error', 'Error deleting Farmer Organization: ' . $e->getMessage());
                             }
                         }
-
 
 
 

@@ -527,12 +527,12 @@
       
                                 <input type="hidden"class="form-control light-gray-placeholder agri_districts" id="personalinfos" value="{{ $agri_district }}">
                            --}}
-                           <div class="input-box col-md-4">
-                            <input type="hodden" class="form-control light-gray-placeholder users_id" name="users_id" value="{{$farmprofiles->users_id}}">
-                        </div>
-                        <div class="input-box col-md-4">
-                            <input type="text" class="form-control light-gray-placeholder users_id" name="agri_districts" value="{{$farmprofiles->agri_districts}}">
-                        </div>
+                    
+                            <input type="hidden" class="form-control light-gray-placeholder users_id" name="users_id" value="{{$farmprofiles->users_id}}">
+                            <input type="hidden" class="form-control light-gray-placeholder users_id" name="personal_informations_id" value="{{$farmprofiles->personal_informations_id}}">
+                       
+                            <input type="hidden" class="form-control light-gray-placeholder users_id" name="agri_districts" value="{{$farmprofiles->agri_districts}}">
+                     
                                
                         <div class="input-box col-md-4">
                                 <span class="details">Tenurial Status:</span>
@@ -729,10 +729,10 @@
                                 <span class="details">Remarks/Recommendation:</span>
                                 <input type="text" class="form-control light-gray-placeholder remarks" value="{{$farmprofiles->remarks_recommendation}}" name="remarks_recommendation" id="remarks_recommendation_0" placeholder=" Enter remarks" onkeypress="return blockSymbolsAndNumbers(event)">
                             </div>
-                            <div class="input-box col-md-4">
+                            {{-- <div class="input-box col-md-4">
                                 <span class="details">OCA District Office:</span>
                                 <input type="text" class="form-control light-gray-placeholder oca_district_office" {{$farmprofiles->oca_district_office}} name="oca_district_office" id="oca_district_office_0" placeholder=" Enter oca district" readonly>
-                            </div>
+                            </div> --}}
                             <div class="input-box col-md-4">
                                 <span class="details">Name of Technicians:</span>
                                 <input type="text" class="form-control light-gray-placeholder name_technicians"value="{{$farmprofiles->name_of_field_officer_technician}}" name="name_of_field_officer_technician" id="name_technicians_0" placeholder="Enter name of technicians" onkeypress="return blockSymbolsAndNumbers(event)">
