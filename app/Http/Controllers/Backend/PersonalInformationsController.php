@@ -1394,6 +1394,7 @@ public function productionAdd(Request $request,$id)
             
             // Assign values to the new sale model from the request data
             $salesModel->last_production_datas_id = $productionId; // Assuming $productionId is set earlier in the code
+            $salesModel->crops_farms_id = $crop_id; // Assuming $cropsId is set earlier in the code
             $salesModel->sold_to = $sale['soldTo'];
             $salesModel->measurement = $sale['measurement'];
             $salesModel->unit_price_rice_per_kg = $sale['unit_price']; // Ensure the key names match your form data
