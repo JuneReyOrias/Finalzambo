@@ -160,7 +160,9 @@
         .bgma {
             background: #ff5500;
         }
-        
+        .bgnew {
+            background: #ff0000;
+        }
         .flatpickr-clear-button {
             margin: 10px;
             padding: 5px 10px;
@@ -341,1824 +343,568 @@
     }
 }
 
-  
+/* #results {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+} */
+
+
+/* Media Queries for smaller devices */
+
+
+
+
+
+
+
+
+
+.custom-card:hover {
+    transform: scale(1.05); /* Slightly enlarge the card on hover */
+}
+
+.card-title {
+    font-size: 10px; /* Adjust title font size */
+}
+
+.card-text {
+    font-size: 0.5rem; /* Adjust value font size */
+}
+
+
+.card {
+    border: 1px solid #007bff; /* Customize border color */
+    border-radius: 15px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); /* Initial card shadow */
+    transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition for hover effects */
+}
+
+.card:hover {
+    transform: scale(1.05); /* Slightly enlarge the card on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Increase shadow on hover */
+}
+
+.card-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+
 </style>
 
 <div class="page-content">
-    <div class="d-flex justify-content-between align-items-center grid-margin flex-wrap">
+  
         <!-- Title -->
         <div>
             <h4 class="mb-3 mb-md-0" style="font-size: 19px;">Zambo-AgriMap Dashboard</h4>
         </div>
-    </div>
+   
+    <div class="row g-2 align-items-center">
+        <!-- Crop Name Dropdown -->
+        <div class="col-md-3">
+            <label for="cropName" class="form-label">Select Crop</label>
+            <select id="cropName" class="form-select">
+                <option value="">All Crops</option>
+                @foreach ($crops as $crop)
+                    <option value="{{ $crop }}">{{ $crop }}</option>
+                @endforeach
+            </select>
+        </div>
     
-    <div class="d-flex justify-content-between align-items-center grid-margin">
-        <!-- Filter Form and Buttons -->
-        <div class="d-flex align-items-center flex-wrap w-100">
-            <form id="filterForm" method="GET" action="/admin/dashboard"  class="d-flex align-items-center flex-wrap w-100">
-                <!-- Crop Dropdown -->
-                <div class="me-2 mb-2 mb-md-0" style="min-width: 150px;">
-                    <select name="crop_name" id="crop_name" class="form-control w-100">
-                        <option value="">All Crops</option>
-                        {{-- @php
-                        function formatCropName($name) {
-                            // Convert to lowercase and replace underscores with spaces
-                            $formattedName = strtolower($name);
-                            $formattedName = str_replace('_', ' ', $formattedName);
-                    
-                            // Capitalize the first letter of each word
-                            return ucwords($formattedName);
-                        }
-                    @endphp --}}
-                    
-                    @foreach ($crops as $crop)
-                        <option value="{{ $crop }}" {{ $crop == $selectedCropName ? 'selected' : '' }}>
-                            {{-- {{ formatCropName($crop) }} --}}
-                        </option>
-                    @endforeach
-                    
-                    
-                    </select>
-                </div>
+        <!-- Date From Input -->
+        <div class="col-md-2">
+            <label for="dateFrom" class="form-label">Date From</label>
+            <input type="date" id="dateFrom" class="form-control">
+        </div>
     
-                <!-- District Dropdown -->
-                <div class="me-2 mb-2 mb-md-0" style="min-width: 150px;">
-                    <select name="district" id="district" class="form-control w-100">
-                        <option value="">All Districts</option>
-                        {{-- @php
-                        function formatdistrict($district) {
-                            // Convert to lowercase and replace underscores with spaces
-                            $formattedName = strtolower($district);
-                            $formattedName = str_replace('_', ' ', $formattedName);
-                    
-                            // Capitalize the first letter of each word
-                            return ucwords($formattedName);
-                        }
-                        @endphp --}}
-                     @foreach ($districts as $district)
-                     
-                       
-                   
-
-                        <option value="{{ $district }}" {{ $district == $selectedDistrict ? 'selected' : '' }}>
-                            {{-- {{ formatdistrict($district) }} --}}
-                        </option>
-                    @endforeach
-                    
-                    </select>
-                </div>
+        <!-- Date To Input -->
+        <div class="col-md-2">
+            <label for="dateTo" class="form-label">Date To</label>
+            <input type="date" id="dateTo" class="form-control">
+        </div>
     
-                <!-- Date Range From -->
-                <div class="me-2 mb-2 mb-md-0" style="min-width: 150px;">
-                    <input type="text" class="form-control w-100 @error('dateFrom') is-invalid @enderror" name="dateFrom" value="{{ $selectedDateFrom }}" placeholder="Harvest Date From" id="datepickerFrom">
-                </div>
+        <!-- District Dropdown -->
+        <div class="col-md-3">
+            <label for="district" class="form-label">Select District</label>
+            <select id="district" class="form-select">
+                <option value="">All Districts</option>
+                @foreach ($districts as $district)
+                    <option value="{{ $district }}">{{ $district }}</option>
+                @endforeach
+            </select>
+        </div>
     
-                <!-- Date Range To -->
-                <div class="me-2 mb-2 mb-md-0" style="min-width: 150px;">
-                    <input type="text" class="form-control w-100 @error('dateTo') is-invalid @enderror" name="dateTo" value="{{ $selectedDateTo }}" placeholder="Harvest Date To" id="datepickerTo">
-                </div>
-    
-                <!-- Filter Button -->
-                <div class="me-2 mb-2 mb-md-0" style="min-width: 150px;">
-                    <button type="submit" class="btn btn-primary btn-icon-text w-100 hide-on-print">Filter</button>
-                </div>
-    
-                <!-- Reset Filters Button -->
-                <div class="me-2 mb-2 mb-md-0" style="min-width: 150px;">
-                    <button type="button" class="btn btn-secondary btn-icon-text w-100 hide-on-print" onclick="resetFilters()" title="Reset Filters">
-                        <i class="btn-icon-prepend" data-feather="refresh-cw"></i>
-                    </button>
-                </div>
-    
-                <!-- Print Button -->
-                <div class="me-2 mb-2 mb-md-0" style="min-width: 150px;">
-                    <button type="button" class="btn btn-primary btn-icon-text w-100 hide-on-print" onclick="printReport()">
-                        <i class="btn-icon-prepend" data-feather="printer"></i>
-                        Print
-                    </button>
-                </div>
-            </form>
+        <div class="col-md-2">
+            <label class="form-label" style="visibility: hidden;">Print Reports</label> <!-- Invisible label to match alignment -->
+            <button id="printButton" class="btn btn-primary w-100">Print Reports</button>
         </div>
     </div>
     
-
     
-    
-    
-    
-      
-      
-
-  <div class="row g-2">
-
-<!-- HTML for Cards and Modal -->
-
-<!-- Card for Total Number of Farmers -->
-<div class="col-md-2 stretch-card" onclick="openModal('{{ $selectedCropName }}')">
-    <div class="card custom-card bg text-white mb-3">
-        <div class="card-body">
-            <div class="d-flex justify-content-center align-items-center flex-column">
-                <div class="text-center">
-                    <h5 class="mb-2 text-white">{{ number_format($totalFarms) }}</h5>
-                </div>
-                <div class="small-title mt-2 text-center">
-                    <h6 class="mb-0 text-white">Total Number</h6>
-                    <h6 class="mb-0 text-white">of Farmers</h6>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal for Farmers Per District -->
-<div class="modal fade" id="farmersModal" tabindex="-1" role="dialog" aria-labelledby="farmersModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-           <!-- Modal Header -->
-                <div class="modal-header">
-                    <h5 class="modal-title" id="farmersModalLabel">Farmers Per District - {{ $selectedCropName }}</h5>
-                    <div class="ms-auto d-flex align-items-center">
-                        <!-- Eye Icon Button with Tooltip -->
-                        <button type="button" class="btn btn-light me-2" data-bs-toggle="modal" data-bs-target="#farmerInfoModal" title="View Farmers Information">
-                            <i class="fa fa-eye"> Farmers</i>
-                        </button>
-                        <!-- Close Button -->
-                        <button type="button" class="btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                </div>
-
-
-            <div class="modal-body p-0">
-                <!-- Pie Chart and Legends Section -->
-                <div class="d-flex flex-column" style="height: 80vh; width: 70%;">
-                    <!-- Pie Chart Container -->
-                    <div id="pieChartContainer" style="flex: 1; height: 70%;"></div>
-                
-                    <!-- Legends Container -->
-                    <div id="pieChartLegend" class="mt-3" style="width: 100%; max-height: 30%; overflow-y: auto; padding: 1rem;">
-                        <!-- Legends will be generated and inserted here by the chart library -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="farmerInfoModal" tabindex="-1" role="dialog" aria-labelledby="farmerInfoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title" id="farmerInfoModalLabel">Detailed Farmers Information</h5>
-                <button type="button"class="btn-close btn-light border border-2 border-white shadow-sm" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body d-flex flex-column justify-content-center align-items-center" style="max-height: calc(100vh - 200px); overflow-y: auto;">
-                <div class="accordion w-100" id="farmerAccordion">
-                    <!-- Accordion Item 1 -->
-                    <div class="accordion-item border-0">
-                        <h2 class="accordion-header" id="headingOne">
-                            <button class="accordion-button bg-secondary text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Farmers Table
-                            </button>
-                        </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#farmerAccordion">
-                            <div class="accordion-body bg-light d-flex flex-column justify-content-center align-items-center">
-                                <div id="farmersTable" class="w-100 table-responsive">
-                                    @include('agent.partials.farmers_table', ['paginatedFarmers' => $paginatedFarmers])
-                                </div>
-                                <div id="pagination" class="mt-3 text-center">
-                                    <ul class="pagination justify-content-center">
-                                        <li class="page-item">
-                                            <a class="page-link" href="{{ $paginatedFarmers->previousPageUrl() }}">Previous</a>
-                                        </li>
-                                        @foreach ($paginatedFarmers->getUrlRange(max(1, $paginatedFarmers->currentPage() - 1), min($paginatedFarmers->lastPage(), $paginatedFarmers->currentPage() + 1)) as $page => $url)
-                                            <li class="page-item {{ $page == $paginatedFarmers->currentPage() ? 'active' : '' }}">
-                                                <a class="page-link" href="{{ $url }}">{{ $page }}</a>
-                                            </li>
-                                        @endforeach
-                                        <li class="page-item">
-                                            <a class="page-link" href="{{ $paginatedFarmers->nextPageUrl() }}">Next</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
+    <div id="results" class="row g-2 mt-4">
+        <!-- Total Farms Card -->
+        <div class="col-md-2 stretch-card" onclick="openCostModal('Total Farms')">
+            <div class="card custom-card bg text-white mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-center align-items-center flex-column">
+                        <div class="text-center">
+                            <h5 class="mb-2 text-white" id="totalFarms">0</h5>
+                        </div>
+                        <div class="small-title mt-2 text-center">
+                            <h6 class="mb-0 text-white">Total Farms</h6>
                         </div>
                     </div>
-                    <!-- Additional Accordion Items can be added here -->
                 </div>
             </div>
         </div>
-    </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
     
-<!-- Card for Total Area Planted -->
-<div class="col-md-2 stretch-card" onclick="openAreaModal('{{ $selectedCropName }}')">
-    <div class="card custom-card backg text-white mb-3">
-        <div class="card-body">
-            <div class="d-flex justify-content-center align-items-center flex-column">
-                <div class="text-center">
-                    <h5 class="mb-2 text-white">{{ number_format($totalAreaPlanted, 2) }}</h5>
-                </div>
-                <div class="small-title mt-2 text-center">
-                    <h6 class="mb-0 text-white">Total Area</h6>
-                    <h6 class="mb-0 text-white">Planted</h6>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal for Area Planted Details -->
-<div class="modal fade" id="areaModal" tabindex="-1" role="dialog" aria-labelledby="areaModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h5 class="modal-title" id="areaModalLabel">Total Area Planted- {{ $selectedCropName }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <!-- Modal Body -->
-            <div class="modal-body p-0">
-                <div class="d-flex flex-column" style="height: 67vh; width: 70%;">
-                    <!-- Pie Chart Container -->
-                    <div id="piecharts" style="flex: 1; height: 90%;"></div>
-                
-                    <!-- Legends Container -->
-                    <div id="pieChartLegend" class="mt-3" style="width: 100%; max-height: 30%; overflow-y: auto; padding: 1rem;">
-                        <!-- Legends will be generated and inserted here by the chart library -->
-                    </div>
-                </div>
-
-                <!-- Add Pie Chart here -->
-              
-            </div>
-
-            <!-- Modal Footer -->
-            {{-- <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              
-            </div> --}}
-        </div>
-    </div>
-</div>
-
-
-
-<!-- Card for Total Area Yield -->
-<div class="col-md-2 stretch-card" onclick="openYieldBarModal('{{ $selectedCropName }}')">
-    <div class="card custom-card bg-warning text-white mb-3">
-        <div class="card-body">
-            <div class="d-flex justify-content-center align-items-center flex-column">
-                <div class="text-center">
-                    <h5 class="mb-2 text-white">{{ number_format($totalAreaYield, 2) }}</h5>
-                </div>
-                <div class="small-title mt-2 text-center">
-                    <h6 class="mb-0 text-white">Total Area</h6>
-                    <h6 class="mb-0 text-white">Yield (Kg/Ha)</h6>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal for Area Yield Details -->
-<div class="modal fade" id="yieldBarModal" tabindex="-1" role="dialog" aria-labelledby="yieldBarModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h5 class="modal-title" id="yieldBarModalLabel">Total Area Yield - {{ $selectedCropName }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <!-- Modal Body -->
-            <div class="modal-body p-0">
-                <div class="d-flex flex-column" style="height: 67vh; width: 70%;">
-                    <!-- Pie Chart Container -->
-                    <div id="yieldBarChart" style="flex: 1; height: 90%;"></div>
-                
-                    <!-- Legends Container -->
-                    <div id="yieldPieChartLegend" class="mt-3" style="width: 100%; max-height: 30%; overflow-y: auto; padding: 1rem;">
-                        <!-- Legends will be generated and inserted here by the chart library -->
+        <!-- Total Area Planted Card -->
+        <div class="col-md-2 stretch-card" onclick="openCostModal('Total Area Planted')">
+            <div class="card custom-card backg text-white mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-center align-items-center flex-column">
+                        <div class="text-center">
+                            <h5 class="mb-2 text-white" id="totalAreaPlanted">0</h5>
+                        </div>
+                        <div class="small-title mt-2 text-center">
+                            <h6 class="mb-0 text-white">Total Area Planted (ha)</h6>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-
-<!-- Card for Total Cost -->
-<div class="col-md-2 stretch-card" >
-    <div class="card custom-card bg-danger text-white mb-3">
-        <div class="card-body">
-            <div class="d-flex justify-content-center align-items-center flex-column">
-                <div class="text-center">
-                    <h5 class="mb-2 text-white">
-                        <p style="font-size: 12px">Php</p>
-                        {{ number_format($totalCost, 2) }}
-                    </h5>
-                </div>
-                <div class="small-title mt-2 text-center">
-                    <h6 class="mb-0 text-white">Total Cost</h6>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-{{-- <!-- Modal for Total Cost Details -->
-<div class="modal fade" id="costModal" tabindex="-1" role="dialog" aria-labelledby="costModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h5 class="modal-title" id="costModalLabel">Total Cost - {{ $selectedCropName }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <!-- Modal Body -->
-            <div class="modal-body p-0">
-                <div class="d-flex flex-column" style="height: 67vh; width: 70%;">
-                    <!-- Pie Chart Container -->
-                    <div id="costLine" style="flex: 1; height: 90%;"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> --}}
-
-<!-- Card for Average Yield/Area Planted -->
-<div class="col-md-2 stretch-card" onclick="openCostModal('{{ $selectedCropName }}')">
-    <div class="card custom-card bgma text-white mb-3">
-        <div class="card-body">
-            <div class="d-flex justify-content-center align-items-center flex-column">
-                <div class="text-center">
-                    <h5 class="mb-2 text-white">{{ number_format($yieldPerAreaPlanted, 2) }}</h5>
-                </div>
-                <div class="small-title mt-2 text-center">
-                    <h6 class="mb-0 text-white">Ave. Yield/Area</h6>
-                    <h6 class="mb-0 text-white">Planted (Kg/Ha)</h6>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal for Average Yield Details -->
-{{-- <div class="modal fade" id="yieldsModal" tabindex="-1" role="dialog" aria-labelledby="yieldsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h5 class="modal-title" id="yieldsModalLabel">Average Yield per Area - {{ $selectedCropName }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <!-- Modal Body -->
-            <div class="modal-body p-0">
-                <div class="d-flex flex-column" style="height: 67vh; width: 70%;">
-                    <!-- Line Chart Container -->
-                    <div id="yieldLineCharts" style="flex: 1; height: 90%;"></div>
-                </div>
-            </div>
-
-            <div class="text-center mt-3">
-                <button class="btn btn-primary" onclick="printChart()">Print Chart</button>
-                <button class="btn btn-success" onclick="saveAsPNG()">Save as PNG</button>
-                <button class="btn btn-info" onclick="saveAsPDF()">Save as PDF</button>
-            </div>
-        </div>
-    </div>
-</div> --}}
-<!-- Modal for Total Cost Details -->
-<div class="modal fade" id="costModal" tabindex="-1" role="dialog" aria-labelledby="costModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h5 class="modal-title" id="costModalLabel">Total Cost - {{ $selectedCropName }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <!-- Modal Body -->
-            <div class="modal-body p-0">
-                <div class="d-flex flex-column" style="height: 67vh; width: 70%;">
-                    <!-- Pie Chart Container -->
-                    <div id="costLine" style="flex: 1; height: 90%;"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Card for Average Cost/Area Planted -->
-<div class="col-md-2 stretch-card" onclick="openAveCostModal('{{ $selectedCropName }}')">
-    <div class="card custom-card bg-secondary text-white mb-3">
-        <div class="card-body">
-            <div class="d-flex justify-content-center align-items-center flex-column">
-                <div class="text-center">
-                    <h5 class="mb-2 text-white"><p style="font-size: 12px">Php</p>{{ number_format($averageCostPerAreaPlanted, 2) }}</h5>
-                </div>
-                <div class="small-title mt-2 text-center">
-                    <h6 class="mb-0 text-white">Ave. Cost/</h6>
-                    <h6 class="mb-0 text-white">Area Planted</h6>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal for Average Cost Details -->
-<div class="modal fade" id="avecostModal" tabindex="-1" role="dialog" aria-labelledby="avecostModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h5 class="modal-title" id="avecostModalLabel">Average Cost per Area - {{ $selectedCropName }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <!-- Modal Body -->
-            <div class="modal-body p-0">
-                <div class="d-flex flex-column" style="height: 67vh; width: 70%;">
-                    <!-- Bar Chart Container -->
-                    <div id="costBarCharts" style="flex: 1; height: 90%;"></div>
-                
-                    <!-- Legends Container -->
-                    <div id="costBarChartLegend" class="mt-3" style="width: 100%; max-height: 30%; overflow-y: auto; padding: 1rem;">
-                        <!-- Legends can be generated and inserted here if needed -->
+    
+        <!-- Total Area Yield Card -->
+        <div class="col-md-2 stretch-card" onclick="openCostModal('Total Area Yield')">
+            <div class="card custom-card bgnew text-white mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-center align-items-center flex-column">
+                        <div class="text-center">
+                            <h5 class="mb-2 text-white" id="totalAreaYield">0</h5>
+                        </div>
+                        <div class="small-title mt-2 text-center">
+                            <h6 class="mb-0 text-white">Total Area Yield (kg)</h6>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="modal-footer">
-                <button id="printChartButton" class="btn btn-primary">Print Chart</button>
-                <button id="saveChartButton" class="btn btn-success">Save as PNG</button>
-                <button id="savePDFButton" class="btn btn-danger">Save as PDF</button> <!-- New PDF button -->
-            </div>
         </div>
-    </div>
-</div>
-<div class="row">
-  <!-- Left Side: Rice Production and Farmers Yields/Districts -->
-<div class="col-lg-6 col-xl-6 grid-margin stretch-card">
-    <div class="card">
-        <div class="card-body">
-            <!-- Card Title and Dropdown Filters -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h6 class="card-title mb-0">Farmers Yields/Districts</h6>
-                <!-- Dropdown Filters -->
-                <div>
-                    <!-- Add your dropdown filters here -->
+    
+        <!-- Total Cost Card -->
+        <div class="col-md-2 stretch-card" onclick="openCostModal('Total Cost')">
+            <div class="card custom-card bg-danger text-white mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-center align-items-center flex-column">
+                        <div class="text-center">
+                            <h5 class="mb-2 text-white" id="totalCost">0</h5>
+                        </div>
+                        <div class="small-title mt-2 text-center">
+                            <h6 class="mb-0 text-white">Total Cost (PHP)</h6>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <!-- Pie Chart and Storage Chart Containers -->
-            <div class="d-flex justify-content-between flex-wrap">
-                <!-- Pie Chart Container -->
-                <div id="pieChart" class="chart-container"></div>
-
-                <!-- Storage Chart Container -->
-                <div id="storageChart" class="chart-container"></div>
-            </div>
         </div>
-    </div>
-</div>
-
     
-
-    <!-- Right Side: Farmers Variety Planted/Districts -->
-    <div class="col-lg-6 col-xl-6 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-baseline mb-2">
-                    <h6 class="card-title mb-0">Farmers Variety Planted/Districts</h6>
+        <!-- Yield per Area Planted Card -->
+        <div class="col-md-2 stretch-card" onclick="openCostModal('Yield per Area Planted')">
+            <div class="card custom-card backg text-white mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-center align-items-center flex-column">
+                        <div class="text-center">
+                            <h5 class="mb-2 text-white" id="yieldPerAreaPlanted">0</h5>
+                        </div>
+                        <div class="small-title mt-2 text-center">
+                            <h6 class="mb-0 text-white">Yield per Area Planted (kg/ha)</h6>
+                        </div>
+                    </div>
                 </div>
-    
-                    <!-- Bar Chart Container -->
-                    <div id="barChart" style="height: 400px;"></div>
-                    
             </div>
         </div>
+    
+        <!-- Average Cost per Area Planted Card -->
+        <div class="col-md-2 stretch-card" onclick="openCostModal('Average Cost per Area Planted')">
+            <div class="card custom-card bgma text-white mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-center align-items-center flex-column">
+                        <div class="text-center">
+                            <h5 class="mb-2 text-white" id="averageCostPerAreaPlanted">0</h5>
+                        </div>
+                        <div class="small-title mt-2 text-center">
+                            <h6 class="mb-0 text-white">Ave. Cost/Area (PHP/ha)</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+
+      
     </div>
     
-</div>
-
-
-
-
-
-
-      </div>
-    </div>
-  </div> <!-- row -->
-
-  <script>
-    function openModal(cropName) {
-        // Set up dynamic content if needed
-        // Example: Use AJAX to load additional details for the selected crop
-        $('#farmerDataModal').modal('show');
-    }
-</script>
-
-
-<script>
-    function resetFilters() {
-        window.location.href = '{{ route("admin.dashb") }}'; // Redirect to the dashboard route with no filters applied
-    }
-</script>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Parse JSON data from the backend
-    var pieChartData = @json($pieChartData);
-    var barChartData = @json($barChartData);
-    var totalRiceProduction = @json($totalRiceProduction); // Fetch total yield production data
-    var riceProductionValue = {{ number_format($totalRiceProduction, 2) }};
-    var selectedCropName = @json($selectedCropName); // Get selected crop name
-    var pieChartDatas = @json($pieChartDatas);
-    var minDate = "{{ $minDate }}";
-    var maxDate = "{{ $maxDate }}";
-
-    // Define a color palette for consistency
-    var colorPalette = ['#ff0000', '#55007f', '#e3004d', '#ff00ff', '#ff5500', '#00aa00', '#008FFB'];
-
-  // Function to format crop names
-function formatCropName(name) {
-    // Convert to lowercase and replace underscores with spaces
-    var formattedName = name.toLowerCase().replace(/_/g, ' ');
-
-    // Capitalize the first letter of each word
-    return formattedName.replace(/\b\w/g, function(char) { return char.toUpperCase(); });
-}
-
-// Radial Bar Chart for Rice Production
-if (document.querySelector('#storageChart')) {
-    var selectedCropName = @json($selectedCropName); // Pass the selected crop name from Blade
-
-    // Format the selected crop name
-    var formattedCropName = formatCropName(selectedCropName);
-
-    var storageChartOptions = {
-        chart: {
-            height: 260,
-            type: "radialBar"
-        },
-        series: [riceProductionValue],
-        colors: ['#00E396'],
-        plotOptions: {
-            radialBar: {
-                hollow: {
-                    margin: 15,
-                    size: "70%"
-                },
-                track: {
-                    background: '#f2f2f2',
-                    strokeWidth: '100%'
-                },
-                dataLabels: {
-                    show: true,
-                    name: {
-                        offsetY: -10,
-                        color: '#888',
-                        fontSize: '15px'
-                    },
-                    value: {
-                        color: '#333',
-                        fontSize: '22px',
-                        fontWeight: 'bold',
-                        formatter: function (value) {
-                            return value + ' tons';
-                        }
-                    }
-                }
-            }
-        },
-        fill: {
-            type: 'solid'
-        },
-        stroke: {
-            lineCap: 'round'
-        },
-        labels: ['Total ' + (formattedCropName === 'All Crops' ? 'Rice' : formattedCropName) + ' Production'] // Dynamically set the label based on the selected crop
-    };
-
-    var storageChart = new ApexCharts(document.querySelector("#storageChart"), storageChartOptions);
-    storageChart.render();
-}
-// Function to format labels
-function formatLabel(label) {
-    return label.replace(/_/g, ' ') // Replace underscores with spaces
-                .toLowerCase()     // Convert to lower case
-                .replace(/\b\w/g, function (char) { // Capitalize the first letter of each word
-                    return char.toUpperCase();
-                });
-}
-
-// Format the labels
-var formattedLabels = pieChartData.labels.map(formatLabel);
-
-// Update pieChartData with formatted labels
-pieChartData.labels = formattedLabels;
-    // Pie Chart for Yield per District
-    if (document.querySelector('#pieChart')) {
     
-    var pieChartOptions = {
-    series: pieChartData.series,
-    chart: {
-        type: 'pie',
-        height: 320
-    },
-    labels: pieChartData.labels,
-    colors: colorPalette,
-    legend: {
-        position: 'bottom',
-        horizontalAlign: 'center'
-    },
-    dataLabels: {
-        style: {
-            colors: ['black'] // Set label text color inside the pie chart to black
-        },
-        dropShadow: {
-            enabled: false // Disable drop shadow if not required
-        },
-        formatter: function (val, opts) {
-            return val.toFixed(2) + "%"; // Format percentage values
-        }
-    },
-    tooltip: {
-        enabled: true,
-        theme: 'light', // Use 'dark' for dark background, here 'light' for white
-        style: {
-            fontSize: '12px',
-            color: '#000', // Set tooltip text color to black
-        },
-        y: {
-            formatter: function (val) {
-                return val + ' tons'; // Customize tooltip content for yields
-            }
-        }
-    },
-    responsive: [{
-        breakpoint: 480,
-        options: {
-            chart: {
-                height: 240
-            },
-            legend: {
-                position: 'bottom'
-            }
-        }
-    }]
-};
-
-
-
-        var pieChart = new ApexCharts(document.querySelector("#pieChart"), pieChartOptions);
-        pieChart.render();
-    }
-
-// Bar Chart for Type Variety Counts per District
-if (document.querySelector('#barChart')) {
-    var barChartOptions = {
-        series: <?php echo json_encode($barChartData); ?>,
-        chart: {
-            type: 'bar',
-            height: 350
-        },
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                columnWidth: '55%',
-                endingShape: 'rounded'
-            }
-        },
-        dataLabels: {
-            enabled: false
-        },
-        colors: colorPalette,
-        xaxis: {
-            categories: ['Inbred', 'Hybrid' ,   'No data'] // Ensure these categories match your data
-        },
-        yaxis: {
-            title: {
-                text: 'Count'
-            }
-        },
-        fill: {
-            opacity: 1
-        }
-    };
-    var barChart = new ApexCharts(document.querySelector("#barChart"), barChartOptions);
-    barChart.render();
-}
-
-
-    // Pie Chart for Total Rice Production per District
-    if (document.querySelector('#pieChartDatas')) {
-        var pieChartDatasOptions = {
-            series: pieChartDatas.series,
-            chart: {
-                type: 'pie',
-                height: 320
-            },
-            labels: pieChartDatas.labels,
-            colors: colorPalette,
-            legend: {
-                position: 'bottom',
-                horizontalAlign: 'center',
-           
-              
-            },
-            responsive: [{
-                breakpoint: 480,
-                options: {
-                    chart: {
-                        height: 240
-                    },
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }]
-        };
-        var pieChartDatasChart = new ApexCharts(document.querySelector("#pieChartDatas"), pieChartDatasOptions);
-        pieChartDatasChart.render();
-    }
-});
-
-</script>
-
-
-
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    function addClearButton(instance) {
-        // Check if the clear button already exists
-        if (instance.calendarContainer.querySelector('.flatpickr-clear-button')) {
-            return;
-        }
-        
-        // Create a clear button
-        const clearButton = document.createElement('button');
-        clearButton.textContent = 'Clear';
-        clearButton.className = 'flatpickr-clear-button';
-        clearButton.style.margin = '5px'; // Style the button
-        clearButton.onclick = function() {
-            instance.clear();
-            instance.close();
-        };
     
-        // Append the clear button to the calendar container
-        const calendarContainer = instance.calendarContainer;
-        calendarContainer.appendChild(clearButton);
-    }
-
-    // Initialize Flatpickr with custom clear button
-    flatpickr("#datepickerFrom", {
-        dateFormat: "Y-m-d", // Date format (YYYY-MM-DD)
-        onOpen: function(selectedDates, dateStr, instance) {
-            // Add clear button when calendar opens
-            addClearButton(instance);
-        }
-    });
-
-    flatpickr("#datepickerTo", {
-        dateFormat: "Y-m-d", // Date format (YYYY-MM-DD)
-        onOpen: function(selectedDates, dateStr, instance) {
-            // Add clear button when calendar opens
-            addClearButton(instance);
-        }
-    });
-});
-
-</script>
-
-<script>
-    function printReport() {
-        // Apply print styles
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = '{{ asset('css/print.css') }}';
-        document.head.appendChild(link);
     
-        // Get current date
-        var currentDate = new Date();
-        var formattedDate = currentDate.toLocaleDateString();
-        var formattedTime = currentDate.toLocaleTimeString();
-    
-        // Create a new element to hold the title and the current date
-        const titleElement = document.createElement('div');
-        titleElement.textContent = 'Farmers Data Report';
-        titleElement.style.fontWeight = 'bold'; // Adjust styling as needed
-    
-        const currentDateElement = document.createElement('div');
-        currentDateElement.textContent = 'Printed on: ' + formattedDate + ' ' + formattedTime;
-        currentDateElement.style.marginBottom = '20px'; // Adjust styling as needed
-    
-        // Insert the title and the current date elements into the document body
-        document.body.insertBefore(titleElement, document.body.firstChild);
-        document.body.insertBefore(currentDateElement, titleElement.nextSibling);
-    
-        // Hide the navbar
-        const navbar = document.querySelector('.navbar');
-        if (navbar) {
-            navbar.style.display = 'none';
-        }
-    
-        // Hide other elements not to be printed
-        const elementsToHide = document.querySelectorAll('.exclude-from-print');
-        elementsToHide.forEach(element => {
-            element.style.display = 'none';
-        });
-        document.querySelectorAll('.hide-on-print').forEach(button => {
-            button.style.display = 'none';
-        });
-    
-        // Insert space after "Average Cost per Area Planted"
-        insertSpaceForPrinting();
-    
-        // Print only the page content
-        window.print();
-    
-        // Show the navbar after printing
-        if (navbar) {
-            navbar.style.display = '';
-        }
-    
-        // Show the hidden elements after printing
-        elementsToHide.forEach(element => {
-            element.style.display = '';
-        });
-        document.querySelectorAll('.hide-on-print').forEach(button => {
-            button.style.display = 'block';
-        });
-    
-        // Remove the title and the current date elements after printing
-        titleElement.remove();
-        currentDateElement.remove();
-    }
-    
-    // Function to insert a space after "Average Cost per Area Planted" when printing
-    function insertSpaceForPrinting() {
-        const averageCostSection = document.getElementById('average-cost-section'); // Adjust the ID accordingly
-        if (averageCostSection) {
-            const spaceDiv = document.createElement('div');
-            spaceDiv.style.marginBottom = '1000px'; // Adjust the margin as needed
-            averageCostSection.parentNode.insertBefore(spaceDiv, averageCostSection.nextSibling);
-        }
-    }
-  </script>
-  
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<!-- Bootstrap JS -->
-{{-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script> --}}
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-<script src="https://cdn.jsdelivr.net/npm/@sgratzl/chartjs-chart-geo@latest"></script>
-
-
-
-  <!-- Include Bootstrap Bundle with Popper -->
-  {{-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> --}}
-  <!-- Include Feather Icons -->
-  <script src="https://unpkg.com/feather-icons"></script>
-  
-
-
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
-
-    <script>
-    // Function to format labels
-    function formatLabel(label) {
-        return label.replace(/_/g, ' ') // Replace underscores with spaces
-                    .toLowerCase()     // Convert to lower case
-                    .replace(/\b\w/g, function (char) { // Capitalize the first letter of each word
-                        return char.toUpperCase();
-                    });
-    }
-
-    // Function to open the modal and initialize the pie chart
-    function openModal(cropName) {
-        // Sample data for pie chart
-        var distributionFrequency = @json($distributionFrequency);
-        var districts = @json($districts);
-
-        // Prepare data for the pie chart
-        var chartData = [];
-        for (var districtId in distributionFrequency) {
-            if (distributionFrequency.hasOwnProperty(districtId)) {
-                chartData.push({
-                    name: districts[districtId] || 'Unknown',
-                    y: distributionFrequency[districtId]
-                });
-            }
-        }
-
-        // Format the labels
-        var formattedLabels = chartData.map(item => formatLabel(item.name));
-
-        // Define a color scheme
-        var colorScheme = ['#FF4560', '#008FFB', '#e3004d', '#FEB019', '#FF66C3', '#7E36A8'];
-
-       // Initialize the pie chart
-           // Initialize the pie chart
-var options = {
-    chart: {
-        type: 'pie'
  
-    },
-    series: chartData.map(item => item.y),
-    labels: formattedLabels, // Use formatted labels
-    colors: colorScheme.slice(0, chartData.length), // Use a subset of colors based on the number of segments
-    title: {
-        text: 'Number of Farmers per District'
-    },
-    legend: {
-        position: 'bottom', // Position the legend below the pie chart
-        horizontalAlign: 'center' // Center-align the legend
-    },
-    dataLabels: {
-        style: {
-            colors: ['black'] // Set the label text color inside the pie chart to black
-        },
-        dropShadow: {
-            enabled: false // Disable drop shadow if you don't want it
-        },
-        formatter: function (val, opts) {
-            return val.toFixed(2) + "%"; // Format percentage values
-        }
-    },
-    plotOptions: {
-        pie: {
-            dataLabels: {
-                style: {
-                    colors: ['black'] // Set the color for floating labels (outside the pie chart)
-                }
-            }
-        }
-    },
-    tooltip: {
-        enabled: true,
-        theme: 'dark', // Change this to 'light' for a white background if needed
-        style: {
-            fontSize: '14px',
-            color: '#000', // Set tooltip text color to black
-        },
-        y: {
-            formatter: function (val) {
-                return val + ' farmers'; // Customize tooltip content if needed
-            }
-        }
-    }
-};
-
-
-
-        var chart = new ApexCharts(document.querySelector("#pieChartContainer"), options);
-        chart.render();
-
-        // Open the modal
-        var modal = new bootstrap.Modal(document.getElementById('farmersModal'));
-        modal.show();
-    }
-</script>
-
+        <div class="row g-2 align-items-center">
+            <!-- First chart (Pie Chart) -->
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <canvas id="pieChart" width="500" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
     
-<script>
-    $(document).ready(function () {
-        // Initialize date pickers
-        $("#dateFrom").datepicker({ dateFormat: "yy-mm-dd" });
-        $("#dateTo").datepicker({ dateFormat: "yy-mm-dd" });
+            <!-- Second chart (Bar Chart) -->
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <canvas id="barChart" width="500" height="500"></canvas>
+                    </div>
+                </div>
+            </div>
     
-        // Form submission handling
-        $('#filterForm').on('submit', function (e) {
-            e.preventDefault();
-            
-            let cropName = $('#cropName').val();
-            let district = $('#district').val();
-            let dateFrom = $('#dateFrom').val();
-            let dateTo = $('#dateTo').val();
+            <!-- Third chart (Donut Chart) -->
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <canvas id="donutChart" width="500" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
     
-            $.ajax({
-                url: '/admin/dashboard', // Adjust the route if needed
-                method: 'GET',
-                data: {
-                    crop_name: cropName,
-                    district: district,
-                    dateFrom: dateFrom,
-                    dateTo: dateTo
-                },
-                success: function (response) {
-                    // Update chart data based on the response
-                    updatePieChart(response.pieChartData);
-                    updateBarChart(response.barChartData);
+            <!-- Fourth chart (Line Chart) -->
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <canvas id="lineChart" width="500" height="500"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
-                    // Update other fields
-                    $('#totalFarms').text(response.totalFarms);
-                    $('#totalAreaPlanted').text(response.totalAreaPlanted);
-                    $('#totalAreaYield').text(response.totalAreaYield);
-                    $('#totalCost').text(response.totalCost);
-                    $('#yieldPerAreaPlanted').text(response.yieldPerAreaPlanted);
-                    $('#averageCostPerAreaPlanted').text(response.averageCostPerAreaPlanted);
-                    $('#totalRiceProduction').text(response.totalRiceProduction);
-    
-                    // Update filters
-                    updateFilters(response.crops, response.districts);
-                },
-                error: function (xhr, status, error) {
-                    console.log(error);
-                    alert('An error occurred while fetching data. Please try again.');
-                }
-            });
-        });
-    
-        function updatePieChart(data) {
-            let options = {
-                chart: {
-                    type: 'pie'
-                },
-                labels: data.labels,
-                series: data.series
-            };
-            let chart = new ApexCharts(document.querySelector("#pieChart"), options);
-            chart.render();
-        }
-    
-        function updateBarChart(data) {
-            let options = {
-                chart: {
-                    type: 'bar'
-                },
-                series: data
-            };
-            let chart = new ApexCharts(document.querySelector("#barChart"), options);
-            chart.render();
-        }
-    
-        function updateFilters(crops, districts) {
-            let cropSelect = $('#cropName');
-            let districtSelect = $('#district');
-    
-            cropSelect.empty();
-            districtSelect.empty();
-    
-            cropSelect.append(new Option('All Crops', ''));
-            crops.forEach(crop => {
-                cropSelect.append(new Option(crop, crop));
-            });
-    
-            districtSelect.append(new Option('All Districts', ''));
-            districts.forEach(district => {
-                districtSelect.append(new Option(district, district));
-            });
-        }
-    });
-    </script>
-
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script>
-$(document).ready(function () {
-    // Handle pagination links click event
-    $(document).on('click', '.pagination a', function (e) {
-        e.preventDefault();
-        
-        // Get the page number from the URL
-        var page = $(this).attr('href').split('page=')[1];
-        
-        console.log('Clicked page number: ', page); // Log the page number
-
-        // Fetch paginated data for the selected page
-        fetchFarmersData(page);
-    });
-
-    // Function to fetch farmers data via AJAX
-    function fetchFarmersData(page) {
-        var districtFilter = $('#districtFilter').val(); // Optional filter for district
-        
-        console.log('Fetching farmers data for page: ', page); // Log before making the AJAX call
-
-        $.ajax({
-            url: '/admin/dashboard?page=' + page,  // Adjust route to use a query string for the page number
-            type: 'GET',
-            data: { 
-                district: districtFilter, // Pass the district filter if applicable
-                // Add other filters like crop, etc.
-            },
-            success: function (response) {
-                console.log('AJAX success response: ', response); // Log the successful response
-
-                // Update the farmers table with new data
-                $('#farmersTable').html(response.farmers);
-
-                // Update pagination links
-                $('.pagination').html(response.pagination);
-            },
-            error: function (xhr, status, error) {
-                console.error('Error fetching paginated data: ', error); // Log error
-                console.error('Error details: ', xhr.responseText); // Log the response text
-            }
-        });
-    }
-});
-
-    </script>
+        $(document).ready(function() {
+            let pieChart;
+            let barChart;
+            let donutChart;
+            let lineChart; // Initialize the line chart variable
     
-<!-- Custom JavaScript for Accordion Behavior -->
-
-<!-- Custom JavaScript for Accordion Behavior -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const accordionButtons = document.querySelectorAll('#farmerDataAccordion .accordion-button');
-
-        accordionButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const targetId = this.getAttribute('data-bs-target');
-                const targetCollapse = document.querySelector(targetId);
-                
-                if (targetCollapse) {
-                    const isCollapsed = targetCollapse.classList.contains('collapse');
-                    
-                    // Toggle the child section
-                    if (isCollapsed) {
-                        const bsCollapse = new bootstrap.Collapse(targetCollapse, { toggle: true });
-                    } else {
-                        const bsCollapse = new bootstrap.Collapse(targetCollapse, { toggle: false });
+            function formatNumber(number, decimals = 2) {
+                return new Intl.NumberFormat('en-US', {
+                    minimumFractionDigits: decimals,
+                    maximumFractionDigits: decimals
+                }).format(number);
+            }
+    
+            // Function to fetch data based on selected filters
+            function fetchData() {
+                // Get the filter values
+                var cropName = $('#cropName').val();
+                var dateFrom = $('#dateFrom').val();
+                var dateTo = $('#dateTo').val();
+                var district = $('#district').val();
+    
+                // Make an AJAX request
+                $.ajax({
+                    url: '/admin/dashboard',
+                    method: 'GET',
+                    data: {
+                        crop_name: cropName,
+                        dateFrom: dateFrom,
+                        dateTo: dateTo,
+                        district: district
+                    },
+                    success: function(data) {
+                        // Update the results section with the response data
+                        $('#totalFarms').text(formatNumber(data.totalFarms, 0)); // No decimals for total farms
+                        $('#totalAreaPlanted').text(formatNumber(data.totalAreaPlanted)); // 2 decimals for area planted
+                        $('#totalAreaYield').text(formatNumber(data.totalAreaYield)); // 2 decimals for yield
+                        $('#totalCost').text(formatNumber(data.totalCost, 2)); // 2 decimals for cost
+                        $('#yieldPerAreaPlanted').text(formatNumber(data.yieldPerAreaPlanted)); // 2 decimals for yield per area
+                        $('#averageCostPerAreaPlanted').text(formatNumber(data.averageCostPerAreaPlanted)); // 2 decimals for cost per area
+                        $('#totalRiceProduction').text(formatNumber(data.totalRiceProduction, 2)); // 2 decimals for rice production
+    
+                        // Update charts
+                        updatePieChart(data.pieChartData);
+                        updateBarChart(data.barChartData);
+                        updateDonutChart(data.donutChartData);
+                        updateLineChart(data.lineChartData); // Update the line chart with received data
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('Error fetching data:', textStatus, errorThrown);
                     }
-                    
-                    // Toggle the parent section
-                    const parentAccordion = targetCollapse.closest('.accordion-item').querySelector('.accordion-button');
-                    if (parentAccordion) {
-                        const parentTargetId = parentAccordion.getAttribute('data-bs-target');
-                        const parentCollapse = document.querySelector(parentTargetId);
-                        
-                        if (parentCollapse) {
-                            const isParentCollapsed = parentCollapse.classList.contains('collapse');
-                            
-                            if (isParentCollapsed) {
-                                const bsCollapseParent = new bootstrap.Collapse(parentCollapse, { toggle: true });
-                            } else {
-                                const bsCollapseParent = new bootstrap.Collapse(parentCollapse, { toggle: false });
+                });
+            }
+    
+            // Trigger data fetch on change of dropdowns or date inputs
+            $('#cropName, #district, #dateFrom, #dateTo').change(function() {
+                fetchData();
+            });
+    
+            // Initial fetch to display default data
+            fetchData();
+    
+            // Function to update the Pie Chart
+            function updatePieChart(pieChartData) {
+                if (!pieChartData || !pieChartData.labels || !pieChartData.datasets) {
+                    console.error('Invalid pie chart data:', pieChartData);
+                    return;
+                }
+    
+                const ctx = document.getElementById('pieChart').getContext('2d');
+                if (typeof pieChart !== 'undefined') {
+                    pieChart.destroy();
+                }
+    
+                pieChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: pieChartData.labels,
+                        datasets: [{
+                            data: pieChartData.datasets[0].data,
+                            backgroundColor: pieChartData.datasets[0].backgroundColor,
+                            hoverBackgroundColor: pieChartData.datasets[0].hoverBackgroundColor
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom', // Position legends at the bottom
+                                labels: {
+                                    boxWidth: 20, // Width of the color box in the legend
+                                    font: {
+                                        size: 14 // Font size for the legend labels
+                                    }
+                                }
+                            },
+                            title: {
+                                display: true, // Display the title
+                                text: 'Farmers Yield/District', // Title text
+                                font: {
+                                    size: 16 // Font size for the title
+                                },
+                                padding: {
+                                    top: 10,
+                                    bottom: 20
+                                }
                             }
                         }
                     }
+                });
+            }
+   
+            function updateBarChart(barChartData) {
+            // Check if barChartData is valid
+            if (!barChartData || !barChartData.labels || !barChartData.datasets) {
+                console.error('Invalid bar chart data:', barChartData);
+                return;
+            }
+
+            // Log the bar chart data to the console for debugging
+            console.log('Bar Chart Data:', barChartData);
+
+            const ctx = document.getElementById('barChart').getContext('2d');
+
+            // Destroy the existing chart if it exists
+            if (typeof barChart !== 'undefined') {
+                barChart.destroy();
+            }
+
+            // Define an array of colors for each district
+            const colors = ['#ff0000', '#55007f', '#e3004d', '#ff00ff', '#ff5500', '#00aa00', '#008FFB'];
+
+            // Create a new chart instance
+            barChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: barChartData.labels,
+                    datasets: barChartData.datasets.map((dataset, index) => ({
+                        label: dataset.label,
+                        data: dataset.data,
+                        backgroundColor: colors[index % colors.length], // Assign colors based on index
+                        borderColor: colors[index % colors.length], // Use the same color for border
+                        borderWidth: 1,
+                        varieties: dataset.varieties // Include varieties for tooltip display
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    const dataset = tooltipItem.dataset;
+                                    const count = dataset.data[tooltipItem.dataIndex];
+                                    const varieties = dataset.varieties[tooltipItem.dataIndex]; // Get the varieties for this dataset
+                                    return `${dataset.label}: ${count} (Varieties: ${varieties})`;
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Number of Varieties per Crop and District', // Updated title
+                        }
+                    }
                 }
             });
-        });
-    });
-</script>
+        }
 
-
-<script>
-    document.getElementById('viewFarmersInfoBtn').addEventListener('click', function() {
-        var farmerInfoModal = new bootstrap.Modal(document.getElementById('farmerInfoModal'));
-        farmerInfoModal.show();
-    });
-</script>
-<script>
-    window.addEventListener('beforeunload', function (event) {
-        navigator.sendBeacon('/logout');
-    });
-</script>
-<script>
-    function openAreaModal(cropName) {
-        // Set the crop name in the modal title or use it for other logic
-        document.getElementById('areaModalLabel').innerText = 'Area Details for ' + cropName;
-        $('#areaModal').modal('show'); // Using jQuery to show the modal
-    }
-    </script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Prepare the district names and total areas as arrays for the chart
-    var districtNames = @json($totalAreaPlantedByDistrict->pluck('district'));
-    var totalAreas = @json($totalAreaPlantedByDistrict->pluck('total_area_planted')->map(function($area) {
-    return round($area, 2); // Round each area to 2 decimal places
-}));
-
-
-    // Define the custom color scheme
-    var colorScheme = ['#FF4560', '#008FFB', '#e3004d', '#FEB019', '#FF66C3', '#7E36A8'];
-
-    // Render the pie chart using ApexCharts
-    var options = {
-        chart: {
-            type: 'pie',
-            height: 400
-        },
-        labels: districtNames,
-        series: totalAreas,
-        colors: colorScheme,  // Use the custom color scheme
-        title: {
-            text: 'Total Area Planted by District (ha)',
-            align: 'center'
-        },
-        legend: {
-            position: 'bottom', // Position the legend below the pie chart
-            horizontalAlign: 'center' // Center-align the legend
-        },
-        dataLabels: {
-            style: {
-                colors: ['black'] // Set the label text color inside the pie chart to black
-            },
-            dropShadow: {
-                enabled: false // Disable drop shadow if you don't want it
-            },
-            formatter: function (val, opts) {
-                return val.toFixed(2) + "%"; // Format percentage values
-            }
-        },
-        responsive: [{
-            breakpoint: 480,
-            options: {
-                chart: {
-                    width: 300
-                },
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }]
-    };
-
-    var chart = new ApexCharts(document.querySelector("#piecharts"), options);
-    chart.render();  // Render the chart
-});
-
-</script>
-
-
-
-
-<script>
-  // Function to open the yield modal and initialize the line chart dynamically
-function openYieldModal(selectedCropName) {
-    // Show the modal
-    $('#yieldModal').modal('show');
-
-    // Prepare the district names (these will serve as x-axis categories) and total areas (y-axis values)
-    var districtNames = @json($totalAreaYieldPerDistricts->pluck('district'));
-    var totalAreas = @json($totalAreaYieldPerDistricts->pluck('total_areaYIELD')->map(function($area) {
-        return round($area, 2); // Round each area to 2 decimal places
-    }));
-
-    // Define the custom color scheme
-    var colorScheme = ['#FF4560', '#008FFB', '#e3004d', '#FEB019', '#FF66C3', '#7E36A8'];
-
-    // Initialize the line chart data
-    const yieldLineChartData = {
-        chart: {
-            type: 'line',
-            height: 400
-        },
-        series: [{
-            name: 'Yield (ha)', // Series name
-            data: totalAreas // The data points for the line graph (y-axis values)
-        }],
-        xaxis: {
-            categories: districtNames, // X-axis categories (districts)
-            title: {
-                text: 'Districts'
-            }
-        },
-        yaxis: {
-            title: {
-                text: 'Yield (ha)'
-            },
-            labels: {
-                formatter: function (value) {
-                    return value.toFixed(2); // Format y-axis labels to 2 decimal places
-                }
-            }
-        },
-        colors: colorScheme, // Use the custom color scheme
-        title: {
-            text: 'Yield  (ha)',
-            align: 'center'
-        },
-        legend: {
-            position: 'bottom',
-            horizontalAlign: 'center'
-        },
-        dataLabels: {
-            enabled: false // Disable data labels to keep the chart clean
-        },
-        stroke: {
-            curve: 'smooth' // Smooth line curve
-        },
-        responsive: [{
-            breakpoint: 480,
-            options: {
-                chart: {
-                    width: 300
-                },
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }]
-    };
-
-    // Check if chart already exists, if so, destroy it before re-rendering
-    if (window.yieldLineChart) {
-        window.yieldLineChart.destroy();
+          // Function to update the Donut Chart
+function updateDonutChart(donutChartData, centerText) {
+    if (!donutChartData || !donutChartData.labels || !donutChartData.datasets) {
+        console.error('Invalid donut chart data:', donutChartData);
+        return;
     }
 
-    // Render the new line chart
-    window.yieldLineChart = new ApexCharts(document.querySelector("#yieldPieChart"), yieldLineChartData);
-    window.yieldLineChart.render();
-}
+    const ctx = document.getElementById('donutChart').getContext('2d');
+    if (typeof donutChart !== 'undefined') {
+        donutChart.destroy();
+    }
 
-// Event listener to handle modal open
-$('#yieldModal').on('shown.bs.modal', function () {
-    // You can add any dynamic data loading logic here if needed, like making an AJAX request for updated data
-});
+    // Custom plugin to add text in the center
+    const centerTextPlugin = {
+        id: 'centerText',
+        afterDatasetsDraw: function(chart) {
+            const { width, height } = chart;
+            const ctx = chart.ctx;
+            const fontSize = (height /314).toFixed(2);
 
+            ctx.restore();
+            ctx.font = `${fontSize}em sans-serif`;
+            ctx.textBaseline = 'middle';
 
+            const text = centerText || 'Crops Production'; // Text for the center
+            const textX = Math.round((width - ctx.measureText(text).width) / 2);
+            const textY = height / 2;
 
-//     // JavaScript function to open the cost modal and initialize the chart
-// function openCostModal(selectedCropName) {
-//     // Show the modal
-//     $('#costModal').modal('show');
-    
-//     // Initialize the cost pie chart
-//     const costPieChartData = {
-//         series: [ /* Data for the cost pie chart */ ],
-//         chart: {
-//             type: 'pie',
-//             height: '100%'
-//         },
-//         labels: [ /* Labels for the cost pie chart */ ],
-//         legend: {
-//             show: true,
-//             position: 'bottom'
-//         }
-//     };
+            ctx.fillStyle = '#000'; // Set text color
+            ctx.fillText(text, textX, textY);
+            ctx.save();
+        }
+    };
 
-//     const costPieChart = new ApexCharts(document.querySelector("#costPieChart"), costPieChartData);
-//     costPieChart.render();
-
-//     // Populate the legend (if needed)
-//     // You can generate legend items based on your data here
-// }
-
-// // Event listener to handle cost modal opening
-// $('#costModal').on('shown.bs.modal', function () {
-//     // If you need to update the chart data every time the modal opens, you can add that logic here
-// });
-// Function to open the modal and initialize the bar chart
-function openYieldBarModal() {
-    // Show the modal
-    $('#yieldBarModal').modal('show');
-
-    // Once the modal is shown, initialize the chart
-    $('#yieldBarModal').on('shown.bs.modal', function () {
-        // Data for the bar chart (fetched from backend as JSON)
-        var districtNames = @json($totalAreaYieldPerDistrictss->pluck('district'));
-        var yieldPerAreaPlanted = @json($totalAreaYieldPerDistrictss->pluck('total_areaYIELD')->map(function($yield) {
-            return round($yield, 2); // Round each yield to 2 decimal places
-        }));
-
-        // Define the bar chart options
-        var options = {
-            chart: {
-                type: 'bar',
-                height: 400
-            },
-            series: [{
-                name: 'Yield per Area Planted',
-                data: yieldPerAreaPlanted
-            }],
-            xaxis: {
-                categories: districtNames,
-                title: {
-                    text: 'Districts'
-                }
-            },
-            yaxis: {
-                title: {
-                    text: 'Yield per Area Planted (kg/ha)'
-                }
-            },
-            colors: ['#008FFB'],
-            title: {
-                text: 'Yield per Area Planted by District',
-                align: 'center'
-            },
-            legend: {
-                position: 'bottom'
-            },
-            dataLabels: {
-                enabled: true,
-                style: {
-                    colors: ['#000']
+    donutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: donutChartData.labels,
+            datasets: [{
+                label: 'Crops Production',
+                data: donutChartData.datasets[0].data,
+                backgroundColor: donutChartData.datasets[0].backgroundColor,
+                hoverBackgroundColor: donutChartData.datasets[0].hoverBackgroundColor
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
                 },
-                formatter: function (val) {
-                    return val.toFixed(2);
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.label + ': ' + tooltipItem.raw + '%';
+                        }
+                    }
                 }
             }
-        };
-
-        // Render the bar chart
-        var chart = new ApexCharts(document.querySelector("#yieldBarChart"), options);
-        chart.render();
-    });
-
-    // Optional: To clean up the chart when the modal is closed (if needed)
-    $('#yieldBarModal').on('hidden.bs.modal', function () {
-        document.querySelector("#yieldBarChart").innerHTML = ""; // Clear the chart
+        },
+        plugins: [centerTextPlugin] // Include the custom plugin for center text
     });
 }
- // Pass the PHP data to JavaScript
- var totalAreaYieldPerDistrictss = @json($totalAreaYieldPerDistrictss);
-    
-    // Prepare data for the chart
-    var districtNames = totalAreaYieldPerDistrictss.map(item => item.district);
-    var yieldPerAreaPlanted = totalAreaYieldPerDistrictss.map(item => item.yieldPerAreaPlanted);
-    var totalAreaYIELD = totalAreaYieldPerDistrictss.map(item => item.total_areaYIELD);
-    var totalAreaPLANTED = totalAreaYieldPerDistrictss.map(item => item.total_areaPLANTED);
-    
-    function openCostModal(selectedCropName) {
-        // Show the modal
-        $('#costModal').modal('show');
 
-        // Once the modal is shown, initialize the chart
-        $('#costModal').on('shown.bs.modal', function () {
-            // Define the line chart options
-            var options = {
-                chart: {
+            // Function to update the Line Chart
+            function updateLineChart(lineChartData) {
+                if (!lineChartData || !lineChartData.labels || !lineChartData.datasets) {
+                    console.error('Invalid line chart data:', lineChartData);
+                    return;
+                }
+    
+                const ctx = document.getElementById('lineChart').getContext('2d');
+                if (typeof lineChart !== 'undefined') {
+                    lineChart.destroy();
+                }
+    
+                lineChart = new Chart(ctx, {
                     type: 'line',
-                    height: 400
-                },
-                series: [
-                    {
-                        name: 'Yield per Area Planted',
-                        data: yieldPerAreaPlanted
+                    data: {
+                        labels: lineChartData.labels,
+                        datasets: lineChartData.datasets.map((dataset, index) => ({
+                            label: dataset.label,
+                            data: dataset.data,
+                            borderColor: dataset.borderColor || 'rgba(75, 192, 192, 1)',
+                            backgroundColor: dataset.backgroundColor || 'rgba(75, 192, 192, 0.2)',
+                            fill: true
+                        }))
                     },
-                    {
-                        name: 'Total Area Yield',
-                        data: totalAreaYIELD
-                    },
-                    {
-                        name: 'Total Area Planted',
-                        data: totalAreaPLANTED
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
                     }
-                ],
-                xaxis: {
-                    categories: districtNames,
-                    title: {
-                        text: 'Districts'
-                    }
-                },
-                yaxis: {
-                    title: {
-                        text: 'Values'
-                    }
-                },
-                title: {
-                    text: 'Yield and Area by District',
-                    align: 'center'
-                },
-                legend: {
-                    position: 'bottom'
-                },
-                dataLabels: {
-                    enabled: true,
-                    formatter: function (val) {
-                        return val.toFixed(2); // Format labels
-                    }
-                }
-            };
+                });
+            }
+    
+            // Print function
+$('#printButton').click(function() {
+    printReport();
+});
 
-            // Render the line chart
-            var chart = new ApexCharts(document.querySelector("#costLine"), options);
-            chart.render();
+function printReport() {
+    const resultsContent = document.getElementById('results').innerHTML;
+    const pieChartContent = document.getElementById('pieChart').toDataURL(); // Get chart image as data URL
+    const barChartContent = document.getElementById('barChart').toDataURL();
+    const donutChartContent = document.getElementById('donutChart').toDataURL();
+    const lineChartContent = document.getElementById('lineChart').toDataURL();
+
+    const farmerName = "John Doe"; // Replace with dynamic name if needed
+    const signContent = "<img src='../assets/logo/logo.png' style='width: 100px;' alt='Signature'/>"; // Update path to the actual image
+
+    const win = window.open('', '', 'height=600,width=800');
+    win.document.write('<html><head><title>Report</title>');
+    win.document.write('<style>body { font-family: Arial, sans-serif; text-align: center; } h1 { margin-bottom: 20px; } h2 { margin-top: 40px; } </style>');
+    win.document.write('</head><body>');
+    win.document.write('<div style="text-align: left; padding: 20px;">' + signContent + '</div>'); // Signature at top left
+    win.document.write('<h1>Agrimap Report</h1>');
+    win.document.write('<h2 style="margin-bottom: 40px;">Farmer: ' + farmerName + '</h2>'); // Farmer's name in the middle
+    win.document.write('<div>' + resultsContent + '</div>');
+    win.document.write('<h2>Charts</h2>');
+    win.document.write('<h3>Pie Chart</h3><img src="' + pieChartContent + '" width="400"><br>');
+    win.document.write('<h3>Bar Chart</h3><img src="' + barChartContent + '" width="400"><br>');
+    win.document.write('<h3>Donut Chart</h3><img src="' + donutChartContent + '" width="400"><br>');
+    win.document.write('<h3>Line Chart</h3><img src="' + lineChartContent + '" width="400"><br>');
+    win.document.write('</body></html>');
+    win.document.close();
+    win.print();
+}
+
         });
-
-        // Optional: To clean up the chart when the modal is closed (if needed)
-        $('#costModal').on('hidden.bs.modal', function () {
-            document.querySelector("#costLine").innerHTML = ""; // Clear the chart
-        });
-    }
-
-// Function to generate legends
-function generateCostLegends(categories, costs) {
-    const legendContainer = document.getElementById('costPieChartLegend');
-    legendContainer.innerHTML = ''; // Clear previous legends
-
-    categories.forEach((category, index) => {
-        const legendItem = document.createElement('div');
-        legendItem.classList.add('legend-item');
-        legendItem.innerHTML = `<span style="background-color: ${ApexCharts.exec("chartColors")[index]}"></span> ${category}: Php ${costs[index].toFixed(2)}`;
-        legendContainer.appendChild(legendItem);
-    });
-}
-
-// Function to open the Yield modal and initialize the line chart
-function openYieldsModal(selectedCropName) {
-    // Show the modal
-    $('#yieldsModal').modal('show');
-
-    // Static data for the line chart (Replace this with your actual data)
-    const yieldData = {
-        categories: ['Ayala', 'Tumaga', 'Culianan', 'Manicahan', 'Curuan', 'Vitali'], // Updated categories for districts
-        series: [{
-            name: 'Average Yield (Kg/Ha)',
-            data: [1500, 1600, 1800, 2000, 2200, 2400] // Replace with actual yield data corresponding to each district
-        }]
-    };
-
-    const yieldLineChartOptions = {
-        chart: {
-            type: 'line',
-            height: '100%',
-            toolbar: {
-                show: false
-            }
-        },
-        dataLabels: {
-            enabled: true
-        },
-        series: yieldData.series,
-        xaxis: {
-            categories: yieldData.categories
-        },
-        title: {
-            text: `Average Yield of ${selectedCropName}`,
-            align: 'center',
-            style: {
-                fontSize: '20px',
-                fontWeight: 'bold'
-            }
-        },
-        stroke: {
-            curve: 'smooth' // Makes the line smooth
-        },
-        markers: {
-            size: 5 // Marker size on the line
-        }
-    };
-
-    // Create and render the line chart
-    const yieldLineChart = new ApexCharts(document.querySelector("#yieldLineCharts"), yieldLineChartOptions);
-    yieldLineChart.render();
-}
-
-// Function to print the chart
-function printChart() {
-    const chartElement = document.querySelector("#yieldLineCharts");
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(`<html><head><title>Print Chart</title></head><body>${chartElement.outerHTML}</body></html>`);
-    printWindow.document.close();
-    printWindow.print();
-}
-
-// Function to save chart as PNG
-function saveAsPNG() {
-    const chartElement = document.querySelector("#yieldLineCharts");
-    html2canvas(chartElement).then(function(canvas) {
-        const link = document.createElement('a');
-        link.href = canvas.toDataURL('image/png');
-        link.download = 'chart.png';
-        link.click();
-    });
-}
-
-// Function to save chart as PDF
-function saveAsPDF() {
-    const chartElement = document.querySelector("#yieldLineCharts");
-    html2canvas(chartElement).then(function(canvas) {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF();
-        const imgWidth = 190;
-        const pageHeight = pdf.internal.pageSize.height;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        let heightLeft = imgHeight;
-
-        let position = 0;
-
-        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-
-        while (heightLeft >= 0) {
-            position = heightLeft - imgHeight;
-            pdf.addPage();
-            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-        }
-        
-        pdf.save('chart.pdf');
-    });
-}
-
-
-
-
-
-
-
-
-// // JavaScript function to open the cost modal and initialize the static bar chart
-// function openAveCostModal(selectedCropName) {
-//     // Show the modal
-//     $('#avecostModal').modal('show');
-
-//     // Static data for the bar chart
-//     const costData = {
-//         categories: ['Fertilizer', 'Labor', 'Seeds', 'Pesticides','Seeds', 'Pesticides'], // Categories for the X-axis
-//         series: [{
-//             name: 'Average Cost (Php)',
-//             data: [1500, 3000, 2000, 2500,2000, 2500] // Static cost values
-//         }]
-//     };
-
-//     // Color scheme array
-//     var colorScheme = ['#FF4560', '#008FFB', '#e3004d', '#FEB019', '#FF66C3', '#7E36A8'];
-
-//     const costBarChartOptions = {
-//         chart: {
-//             type: 'bar',
-//             height: '100%',
-//             toolbar: {
-//                 show: false
-//             }
-//         },
-//         plotOptions: {
-//             bar: {
-//                 horizontal: false,
-//                 endingShape: 'rounded',
-//                 columnWidth: '55%'
-//             },
-//         },
-//         dataLabels: {
-//             enabled: true
-//         },
-//         series: costData.series,
-//         xaxis: {
-//             categories: costData.categories
-//         },
-//         title: {
-//             text: `Average Cost of ${selectedCropName}`,
-//             align: 'center',
-//             style: {
-//                 fontSize: '20px',
-//                 fontWeight: 'bold'
-//             }
-//         },
-//         colors: colorScheme // Use the color scheme array here
-//     };
-
-//     // Create and render the bar chart
-//     const costBarChart = new ApexCharts(document.querySelector("#costBarCharts"), costBarChartOptions);
-//     costBarChart.render();
-// }
-
-// JavaScript function to open the cost modal and initialize the static bar chart
-// JavaScript function to open the cost modal and initialize the static bar chart
-function openAveCostModal(selectedCropName) {
-    // Show the modal
-    $('#avecostModal').modal('show');
-
-    // Static data for the bar chart
-    const costData = {
-        categories: ['Fertilizer', 'Labor', 'Seeds', 'Pesticides'], // Categories for the X-axis
-        series: [{
-            name: 'Average Cost (Php)',
-            data: [
-                { x: 'Fertilizer', y: 1500, fillColor: '#FF4560' },
-                { x: 'Labor', y: 3000, fillColor: '#008FFB' },
-                { x: 'Seeds', y: 2000, fillColor: '#e3004d' },
-                { x: 'Pesticides', y: 2500, fillColor: '#FEB019' },
-                { x: 'ALLa', y: 2000, fillColor: '#FF66C3' },
-                { x: 'Mas', y: 2500, fillColor: '#7E36A8' }
-            ]
-        }]
-    };
-
-    const costBarChartOptions = {
-        chart: {
-            type: 'bar',
-            height: '100%',
-            toolbar: {
-                show: false
-            }
-        },
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                endingShape: 'rounded',
-                columnWidth: '55%'
-            }
-        },
-        dataLabels: {
-            enabled: true
-        },
-        series: costData.series,
-        xaxis: {
-            categories: costData.categories
-        },
-        title: {
-            text: `Average Cost of ${selectedCropName}`,
-            align: 'center',
-            style: {
-                fontSize: '20px',
-                fontWeight: 'bold'
-            }
-        },
-        colors: costData.series[0].data.map(point => point.fillColor)
-    };
-
-    // Create and render the bar chart
-    const costBarChart = new ApexCharts(document.querySelector("#costBarCharts"), costBarChartOptions);
-    costBarChart.render();
-
-    // Add event listeners for buttons
-    document.getElementById("printChartButton").onclick = function () {
-        printChart(costBarChart);
-    };
-    
-    document.getElementById("saveChartButton").onclick = function () {
-        saveChartAsPNG(costBarChart);
-    };
-
-    document.getElementById("savePDFButton").onclick = function () {
-        saveChartAsPDF(costBarChart);
-    };
-}
-
-// Function to print the chart
-function printChart(chart) {
-    // Create a new window for printing
-    const printWindow = window.open('', '', 'height=500,width=800');
-    printWindow.document.write('<html><head><title>Print Chart</title>');
-    printWindow.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts/dist/apexcharts.css">'); // Include ApexCharts styles
-    printWindow.document.write('</head><body >');
-    printWindow.document.write('<h1>Chart</h1>');
-    
-    // Append the SVG of the chart
-    printWindow.document.write(chart.container.innerHTML);
-    printWindow.document.write('</body></html>');
-    
-    printWindow.document.close(); // Close the document for writing
-    printWindow.print(); // Print the window
-}
-
-// Function to save the chart as PNG
-function saveChartAsPNG(chart) {
-    chart.dataURI().then(({ imgURI }) => {
-        const link = document.createElement('a');
-        link.href = imgURI; // Set the URI to the image
-        link.download = 'chart.png'; // Set the file name
-        link.click(); // Programmatically click the link to trigger download
-    });
-}
-
-// Function to save the chart as PDF
-function saveChartAsPDF(chart) {
-    // Create a new canvas
-    html2canvas(document.querySelector("#costBarCharts")).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('landscape');
-        const imgWidth = 190; // Image width
-        const pageHeight = pdf.internal.pageSize.height; // Page height
-        const imgHeight = (canvas.height * imgWidth) / canvas.width; // Image height
-        let heightLeft = imgHeight;
-
-        let position = 0;
-
-        // Add the image to the PDF
-        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-
-        // If there's still space, add another page
-        while (heightLeft >= 0) {
-            position = heightLeft - imgHeight;
-            pdf.addPage();
-            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-        }
-
-        // Save the PDF
-        pdf.save('chart.pdf');
-    });
-}
-
-</script>
-    
+    </script>
+      
 @endsection
