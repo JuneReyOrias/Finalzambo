@@ -523,7 +523,7 @@
                         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#farmerAccordion">
                             <div class="accordion-body bg-light d-flex flex-column justify-content-center align-items-center">
                                 <div id="farmersTable" class="w-100 table-responsive">
-                                    @include('admin.partials.farmers_table', ['paginatedFarmers' => $paginatedFarmers])
+                                    @include('admin.partials.farmers_table', ['farmersTable' => $farmersTable])
                                 </div>
                                 <div id="pagination" class="mt-3 text-center">
                                     <ul class="pagination justify-content-center">
