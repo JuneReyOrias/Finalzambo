@@ -58,8 +58,11 @@ class FarmProfile extends Model
   'users_id', 
   'personal_informations_id',
     ];
-
-    public function crops()
+    public function cropFarms()
+    {
+        return $this->hasMany(Crop::class, 'farm_profiles_id'); // Adjust the foreign key if necessary
+    }
+        public function crops()
     {
         return $this->hasMany(Crop::class, 'farm_profiles_id');
     }
