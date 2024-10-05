@@ -1729,6 +1729,13 @@ $(document).ready(function () {
     });
 });
 $(document).ready(function() {
+    // Function to convert text to title case (capitalize initial letters)
+    function capitalizeWords(str) {
+        return str.toLowerCase().replace(/\b\w/g, function(char) {
+            return char.toUpperCase();
+        });
+    }
+
     // Function to fetch and display the pie chart
     function fetchAndDisplayChart() {
         $.ajax({
@@ -1737,7 +1744,7 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(response) {
                 // Prepare data for the pie chart
-                const districtNames = response.totalAreaPlantedByDistrict.map(d => d.district);
+                const districtNames = response.totalAreaPlantedByDistrict.map(d => capitalizeWords(d.district));
                 const totalAreas = response.totalAreaPlantedByDistrict.map(d => d.total_area_planted);
 
                 // Create the pie chart
@@ -1760,11 +1767,17 @@ $(document).ready(function() {
                             legend: {
                                 display: true,
                                 position: 'bottom',
+                                labels: {
+                                    color: '#000', // Ensure text color is visible
+                                    font: {
+                                        size: 14 // Adjust font size if necessary
+                                    }
+                                }
                             },
                             tooltip: {
                                 callbacks: {
                                     label: function(tooltipItem) {
-                                        return tooltipItem.label + ': ' + tooltipItem.raw + ' hectares';
+                                        return districtNames[tooltipItem.dataIndex] + ': ' + tooltipItem.raw + ' hectares';
                                     }
                                 }
                             }
@@ -1784,9 +1797,18 @@ $(document).ready(function() {
 });
 
 
+
+
 $(document).ready(function() {
     // Fetch and display farm distribution
     fetchFarmDistribution();
+
+    // Function to convert text to title case (capitalize initial letters)
+    function capitalizeWords(str) {
+        return str.toLowerCase().replace(/\b\w/g, function(char) {
+            return char.toUpperCase();
+        });
+    }
 
     function fetchFarmDistribution(selectedDistrict = null) {
         $.ajax({
@@ -1794,14 +1816,13 @@ $(document).ready(function() {
             method: 'GET',
             data: {
                 selected_district: selectedDistrict
-              
             },
             dataType: 'json',
             success: function(response) {
                 // Check if distributionFrequency exists in the response
                 if (response.distributionFrequency) {
                     // Handle the distribution frequency for the pie chart
-                    const labels = Object.keys(response.distributionFrequency);
+                    const labels = Object.keys(response.distributionFrequency).map(capitalizeWords);
                     const dataValues = Object.values(response.distributionFrequency);
 
                     // Create the pie chart
