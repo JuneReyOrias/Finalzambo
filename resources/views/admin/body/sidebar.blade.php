@@ -27,15 +27,15 @@
         </a>
         <div class="collapse" id="crop">
           <ul class="nav sub-menu" style="padding-left: 70px;">
-            <li class="nav-item">
+            {{-- <li class="nav-item">
               <a href="{{route('map.arcmap')}}" class="nav-link">Rice</a>
-            </li>
+            </li> --}}
             <li class="nav-item">
-              <a href="{{route('map.cornmap')}}" class="nav-link">Corn</a>
+              <a href="{{route('map.cornmap')}}" class="nav-link">All Crops</a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
               <a href="{{route('map.coconutmap')}}" class="nav-link">Coconut</a>
-            </li>
+            </li> --}}
           </ul>
         </div>
       </li>

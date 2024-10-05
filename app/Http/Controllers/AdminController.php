@@ -3010,145 +3010,185 @@ public function FarmersRiceVarietyDistrict()
     // }
 
 
-        // admin view corn map farmers
-        public function CornMap(Request $request) {
-            // Check if the user is authenticated
-            if (Auth::check()) {
-                // User is authenticated
-                $userId = Auth::id();
-                $admin = User::find($userId);
-                
-                if ($admin) {
-                    // Find the user's personal information by their ID
-                    $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
-                    $polygons = Polygon::all();
-                    // Fetch all farm profiles
-                    $farmProfiles = FarmProfile::with(['cropFarms', 'personalInformation'])->get();
-    
-        
-                    // Fetch all agri districts
-                    $agriDistricts = AgriDistrict::all(); // Get all agri districts
-        
-                    // Check if there are any farm profiles
-                    if ($farmProfiles->isEmpty() && $agriDistricts->isEmpty()) {
-                        return response()->json(['error' => 'No farm profiles or agri districts found.'], 404);
-                    }
-        
-                    // Fetch total rice production
-                    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-        
-                  // Prepare an array for GPS coordinates
-    $gpsData = [];
-    foreach ($farmProfiles as $farmProfile) {
-        // Concatenate all crop names associated with the farm profile
-        $cropNames = $farmProfile->cropFarms->pluck('crop_name')->implode(', '); // This will create a comma-separated string of crop names
-    
-        // Access personal information (if it exists)
-            $farmerName = $farmProfile->personalInformation ? 
-            ($farmProfile->personalInformation->first_name . 
-            ($farmProfile->personalInformation->middle_name ? ' ' . $farmProfile->personalInformation->middle_name : '') . 
-            ' ' . $farmProfile->personalInformation->last_name) : 
-            null;
+    public function CornMap(Request $request) {
+        // Check if the user is authenticated
+        if (Auth::check()) {
+            // User is authenticated
+            $userId = Auth::id();
+            $admin = User::find($userId);
             
+            if ($admin) {
+                // Find the user's personal information by their ID
+                $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+                $polygons = Polygon::all();
+                // Fetch all farm profiles
+                $farmProfiles = FarmProfile::with(['cropFarms', 'personalInformation'])->get();
+
     
-        $civilStatus = $farmProfile->personalInformation ? $farmProfile->personalInformation->civil_status : null; // Adjust field name as needed
-        $orgName = $farmProfile->personalInformation ? $farmProfile->personalInformation->nameof_farmers_ass_org_coop: null; // Adjust field name as needed
-        $homeAddress = $farmProfile->personalInformation ? $farmProfile->personalInformation->home_address: null;
-        $gpsData[] = [
-            'gpsLatitude' => $farmProfile->gps_latitude,
-            'gpsLongitude' => $farmProfile->gps_longitude,
-            'FarmAddress' => $farmProfile->farm_address,
-            'NoYears' => $farmProfile->no_of_years_as_farmers,
-            'totalPhysicalArea' => $farmProfile->total_physical_area,
-            'TotalCultivated' => $farmProfile->total_area_cultivated,
-            
-            'cropName' => $cropNames, // List of crops
-            'farmerName' => $farmerName, // Farmer's name from personal information
-            'civilStatus' => $civilStatus,
-            'orgName' => $orgName,
-            'homeAddress' => $homeAddress,
+                // Fetch all agri districts
+                $agriDistricts = AgriDistrict::all(); // Get all agri districts
     
-        ];
-    }
-    
-        
-                    // Prepare agri district GPS coordinates
-                    $districtsData = [];
-                    foreach ($agriDistricts as $district) {
-                        $districtsData[] = [
-                            'gpsLatitude' => $district->latitude,
-                            'gpsLongitude' => $district->longitude,
-                            'districtName' => $district->district,
-                            'description' => $district->description,
-                      
-                        ];
-                    }
-                    $polygonsData = [];
-                    foreach ($polygons as $polygon) {
-                        // Prepare coordinates array from vertex fields
-                        $coordinates = [
-                            ['lat' => $polygon->verone_latitude, 'lng' => $polygon->verone_longitude],
-                            ['lat' => $polygon->vertwo_latitude, 'lng' => $polygon->vertwo_longitude],
-                            ['lat' => $polygon->verthree_latitude, 'lng' => $polygon->verthree_longitude],
-                            ['lat' => $polygon->vertfour_latitude, 'lng' => $polygon->vertfour_longitude],
-                            ['lat' => $polygon->verfive_latitude, 'lng' => $polygon->verfive_longitude],
-                            ['lat' => $polygon->versix_latitude, 'lng' => $polygon->versix_longitude],
-                            ['lat' => $polygon->verseven_latitude, 'lng' => $polygon->verseven_longitude],
-                            ['lat' => $polygon->vereight_latitude, 'lng' => $polygon->verteight_longitude]
-                        ];
-                        
-                        // Push to polygonData
-                        $polygonsData[] = [
-                            'id' => $polygon->id,
-                            'name' => $polygon->poly_name,
-                            'coordinates' => $coordinates,
-                            'strokeColor' => $polygon->strokecolor, // Stroke color of the polygon
-                            'area' => $polygon->area, // Area of the polygon (if applicable)
-                            'perimeter' => $polygon->perimeter // Perimeter of the polygon (if applicable)
-                        ];
-                    }
-                    
-                    // // Check if the $polygonsData has been populated
-                    // if (!empty($polygonsData)) {
-                    //     // Output the populated polygons data for debugging
-                    //     echo "<pre>";
-                    //     print_r($polygonsData); // Print the array structure
-                    //     echo "</pre>";
-                    // } else {
-                    //     echo "No polygons data found.";
-                    // }
-                    
-        
-                    // Check if the request is an AJAX request
-                    if ($request->ajax()) {
-                        // Return the response as JSON for AJAX requests
-                        return response()->json([
-                            'admin' => $admin,
-                            'profile' => $profile,
-                            'farmProfiles' => $farmProfiles,
-                            'totalRiceProduction' => $totalRiceProduction,
-                            'gpsData' => $gpsData,
-                            'polygons' => $polygonsData,
-                            'districtsData' => $districtsData // Send all district GPS coordinates
-                        ]);
-                    } else {
-                        // Return the view with the fetched data for regular requests
-                        return view('map.cornmap', [
-                            'admin' => $admin,
-                            'profile' => $profile,
-                            'farmProfiles' => $farmProfiles,
-                            'totalRiceProduction' => $totalRiceProduction,
-                            'gpsData' => $gpsData,
-                            'districtsData' => $districtsData // Pass to view
-                        ]);
-                    }
-                } else {
-                    return response()->json(['error' => 'User not found.'], 404);
+                // Check if there are any farm profiles
+                if ($farmProfiles->isEmpty() && $agriDistricts->isEmpty()) {
+                    return response()->json(['error' => 'No farm profiles or agri districts found.'], 404);
                 }
-            } else {
-                return response()->json(['error' => 'Unauthorized.'], 401);
+    
+                // Fetch total rice production
+                $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+    
+                                // Prepare an array for GPS coordinates
+                    $gpsData = [];
+                    foreach ($farmProfiles as $farmProfile) {
+                        // Concatenate all crop names associated with the farm profile
+                    // This will create a comma-separated string of crop names
+                    foreach ($farmProfile->cropFarms as $cropFarm) {
+                        $cropNames = $cropFarm->crop_name; // Fetch individual crop name
+                        $cropVariety = $cropFarm->type_of_variety_planted; // Fetch individual crop variety
+                        $croppingperYear = $cropFarm->no_of_cropping_per_year; // Fetch individual cropping per year
+                        $yield = $cropFarm->yield_kg_ha; // Fetch individual yield
+                
+                        // Now you can use these variables as needed
+                        // For example, you could print them
+                        // echo "Crop Name: $cropNames, Crop Variety: $cropVariety, Cropping/Year: $croppingperYear, Yield: $yield kg/ha\n";
+                    }
+
+
+                        // Access personal information (if it exists)
+                            $farmerName = $farmProfile->personalInformation ? 
+                            ($farmProfile->personalInformation->first_name . 
+                            ($farmProfile->personalInformation->middle_name ? ' ' . $farmProfile->personalInformation->middle_name : '') . 
+                            ' ' . $farmProfile->personalInformation->last_name) : 
+                            null;
+                            
+
+                        $civilStatus = $farmProfile->personalInformation ? $farmProfile->personalInformation->civil_status : null; // Adjust field name as needed
+                        $orgName = $farmProfile->personalInformation ? $farmProfile->personalInformation->nameof_farmers_ass_org_coop: null; // Adjust field name as needed
+                        $homeAddress = $farmProfile->personalInformation ? $farmProfile->personalInformation->home_address: null;
+                        $landtitleNo = $farmProfile->personalInformation ? $farmProfile->personalInformation->land_title_no: null;
+                        $lotNo = $farmProfile->personalInformation ? $farmProfile->personalInformation->lot_no: null;
+
+                    // Fetch date_of_birth from the related personalInformation model
+                    $dateOfBirth = $farmProfile->personalInformation ? $farmProfile->personalInformation->date_of_birth : null;
+
+                    // Calculate age based only on the year (ignores month/day)
+                    $age = null;
+                    if ($dateOfBirth) {
+                        $birthYear = Carbon::parse($dateOfBirth)->year; // Extract year of birth
+                        $currentYear = Carbon::now()->year; // Get the current year
+
+                        // Debugging: check the values of birthYear and currentYear
+                        // dd($birthYear, $currentYear); // This will dump the values to the screen and stop execution
+
+                        $age = $currentYear - $birthYear; // Calculate the difference in years
+                    }
+
+                        $gpsData[] = [
+                            'gpsLatitude' => $farmProfile->gps_latitude,
+                            'gpsLongitude' => $farmProfile->gps_longitude,
+                            'FarmAddress' => $farmProfile->farm_address,
+                            'NoYears' => $farmProfile->no_of_years_as_farmers,
+                            'totalPhysicalArea' => $farmProfile->total_physical_area,
+                            'TotalCultivated' => $farmProfile->total_area_cultivated,
+                            
+                            'cropName' => $cropNames, // List of crops
+                            'cropVariety' => $cropVariety,
+                            'croppingperYear' => $croppingperYear,
+                            'Yield' => $yield,
+
+                            'farmerName' => $farmerName, // Farmer's name from personal information
+                            'civilStatus' => $civilStatus,
+                            'orgName' => $orgName,
+                            'homeAddress' => $homeAddress,
+                            'landtitleNo' => $landtitleNo,
+                            'lotNo' => $lotNo,
+                            'age' => $age,
+
+
+                        ];
+                    }
+
+    
+                // Prepare agri district GPS coordinates
+                $districtsData = [];
+                foreach ($agriDistricts as $district) {
+                    $districtsData[] = [
+                        'gpsLatitude' => $district->latitude,
+                        'gpsLongitude' => $district->longitude,
+                        'districtName' => $district->district,
+                        'description' => $district->description,
+                  
+                    ];
+                }
+                $polygonsData = [];
+                foreach ($polygons as $polygon) {
+                    // Prepare coordinates array from vertex fields
+                    $coordinates = [
+                        ['lat' => $polygon->verone_latitude, 'lng' => $polygon->verone_longitude],
+                        ['lat' => $polygon->vertwo_latitude, 'lng' => $polygon->vertwo_longitude],
+                        ['lat' => $polygon->verthree_latitude, 'lng' => $polygon->verthree_longitude],
+                        ['lat' => $polygon->vertfour_latitude, 'lng' => $polygon->vertfour_longitude],
+                        ['lat' => $polygon->verfive_latitude, 'lng' => $polygon->verfive_longitude],
+                        ['lat' => $polygon->versix_latitude, 'lng' => $polygon->versix_longitude],
+                        ['lat' => $polygon->verseven_latitude, 'lng' => $polygon->verseven_longitude],
+                        ['lat' => $polygon->vereight_latitude, 'lng' => $polygon->verteight_longitude]
+                    ];
+                    
+                    // Push to polygonData
+                    $polygonsData[] = [
+                        'id' => $polygon->id,
+                        'name' => $polygon->poly_name,
+                        'coordinates' => $coordinates,
+                        'strokeColor' => $polygon->strokecolor, // Stroke color of the polygon
+                        'area' => $polygon->area, // Area of the polygon (if applicable)
+                        'perimeter' => $polygon->perimeter // Perimeter of the polygon (if applicable)
+                    ];
+                }
+                
+                // // Check if the $polygonsData has been populated
+                // if (!empty($polygonsData)) {
+                //     // Output the populated polygons data for debugging
+                //     echo "<pre>";
+                //     print_r($polygonsData); // Print the array structure
+                //     echo "</pre>";
+                // } else {
+                //     echo "No polygons data found.";
+                // }
+                
+    
+                // Check if the request is an AJAX request
+                if ($request->ajax()) {
+                    // Return the response as JSON for AJAX requests
+                    return response()->json([
+                        'admin' => $admin,
+                        'profile' => $profile,
+                        'farmProfiles' => $farmProfiles,
+                        'totalRiceProduction' => $totalRiceProduction,
+                        'gpsData' => $gpsData,
+                        'polygons' => $polygonsData,
+                        'districtsData' => $districtsData // Send all district GPS coordinates
+                    ]);
+                } else {
+                    // Return the view with the fetched data for regular requests
+                    return view('map.cornmap', [
+                        'admin' => $admin,
+                        'profile' => $profile,
+                        'farmProfiles' => $farmProfiles,
+                        'totalRiceProduction' => $totalRiceProduction,
+                        'gpsData' => $gpsData,
+                        'districtsData' => $districtsData // Pass to view
+                    ]);
+                }
+            }  else {
+                // Handle the case where the user is not found
+                // You can redirect the user or display an error message
+                return redirect()->route('login')->with('error', 'User not found.');
             }
-        }
+            } else {
+            // Handle the case where the user is not authenticated
+            // Redirect the user to the login page
+            return redirect()->route('login');
+            }
+    }
 
    // admin view coconut map farmers
    public function CoconutMap(){

@@ -3,6 +3,8 @@
 
 @extends('layouts._footer-script')
 @extends('layouts._head')
+
+
 <style>
   .link-hover-effect {
       transition: color 0.3s ease, text-decoration 0.3s ease;
@@ -12,32 +14,84 @@
       color: #032807; /* Change to your desired hover color */
       text-decoration: underline; /* Adds an underline on hover */
   }
+
+
+  .modal-content {
+    border-radius: 10px; /* Rounded corners */
+    background-color: #f9f9f9; /* Light background color */
+}
+
+.modal-header {
+    background-color: #dde9f6; /* Bootstrap primary color */
+    color: white; /* White text for the header */
+    border-top-left-radius: 10px; /* Rounded corners */
+    border-top-right-radius: 10px; /* Rounded corners */
+}
+
+.modal-title {
+    font-size: 1.25rem; /* Slightly larger title font size */
+}
+
+.modal-body p {
+    margin: 0.5rem 0; /* Add spacing between paragraphs */
+    font-size: 0.95rem; /* Adjust paragraph font size */
+}
+
+.modal-footer {
+    border-top: 1px solid #dee2e6; /* Subtle border for footer */
+}
+
 </style>
 <div class="page-content">
-    {{-- <div class="d-flex justify-content-between mb-3">
-        <form action="" method="GET" class="d-flex">
-            <input type="text" name="query" placeholder="Search" class="form-control me-2">
-            <button type="submit" class="btn btn-success">Search</button>
-        </form>
     
-        <form id="showAllForm" action="" method="GET">
-            <button class="btn btn-outline-success" type="submit">All</button>
-        </form>
-    </div>
 
-  --}}
-    <div style="position: relative;">
-      <div id="map" style="height: 450px; width: 100%;"></div>
-      
-      <!-- Floating Search Inputs -->
-      <div class="d-flex" style="position: absolute; bottom: 10px; left: 10px; z-index: 1000;">
-          <input type="text" id="latitude" placeholder="Enter Latitude" class="form-control me-2" style="width: 100px;">
-          <input type="text" id="longitude" placeholder="Enter Longitude" class="form-control me-2" style="width: 100px;">
-          <button id="panButton" class="btn btn-primary" title="Pan to specified location">
-            <i class="fas fa-search"></i>
-        </button>
+  <div style="position: relative;">
+    <div id="map" style="height: 450px; width: 100%;"></div>
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+          <div class="modal-content border-0 shadow-sm">
+              <div class="modal-header border-bottom-0">
+                  <h5 class="modal-title" id="infoModalLabel">Farmer Information</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" id="districtInfoBody">
+                  <div class="mb-3">
+                      <p id="modalFarmerName" class="fw-bold"></p>
+                      <p id="modalAge"></p>
+                      <p id="modalCropName"></p>
+                      <p id="modalCropVariety"></p>
+                      <p id="modalFarmAddress"></p>
+                      <p id="modalYearsFarmer"></p>
+                      <p id="modalOrganization"></p>
+                      <p id="modalLandTitle"></p>
+                      <p id="modalPhysicalArea"></p>
+                      <p id="modalCultivated"></p>
+                      <p id="modalcopping"></p>
+                      <p id="modalYield"></p>
+                  </div>
+              </div>
+              
+          </div>
       </div>
-  </div>
+    </div>
+    <!-- Floating Search Inputs -->
+    <div class="controls" style="position: absolute; bottom: 20px; left: 20px; z-index: 1000; background: rgba(255, 255, 255, 0.8); padding: 10px; border-radius: 5px;">
+        <h2 style="font-size: 16px;">Search for a Farmer</h2>
+        <select id="farmerNameDropdown" class="form-control mb-2">
+            <option value="" disabled selected>Select Farmer Name</option>
+            <!-- Farmer names will be populated here -->
+        </select>
+        <button id="searchFarmerButton" class="btn btn-primary mb-2" title="Search Farmer">
+            <i class="fas fa-search"></i> 
+        </button>
+        
+       
+        <button id="panButton" class="btn btn-primary mb-2" title="Hide Farmer">
+          <i class="fas fa-eye-slash"></i>
+        </button>
+    </div>
+</div>
+
   <!-- District Info Modal -->
   <div class="modal fade" id="districtInfoModal" tabindex="-1" aria-labelledby="districtInfoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
@@ -78,93 +132,14 @@
                     </button>
                 </div>
             </div>
-            <div class="modal-footer">
+            {{-- <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>
-<div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-md">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title" id="infoModalLabel">Farmer Information</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body" id="districtInfoBody">
-              <div class="mb-3">
-                <p id="modalFarmerName"></p>
-                <p id="modalDistrictName"></p>
-                <p id="modalCropName"></p>
-              </div>
-              <hr>
-              <h6>Related Information:</h6><br>
-           
-            
-            {{-- <div class="d-flex flex-wrap mb-3">
-                <a href="#" id="farmersInfoLink" class="text-decoration-none me-3 link-hover-effect" data-district-id="">Farmers Info</a>
-                <a href="#" id="cropsVarietyLink" class="text-decoration-none me-3 link-hover-effect" data-district-id="">Crops Variety</a>
-                <a href="#" id="Production" class="text-decoration-none me-3 link-hover-effect" data-district-id="">Production</a>
-                <a href="#" id="FarmerOrganization" class="text-decoration-none link-hover-effect" data-district-id="">Farmers Org</a>
-            </div>
-            
-              --}}
-
-              <div id="imageCarousel" class="carousel slide mt-3" data-bs-ride="carousel">
-                  <div class="carousel-inner" id="carouselImages">
-                     
-                  </div>
-                  <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
-                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                      <span class="visually-hidden">Previous</span>
-                  </button>
-                  <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
-                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                      <span class="visually-hidden">Next</span>
-                  </button>
-              </div>
-          </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          </div>
-      </div>
-  </div>
-</div>
-<!-- Modal Structure -->
-{{-- <div id="infoModal" class="modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Farmer Information</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p id="modalFarmerName"></p>
-        <p id="modalDistrictName"></p>
-        <p id="modalCropName"></p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div> --}}
 
 
-  {{-- <!-- Optional Search Form for Other Queries -->
-  <div class="d-flex justify-content-between mb-3">
-      <form action="" method="GET" class="d-flex flex-grow-1 me-2">
-          <input type="text" name="query" placeholder="Search" class="form-control me-2">
-          <button type="submit" class="btn btn-success">Search</button>
-      </form>
-  
-      <form id="showAllForm" action="" method="GET">
-          <button class="btn btn-outline-success" type="submit">All</button>
-      </form>
-  </div>
-   --}}
   <style>
       /* Responsive adjustments for floating search inputs */
       @media (max-width: 768px) {
@@ -191,6 +166,7 @@
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMstylquYwo8gAuOrkrF5IsN6K8gbgV6I&callback=initMap" ></script>
  
 <script type="text/javascript">
+let gpsData = [];
   var map;
   var markers = []; // Array to store all farm markers
   var districtData = {}; // Store markers by district
@@ -199,8 +175,9 @@
 
   // Marker icons for different crops
   var markerIcons = {
-      'Rice': "{{ asset('assets/images/corn.png') }}", // Custom logo for rice
-      'Corn': "{{ asset('assets/images/corn.png') }}", // Custom logo for corn
+      'Rice': "{{ asset('assets/logo/rice.png') }}", // Custom logo for rice
+      'Corn': "{{ asset('assets/logo/corn.png') }}", // Custom logo for corn
+      'Coconut': "{{ asset('assets/logo/coconut.png') }}", // Custom logo for corn
       'default': "{{ asset('assets/logo/rice.png') }}" // Default logo for other crops
   };
 
@@ -242,28 +219,66 @@
           url: '/admin-view-corn-map', // Your API endpoint
           method: 'GET',
           success: function(data) {
-              console.log('Map data loaded successfully:', data); // Log the received data
+              // console.log('Map data loaded successfully:', data); // Log the received data
 
               var gpsData = data.gpsData; // GPS coordinates for markers
               var districtsData = data.districtsData; // District markers
               var polygonsData = data.polygons; // Polygons
+              // Populate the farmer name dropdown with GPS coordinates
+             // Populate the farmer name dropdown with GPS coordinates
+           
+function populateFarmerDropdown() {
+    var farmerNameDropdown = document.getElementById('farmerNameDropdown');
+    farmerNameDropdown.innerHTML = ''; // Clear existing options
 
-              // Loop through the GPS data to add markers for farm profiles
-              gpsData.forEach(function(location) {
-                  var position = { lat: parseFloat(location.gpsLatitude), lng: parseFloat(location.gpsLongitude) };
-                  var districtName = location.districtName; // Assume districtName is available in location
+    gpsData.forEach(function(farm) {
+        if (farm.gpsLatitude && farm.gpsLongitude) { // Only add if gps data is available
+            var option = document.createElement('option');
+            option.value = farm.farmerName;
+            option.textContent = farm.farmerName; // Display farmer's name
+            option.setAttribute('data-lat', farm.gpsLatitude);
+            option.setAttribute('data-lng', farm.gpsLongitude);
+            farmerNameDropdown.appendChild(option);
+        }
+    });
+}
+
+
+
+              // // Loop through the GPS data to add markers for farm profiles
+              // gpsData.forEach(function(location) {
+              //     var position = { lat: parseFloat(location.gpsLatitude), lng: parseFloat(location.gpsLongitude) };
+              //     var districtName = location.districtName; // Assume districtName is available in location
                   
-                  console.log('Adding marker for location:', location); // Log each location being added
-                  addMarker(position, location.cropName, location.farmerName, districtName); // Add farm profile marker
-              });
+              //     console.log('Adding marker for location:', location); // Log each location being added
+              //     addMarker(position, location.cropName, location.farmerName, districtName, location.cropVariety,
+              //       location.FarmAddress, location.NoYears, location.age, location.orgName, location.landtitleNo,
+              //        location.totalPhysicalArea, location.TotalCultivated, location.croppingperYear, location.Yield
+              //      ); // Add farm profile marker
+              // });
 
-              console.log('Total GPS markers added:', gpsData.length); // Log total number of markers added
+                        function addAllFarmerMarkers() {
+              gpsData.forEach(function(location) {
+                  if (location.gpsLatitude && location.gpsLongitude) { // Only add markers with valid GPS data
+                      var position = { lat: parseFloat(location.gpsLatitude), lng: parseFloat(location.gpsLongitude) };
+                      addMarker(position, location.cropName, location.farmerName, location.districtName, 
+                          location.cropVariety, location.FarmAddress, location.NoYears, location.age, 
+                          location.orgName, location.landtitleNo, location.totalPhysicalArea, 
+                          location.TotalCultivated, location.croppingperYear, location.Yield);
+                  }
+              });
+          }
+
+          // Call the functions to populate the dropdown and add all markers
+          populateFarmerDropdown();
+          addAllFarmerMarkers();
+              // console.log('Total GPS markers added:', gpsData.length); // Log total number of markers added
 
               // Loop through districts data to add district markers
               districtsData.forEach(function(district) {
                   var position = { lat: parseFloat(district.gpsLatitude), lng: parseFloat(district.gpsLongitude) };
                   
-                  console.log('Adding district marker:', district); // Log each district being added
+                  // console.log('Adding district marker:', district); // Log each district being added
                   addDistrictMarker(position, district.districtName, district.description, district.id); // Pass district ID
               });
 
@@ -271,11 +286,11 @@
 
               // Loop through polygons data to draw polygons on the map
               polygonsData.forEach(function(polygonData) {
-                  console.log('Drawing polygon with coordinates:', polygonData.coordinates); // Log polygon coordinates
+                  // console.log('Drawing polygon with coordinates:', polygonData.coordinates); // Log polygon coordinates
                   drawPolygon(polygonData.coordinates, polygonData); // Assuming polygonData contains options
               });
 
-              console.log('Total polygons drawn:', polygonsData.length); // Log total number of polygons drawn
+              // console.log('Total polygons drawn:', polygonsData.length); // Log total number of polygons drawn
           },
           error: function(error) {
               console.error('Error loading map data:', error); // Log error message
@@ -284,7 +299,8 @@
   }
 
   // Function to add marker to the map with customized icon and farmer's name on hover
-function addMarker(location, cropName, farmerName, districtName) {
+function addMarker(location, cropName, farmerName, districtName, cropVariety, FarmAddress, NoYears, age,
+ orgName, landtitleNo, totalPhysicalArea, TotalCultivated,croppingperYear, Yield  ) {
     var icon = {
         url: markerIcons[cropName] || markerIcons['default'],
         scaledSize: new google.maps.Size(20, 30)
@@ -294,7 +310,7 @@ function addMarker(location, cropName, farmerName, districtName) {
         position: location,
         map: null, // Initially hidden
         icon: icon,
-        title: farmerName
+        title: `${farmerName} - ${cropName}` 
     });
 
     // Store the marker in the districtData under the appropriate district name
@@ -312,13 +328,113 @@ function addMarker(location, cropName, farmerName, districtName) {
     google.maps.event.addListener(marker, 'click', function() {
         // Populate modal with farmer's name, district name, and crop name
         document.getElementById('modalFarmerName').innerText = "Farmer: " + toTitleCase(farmerName);
-
+        document.getElementById('modalAge').innerText = "Age: " +  age;
         document.getElementById('modalCropName').innerText = "Crop: " +  toTitleCase(cropName);
+        document.getElementById('modalCropVariety').innerText = "Crop Variety: " + toTitleCase(cropVariety);
+        document.getElementById('modalFarmAddress').innerText = "Farm Address: " +  FarmAddress;
+        document.getElementById('modalYearsFarmer').innerText = "Years as Farmer: " +  NoYears ;
+        // document.getElementById('modalCiviStatus').innerText = "Civil Status: " +  civilStatus;
+        document.getElementById('modalOrganization').innerText = "Organization: " +  toTitleCase(orgName);
+       // Check if landtitleNo has a value, if not, set it to an empty string
+document.getElementById('modalLandTitle').innerText = "Land Title no.: " + (landtitleNo ? landtitleNo : '');
 
+        document.getElementById('modalPhysicalArea').innerText = "Total Physical Area: " +  (totalPhysicalArea ? totalPhysicalArea : '');
+        document.getElementById('modalCultivated').innerText = "Total Cultivated Area: " + (TotalCultivated ? TotalCultivated : '');
+      
+        document.getElementById('modalcopping').innerText = "Cropping/Year: " +  (croppingperYear ? croppingperYear : '');
+        document.getElementById('modalYield').innerText = "Yield: " + (Yield ? new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Yield) : '');
+
+
+
+
+       
         // Show the modal
         $('#infoModal').modal('show'); // Using jQuery to show the modal
     });
 }
+  //  // Event listener for searching a farmer by name
+  //  document.getElementById('searchFarmerButton').addEventListener('click', function() {
+  //           var farmerNameDropdown = document.getElementById('farmerNameDropdown');
+  //           var selectedOption = farmerNameDropdown.options[farmerNameDropdown.selectedIndex];
+
+  //           // Get latitude and longitude from selected option
+  //           var lat = parseFloat(selectedOption.getAttribute('data-lat'));
+  //           var lng = parseFloat(selectedOption.getAttribute('data-lng'));
+
+  //           if (selectedOption.value) {
+  //               const farmPosition = { lat: lat, lng: lng };
+  //               alert(`Found ${selectedOption.value} at coordinates: ${lat}, ${lng}`);
+                
+  //               // Log the found farmer details
+  //               console.log('Farmer found:', selectedOption.value); // Log the details of the found farmer
+
+  //               // Pan to the found farm's location
+  //               map.panTo(farmPosition);
+  //               map.setZoom(90); // Adjust zoom level
+
+  //               // Optionally add a marker for this specific farm
+  //               // addMarker(farmPosition, selectedOption.textContent, selectedOption.value, "", "", "", 0, 0, "", "", 0, 0, 0, 0);
+  //           } else {
+  //               alert("Please select a farmer from the dropdown.");
+                
+  //               // Log that the farmer was not found
+  //               console.log('No farmer selected.'); // Log the unsuccessful search
+  //           }
+  //       });
+// Event listener for searching a farmer by name
+document.getElementById('searchFarmerButton').addEventListener('click', function() {
+    var farmerNameDropdown = document.getElementById('farmerNameDropdown');
+    var selectedOption = farmerNameDropdown.options[farmerNameDropdown.selectedIndex];
+
+    // Get latitude and longitude from the selected option
+    const lat = parseFloat(selectedOption.getAttribute('data-lat'));
+    const lng = parseFloat(selectedOption.getAttribute('data-lng'));
+
+    if (selectedOption.value) {
+        const farmPosition = { lat: lat, lng: lng };
+        alert(`Found ${selectedOption.value} at coordinates: ${lat}, ${lng}`);
+        
+        // Log the found farmer details
+        console.log('Farmer found:', selectedOption.value); // Log the details of the found farmer
+
+        // Pan to the found farm's location
+        map.panTo(farmPosition);
+        map.setZoom(90); // Adjust zoom level
+    } else {
+        alert("Please select a farmer from the dropdown.");
+        
+        // Log that no farmer was selected
+        console.log('No farmer selected.'); // Log the unsuccessful search
+    }
+});
+
+function clearMarkers() {
+      markers.forEach(function(marker) {
+          marker.setMap(null); // Remove markers from the map
+      });
+  }
+
+// Event listener for panning to the location
+document.getElementById('panButton').addEventListener('click', function() {
+  
+        // // Clear all markers from the map
+        clearMarkers();
+        
+        // Pan to the new location
+     
+});
+
+// Add functionality to hide all markers
+document.getElementById('hideMarkersButton').addEventListener('click', function() {
+    markers.forEach(function(marker) {
+        marker.setMap(null); // Hide the marker
+    });
+    
+    // Clear the markers array if needed
+    markers = [];
+    console.log('All markers hidden.'); // Log the action
+});
+
 
   // Function to add district marker
   function addDistrictMarker(location, districtName, description, districtId) {
@@ -393,30 +509,7 @@ function addMarker(location, cropName, farmerName, districtName) {
   }
 
   // Function to clear markers from the map but keep them in the array
-  function clearMarkers() {
-      markers.forEach(function(marker) {
-          marker.setMap(null); // Remove markers from the map
-      });
-  }
 
-// Event listener for panning to the location
-document.getElementById('panButton').addEventListener('click', function() {
-    var lat = parseFloat(document.getElementById('latitude').value);
-    var lng = parseFloat(document.getElementById('longitude').value);
-
-    if (!isNaN(lat) && !isNaN(lng)) {
-        var newLocation = { lat: lat, lng: lng };
-        
-        // // Clear all markers from the map
-        // clearMarkers();
-        
-        // Pan to the new location
-        map.panTo(newLocation); // Pan to the new location
-        map.setZoom(90); // Optionally reset zoom level
-    } else {
-        alert("Please enter valid latitude and longitude.");
-    }
-});
 
 
   // Event listeners for district-related buttons
@@ -443,6 +536,8 @@ document.getElementById('panButton').addEventListener('click', function() {
       // Load farmer organization logic here
       alert('Farmer Organization for District ID: ' + districtId);
   });
+
+
 </script>
 
 
