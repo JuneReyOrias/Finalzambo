@@ -69,8 +69,12 @@ Route::get('/dashboard', function () {
 });
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
+// agent accent all farners
+Route::post('/admin-view-polygon',[adminController ::class,'store']);
 
-
+Route::get('/admin-edit-polygon/{polygon}',[PolygonController::class, 'polygonEdit'])->name('polygon.polygons_edit');
+Route::post('/admin-edit-polygon/{polygon}',[PolygonController::class, 'update']);
+Route::delete('/admin-delete-polygon/{polygon}',[PolygonController::class, 'polygondelete'])->name('polygon.delete');
 // agent accent all farners
 Route::get('/agent-view-farmers',[AgentController ::class,'ViewFarmers'])->name('agent.FarmerInfo.farmers_view');
 Route::get('/agent-edit-farmers/{personalinfos}',[AgentController ::class,'FarmersInfoEdit'])->name('agent.FarmerInfo.crudfarmer.edit');
@@ -541,7 +545,7 @@ Route::post('/agent-kml-import',[KmlFileController::class,'uploadkml']);
 
 //parcelaryBoarders
 Route::get('/admin-add-parcel',[AdminController::class, 'ParcelBoarders'])->name('parcels.new_parcels');
-Route::post('/admin-add-parcel',[AdminController::class, 'newparcels']);
+Route::post('/admin-add-parcel',[AdminController::class, 'Parcel']);
 // Route::get('/add-parcel',[AgriDistrictController::class, 'ParcelAgrifetch'])->name('parcels.new_parcels');
 
 // parcellary boarder per farm or lot area of farmers access by admin only
@@ -558,14 +562,11 @@ Route::post('/admin-polygon-create',[PolygonController::class, 'store']);
 
 // polygon view,edit and delete access by agent
 Route::get('/admin-view-polygon',[PolygonController::class, 'polygonshow'])->name('polygon.polygons_show');
-Route::post('/admin-view-polygon',[AgriDistrictController::class, 'store']);//agri district stiore data into database
+// Route::post('/admin-view-polygon',[AgriDistrictController::class, 'store']);//agri district stiore data into database
 Route::get('/admin-update-agridistrict/{AgriDistrict}',[AgriDistrictController::class, 'AgriInfoEdit'])->name('agri_districts.agri_edit');;//agri district stiore data into database
 Route::post('/admin-update-agridistrict/{AgriDistrict}',[AgriDistrictController::class, 'update']);//agri district stiore data into database
 Route::post('/admin-delete-agridistrict/{AgriDistrict}',[AgriDistrictController::class, 'destroy'])->name('agri_districts.agri_delete');//agri district stiore data into database
 
-Route::get('/admin-edit-polygon/{polygons}',[PolygonController::class, 'polygonEdit'])->name('polygon.polygons_edit');
-Route::post('/admin-edit-polygon/{polygons}',[PolygonController::class, 'polygonUpdates']);
-Route::delete('/admin--delete-polygon/{polygons}',[PolygonController::class, 'polygondelete'])->name('polygon.delete');
 
 
 //fish

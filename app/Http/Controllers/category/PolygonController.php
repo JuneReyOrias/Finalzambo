@@ -24,6 +24,7 @@ use App\Models\Barangay;
 use App\Models\User;
 use App\Models\VariableCost;
 use Carbon\Carbon;
+use App\Models\CropParcel;
 use Illuminate\Support\Facades\Storage;
 
 class PolygonController extends Controller
@@ -74,9 +75,42 @@ class PolygonController extends Controller
 
             
             $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+
+
+            
+  // Fetch all CropParcel records and transform them
+  $mapdata = CropParcel::all()->map(function($parcel) {
+    // Output the individual parcel data for debugging
+  //   echo "Parcel data fetched: " . json_encode($parcel) . "\n";
+
+    // Decode the JSON coordinates
+    $coordinates = json_decode($parcel->coordinates);
+    
+    // Check if the coordinates are valid and properly formatted
+    if (!is_array($coordinates)) {
+      //   echo "Invalid coordinates for parcel ID {$parcel->id}: " . $parcel->coordinates . "\n";
+        return null; // Return null for invalid data
+    }
+
+    return [
+        'id' => $parcel->id, // Include the ID for reference
+        'coordinates' => $coordinates, // Include the decoded coordinates
+        'area' => $parcel->area, // Assuming there's an area field
+        'altitude' => $parcel->altitude, // Assuming there's an altitude field
+        'strokecolor' => $parcel->strokecolor, // Include the stroke color
+        'fillColor' => $parcel->fillColor // Optionally include the fill color if available
+    ];
+})->filter(); // Remove any null values from the collection
+
+
+
+// If the request expects JSON, return mapdata as a JSON response
+if (request()->wantsJson()) {
+    return response()->json($mapdata);
+}
             // Return the view with the fetched data
             return view('polygon.polygon_create', compact('admin', 'profile', 'farmprofile','totalRiceProduction'
-            ,'agri_districts','agri_districts_id','userId','agriculture'
+            ,'agri_districts','agri_districts_id','userId','agriculture','mapdata'
             
             ));
         } else {
@@ -250,13 +284,43 @@ public function  polygonshow(Request $request)
                         });
                     }
                     $CropVariety = $CropVarietyQuery->orderBy('id','asc')->paginate(4);
-          
+                                // Fetch CropParcel records, optionally applying search criteria
+                        $cropParcelsQuery = CropParcel::query();
+                        if ($request->has('search')) {
+                            $cropParcelsQuery->where('strokecolor', 'like', "%$searchTerm%");
+                        }
+                        $cropParcels = $cropParcelsQuery->orderBy('id', 'asc')->paginate(4); // Adjust pagination as needed
+
+
            
             $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                            // Fetch all CropParcel records and transform them
+                            $mapdata = CropParcel::all()->map(function($parcel) {
+                                // Output the individual parcel data for debugging
+                            //   echo "Parcel data fetched: " . json_encode($parcel) . "\n";
+
+                                // Decode the JSON coordinates
+                                $coordinates = json_decode($parcel->coordinates);
+                                
+                                // Check if the coordinates are valid and properly formatted
+                                if (!is_array($coordinates)) {
+                                //   echo "Invalid coordinates for parcel ID {$parcel->id}: " . $parcel->coordinates . "\n";
+                                    return null; // Return null for invalid data
+                                }
+
+                                return [
+                                    'id' => $parcel->id, // Include the ID for reference
+                                    'coordinates' => $coordinates, // Include the decoded coordinates
+                                    'area' => $parcel->area, // Assuming there's an area field
+                                    'altitude' => $parcel->altitude, // Assuming there's an altitude field
+                                    'strokecolor' => $parcel->strokecolor, // Include the stroke color
+                                    'fillColor' => $parcel->fillColor // Optionally include the fill color if available
+                                ];
+                            })->filter(); // Remove any null values from the collection
 
             // Return the view with the fetched data
             return view('polygon.polygons_show', compact('userId','admin','polygons', 'profile', 'parcels','AgriDistrict','pesticides',
-           'CropCat','cropVarieties','transports', 'totalRiceProduction','CropVariety'));
+           'CropCat','cropVarieties','transports', 'totalRiceProduction','CropVariety','mapdata','cropParcels'));
         } else {
             // Handle the case where the user is not found
             // You can redirect the user or display an error message
@@ -304,8 +368,38 @@ public function polygonEdit(Request $request,$id)
 
             // Find the farm profile using the fetched farm ID
             $farmprofile = FarmProfile::where('users_id', $farmId)->latest()->first();
-            $polygons=Polygon::find($id);
-      
+            $polygon = CropParcel::find($id);
+
+            $mapdata = collect([$polygon])->map(function($parcel) {
+                if (!$parcel) {
+                    return null; // Return null if the polygon is not found
+                }
+            
+                // Decode the JSON coordinates
+                $coordinates = json_decode($parcel->coordinates);
+            
+                // Check if the coordinates are valid and properly formatted
+                if (!is_array($coordinates)) {
+                    return null; // Return null for invalid data
+                }
+            
+                return [
+                    'id' => $parcel->id, // Include the ID for reference
+                    'coordinates' => $coordinates, // Include the decoded coordinates
+                    'area' => $parcel->area, // Assuming there's an area field
+                    'altitude' => $parcel->altitude, // Assuming there's an altitude field
+                    'strokecolor' => $parcel->strokecolor, // Include the stroke color
+                    'fillColor' => $parcel->fillColor // Optionally include the fill color if available
+                ];
+            })->filter(); // Remove any null values from the collection
+            
+            // // Output the result for debugging purposes (optional)
+            // if ($mapdata->isEmpty()) {
+            //     echo "No valid data found for the given ID.";
+            // } else {
+            //     // Output or process the map data as needed
+            //     echo json_encode($mapdata);
+            // }
             if ($request->ajax()) {
                 $type = $request->input('type'); // Get the type of request (districts or barangays)
                 
@@ -329,7 +423,7 @@ public function polygonEdit(Request $request,$id)
             $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
             // Return the view with the fetched data
             return view('polygon.polygons_edit', compact('admin', 'profile', 'farmprofile','totalRiceProduction'
-            ,'agri_districts','agri_districts_id','userId','polygons'
+            ,'agri_districts','agri_districts_id','userId','polygon','mapdata'
             
             ));
         } else {
@@ -343,58 +437,64 @@ public function polygonEdit(Request $request,$id)
         return redirect()->route('login');
     }
 }
-public function polygonUpdates(PolygonRequest $request,$id)
-{
+// public function polygonUpdates(PolygonRequest $request,$id)
+// {
 
-    try{
+//     try{
         
 
-        $data= $request->validated();
-        $data= $request->all();
+//         $data= $request->validated();
+//         $data= $request->all();
         
-        $data= Polygon::find($id);
+//         $polygon= CropParcel::find($id);
 
-        $data->poly_name = $request->poly_name;
-        $data->agri_districts = $request->agri_districts;
-        $data->verone_latitude=$request->verone_latitude;
-        $data-> verone_longitude=$request->verone_longitude;
-        $data-> vertwo_latitude=$request->vertwo_latitude;
-        $data-> vertwo_longitude=$request->vertwo_longitude;
-        $data->verthree_latitude=$request->verthree_latitude;
-        $data-> verthree_longitude=$request->verthree_longitude;
-        $data->vertfour_latitude=$request->vertfour_latitude;
-        $data->vertfour_longitude=$request->vertfour_longitude;
-        $data->verfive_latitude=$request->verfive_latitude;
-        $data->verfive_longitude=$request->verfive_longitude;
-        $data->versix_latitude=$request->versix_latitude;
-        $data->versix_longitude=$request->versix_longitude;
-        $data->verseven_latitude=$request->verseven_latitude;
-        $data-> verseven_longitude=$request->verseven_longitude;
-        $data->vereight_latitude=$request->vereight_latitude;
-        $data->verteight_longitude=$request->verteight_longitude;
-        $data->strokecolor=$request->strokecolor;
-        $data->latitude=$request->latitude;
-        $data->longitude=$request->longitude;
-        $data->area=$request->area;
-        $data->perimeter=$request->perimeter;
-        $data->poly_name=$request->poly_name;
+//         $polygon->coordinates = json_encode($request->coordinates); // Save as JSON
+//         $polygon->polygon_name = $request->polygonName;
+//         $polygon->area = $request->area;
+//         $polygon->altitude = $request->altitude;
+//         $polygon->strokecolor = $request->strokecolor;
+//         $polygon->save();
        
 
-        // dd($data);
-        $data->save();     
+//         // dd($data);
+//         $polygon->save();     
         
     
-        return redirect('/admin-view-polygon')->with('message','Polygon Boundary Data Updated successsfully');
+//         return redirect('/admin-view-polygon')->with('message','Polygon Boundary Data Updated successsfully');
     
-      }
-    catch(\Exception $ex){
-        dd($ex); // Debugging statement to inspect the exception
-        return redirect('/admin-edit-polygon/{polygons}')->with('message','Someting went wrong');
+//       }
+//     catch(\Exception $ex){
+//         dd($ex); // Debugging statement to inspect the exception
+//         return redirect('/admin-edit-polygon/{polygons}')->with('message','Someting went wrong');
         
-      }   
-    } 
+//       }   
+//     } 
 
+public function update(Request $request, $id)
+{
+    // Validate the incoming data
+    $request->validate([
+        'coordinates' => 'required|array',
+        'polygonName' => 'required|string|max:255',
+        'area' => 'required|numeric',
+        'altitude' => 'required|numeric',
+        'strokecolor' => 'required|string|max:7', // Assuming hex color
+    ]);
 
+    // Find the existing polygon record by ID
+    $polygon = CropParcel::findOrFail($id); // Use findOrFail to throw an error if not found
+
+    // Update the polygon record
+    $polygon->coordinates = json_encode($request->coordinates); // Update coordinates
+    $polygon->polygon_name = $request->polygonName; // Update polygon name
+    $polygon->area = $request->area; // Update area
+    $polygon->altitude = $request->altitude; // Update altitude
+    $polygon->strokecolor = $request->strokecolor; // Update stroke color
+    $polygon->save(); // Save the updated record
+
+    // Return a response to the frontend
+    return response()->json(['success' => true, 'polygon_id' => $polygon->id]);
+}
 
 
 
@@ -402,19 +502,18 @@ public function polygonUpdates(PolygonRequest $request,$id)
     public function polygondelete($id) {
     try {
         // Find the personal information by ID
-       $polygons = Polygon::find($id);
-
+        $polygon = CropParcel::find($id);
+    
         // Check if the personal information exists
-        if (!$polygons) {
-            return redirect()->back()->with('error', 'PoLygon Boundary not found');
+        if (!$polygon) {
+            return redirect()->back()->with('error', 'Polygon not found');
         }
 
         // Delete the personal information data from the database
-       $polygons->delete();
+       $polygon->delete();
 
         // Redirect back with success message
-        return redirect()->back()->with('message', 'PoLygon Boundary deleted Successfully');
-
+        return redirect()->back()->with('message', 'Polygon deleted Successfully');
     } catch (\Exception $e) {
         // Handle any exceptions and redirect back with error message
         return redirect()->back()->with('error', 'Error deleting PoLygon Boundary: ' . $e->getMessage());

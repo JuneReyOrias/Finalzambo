@@ -37,9 +37,152 @@
                                 </div>
                                                         
                                 <div class="me-md-1">
-                                    <a href="{{ route('polygon.create') }}" class="btn btn-success">Add</a>
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#mapModal">
+                                        Add
+                                      </button>
+                                
+                                    {{-- <a href="{{ route('polygon.create') }}" class="btn btn-success">Add</a> --}}
                                 </div>
+                            <!-- Map Modal -->
+                            <div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-lg" >
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="mapModalLabel">Polygon Information</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <div id="map" style="height: 400px; width: 100%;"></div>
+                                    <!-- Polygon Coordinates Section -->
+                                    <div style="margin: 40px auto; width: 80%; max-width: 800px; display: flex; flex-wrap: wrap; gap: 20px;">
                             
+                            
+                                        
+                                    
+                                        <!-- Right Column -->
+                                        <div style="display: flex; gap: 20px;">
+                                            <div style="flex: 1; margin-bottom: 20px;">
+                                                <h5 style="margin-bottom: 10px;">Polygon Name</h5>
+                                                
+                                                <select id="boarder-name" onchange="checkPolygonName()" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                                                    <option value="">Select</option>
+                                                    <option value="Ayala">Ayala Boarder</option>
+                                                    <option value="Tumaga">Tumaga Boarder</option>
+                                                    <option value="Culianan">Culianan Boarder</option>
+                                                    <option value="Manicahan">Manicahan Boarder</option>
+                                                    <option value="Curuan">Curuan Boarder</option>
+                                                    <option value="Vitali">Vitali Boarder</option>
+                                                    <option value="Rice">Rice Boarder</option>
+                                                    <option value="Corn">Corn Boarder</option>
+                                                    <option value="#663300">Coconut Boarder</option>
+                                                   
+                                                    <option value="Add prefer">Add prefer</option>
+                                                </select>
+                                                
+                                                <button id="removePolygonButton" style="display: none; margin-top: 10px; padding: 10px; border: none; background-color: #FF5733; color: white; border-radius: 5px; cursor: pointer;" onclick="removeCustomPolygon()">Remove</button>
+                                            </div>
+                                            
+                                            <!-- Area of the Polygon Section -->
+                                         
+                                        
+                                            <!-- Polygon Fill Color Section -->
+                                            <div style="flex: 1; margin-bottom: 20px;">
+                                            <h5 style="margin-bottom: 10px;">Polygon Fill Color</h5>
+                                            
+                                            <select id="fill-color-select" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                                                <option value="">Select Fill Color</option>
+                                                <option value="#000000">Black</option>
+                                                <option value="#ff0000">Red</option>
+                                                <option value="#00ff00">Green</option>
+                                                <option value="#0000ff">Blue</option>
+                                                <option value="#ffff00">Yellow</option>
+                                                <option value="#ffffff">White</option>
+                                                <option value="#ff00ff">Magenta</option>
+                                                <option value="#00ffff">Cyan</option>
+                                                <option value="custom-fill">Custom Color</option>
+                                            </select>
+                                        
+                                            <!-- Custom fill color input -->
+                                            {{-- <label for="custom-fill-color" id="custom-fill-color-label" style="display: none; margin-top: 10px;">Custom Fill Color:</label> --}}
+                                            <input type="color" id="custom-fill-color" style="display: none; margin-top: 10px; width: 100%; padding: 10px;">
+                                            </div>
+                                        
+                                            <!-- Polygon Stroke Color Section -->
+                                            <div style="flex: 1; margin-bottom: 20px;">
+                                            <h5 style="margin-bottom: 10px;">Stroke Color</h5>
+                                        
+                                            <select id="stroke-color-select" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                                                <option value="">Select Stroke Color</option>
+                                                <option value="#00aa00">Ayala</option>
+                                                <option value="#55007f">Tumaga</option>
+                                                <option value="#ffff00">Culianan</option>
+                                                <option value="#ff5500">Manicahan</option>
+                                                <option value="#ff00ff">Curuan</option>
+                                                <option value="#ff0000">Vitali</option>
+                                                <option value="#FFBF00">Rice</option>
+                                                <option value="#ffff33">Corn</option>
+                                                <option value="#663300">Coconut</option>
+                                                
+                                                <option value="custom-stroke">Custom Color</option>
+                                            </select>
+                                        
+                                            <!-- Custom stroke color input -->
+                                            {{-- <label for="custom-stroke-color" id="custom-stroke-color-label" style="display: none; margin-top: 30px;">Custom Stroke Color:</label> --}}
+                                            <input type="color" id="custom-stroke-color" style="display: none; margin-top: 10px; width: 100%; padding: 10px;">
+                                            </div>
+                                        
+                                        </div>
+                                        
+                                    
+                                    
+                                                <!-- Left Column -->
+                                                <div style="display: flex; gap: 20px;">
+                                                    <!-- Section to display Altitude -->
+                                                    <div style="flex: 1; margin-bottom: 20px;">
+                                                        <h5>Area (in sq. m)</h5>
+                                                    
+                                                        <input type="text" id="area" placeholder="Area of the Polygon" readonly style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                                                        </div>
+                                                   
+                                                    <div style="flex: 1; margin-bottom: 20px;">
+                                                        <div style="margin-bottom: 20px;">
+                                                        <h5>Altitude  (in meters)</h5>
+                                                        <input type="text" id="altitude" readonly style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Polygon Coordinates Section -->
+                                                    <div style="flex: 1; margin-bottom: 20px;">
+                                                    <div >
+                                                        <h5 style="margin-bottom: 10px;">Polygon Coordinates</h5>
+                                                        <textarea id="polygon-coordinates" rows="5" cols="50" readonly style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
+                                                    </div>
+                                                    </div>
+                                                
+                                            
+                                                
+                                                </div>
+                                    
+                                    
+                                    
+                                        <!-- Save Button -->
+                                        {{-- <div style="text-align: center; width: 100%;">
+                                        <button id="save-polygon" class="btn btn-primary" style="padding: 10px 20px; border-radius: 5px;">Save Polygon</button>
+                                        </div> --}}
+                                    
+                                    </div>
+                                <!-- CSRF token for AJAX request -->
+                                <meta name="csrf-token" content="{{ csrf_token() }}">
+                                            </div>
+
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button id="save-polygon" class="btn btn-primary">Save Polygon</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
                                 <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET" class="me-2">
                                     <div class="input-group">
                                         <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
@@ -59,69 +202,38 @@
                                     <thead class="thead-light" >
                                         <tr>
                                             <th>#</th>
-                                            <th>agri-district</th>
-                                            <th>Polygon name</th>
+                                            <th>Polygon Name</th>
+                                            <th>Area</th>
+                                            <th>Altitude</th>
                                             <th>color</th>
-                                            <th>point 1 lat</th>
-                                            <th>point 1 lng</th>
-                                            <th>pontt 2 lat</th>
-                                            <th>point 2 lng</th>
-                                            <th>pontt 3 lat</th>
-                                            <th>point 3 lng</th>
-                                            <th>pontt 4 lat</th>
-                                            <th>point 4 lng</th>
-                                            <th>point 5 lat</th>
-                                            <th>point 5 lng</th>
-                                            <th>pontt 6 lat</th>
-                                            <th>point 6 lng</th>
-                                            <th>pontt 7 lat</th>
-                                            <th>point 7 lng</th>
-                                            <th>pontt 8 lat</th>
-                                            <th>point 8 lng</th>
-                                            <th>area</th>
-                                            <th>perimeter</th>
+                                           
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if($polygons->count() > 0)
-                                        @foreach($polygons as $seed)
+                                        @if($cropParcels->count() > 0)
+                                        @foreach($cropParcels as $seed)
                                             <tr class="table-light">
                                                  
                                                  <td>{{$seed->id}}</td>
-                                                 <td>{{$seed->agri_districts}}</td>
-                                                 <td>{{$seed->poly_name }}</td>
+                                                 <td>{{$seed->polygon_name}}</td>
+                                                 <td>{{$seed->area}}</td>
+                                                <td>{{$seed->altitude}}</td>
+                                             
                                                  <td>{{$seed->strokecolor }}</td>
-                                                 <td>{{$seed->verone_latitude }}</td>
-                                                <td>{{$seed->verone_longitude}}</td>
-                                                <td>{{$seed->vertwo_latitude }}</td>
-                                                <td>{{$seed->vertwo_longitude}}</td>
-                                                <td>{{$seed->verthree_latitude }}</td>
-                                                <td>{{$seed->verthree_longitude }}</td>
-                        
-                                                <td>{{$seed->vertfour_latitude }}</td>
-                                                <td>{{$seed->vertfour_longitude}}</td>
-                                                <td>{{$seed->verfive_latitude }}</td>
-                                                <td>{{$seed->verfive_longitude}}</td>
-                                                <td>{{$seed->versix_latitude }}</td>
-                                                <td>{{$seed->versix_longitude}}</td>
-                                                <td>{{$seed->verseven_latitude }}</td>
-                                                <td>{{$seed->verseven_longitude}}</td>
-                                                <td>{{$seed->vereight_latitude }}</td>
-                                                <td>{{$seed->verteight_longitude}}</td>
-                                                <td>{{$seed->area}}</td>
-                                                <td>{{$seed->perimeter}}</td>
+                                                
+                                               
                                                 
                                                 
                           
                                                 <td>
                                                    
-                                                     <a href="{{route('polygon.polygons_edit',  $seed->id)}}" title="Edit Student"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
+                                                     <a href="{{route('polygon.polygons_edit',  $seed->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a> 
                                         
                                                      <form  action="{{ route('polygon.delete', $seed->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
                                                     @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm" title="Delete Student" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                                                        <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
                                                     </form> 
                                                     
                                                 </td>
@@ -137,13 +249,13 @@
                             </div>
                              <!-- Pagination links -->
                              <ul class="pagination">
-                                <li><a href="{{ $polygons->previousPageUrl() }}">Previous</a></li>
-                                @foreach ($polygons->getUrlRange(1,$polygons->lastPage()) as $page => $url)
-                                    <li class="{{ $page == $polygons->currentPage() ? 'active' : '' }}">
+                                <li><a href="{{ $cropParcels->previousPageUrl() }}">Previous</a></li>
+                                @foreach ($cropParcels->getUrlRange(1,$cropParcels->lastPage()) as $page => $url)
+                                    <li class="{{ $page == $cropParcels->currentPage() ? 'active' : '' }}">
                                         <a href="{{ $url }}">{{ $page }}</a>
                                     </li>
                                 @endforeach
-                                <li><a href="{{ $polygons->nextPageUrl() }}">Next</a></li>
+                                <li><a href="{{ $cropParcels->nextPageUrl() }}">Next</a></li>
                             </ul>
                         </div>
 
@@ -178,15 +290,9 @@
                                               <th>#</th>
                                               <th>Parcel Name</th>
                                               <th>ARP OwnerName</th>
-                                              <th>Agri-District</th>
-                                              <th>brgyName</th>
-                                              <th>land title no</th>
-                                              <th>Lot no.</th>
-                                              <th>pkind desc</th>
-                                              <th>pused desc</th>
+                                              
                                               <th>actual used</th>
-                                              <th>Longitude</th>
-                                              <th>Latitude</th>
+                                            
                                               <th>Area</th>
                                               <th>Parcel Color</th>
                                               <th>Action</th>
@@ -201,25 +307,19 @@
                                               
                                               <td>{{  $personalinformation->parcel_name}}</td>
                                               <td>{{  $personalinformation->arpowner_na }}</td>
-                                              <td>{{  $personalinformation->agri_districts }}</td>
-                                              <td>{{  $personalinformation->barangay_name }}</td>
-                                              <td>{{  $personalinformation->tct_no}}</td>
-                                              <td>{{  $personalinformation->lot_no }}</td>
-                                              <td>{{  $personalinformation->pkind_desc }}</td>
-                                              <td>{{  $personalinformation->puse_desc }}</td>
+                                            
                                               <td>{{  $personalinformation->actual_used}}</td>
-                                              <td>{{  $personalinformation->latitude }}</td>
-                                              <td>{{  $personalinformation->longitude }}</td>
+                                            
                                               <td>{{  $personalinformation->area }}</td>
-                                              <td>{{  $personalinformation->parcolor }}</td>
+                                              <td>{{  $personalinformation->strokecolor }}</td>
                                              
                                               <td>
                                                  
-                                                   <a href="{{route('parcels.edit',  $personalinformation->id)}}" title="Edit Student"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
+                                                   <a href="{{route('parcels.edit',  $personalinformation->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
                                       
                                                    <form  action="{{ route('parcels.delete',  $personalinformation->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
                                                       {{ csrf_field()}}
-                                                      <button type="submit" class="btn btn-danger btn-sm" title="Delete Student" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                                                      <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
                                                   </form>
                                                  
                                               </td>
@@ -418,7 +518,7 @@
 
                                                                             <form  action="{{ route('agri_districts.agri_delete',  $personalinformation->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
                                                                                 {{ csrf_field()}}
-                                                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete Student" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                                                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
                                                                        </form>
                                                                       
                                                                    </td>
@@ -626,189 +726,260 @@
         </div>
     </div>
 </div>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const searchInput = document.getElementById('searchInput');
-        const farmProfileSearchForm = document.getElementById('farmProfileSearchForm');
-        const showAllForm = document.getElementById('showAllForm');
   
-        let timer;
-  
-        // Add event listener for search input
-        searchInput.addEventListener('input', function() {
-            // Clear previous timer
-            clearTimeout(timer);
-            // Start new timer with a delay of 500 milliseconds (adjust as needed)
-            timer = setTimeout(function() {
-                // Submit the search form
-                farmProfileSearchForm.submit();
-            }, 1000);
-        });
-  
-        // Add event listener for "Show All" button
-        showAllForm.addEventListener('click', function(event) {
-            // Prevent default form submission behavior
-            event.preventDefault();
-            // Remove search query from input field
-            searchInput.value = '';
-            // Submit the form
-            showAllForm.submit();
-        });
-    });
-  </script>
+
 
   
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
+
+
+
+<!-- Include the Google Maps API with Drawing and Geometry libraries -->
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMstylquYwo8gAuOrkrF5IsN6K8gbgV6I&libraries=drawing,geometry&callback=initMap"></script>
 <script type="text/javascript">
-  var map;
-  var markers = [];
+    var map;
+    var drawingManager;
+    var selectedShape;
 
-  function initMap() {
-    var initialLocation = {lat: 6.9214, lng: 122.0790};
+    // Initialize the map
+    function initMap() {
+        var initialLocation = { lat: 6.9214, lng: 122.0790 }; // Adjust to your desired initial map center
 
-    map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 16.3,
-      center: initialLocation,
-      mapTypeId: 'terrain'
-    });
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 13,
+            center: initialLocation,
+            mapTypeId: 'satellite'
+        });
 
-    // This event listener will call addMarker() when the map is clicked.
-    map.addListener('click', function(event) {
-      if (markers.length >= 1) {
-          deleteMarkers();
-      }
+        // Initialize the Drawing Manager
+        drawingManager = new google.maps.drawing.DrawingManager({
+            drawingMode: google.maps.drawing.OverlayType.POLYGON,
+            drawingControl: true,
+            drawingControlOptions: {
+                position: google.maps.ControlPosition.TOP_CENTER,
+                drawingModes: ['polygon']
+            },
+            polygonOptions: {
+                editable: true,
+                strokeWeight: 2
+            }
+        });
+        drawingManager.setMap(map);
 
-      addMarker(event.latLng);
-      document.getElementById('lat').value = event.latLng.lat();
-      document.getElementById('long').value = event.latLng.lng();
+        // Add event listener to capture the drawn polygon
+        google.maps.event.addListener(drawingManager, 'overlaycomplete', function (event) {
+            if (event.type === google.maps.drawing.OverlayType.POLYGON) {
+                if (selectedShape) {
+                    selectedShape.setMap(null);
+                }
+                selectedShape = event.overlay;
 
-      // Fetch the altitude for the clicked point
-      getElevation(event.latLng);
-    });
+                updatePolygonColors(); // Apply selected colors when the polygon is created
 
-    // Event listener for latitude and longitude input fields
-    $('#lat, #long').on('change', function() {
-      var lat = parseFloat($('#lat').val());
-      var lng = parseFloat($('#long').val());
-      
-      if (!isNaN(lat) && !isNaN(lng)) {
-        var location = { lat: lat, lng: lng };
-        map.setCenter(location);
-        deleteMarkers();
-        addMarker(location);
-      }
-    });
-  }
+                // Calculate and set area
+                var area = google.maps.geometry.spherical.computeArea(selectedShape.getPath());
+                document.getElementById('area').value = area.toFixed(2);
 
-  // Adds a marker to the map and push to the array.
-  function addMarker(location) {
-    var marker = new google.maps.Marker({
-      position: location,
-      map: map
-    });
-    markers.push(marker);
-  }
+                // Get the coordinates of the polygon's vertices
+                var path = selectedShape.getPath();
+                var coordinatesText = '';
+                path.forEach(function (latLng, index) {
+                    var lat = latLng.lat();
+                    var lng = latLng.lng();
+                    coordinatesText += 'Vertex ' + (index + 1) + ': Latitude: ' + lat.toFixed(6) + ', Longitude: ' + lng.toFixed(6) + '\n';
+                });
 
-  // Sets the map on all markers in the array.
-  function setMapOnAll(map) {
-    for (var i = 0; i < markers.length; i++) {
-      markers[i].setMap(map);
+                // Display the coordinates in the textarea
+                document.getElementById('polygon-coordinates').value = coordinatesText;
+
+                // Get the elevation of the first vertex
+                getElevation(path.getAt(0));
+
+                // Listen for changes in polygon vertices
+                google.maps.event.addListener(selectedShape.getPath(), 'set_at', function () {
+                    updatePolygonColors();
+                });
+
+                google.maps.event.addListener(selectedShape.getPath(), 'insert_at', function () {
+                    updatePolygonColors();
+                });
+            }
+        });
+
+        // Load existing polygons from the server
+        loadPolygons();
     }
-  }
 
-  // Removes the markers from the map, but keeps them in the array.
-  function clearMarkers() {
-    setMapOnAll(null);
-  }
+    // Function to get and display elevation
+    function getElevation(latLng) {
+        var elevator = new google.maps.ElevationService();
+        elevator.getElevationForLocations({ 'locations': [latLng] }, function (results, status) {
+            if (status === 'OK') {
+                if (results[0]) {
+                    var elevation = results[0].elevation;
+                    document.getElementById('altitude').value = elevation.toFixed(2);
+                } else {
+                    document.getElementById('altitude').value = 'No data';
+                }
+            } else {
+                document.getElementById('altitude').value = 'Error';
+            }
+        });
+    }
 
-  // Deletes all markers in the array by removing references to them.
-  function deleteMarkers() {
-    clearMarkers();
-    markers = [];
-  }
+    // Load existing polygons
+    function loadPolygons() {
+        var mapdata = @json($mapdata); // Ensure that $mapdata is properly formatted as JSON in your Laravel controller.
 
-  // Fetch and display the elevation of a location
-  function getElevation(latLng) {
-    var elevator = new google.maps.ElevationService();
-    elevator.getElevationForLocations({'locations': [latLng]}, function(results, status) {
-      if (status === 'OK') {
-        if (results[0]) {
-          var elevation = results[0].elevation;
-          document.getElementById('altitude').value = elevation.toFixed(2);
-        } else {
-          document.getElementById('altitude').value = 'No data';
+        // Loop through the mapdata and add polygons to the map
+        mapdata.forEach(function (parcel) {
+            var polygon = new google.maps.Polygon({
+                paths: parcel.coordinates.map(coord => new google.maps.LatLng(coord.lat, coord.lng)),
+                strokeColor: parcel.strokecolor, // Use color from data or default to blue
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: parcel.fillcolor, // Use fill color from data or default to green
+                fillOpacity: 0.02
+            });
+            polygon.setMap(map);
+
+            // Bind a click event to show parcel details
+            google.maps.event.addListener(polygon, 'click', function () {
+                var contentString = 'Parcel ID: ' + parcel.id + '<br>' +
+                                    'Area: ' + parcel.area + ' sq. meters<br>' +
+                                    'Altitude: ' + parcel.altitude + ' meters';
+                var infowindow = new google.maps.InfoWindow({
+                    content: contentString
+                });
+                infowindow.setPosition(parcel.coordinates[0]);
+                infowindow.open(map);
+            });
+        });
+
+        // Optionally, fit the map to the bounds of the polygons
+        var bounds = new google.maps.LatLngBounds();
+        mapdata.forEach(function (parcel) {
+            parcel.coordinates.forEach(function (coord) {
+                bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
+            });
+        });
+        map.fitBounds(bounds);
+    }
+
+// Save polygon data via AJAX
+document.getElementById('save-polygon').addEventListener('click', function () {
+    if (!selectedShape) {
+        alert("Please draw a polygon first.");
+        return;
+    }
+
+    // Get polygon coordinates
+    var path = selectedShape.getPath();
+    var coordinates = [];
+    path.forEach(function (latLng) {
+        coordinates.push({
+            lat: latLng.lat(),
+            lng: latLng.lng()
+        });
+    });
+
+    // Get area and altitude
+    
+    var polygonName = document.getElementById('boarder-name').value;
+    var area = document.getElementById('area').value;
+    var altitude = document.getElementById('altitude').value;
+
+    // Get fill and stroke colors
+    var fillColor = getSelectedFillColor();
+    var strokeColor = getSelectedStrokeColor();
+
+    // AJAX request to save the polygon data
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/admin-view-polygon', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            if (response.success) {
+                alert("Polygon saved successfully!");
+                window.location.reload(); // Reload the page after successful save
+            } else {
+                alert("Error saving polygon. Please try again.");
+            }
         }
-      } else {
-        document.getElementById('altitude').value = 'Error';
-      }
+    };
+    var data = JSON.stringify({
+        coordinates: coordinates,
+       polygonName :polygonName ,
+        area: area,
+        altitude: altitude,
+        fillcolor: fillColor,
+        strokecolor: strokeColor
     });
-  }
+    xhr.send(data);
+});
 
-  // jQuery event listener for form submission
-  $(document).ready(function() {
-    $(document).on('click', '.btn-submit', function(event) {
-      var form = $(this).closest("form");
+    // Function to update polygon fill and stroke colors based on the selected options
+    function updatePolygonColors() {
+        if (selectedShape) {
+            var fillColor = getSelectedFillColor();
+            var strokeColor = getSelectedStrokeColor();
 
-      event.preventDefault(); // Prevent the default button action
-
-      swal({
-          title: "Are you sure you want to submit this form?",
-          text: "Please confirm your action.",
-          icon: "warning",
-          buttons: {
-              cancel: "Cancel",
-              confirm: {
-                  text: "Yes, Continue!",
-                  value: true,
-                  visible: true,
-                  className: "btn-success",
-                  closeModal: false
-              }
-          },
-          dangerMode: true,
-      }).then((willSubmit) => {
-          if (willSubmit) {
-              // Display loading indicator
-              swal({
-                  title: "Processing...",
-                  text: "Please wait.",
-                  buttons: false,
-                  closeOnClickOutside: false,
-                  closeOnEsc: false,
-                  icon: "info",
-                  timerProgressBar: true,
-              });
-
-              // Submit the form after a short delay to allow the loading indicator to be shown
-              setTimeout(function() {
-                  form.submit(); // Submit the form
-              }, 500);
-          }
-      });
-    });
-  });
-</script>
-
-
-<script>
-    // Function to handle opening edit modal and populating data
-    function editAgriDistrict(agriDistrictId) {
-        // Fetch data or set values dynamically based on agriDistrictId
-        var agriDistrict = {}; // Example: Replace with actual data fetching logic
-
-        // Set modal form action dynamically
-        var form = document.getElementById('editAgriDistrictForm');
-        form.action = '//admin-view-polygon/' + agriDistrictId; // Adjust based on your route
-
-        // Set modal input fields based on fetched data
-        document.getElementById('agriDistrictId').value = agriDistrictId;
-        document.getElementById('districtName').value = agriDistrict.district_name;
-
-        // Show the modal
-        var modal = new bootstrap.Modal(document.getElementById('editAgriDistrictModal'), {});
-        modal.show();
+            selectedShape.setOptions({
+                fillColor: fillColor,
+                strokeColor: strokeColor
+            });
+        }
     }
+
+    // Helper function to get the selected fill color
+    function getSelectedFillColor() {
+        var fillColorSelect = document.getElementById('fill-color-select').value;
+        if (fillColorSelect === 'custom-fill') {
+            return document.getElementById('custom-fill-color').value;
+        }
+        return fillColorSelect;
+    }
+
+    // Helper function to get the selected stroke color
+    function getSelectedStrokeColor() {
+        var strokeColorSelect = document.getElementById('stroke-color-select').value;
+        if (strokeColorSelect === 'custom-stroke') {
+            return document.getElementById('custom-stroke-color').value;
+        }
+        return strokeColorSelect;
+    }
+
+    // Event listener for showing/hiding custom color inputs for fill color
+    document.getElementById('fill-color-select').addEventListener('change', function () {
+        var fillColorSelect = document.getElementById('fill-color-select').value;
+        if (fillColorSelect === 'custom-fill') {
+            document.getElementById('custom-fill-color').style.display = 'inline';
+            document.getElementById('custom-fill-color-label').style.display = 'inline';
+        } else {
+            document.getElementById('custom-fill-color').style.display = 'none';
+            document.getElementById('custom-fill-color-label').style.display = 'none';
+        }
+        updatePolygonColors();
+    });
+
+    // Event listener for showing/hiding custom color inputs for stroke color
+    document.getElementById('stroke-color-select').addEventListener('change', function () {
+        var strokeColorSelect = document.getElementById('stroke-color-select').value;
+        if (strokeColorSelect === 'custom-stroke') {
+            document.getElementById('custom-stroke-color').style.display = 'inline';
+            document.getElementById('custom-stroke-color-label').style.display = 'inline';
+        } else {
+            document.getElementById('custom-stroke-color').style.display = 'none';
+            document.getElementById('custom-stroke-color-label').style.display = 'none';
+        }
+        updatePolygonColors();
+    });
 </script>
+
+
+
+<script src="{{ asset('js/modal_map.js') }}"></script>
 @endsection

@@ -46,7 +46,7 @@
     
 
   <div style="position: relative;">
-    <div id="map" style="height: 450px; width: 100%;"></div>
+    <div id="map" style="height: 700px; width: 100%;"></div>
     <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-sm">
           <div class="modal-content border-0 shadow-sm">
@@ -106,7 +106,7 @@
                     <p><strong>Description:</strong> <span id="districtAdditionalInfo"></span></p>
                 </div>
                 <hr>
-                <h6>Related Information:</h6><br>
+                <h6>Related Information:</h6>
              
               
               <div class="d-flex flex-wrap mb-3">
@@ -209,11 +209,12 @@ let gpsData = [];
 
       // Load initial markers, districts, and polygons
       loadInitialData();
+      loadPolygons();
   }
-
+ 
   // Function to load initial data using AJAX
   function loadInitialData() {
-      console.log('Starting to load initial map data...'); // Indicate start of loading
+      // console.log('Starting to load initial map data...'); // Indicate start of loading
 
       $.ajax({
           url: '/admin-view-corn-map', // Your API endpoint
@@ -223,7 +224,7 @@ let gpsData = [];
 
               var gpsData = data.gpsData; // GPS coordinates for markers
               var districtsData = data.districtsData; // District markers
-              var polygonsData = data.polygons; // Polygons
+              // var polygonsData = data.polygons; // Polygons
               // Populate the farmer name dropdown with GPS coordinates
              // Populate the farmer name dropdown with GPS coordinates
            
@@ -245,50 +246,39 @@ function populateFarmerDropdown() {
 
 
 
-              // // Loop through the GPS data to add markers for farm profiles
-              // gpsData.forEach(function(location) {
-              //     var position = { lat: parseFloat(location.gpsLatitude), lng: parseFloat(location.gpsLongitude) };
-              //     var districtName = location.districtName; // Assume districtName is available in location
-                  
-              //     console.log('Adding marker for location:', location); // Log each location being added
-              //     addMarker(position, location.cropName, location.farmerName, districtName, location.cropVariety,
-              //       location.FarmAddress, location.NoYears, location.age, location.orgName, location.landtitleNo,
-              //        location.totalPhysicalArea, location.TotalCultivated, location.croppingperYear, location.Yield
-              //      ); // Add farm profile marker
-              // });
 
-                        function addAllFarmerMarkers() {
-              gpsData.forEach(function(location) {
-                  if (location.gpsLatitude && location.gpsLongitude) { // Only add markers with valid GPS data
-                      var position = { lat: parseFloat(location.gpsLatitude), lng: parseFloat(location.gpsLongitude) };
-                      addMarker(position, location.cropName, location.farmerName, location.districtName, 
-                          location.cropVariety, location.FarmAddress, location.NoYears, location.age, 
-                          location.orgName, location.landtitleNo, location.totalPhysicalArea, 
-                          location.TotalCultivated, location.croppingperYear, location.Yield);
-                  }
-              });
-          }
+              function addAllFarmerMarkers() {
+    gpsData.forEach(function(location) {
+        if (location.gpsLatitude && location.gpsLongitude) { // Only add markers with valid GPS data
+            var position = { lat: parseFloat(location.gpsLatitude), lng: parseFloat(location.gpsLongitude) };
+            addMarker(position, location.cropName, location.farmerName, location.districtName, 
+                location.cropVariety, location.FarmAddress, location.NoYears, location.age, 
+                location.orgName, location.landtitleNo, location.totalPhysicalArea, 
+                location.TotalCultivated, location.croppingperYear, location.Yield);
+        }
+    });
+}
 
-          // Call the functions to populate the dropdown and add all markers
-          populateFarmerDropdown();
-          addAllFarmerMarkers();
+// Call the functions to populate the dropdown and add all markers
+populateFarmerDropdown();
+addAllFarmerMarkers();
               // console.log('Total GPS markers added:', gpsData.length); // Log total number of markers added
 
               // Loop through districts data to add district markers
               districtsData.forEach(function(district) {
                   var position = { lat: parseFloat(district.gpsLatitude), lng: parseFloat(district.gpsLongitude) };
                   
-                  // console.log('Adding district marker:', district); // Log each district being added
+                  console.log('Adding district marker:', district); // Log each district being added
                   addDistrictMarker(position, district.districtName, district.description, district.id); // Pass district ID
               });
 
               console.log('Total district markers added:', districtsData.length); // Log total number of district markers added
 
-              // Loop through polygons data to draw polygons on the map
-              polygonsData.forEach(function(polygonData) {
-                  // console.log('Drawing polygon with coordinates:', polygonData.coordinates); // Log polygon coordinates
-                  drawPolygon(polygonData.coordinates, polygonData); // Assuming polygonData contains options
-              });
+              // // Loop through polygons data to draw polygons on the map
+              // polygonsData.forEach(function(polygonData) {
+              //     // console.log('Drawing polygon with coordinates:', polygonData.coordinates); // Log polygon coordinates
+              //     drawPolygon(polygonData.coordinates, polygonData); // Assuming polygonData contains options
+              // });
 
               // console.log('Total polygons drawn:', polygonsData.length); // Log total number of polygons drawn
           },
@@ -352,35 +342,7 @@ document.getElementById('modalLandTitle').innerText = "Land Title no.: " + (land
         $('#infoModal').modal('show'); // Using jQuery to show the modal
     });
 }
-  //  // Event listener for searching a farmer by name
-  //  document.getElementById('searchFarmerButton').addEventListener('click', function() {
-  //           var farmerNameDropdown = document.getElementById('farmerNameDropdown');
-  //           var selectedOption = farmerNameDropdown.options[farmerNameDropdown.selectedIndex];
 
-  //           // Get latitude and longitude from selected option
-  //           var lat = parseFloat(selectedOption.getAttribute('data-lat'));
-  //           var lng = parseFloat(selectedOption.getAttribute('data-lng'));
-
-  //           if (selectedOption.value) {
-  //               const farmPosition = { lat: lat, lng: lng };
-  //               alert(`Found ${selectedOption.value} at coordinates: ${lat}, ${lng}`);
-                
-  //               // Log the found farmer details
-  //               console.log('Farmer found:', selectedOption.value); // Log the details of the found farmer
-
-  //               // Pan to the found farm's location
-  //               map.panTo(farmPosition);
-  //               map.setZoom(90); // Adjust zoom level
-
-  //               // Optionally add a marker for this specific farm
-  //               // addMarker(farmPosition, selectedOption.textContent, selectedOption.value, "", "", "", 0, 0, "", "", 0, 0, 0, 0);
-  //           } else {
-  //               alert("Please select a farmer from the dropdown.");
-                
-  //               // Log that the farmer was not found
-  //               console.log('No farmer selected.'); // Log the unsuccessful search
-  //           }
-  //       });
 // Event listener for searching a farmer by name
 document.getElementById('searchFarmerButton').addEventListener('click', function() {
     var farmerNameDropdown = document.getElementById('farmerNameDropdown');
@@ -474,24 +436,24 @@ document.getElementById('hideMarkersButton').addEventListener('click', function(
   }
 
   // Function to draw polygon on the map
-  function drawPolygon(coordinates, options) {
-      // Convert the coordinates to the format expected by Google Maps
-      var path = coordinates.map(function(coord) {
-          return { lat: coord.lat, lng: coord.lng };
-      });
+  // function drawPolygon(coordinates, options) {
+  //     // Convert the coordinates to the format expected by Google Maps
+  //     var path = coordinates.map(function(coord) {
+  //         return { lat: coord.lat, lng: coord.lng };
+  //     });
 
-      var polygon = new google.maps.Polygon({
-          paths: path,
-          strokeColor: options.strokeColor || '#FF0000', // Default stroke color
-          strokeOpacity: options.strokeOpacity || 0.8, // Default stroke opacity
-          strokeWeight: options.strokeWeight || 2, // Default stroke weight
-          fillColor: options.fillColor || '#fffff', // Default fill color
-          fillOpacity: options.fillOpacity || 0.1 // Default fill opacity
-      });
+  //     var polygon = new google.maps.Polygon({
+  //         paths: path,
+  //         strokeColor: options.strokeColor || '#FF0000', // Default stroke color
+  //         strokeOpacity: options.strokeOpacity || 0.8, // Default stroke opacity
+  //         strokeWeight: options.strokeWeight || 2, // Default stroke weight
+  //         fillColor: options.fillColor || '#fffff', // Default fill color
+  //         fillOpacity: options.fillOpacity || 0.1 // Default fill opacity
+  //     });
       
-      polygon.setMap(map); // Add the polygon to the map
-      polygons.push(polygon); // Store in the polygons array
-  }
+  //     polygon.setMap(map); // Add the polygon to the map
+  //     polygons.push(polygon); // Store in the polygons array
+  // }
 
   // Function to show markers for a specific district and hide others
   function showDistrictMarkers(districtName) {
@@ -537,7 +499,114 @@ document.getElementById('hideMarkersButton').addEventListener('click', function(
       alert('Farmer Organization for District ID: ' + districtId);
   });
 
+   // Load existing polygons
+//    function loadPolygons() {
+//         var mapdata = @json($mapdata); // Ensure that $mapdata is properly formatted as JSON in your Laravel controller.
+  
+//         // Loop through the mapdata and add polygons to the map
+//         mapdata.forEach(function(parcel) {
+//           console.log("Stroke Color:", parcel.strokecolor);
+//           console.log("Fill Color:", parcel.fillColor); // Assuming you also have a fillcolor property
+  
+//     var polygon = new google.maps.Polygon({
+//         paths: parcel.coordinates.map(coord => new google.maps.LatLng(coord.lat, coord.lng)),
+//         strokeColor: parcel.strokecolor , // Use color from data or default to blue
+//         strokeOpacity: 0.8,
+//         strokeWeight: 2,
+//         // fillColor: parcel.fillColor, // Use fill color from data or default to green
+//         fillOpacity: 0.02
+//     });
+//             polygon.setMap(map); // Add the polygon to the map
+  
+//             // Bind a click event to show parcel details
+//             google.maps.event.addListener(polygon, 'click', function() {
+//                 var contentString = 'Parcel ID: ' + parcel.id + '<br>' +
+//                                     'Area: ' + parcel.area + ' sq. meters<br>' +
+//                                     'Altitude: ' + parcel.altitude + ' meters';
+//                 var infowindow = new google.maps.InfoWindow({
+//                     content: contentString
+//                 });
+//                 infowindow.setPosition(parcel.coordinates[0]); // Position it at the first coordinate
+//                 infowindow.open(map);
+//             });
+//         });
+  
+//         // Optionally, fit the map to the bounds of the polygons
+//         var bounds = new google.maps.LatLngBounds();
+//         mapdata.forEach(function(parcel) {
+//             parcel.coordinates.forEach(function(coord) {
+//                 bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
+//             });
+//         });
+//         map.fitBounds(bounds);
+//     }
 
+
+function loadPolygons() {
+    var mapdata = @json($mapdata); // Existing data from the view
+    var parceldata = @json($parceldata); // Data from ParcellaryBoundaries
+
+    // Function to plot a polygon on the map with different info windows
+    function plotPolygon(parcel, isParcelData = false) {
+        var polygon = new google.maps.Polygon({
+            paths: parcel.coordinates.map(coord => new google.maps.LatLng(coord.lat, coord.lng)),
+            strokeColor: parcel.strokecolor || '#FF0000', // Default stroke color if missing
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: parcel.fillcolor || '#FF0000', // Default fill color if missing
+            fillOpacity: 0.02
+        });
+        polygon.setMap(map);
+
+        google.maps.event.addListener(polygon, 'click', function () {
+            var contentString;
+
+            // Different info window content for `mapdata` and `parceldata`
+            if (isParcelData) {
+                contentString = 'Parcel Name: ' + parcel.parcel_name + '<br>' +
+                                 'ARPOwner Name: ' + parcel.arpowner_na + '<br>' +
+                                'Agri-District: ' + parcel.agri_districts + ' sq. meters<br>' +
+                                'Brgy. Name: ' + parcel.barangay_name + ' sq. meters<br>' +
+                                'Title name: ' + parcel.tct_no + '<br>' +
+                                'Property kind description: ' + parcel.pkind_desc + '<br>' +
+                                'Property Used description: ' + parcel.puse_desc + '<br>' +
+                                'Actual Used: ' + parcel.actual_used + '<br>' +
+                                'Area: ' + parcel.area + ' sq. meters<br>' +
+                                'Altitude: ' + parcel.altitude + ' meters<br>' 
+                                ;
+            } else {
+                contentString = 'Polygon Name: ' + parcel.polygon_name + '<br>' +
+                                'Area: ' + parcel.area + ' sq. meters<br>' +
+                                'Altitude: ' + parcel.altitude + ' meters';
+            }
+
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+            infowindow.setPosition(parcel.coordinates[0]); // Set at first coordinate
+            infowindow.open(map);
+        });
+    }
+
+    // Plot polygons from `mapdata`
+    mapdata.forEach(function (parcel) {
+        plotPolygon(parcel);
+    });
+
+    // Plot polygons from `parceldata` with `isParcelData` flag set to true
+    parceldata.forEach(function (parcel) {
+        plotPolygon(parcel, true);
+    });
+
+    // Extend map bounds based on all parcels' coordinates
+    var bounds = new google.maps.LatLngBounds();
+    mapdata.concat(parceldata).forEach(function (parcel) {
+        parcel.coordinates.forEach(function (coord) {
+            bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
+        });
+    });
+    map.fitBounds(bounds);
+}
 </script>
 
 
