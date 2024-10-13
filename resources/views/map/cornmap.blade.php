@@ -106,7 +106,7 @@
                     <p><strong>Description:</strong> <span id="districtAdditionalInfo"></span></p>
                 </div>
                 <hr>
-                <h6>Related Information:</h6>
+                {{-- <h6>Related Information:</h6>
              
               
               <div class="d-flex flex-wrap mb-3">
@@ -130,7 +130,7 @@
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
                         <span class="visually-hidden">Next</span>
                     </button>
-                </div>
+                </div> --}}
             </div>
             {{-- <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -418,14 +418,14 @@ document.getElementById('hideMarkersButton').addEventListener('click', function(
           document.getElementById('districtName').innerText = toTitleCase(districtName) + ' District'; // Set the district name
           document.getElementById('districtAdditionalInfo').innerText = description; // Set additional information
 
-          // Clear any previous images from the carousel
-          document.getElementById('carouselImages').innerHTML = '';
+        //   // Clear any previous images from the carousel
+        //   document.getElementById('carouselImages').innerHTML = '';
 
-          // Set district ID for links
-          document.getElementById('farmersInfoLink').setAttribute('data-district-id', districtId); // Set appropriate ID
-          document.getElementById('cropsVarietyLink').setAttribute('data-district-id', districtId); // Set appropriate ID
-          document.getElementById('Production').setAttribute('data-district-id', districtId); // Set appropriate ID
-          document.getElementById('FarmerOrganization').setAttribute('data-district-id', districtId); // Set appropriate ID
+        //   // Set district ID for links
+        //   document.getElementById('farmersInfoLink').setAttribute('data-district-id', districtId); // Set appropriate ID
+        //   document.getElementById('cropsVarietyLink').setAttribute('data-district-id', districtId); // Set appropriate ID
+        //   document.getElementById('Production').setAttribute('data-district-id', districtId); // Set appropriate ID
+        //   document.getElementById('FarmerOrganization').setAttribute('data-district-id', districtId); // Set appropriate ID
 
           // Show the modal
           var districtInfoModal = new bootstrap.Modal(document.getElementById('districtInfoModal'));
