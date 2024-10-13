@@ -30,7 +30,10 @@ class MachineriesUseds extends Model
         'total_cost_for_machineries',
         'users_id'
     ];
-
+    public function cropFarm()
+    {
+        return $this->belongsTo(Crop::class, 'crops_farms_id');
+    }
     public function farmprofiles()
     {
         return $this->belongsTo(FarmProfile::class,'farm_profiles_id','id')->withDefault();
