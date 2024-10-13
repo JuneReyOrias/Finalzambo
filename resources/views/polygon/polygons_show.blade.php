@@ -846,7 +846,7 @@
 
             // Bind a click event to show parcel details
             google.maps.event.addListener(polygon, 'click', function () {
-                var contentString = 'Parcel ID: ' + parcel.id + '<br>' +
+                var contentString = 'PolygonName ' + parcel.polygon_name + '<br>' +
                                     'Area: ' + parcel.area + ' sq. meters<br>' +
                                     'Altitude: ' + parcel.altitude + ' meters';
                 var infowindow = new google.maps.InfoWindow({

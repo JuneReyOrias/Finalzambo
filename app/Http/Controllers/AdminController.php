@@ -3252,7 +3252,7 @@ public function FarmersRiceVarietyDistrict()
                     }
 
                     return [
-                        'id' => $parcel->polygon_name, // Include the ID for reference
+                        'polygon_name' => $parcel->polygon_name, // Include the ID for reference
                         'coordinates' => $coordinates, // Include the decoded coordinates
                         'area' => $parcel->area, // Assuming there's an area field
                         'altitude' => $parcel->altitude, // Assuming there's an altitude field
