@@ -30,16 +30,16 @@
         </a>
         <div class="collapse" id="crop">
           <ul class="nav sub-menu">
-            <li class="nav-item">
+            {{-- <li class="nav-item">
               <a href="{{route('map.gmap')}}" class="nav-link">Rice</a>
-            </li>
+            </li> --}}
             <li class="nav-item">
-              <a href="{{route('agent.agri.cornmap')}}" class="nav-link">Corn</a>
+              <a href="{{route('agent.agri.cornmap')}}" class="nav-link">All Crops</a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
               <a href="{{route('agent.agri.coconutmap')}}" class="nav-link">Coconut</a>
             </li>
-           
+            --}}
             
           </ul>
         </div>
@@ -85,7 +85,7 @@
           </div>
         </li>
       {{-- <li class="nav-item nav-category">Components</li> --}}
-      <li class="nav-item nav-category">Crops</li>
+      {{-- <li class="nav-item nav-category">Crops</li>
       <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#Farmer" role="button" aria-expanded="false" aria-controls="uiComponents">
           <img src="../assets/logo/rice.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
@@ -95,9 +95,7 @@
         <div class="collapse" id="Farmer">
           <ul class="nav sub-menu"  style="padding-left: 70px;">
 
-            {{-- <li class="nav-item">
-              <a href="{{route('admin.corn.forms.corn_form')}}" class="nav-link">Survey Form</a>
-            </li> --}}
+       
             <li class="nav-item">
               <a href="{{route('agent.CropReport.all_crops')}}" class="nav-link">Crops</a>
             </li>
@@ -106,7 +104,7 @@
            
           </ul>
         </div>
-      </li>
+      </li> --}}
     {{--  livestock  --}}
    
 </nav>

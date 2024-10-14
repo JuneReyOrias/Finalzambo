@@ -69,6 +69,10 @@ Route::get('/dashboard', function () {
 });
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
+    // farmer profiling
+    Route::get('/user-farmer-Profiling',[FarmProfileController::class, 'FarmerProfiling'])->name('user.farmerInfo.profilingData');
+
+
 // agent accent all farners
 Route::post('/admin-view-polygon',[adminController ::class,'store']);
 
@@ -676,7 +680,7 @@ Route::post('/admin-multifile-imports', [FileController::class, 'saveUploadForm'
       Route::get('/map/gmap',[FarmProfileController::class, 'Gmap'])->name('map.gmap');
       Route::get('/agent-map-view-info/{id}',[AgentController::class, 'mapView'])->name('map.view_map_info');
 
-      Route::get('/map/agrimap',[FarmProfileController::class, 'agrimap'])->name('map.agrimap');
+      Route::get('/user-all-crops-map',[FarmProfileController::class, 'agrimap'])->name('map.agrimap');
  
       // admin Map route
       Route::get('/admin-map-arcmap',[FarmProfileController::class, 'ArcMap'])->name('map.arcmap');

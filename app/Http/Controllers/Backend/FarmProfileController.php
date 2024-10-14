@@ -26,7 +26,9 @@ use App\Models\Crop;
 use App\Models\VariableCost;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Pagination\Paginator;
-
+use App\Models\CropParcel;
+use App\Models\ParcellaryBoundaries;
+use App\Models\Polygon;
 
 use Carbon\Carbon;
 
@@ -205,7 +207,7 @@ class FarmProfileController extends Controller
             
 
 // agent map view
-public function Gmap(Request $request)
+public function FarmerProfiling(Request $request)
 {
     // Check if the user is authenticated
     if (Auth::check()) {
@@ -213,9 +215,9 @@ public function Gmap(Request $request)
         $userId = Auth::id();
 
         // Find the user based on the retrieved ID
-        $agent = User::find($userId);
+        $user = User::find($userId);
 
-        if ($agent) {
+        if ($user) {
             // Assuming $user represents the currently logged-in user
             $user = auth()->user();
 
@@ -234,69 +236,9 @@ public function Gmap(Request $request)
             // Find the farm profile using the fetched farm ID
             $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
 
-           // Retrieve the search query from the request
-           $searchQuery = $request->input('query');
-           $searchType = $request->input('search_type'); // Assuming 'search_type' is provided in the request
            
-           // Check if the search query is in all capital letters
-           if ($searchQuery === mb_strtoupper($searchQuery, 'UTF-8')) {
-               // If the search query is in all capital letters, redirect back with an error message
-               return redirect()->back()->withErrors(['search_error' => 'Search query cannot be in all capital letters.']);
-           }
-           
-           // Query to fetch farm locations based on last name, middle name, first name, longitude, or latitude
-           $farmLocationQuery = DB::table('farm_profiles')
-               ->join('agri_districts', 'farm_profiles.agri_districts_id', '=', 'agri_districts.id')
-               ->leftJoin('polygons', 'farm_profiles.polygons_id', '=', 'polygons.id')
-               ->leftJoin('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-               ->select('farm_profiles.*', 'agri_districts.*', 'polygons.*', 'personal_informations.*');
-           
-           // Check the search type and add appropriate conditions
-           switch ($searchType) {
-               case 'longitude':
-                   $farmLocationQuery->where('farm_profiles.longitude', '=', $searchQuery);
-                   break;
-               case 'latitude':
-                   $farmLocationQuery->where('farm_profiles.latitude', '=', $searchQuery);
-                   break;
-               default:
-                   // For other search types, search in names
-                   $farmLocationQuery->where(function ($query) use ($searchQuery) {
-                       $query->where('personal_informations.last_name', 'like', '%' . $searchQuery . '%')
-                             ->orWhere('personal_informations.middle_name', 'like', '%' . $searchQuery . '%')
-                             ->orWhere('personal_informations.first_name', 'like', '%' . $searchQuery . '%')
-                             ->orWhere('farm_profiles.tenurial_status', 'like', '%' . $searchQuery . '%');
-                   });
-                   break;
-           }
-           
-           // Execute the query to fetch farm locations
-           $farmLocation = $farmLocationQuery->get();
-           
-           // If no farm locations are found, redirect back with an error message
-           if ($farmLocation->isEmpty()) {
-               return redirect()->back()->withErrors(['search_error' => 'No farm locations found for the provided query.']);
-           }
-           
-           // Initialize empty arrays
-           $agriDistrictIds = [];
-           $polygonsIds = [];
-           
-           // Loop through each row of the result
-           foreach ($farmLocation as $location) {
-               // Extract agri_district_id and polygons_id from each row
-               $agriDistrictIds[] = $location->id;
-               $polygonsIds[] = $location->id;
-           }
-
-            
-            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
             // Return the view with the fetched data
-            return view('map.gmap', compact('agent', 'profile', 'farmProfile','farmLocation','totalRiceProduction',
-            'agriDistrictIds', 'agriDistrictIds',
-            'polygonsIds',
-            'searchQuery' , // Pass the search query to the view
-            'searchType', // Pass the search type to the view
+            return view('user.farmerInfo.profilingData', compact('user', 
             ));
         } else {
             // Handle the case where the user is not found
@@ -309,297 +251,243 @@ public function Gmap(Request $request)
         return redirect()->route('login');
     }
 }
-        // user view the map
-    public function agrimap(Request $request)
-    {
+ 
+    
+    public function agrimap(Request $request) {
         // Check if the user is authenticated
         if (Auth::check()) {
-            // User is authenticated, proceed with retrieving the user's ID
+            // User is authenticated
             $userId = Auth::id();
-    
-            // Find the user based on the retrieved ID
-            $agent = User::find($userId);
-    
-            if ($agent) {
-                // Assuming $user represents the currently logged-in user
-                $user = auth()->user();
-    
-                // Check if user is authenticated before proceeding
-                if (!$user) {
-                    // Handle unauthenticated user, for example, redirect them to login
-                    return redirect()->route('login');
-                }
-    
+            $user = User::find($userId);
+            
+            if ($user) {
                 // Find the user's personal information by their ID
                 $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+                $polygons = Polygon::all();
+                // Fetch all farm profiles
+                // $farmProfiles = FarmProfile::with(['cropFarms', 'personalInformation'])->get();
+                $farmProfiles = FarmProfile::with(['cropFarms', 'personalInformation'])
+                ->where('users_id', $userId) // Filter based on user_id
+                ->get();
     
-                // Fetch the farm ID associated with the user
-                $farmId = $user->farm_id;
+                // Fetch all agri districts
+                $agriDistricts = AgriDistrict::all(); // Get all agri districts
     
-                // Find the farm profile using the fetched farm ID
-                $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
+                // Check if there are any farm profiles
+                if ($farmProfiles->isEmpty() && $agriDistricts->isEmpty()) {
+                    return response()->json(['error' => 'No farm profiles or agri districts found.'], 404);
+                }
     
-               // Retrieve the search query from the request
-               $searchQuery = $request->input('query');
-               $searchType = $request->input('search_type'); // Assuming 'search_type' is provided in the request
-               
-               // Check if the search query is in all capital letters
-               if ($searchQuery === mb_strtoupper($searchQuery, 'UTF-8')) {
-                   // If the search query is in all capital letters, redirect back with an error message
-                   return redirect()->back()->withErrors(['search_error' => 'Search query cannot be in all capital letters.']);
-               }
-               
-               // Query to fetch farm locations based on last name, middle name, first name, longitude, or latitude
-               $farmLocationQuery = DB::table('farm_profiles')
-                   ->join('agri_districts', 'farm_profiles.agri_districts_id', '=', 'agri_districts.id')
-                   ->leftJoin('polygons', 'farm_profiles.polygons_id', '=', 'polygons.id')
-                   ->leftJoin('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                   ->select('farm_profiles.*', 'agri_districts.*', 'polygons.*', 'personal_informations.*');
-               
-               // Check the search type and add appropriate conditions
-               switch ($searchType) {
-                   case 'longitude':
-                       $farmLocationQuery->where('farm_profiles.longitude', '=', $searchQuery);
-                       break;
-                   case 'latitude':
-                       $farmLocationQuery->where('farm_profiles.latitude', '=', $searchQuery);
-                       break;
-                   default:
-                       // For other search types, search in names
-                       $farmLocationQuery->where(function ($query) use ($searchQuery) {
-                           $query->where('personal_informations.last_name', 'like', '%' . $searchQuery . '%')
-                                 ->orWhere('personal_informations.middle_name', 'like', '%' . $searchQuery . '%')
-                                 ->orWhere('personal_informations.first_name', 'like', '%' . $searchQuery . '%')
-                                 ->orWhere('farm_profiles.tenurial_status', 'like', '%' . $searchQuery . '%');
-                       });
-                       break;
-               }
-               
-               // Execute the query to fetch farm locations
-               $farmLocation = $farmLocationQuery->get();
-               
-               // If no farm locations are found, redirect back with an error message
-               if ($farmLocation->isEmpty()) {
-                   return redirect()->back()->withErrors(['search_error' => 'No farm locations found for the provided query.']);
-               }
-               
-               // Initialize empty arrays
-               $agriDistrictIds = [];
-               $polygonsIds = [];
-               
-               // Loop through each row of the result
-               foreach ($farmLocation as $location) {
-                   // Extract agri_district_id and polygons_id from each row
-                   $agriDistrictIds[] = $location->id;
-                   $polygonsIds[] = $location->id;
-               }
-    
-                
+                // Fetch total rice production
                 $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-                // Return the view with the fetched data
-                return view('map.agrimap', compact('agent', 'profile', 'farmProfile','farmLocation','totalRiceProduction',
-                'agriDistrictIds', 'agriDistrictIds',
-                'polygonsIds',
-                'searchQuery' , // Pass the search query to the view
-                'searchType', // Pass the search type to the view
-                ));
-            } else {
+    
+                                // Prepare an array for GPS coordinates
+                    $gpsData = [];
+                    foreach ($farmProfiles as $farmProfile) {
+                        // Concatenate all crop names associated with the farm profile
+                    // This will create a comma-separated string of crop names
+                    foreach ($farmProfile->cropFarms as $cropFarm) {
+                        $cropNames = $cropFarm->crop_name; // Fetch individual crop name
+                        $cropVariety = $cropFarm->type_of_variety_planted; // Fetch individual crop variety
+                        $croppingperYear = $cropFarm->no_of_cropping_per_year; // Fetch individual cropping per year
+                        $yield = $cropFarm->yield_kg_ha; // Fetch individual yield
+                
+                        // Now you can use these variables as needed
+                        // For example, you could print them
+                        // echo "Crop Name: $cropNames, Crop Variety: $cropVariety, Cropping/Year: $croppingperYear, Yield: $yield kg/ha\n";
+                    }
+
+
+                        // Access personal information (if it exists)
+                            $farmerName = $farmProfile->personalInformation ? 
+                            ($farmProfile->personalInformation->first_name . 
+                            ($farmProfile->personalInformation->middle_name ? ' ' . $farmProfile->personalInformation->middle_name : '') . 
+                            ' ' . $farmProfile->personalInformation->last_name) : 
+                            null;
+                            
+
+                        $civilStatus = $farmProfile->personalInformation ? $farmProfile->personalInformation->civil_status : null; // Adjust field name as needed
+                        $orgName = $farmProfile->personalInformation ? $farmProfile->personalInformation->nameof_farmers_ass_org_coop: null; // Adjust field name as needed
+                        $homeAddress = $farmProfile->personalInformation ? $farmProfile->personalInformation->home_address: null;
+                        $landtitleNo = $farmProfile->personalInformation ? $farmProfile->personalInformation->land_title_no: null;
+                        $lotNo = $farmProfile->personalInformation ? $farmProfile->personalInformation->lot_no: null;
+
+                    // Fetch date_of_birth from the related personalInformation model
+                    $dateOfBirth = $farmProfile->personalInformation ? $farmProfile->personalInformation->date_of_birth : null;
+
+                    // Calculate age based only on the year (ignores month/day)
+                    $age = null;
+                    if ($dateOfBirth) {
+                        $birthYear = Carbon::parse($dateOfBirth)->year; // Extract year of birth
+                        $currentYear = Carbon::now()->year; // Get the current year
+
+                        // Debugging: check the values of birthYear and currentYear
+                        // dd($birthYear, $currentYear); // This will dump the values to the screen and stop execution
+
+                        $age = $currentYear - $birthYear; // Calculate the difference in years
+                    }
+
+                        $gpsData[] = [
+                            'gpsLatitude' => $farmProfile->gps_latitude,
+                            'gpsLongitude' => $farmProfile->gps_longitude,
+                            'FarmAddress' => $farmProfile->farm_address,
+                            'NoYears' => $farmProfile->no_of_years_as_farmers,
+                            'totalPhysicalArea' => $farmProfile->total_physical_area,
+                            'TotalCultivated' => $farmProfile->total_area_cultivated,
+                            
+                            'cropName' => $cropNames, // List of crops
+                            'cropVariety' => $cropVariety,
+                            'croppingperYear' => $croppingperYear,
+                            'Yield' => $yield,
+
+                            'farmerName' => $farmerName, // Farmer's name from personal information
+                            'civilStatus' => $civilStatus,
+                            'orgName' => $orgName,
+                            'homeAddress' => $homeAddress,
+                            'landtitleNo' => $landtitleNo,
+                            'lotNo' => $lotNo,
+                            'age' => $age,
+
+
+                        ];
+                    }
+
+    
+                // Prepare agri district GPS coordinates
+                $districtsData = [];
+                foreach ($agriDistricts as $district) {
+                    $districtsData[] = [
+                        'gpsLatitude' => $district->latitude,
+                        'gpsLongitude' => $district->longitude,
+                        'districtName' => $district->district,
+                        'description' => $district->description,
+                  
+                    ];
+                }
+                $polygonsData = [];
+                foreach ($polygons as $polygon) {
+                    // Prepare coordinates array from vertex fields
+                    $coordinates = [
+                        ['lat' => $polygon->verone_latitude, 'lng' => $polygon->verone_longitude],
+                        ['lat' => $polygon->vertwo_latitude, 'lng' => $polygon->vertwo_longitude],
+                        ['lat' => $polygon->verthree_latitude, 'lng' => $polygon->verthree_longitude],
+                        ['lat' => $polygon->vertfour_latitude, 'lng' => $polygon->vertfour_longitude],
+                        ['lat' => $polygon->verfive_latitude, 'lng' => $polygon->verfive_longitude],
+                        ['lat' => $polygon->versix_latitude, 'lng' => $polygon->versix_longitude],
+                        ['lat' => $polygon->verseven_latitude, 'lng' => $polygon->verseven_longitude],
+                        ['lat' => $polygon->vereight_latitude, 'lng' => $polygon->verteight_longitude]
+                    ];
+                    
+                    // Push to polygonData
+                    $polygonsData[] = [
+                        'id' => $polygon->id,
+                        'name' => $polygon->poly_name,
+                        'coordinates' => $coordinates,
+                        'strokeColor' => $polygon->strokecolor, // Stroke color of the polygon
+                        'area' => $polygon->area, // Area of the polygon (if applicable)
+                        'perimeter' => $polygon->perimeter // Perimeter of the polygon (if applicable)
+                    ];
+                }
+                
+             
+
+                // Fetch all CropParcel records and transform them
+                $mapdata = CropParcel::all()->map(function($parcel) {
+                
+                    // Decode the JSON coordinates
+                    $coordinates = json_decode($parcel->coordinates);
+                    
+                    // Check if the coordinates are valid and properly formatted
+                    if (!is_array($coordinates)) {
+                    //   echo "Invalid coordinates for parcel ID {$parcel->id}: " . $parcel->coordinates . "\n";
+                        return null; // Return null for invalid data
+                    }
+
+                    return [
+                        'polygon_name' => $parcel->polygon_name, // Include the ID for reference
+                        'coordinates' => $coordinates, // Include the decoded coordinates
+                        'area' => $parcel->area, // Assuming there's an area field
+                        'altitude' => $parcel->altitude, // Assuming there's an altitude field
+                        'strokecolor' => $parcel->strokecolor, // Include the stroke color
+                        'fillColor' => $parcel->fillColor // Optionally include the fill color if available
+                    ];
+                })->filter(); // Remove any null values from the collection
+
+                
+                    $parceldata = ParcellaryBoundaries::all()->map(function($parcel) {
+                        // Output the individual parcel data for debugging
+                    //   echo "Parcel data fetched: " . json_encode($parcel) . "\n";
+
+                        // Decode the JSON coordinates
+                        $coordinates = json_decode($parcel->coordinates);
+                        
+                        // Check if the coordinates are valid and properly formatted
+                        if (!is_array($coordinates)) {
+                        //   echo "Invalid coordinates for parcel ID {$parcel->id}: " . $parcel->coordinates . "\n";
+                            return null; // Return null for invalid data
+                        }
+
+                        return [
+                            'parcel_name' => $parcel->parcel_name, // Include the ID for reference
+                            'arpowner_na' => $parcel->arpowner_na, 
+                            'agri_districts' => $parcel->agri_districts, 
+                            'barangay_name' => $parcel->barangay_name, 
+                            'tct_no' => $parcel->tct_no, 
+                            'lot_no' => $parcel->lot_no, 
+                            'pkind_desc' => $parcel->pkind_desc, 
+                            'puse_desc' => $parcel->puse_desc, 
+                            'actual_used' => $parcel->actual_used, 
+                            'coordinates' => $coordinates, // Include the decoded coordinates
+                            'area' => $parcel->area, // Assuming there's an area field
+                            'altitude' => $parcel->altitude, // Assuming there's an altitude field
+                            'strokecolor' => $parcel->strokecolor, // Include the stroke color
+                        
+                        ];
+                    })->filter(); // Remove any null values from the collection
+
+
+    
+                // Check if the request is an AJAX request
+                if ($request->ajax()) {
+                    // Return the response as JSON for AJAX requests
+                    return response()->json([
+                        'user' => $user,
+                        'profile' => $profile,
+                        'farmProfiles' => $farmProfiles,
+                        'totalRiceProduction' => $totalRiceProduction,
+                        'gpsData' => $gpsData,
+                        'polygons' => $polygonsData,
+                        'districtsData' => $districtsData // Send all district GPS coordinates
+                    ]);
+                } else {
+                    // Return the view with the fetched data for regular requests
+                    return view('map.agrimap', [
+                        'user' => $user,
+                        'profile' => $profile,
+                        'farmProfiles' => $farmProfiles,
+                        'totalRiceProduction' => $totalRiceProduction,
+                        'gpsData' => $gpsData,
+                        'districtsData' => $districtsData,
+                        'mapdata' => $mapdata, // Pass to view
+                        'parceldata'=> $parceldata 
+                    ]);
+                }
+            }  else {
                 // Handle the case where the user is not found
                 // You can redirect the user or display an error message
                 return redirect()->route('login')->with('error', 'User not found.');
             }
-        } else {
+            } else {
             // Handle the case where the user is not authenticated
             // Redirect the user to the login page
             return redirect()->route('login');
-        }
+            }
     }
-    
-   
+
   
    
 
-    // insertion of new data into farm profile table by admin
-
-// public function store(Request $request)
-// {
-//     try {
-//         // Get authenticated user
-//         $user = auth()->user();
-
-//         // Validate the incoming request data
-//         // $data = $request->validated();
-
-//         // Check if FarmProfile with the given personal_informations_id already exists
-//         $existingFarmProfile = FarmProfile::where('personal_informations_id', $request->input('personal_informations_id'))->first();
-
-//         if ($existingFarmProfile) {
-//             return redirect('/admin-farmprofile')->with('error', 'Farm Profile with this information already exists.');
-//         }
-
-//         // Create a new FarmProfile instance
-//         $farmProfile = new FarmProfile;
-//         $farmProfile->users_id = $request->users_id;
-//         $farmProfile->personal_informations_id = $request->personal_informations_id;
-//         $farmProfile->agri_districts_id = $request->agri_districts_id;
-//         $farmProfile->agri_districts = $request->agri_districts;
-//         $farmProfile->tenurial_status = $request->tenurial_status === 'Add' ? $request->add_newTenure : $request->tenurial_status;
-//         $farmProfile->rice_farm_address = $request->rice_farm_address;
-//         $farmProfile->no_of_years_as_farmers = $request->no_of_years_as_farmers === 'Add' ? $request->add_newFarmyears : $request->no_of_years_as_farmers;
-//         $farmProfile->gps_longitude = $request->gps_longitude;
-//         $farmProfile->gps_latitude = $request->gps_latitude;
-//         $farmProfile->total_physical_area_has = $request->total_physical_area_has;
-//         $farmProfile->rice_area_cultivated_has = $request->rice_area_cultivated_has;
-//         $farmProfile->land_title_no = $request->land_title_no;
-//         $farmProfile->lot_no = $request->lot_no;
-//         $farmProfile->area_prone_to = $request->area_prone_to === 'Add Prone' ? $request->add_newProneYear : $request->area_prone_to;
-//         $farmProfile->ecosystem = $request->ecosystem === 'Add ecosystem' ? $request->Add_Ecosystem : $request->ecosystem;
-//         $farmProfile->type_rice_variety = $request->type_rice_variety;
-//         $farmProfile->prefered_variety = $request->prefered_variety;
-//         $farmProfile->plant_schedule_wetseason = $request->plant_schedule_wetseason;
-//         $farmProfile->plant_schedule_dryseason = $request->plant_schedule_dryseason;
-//         $farmProfile->no_of_cropping_yr = $request->no_of_cropping_yr === 'Adds' ? $request->add_cropyear : $request->no_of_cropping_yr;
-//         $farmProfile->yield_kg_ha = $request->yield_kg_ha;
-//         $farmProfile->rsba_register = $request->rsba_register;
-//         $farmProfile->pcic_insured = $request->pcic_insured;
-//         $farmProfile->government_assisted = $request->government_assisted;
-//         $farmProfile->source_of_capital = $request->source_of_capital === 'Others' ? $request->add_sourceCapital : $request->source_of_capital;
-//         $farmProfile->remarks_recommendation = $request->remarks_recommendation;
-//         $farmProfile->oca_district_office = $request->oca_district_office;
-//         $farmProfile->name_technicians = $request->name_technicians;
-//         $farmProfile->date_interview = $request->date_interview;
-//         dd($farmProfile);
-//         // Save the new FarmProfile
-//         $farmProfile->save();
-
-//         // Redirect with success message
-//         return redirect('/admin-fixedcost')->with('message', 'Farm Profile added successfully');
-//     } catch (\Exception $ex) {
-//         // Log the exception or handle it appropriately
-//         // dd($ex);
-//         return redirect('/admin-farmprofile')->with('message', 'Something went wrong');
-//     }
-// }  
-   
-    // farmers view of all the data from farm profile by admin 
-    
   
-  
-    // public function store(Request $request)
-    // {
-      
-    //     // Farm info
-    //     $farms = $request->farm;
-    //     $farmModel = new FarmProfile();
-    
-    //     $farmModel->tenurial_status = $farms['tenurial_status'];
-    //     $farmModel->farm_address = $farms['farm_address'];
-    //     // $farmModel->no_of_years_as_farmers = $farms['no_of_years_as_farmers'];
-    //     $farmModel->gps_longitude = $farms['gps_longitude'];
-    //     $farmModel->gps_latitude = $farms['gps_latitude'];
-    //     $farmModel->total_physical_area = $farms['Total_area_cultivated_has'];
-    //     $farmModel->total_area_cultivated = $farms['Total_area_cultivated_has'];
-    //     $farmModel->land_title_no = $farms['land_title_no'];
-    //     $farmModel->lot_no = $farms['lot_no'];
-    //     $farmModel->area_prone_to = $farms['area_prone_to'];
-    //     $farmModel->ecosystem = $farms['ecosystem'];
-    //     $farmModel->rsba_registered = $farms['rsba_register'];
-    //     $farmModel->pcic_insured = $farms['pcic_insured'];
-    //     $farmModel->government_assisted = $farms['government_assisted'];
-    //     $farmModel->source_of_capital = $farms['source_of_capital'];
-    //     $farmModel->remarks_recommendation = $farms['remarks'];
-    //     $farmModel->oca_district_office = $farms;
-    //     $farmModel->name_of_field_officer_technician = $farms['name_technicians'];
-    //     $farmModel->date_interviewed = $farms['date_interview'];
-    
-    //     $farmModel->save();
-    
-    //     // VARIABLES
-    //     $farm_id = $farmModel->id;
-    //     $users_id =   $farmModel->users_id;
-    //     // VARIABLES
-    
-    //     // Crop info
-    //     foreach ($request->crops as $crop) {
-    //         $cropModel = new Crop();
-    //         $cropModel->farm_profiles_id = $farm_id;
-    //         $cropModel->crop_name = $crop['crop_name'];
-    //         $cropModel->users_id = $users_id;
-    //         $cropModel->planting_schedule_dryseason = $crop['variety']['dry_season'];
-    //         $cropModel->no_of_cropping_per_year = $crop['variety']['no_cropping_year'];
-    //         $cropModel->preferred_variety = $crop['variety']['preferred'];
-    //         $cropModel->type_of_variety_planted = $crop['variety']['type_variety'];
-    //         $cropModel->planting_schedule_wetseason = $crop['variety']['wet_season'];
-    //         $cropModel->yield_kg_ha = $crop['variety']['yield_kg_ha'];
-    //         $cropModel->save();
-    
-    //         $crop_id = $cropModel->id;
-    
-    //         $productionModel = new LastProductionDatas();
-    //         $productionModel->users_id = $users_id;
-    //         $productionModel->farm_profiles_id = $farm_id;
-    //         $productionModel->crops_farms_id = $crop_id;
-    //         $productionModel->seed_source = $crop['production']['seedSource'];
-    //         $productionModel->seeds_used_in_kg = $crop['production']['seedUsed'];
-    //         $productionModel->seeds_typed_used = $crop['production']['seedtype'];
-    //         $productionModel->no_of_fertilizer_used_in_bags = $crop['production']['fertilizedUsed'];
-    //         $productionModel->no_of_insecticides_used_in_l = $crop['production']['insecticide'];
-    //         $productionModel->no_of_pesticides_used_in_l_per_kg = $crop['production']['pesticidesUsed'];
-    //         $productionModel->area_planted = $crop['production']['areaPlanted'];
-    //         $productionModel->date_planted = $crop['production']['datePlanted'];
-    //         $productionModel->date_harvested = $crop['production']['Dateharvested'];
-    //         $productionModel->unit = $crop['production']['unit'];
-    //         $productionModel->yield_tons_per_kg = $crop['production']['yieldkg'];
-    //         $productionModel->save();
-    
-    //         // productionid
-    //         $productionId = $productionModel->id;
-    
-    //         foreach ($crop['sales'] as $sale) {
-    //             // Create a new sale associated with the production ID
-    //             $salesModel = new ProductionSold();
-    //             $salesModel->last_production_datas_id = $productionId;
-    //             $salesModel->sold_to = $sale['soldTo'];
-    //             $salesModel->measurement = $sale['measurement'];
-    //             $salesModel->unit_price_rice_per_kg = $sale['unit_price'];
-    //             $salesModel->quantity = $sale['quantity'];
-    //             $salesModel->gross_income = $sale['grossIncome'];
-    //             $salesModel->save();
-    //         }
-    
-    //         // FIXED COST
-    //         $fixedcostModel = new FixedCost();
-    //         $fixedcostModel->crops_farms_id = $crop_id;
-    //         $fixedcostModel->users_id = $users_id;
-    //         $fixedcostModel->labor = $crop['fixed_cost']['labor'];
-    //         $fixedcostModel->fertilizer = $crop['fixed_cost']['fertilizer'];
-    //         $fixedcostModel->pesticides = $crop['fixed_cost']['pesticides'];
-    //         $fixedcostModel->irrigation = $crop['fixed_cost']['irrigation'];
-    //         $fixedcostModel->other = $crop['fixed_cost']['other'];
-    //         $fixedcostModel->save();
-    //         // FIXED COST
-    
-    //         // VARIABLE COST
-    //         $variablecostModel = new VariableCost();
-    //         $variablecostModel->crops_farms_id = $crop_id;
-    //         $variablecostModel->users_id = $users_id;
-    //         $variablecostModel->labor = $crop['variable_cost']['labor'];
-    //         $variablecostModel->fertilizer = $crop['variable_cost']['fertilizer'];
-    //         $variablecostModel->pesticides = $crop['variable_cost']['pesticides'];
-    //         $variablecostModel->irrigation = $crop['variable_cost']['irrigation'];
-    //         $variablecostModel->other = $crop['variable_cost']['other'];
-    //         $variablecostModel->save();
-    //         // VARIABLE COST
-    
-         
-
-    //         // LOAN INFO
-    //     }
-    
-    //     return response()->json([
-    //         'success' => 'Data saved successfully!'
-    //     ]);
-    // }
     public function saveFarms(Request $request)
     {
     
