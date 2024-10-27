@@ -87,8 +87,8 @@
           <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   
-                @if ($agent->image)
-                <img  class="wd-30 ht-30 rounded-circle" src="/agentimages/{{$agent->image}}" alt="profile">
+                @if ($user->image)
+                <img  class="wd-30 ht-30 rounded-circle" src="/agentimages/{{$user->image}}" alt="profile">
               @else
                 <img src="/upload/profile.jpg" alt="default avatar"  class="wd-30 ht-30 rounded-circle">
               @endif
@@ -98,15 +98,15 @@
                   <div class="d-flex flex-column align-items-center border-bottom px-5 py-3">
                     <div class="mb-3">
 
-                      @if ($agent->image)
-                      <img class="wd-80 ht-80 rounded-circle" src="/agentimages/{{$agent->image}}" alt="">
+                      @if ($user->image)
+                      <img class="wd-80 ht-80 rounded-circle" src="/agentimages/{{$user->image}}" alt="">
                     @else
                       <img src="/upload/profile.jpg" alt="default avatar"  class="wd-30 ht-30 rounded-circle">
                     @endif
                   </div>
                   <div class="text-center">
-                    <p class="tx-16 fw-bolder">{{ $agent->first_name.' '.$agent->last_name}}</p>
-                      <p class="tx-12 text-muted">{{ $agent->email }}</p>
+                    <p class="tx-16 fw-bolder">{{ $user->first_name.' '.$user->last_name}}</p>
+                      <p class="tx-12 text-muted">{{ $user->email }}</p>
                   </div>
                   </div>
   <ul class="list-unstyled p-1">
