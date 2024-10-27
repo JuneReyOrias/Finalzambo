@@ -610,7 +610,14 @@
 
 
                                     
-                                 
+                                                        
+                    <div class="input-box col-md-4">
+                        <span class="details">Home Address</span>
+                        <input type="text" name="home_address" id="home_address" class="form-control home_address light-gray-placeholder @error('home_address') is-invalid @enderror" placeholder="Enter home address" autocomplete="new-password" value="{{ old('home_address') }}">
+                        @error('home_address')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                                    
                     <div class="input-box col-md-4">
                         <span class="details">Street</span>
