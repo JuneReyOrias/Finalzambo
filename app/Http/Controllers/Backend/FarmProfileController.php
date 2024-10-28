@@ -487,8 +487,9 @@ public function FarmerProfiling(Request $request)
                 ]);
             }
 
+
             // Return the view with the fetched data (non-AJAX)
-            return view('user.farmerInfo.profilingData', compact('user', 'gpsData', 'farmProfiles'));
+            return view('user.farmerInfo.profilingData', compact('user', 'gpsData', 'farmProfiles',));
 
         } else {
             // Handle the case where the user is not found

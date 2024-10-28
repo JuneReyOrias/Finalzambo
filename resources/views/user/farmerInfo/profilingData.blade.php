@@ -764,25 +764,295 @@
                         </div>
                     </div>
                   
-
+               
                         
                     </div>
                     </div>
+                
+                               <!-- Buttons for Download and Print -->
+<div class="row mr-4 mb-4">
+    <div class="col-md-12 text-end">
+        {{-- <button type="button" class="btn btn-outline-primary me-2" id="downloadBtn">Download Profile</button> --}}
+        <button type="button" class="btn btn-outline-success me-2" onclick="printProfile()">Print Profile</button>
+        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#farmerReportModal">
+            Farmer Reports
+        </button>
+    </div>
+</div>
+
                 </div>
+
+                
                 @endforeach <!-- End loop -->
-                <!-- Buttons for Download and Print -->
-                <div class="row mt-4">
-                    <div class="col-md-12 text-end">
-                        {{-- <button type="button" class="btn btn-outline-primary me-2"id="downloadBtn">Download Profile</button> --}}
-                        <button type="button" class="btn btn-outline-success" onclick="printProfile()">Print Profile</button>
-                    </div>
-                </div>
+
             </form>
         </div>
     </div>
 </div>
+<!-- Modal Structure -->
+<div class="modal fade" id="farmerReportModal" tabindex="-1" aria-labelledby="farmerReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="farmerReportModalLabel">Farmer Reports</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalContentToPrint">
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <!-- Right Logo (appearing on the left) -->
+                    <div class="right-logo mr-5">
+                        {{-- <img src="path_to_right_logo.png" alt="Right Logo" class="img-fluid" style="max-height: 60px;"> --}}
+                        
+                        @if ($user->image)
+                        <img src="../assets/logo/Citylogo.jpg" alt="Right Logo" class="img-fluid rounded-circles"style="max-height: 90px;">
+                      @else
+                        <img src="/upload/profile.jpg" alt="Profile Image" class="img-fluid">
+                      @endif
+                    </div>
+                
+                    <!-- Middle Institution Name and Farmer Info -->
+                    <div class="text-center">
+                        <h4 class="institution-name mb-0">Office of City Agriculture</h4>
+                        <h5 class="mb-1">Zamboanga City</h5>
+                        <h5 class="h5 profile-rating"></span></h5>
+                    </div>
+                
+                    <!-- Left Logo (appearing on the right) -->
+                    <div class="left-logo  ml-5">
+                        {{-- <img src="path_to_left_logo.png" alt="Left Logo" class="img-fluid" style="max-height: 60px;"> --}}
+                        @if ($user->image)
+                        <img src="../assets/logo/agriculture.jpg" alt="Right Logo"  class="img-fluid rounded-circles"style="max-height: 90px; max-width:80">
+                      @else
+                        <img src="/upload/profile.jpg" alt="Profile Image" class="img-fluid">
+                      @endif
+                    </div>
+                </div>
+                
+                   <!-- Farmer Profile -->
+                   <div class="profile-head text-center mt-5">
+                    <h5 class="mb-1">{{ $data['farmerName'] }}</h5>
+                    <h5 class="h5 profile-rating">Age: <span>{{ $data['age'] }}</span></h5>
+                </div>
+                <!-- Filter Inputs -->
+                {{-- <div class="row g-2 align-items-center mb-3">
+                    <!-- Crop Name Dropdown -->
+                    <div class="col-md-3">
+                        <label for="cropName" class="form-label">Select Crop</label>
+                        <select id="cropName" class="form-select">
+                            <option value="">All Crops</option>
+                            @foreach ($crops as $crop)
+                                <option value="{{ $crop }}">{{ ucwords(strtolower($crop)) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
+                    <!-- Date From Input -->
+                    <div class="col-md-2">
+                        <label for="dateFrom" class="form-label">Date From</label>
+                        <input type="date" id="dateFrom" class="form-control">
+                    </div>
+
+                    <!-- Date To Input -->
+                    <div class="col-md-2">
+                        <label for="dateTo" class="form-label">Date To</label>
+                        <input type="date" id="dateTo" class="form-control">
+                    </div>
+
+                    <!-- District Dropdown -->
+                    <div class="col-md-3">
+                        <label for="district" class="form-label">Select District</label>
+                        <select id="district" class="form-select">
+                            <option value="">All Districts</option>
+                            @foreach ($districts as $district)
+                                <option value="{{ $district }}">{{ ucwords(strtolower($district)) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    
+                </div> --}}
+
+             
+
+                <!-- Report Data -->
+                <div class="table-responsive mt-3">
+                    <table class="table table-hover-color table-bordered align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="custom-cell">Report Type</th>
+                                <th class="custom-cell">Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($gpsData as $data)
+                                <tr>
+                                    <td class="text-black">Total Area Planted</td>
+
+                                    <td id="totalAreaPlanted">{{ number_format($data['totalPhysicalArea'], 1) }} ha</td>
+                                </tr>
+                                
+                                @php
+                                    $totalAreaPlanted = $data['totalPhysicalArea'];
+                                    $totalYield = $data['Yield'];
+                                    $yieldPerAreaPlanted = ($totalAreaPlanted > 0) ? ($totalYield / $totalAreaPlanted) : 0;
+                                @endphp
+                
+                                <tr>
+                                    <td class="text-black">Yield/Area Planted</td>
+                                    <td id="yieldPerAreaPlanted">{{ number_format($yieldPerAreaPlanted, 2) }} tons/ha</td>
+                                </tr>
+                            @endforeach
+                
+                            {{-- @foreach ($farmProfiles as $farmProfile)
+                                @foreach ($farmProfile->cropFarms as $cropFarm)
+                                @php
+                                $cropFarm = $productionData->crop_name;
+                           
+                            @endphp
+                                    @foreach ($cropFarm->lastProductionDatas as $productionData)
+                                        @php
+                                            $noOfCropping = $productionData->cropping_no;
+                                            $harvestDate = \Carbon\Carbon::parse($productionData->date_harvested)->format('F d, Y');
+                                            $croppingLabel = "Cropping No. " . $noOfCropping;
+                                            $yieldTonsKg = $productionData->yield_tons_per_kg;
+                                        @endphp
+                
+                                        <tr class="table-secondary">
+                                            <td colspan="2">
+                                                <strong>{{ $croppingLabel }} (Harvest Date: {{ $harvestDate }})</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-black">Yield (Tons/Kg) for {{ $croppingLabel }}</td>
+                                            <td id="yieldTonsKg">{{ number_format($yieldTonsKg, 2) }} kg</td>
+                                        </tr>
+                
+                                        @foreach ($cropFarm->variableCosts as $variableCostsData)
+                                            <tr>
+                                                <td class="text-black">Total Cost for {{ $croppingLabel }}</td>
+                                                <td id="totalCostForCropping">₱{{ number_format($variableCostsData->total_variable_cost, 2) }}</td>
+                                            </tr>
+                
+                                            @php
+                                                $averageCostPerAreaPlanted = ($totalAreaPlanted > 0) ? ($variableCostsData->total_variable_cost / $totalAreaPlanted) : 0;
+                                            @endphp
+                
+                                            <tr>
+                                                <td class="text-black">Average Cost/Area Planted for {{ $croppingLabel }}</td>
+                                                <td id="averageCostPerAreaPlantedForCropping">₱{{ number_format($averageCostPerAreaPlanted, 2) }}/ha</td>
+                                            </tr>
+                                        @endforeach
+                                    @endforeach
+                                @endforeach
+                            @endforeach --}}
+                            @foreach ($farmProfiles as $farmProfile)
+    @foreach ($farmProfile->cropFarms as $cropFarm)
+        @foreach ($cropFarm->lastProductionDatas as $productionData)
+            @php
+                $noOfCropping = $productionData->cropping_no;
+                $harvestDate = \Carbon\Carbon::parse($productionData->date_harvested)->format('F d, Y');
+                $croppingLabel = "Cropping No. " . $noOfCropping;
+                $yieldTonsKg = $productionData->yield_tons_per_kg;
+                $cropName = $cropFarm->crop_name; // Get the crop name for each crop farm
+            @endphp
+
+            <tr class="table-secondary">
+                <td colspan="2">
+                    <strong>{{ $croppingLabel }} (Harvest Date: {{ $harvestDate }}) for {{ $cropName }}</strong>
+                </td>
+            </tr>
+            <tr>
+                <td class="text-black">Yield (Tons/Kg) for {{ $croppingLabel }}</td>
+                <td id="yieldTonsKg">{{ number_format($yieldTonsKg, 2) }} kg</td>
+            </tr>
+
+            @foreach ($cropFarm->variableCosts as $variableCostsData)
+                <tr>
+                    <td class="text-black">Total Cost for {{ $croppingLabel }}</td>
+                    <td id="totalCostForCropping">₱{{ number_format($variableCostsData->total_variable_cost, 2) }}</td>
+                </tr>
+
+                @php
+                    $averageCostPerAreaPlanted = ($totalAreaPlanted > 0) ? ($variableCostsData->total_variable_cost / $totalAreaPlanted) : 0;
+                @endphp
+
+                <tr>
+                    <td class="text-black">Average Cost/Area Planted for {{ $croppingLabel }}</td>
+                    <td id="averageCostPerAreaPlantedForCropping">₱{{ number_format($averageCostPerAreaPlanted, 2) }}/ha</td>
+                </tr>
+            @endforeach
+        @endforeach
+    @endforeach
+@endforeach
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="printModalContent()">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+  
 <style>
+
+    .rounded-circles{
+        border-radius: 50% !important;
+        width: 80px;
+        height: 70px;
+    }
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+}
+
+.table thead {
+    background-color: #f8f9fa; /* Light gray background */
+}
+
+.table thead th {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+}
+
+.table tbody tr {
+    transition: background-color 0.2s ease-in-out;
+}
+
+.table tbody tr:hover {
+    background-color: #e9ecef; /* Light gray hover effect */
+}
+
+.table tbody td {
+    padding: 15px;
+    vertical-align: middle;
+}
+
+.custom-cell {
+    font-weight: bold;
+}
+
+.table-secondary {
+    background-color: #f1f3f5;
+    font-weight: bold;
+    font-size: 1.1em;
+    text-align: center;
+}
+
+#totalAreaPlanted, #yieldPerAreaPlanted, #yieldTonsKg, #totalCostForCropping, #averageCostPerAreaPlantedForCropping {
+    font-weight: 500;
+    color: #239e29;
+}
+
+
+
+
     .collapse-header {
         cursor: pointer; /* Make header clickable */
         background-color: #f8f9fa; /* Background color for better visibility */
@@ -966,84 +1236,20 @@ body {
 }
 
 </style>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Ensure you have Bootstrap JavaScript and jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script> --}}
 <script>
-
-// document.getElementById('downloadBtn').addEventListener('click', function () {
-//     const element = document.getElementById('profileContent');
-
-//     // Ensure all collapsible sections are expanded
-//     const collapseHeaders = document.querySelectorAll('.collapse-header');
-//     collapseHeaders.forEach(header => {
-//         if (!header.classList.contains('open')) {  // Ensure they open if closed
-//             header.click();
-//         }
-//     });
-
-//     // Function to check if all images are loaded
-//     const waitForImages = () => {
-//         return new Promise((resolve) => {
-//             const images = element.getElementsByTagName('img');
-//             let loadedImages = 0;
-
-//             if (images.length === 0) {
-//                 resolve(); // No images, resolve immediately
-//             }
-
-//             for (let img of images) {
-//                 if (img.complete) {
-//                     loadedImages++;
-//                 } else {
-//                     img.onload = () => {
-//                         loadedImages++;
-//                         if (loadedImages === images.length) {
-//                             resolve();
-//                         }
-//                     };
-//                 }
-//             }
-
-//             if (loadedImages === images.length) {
-//                 resolve(); // All images already loaded
-//             }
-//         });
-//     };
-
-//     // Wait for collapsibles to expand and images to load, then download the PDF
-//     waitForImages().then(() => {
-//         const options = {
-//             margin: 0.5, // Reduced margin
-//             filename: 'profile.pdf',
-//             image: { type: 'jpeg', quality: 0.98 },
-//             html2canvas: { 
-//                 scale: 1.2, // Adjust scale for better fit
-//                 useCORS: true, // Handle cross-origin images
-//                 windowWidth: document.documentElement.scrollWidth // Capture full width
-//             },
-//             jsPDF: { 
-//                 unit: 'in', 
-//                 format: 'letter', 
-//                 orientation: 'portrait'  // Fit more content vertically
-//             },
-//             pagebreak: { 
-//                 mode: ['avoid-all', 'css', 'legacy'] // Manage page breaks properly
-//             }
-//         };
-
-//         html2pdf().from(element).set(options).save();
-//     });
-// });
-
-
-
-
-// Function to print the profile
-// Function to print the profile
+//     function printModalContent() {
+//     var modalContent = document.getElementById('modalContentToPrint').innerHTML;
+//     var originalContent = document.body.innerHTML;
+    
+//     // Set the body content to the modal content
+//     document.body.innerHTML = modalContent;
+//     window.print();  // Trigger the print dialog
+    
+//     // Restore the original content after printing
+//     document.body.innerHTML = originalContent;
+//     location.reload();  // Reload the page to restore any JS or event listeners
+// }
 function printProfile() {
     // Get the profile content
     const printContents = document.querySelector('.emp-profile').innerHTML;
@@ -1072,6 +1278,45 @@ function printProfile() {
     // // Reload the page to restore any dynamic elements
     window.location.reload();
 }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Ensure you have Bootstrap JavaScript and jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script> --}}
+<script>
+
+// Function to print the profile
+function printModalContent() {
+    // Get the modal content you want to print
+    const printContents = document.querySelector('#modalContentToPrint').innerHTML;
+    
+    // Optionally, highlight specific elements within the modal
+    const modalElement = document.querySelector('#modalContentToPrint');
+    const elementsToHighlight = modalElement.querySelectorAll('.highlight-target'); // Adjust the selector if needed
+
+    // Add highlight class (if necessary)
+    elementsToHighlight.forEach(element => {
+        element.classList.add('highlight-target');  // Add highlight class
+    });
+
+    // Save the original content of the page
+    const originalContents = document.body.innerHTML;
+
+    // Set the body content to the modal content for printing
+    document.body.innerHTML = printContents;
+
+    // Trigger the print dialog
+    window.print();
+
+    // Restore the original page content after printing
+    document.body.innerHTML = originalContents;
+
+    // Reload the page to restore any dynamic elements like JS events
+    window.location.reload();
+}
+
 
 
 
@@ -1082,84 +1327,7 @@ function printProfile() {
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 <script>
-// $(document).ready(function() {
-//     const userId = {{ auth()->user()->id }}; // Get the authenticated user ID dynamically
 
-//     // Perform the AJAX request to fetch the crop data when the page loads
-//     $.ajax({
-//         url: `/user-farmer-Profiling`, // Update with your actual route URL
-//         method: 'GET',
-//         success: function(response) {
-//             // Check if data is returned successfully
-//             if (response && response.formattedData) {
-//                 const cropData = response.formattedData;
-
-//                 // Function to capitalize the first letter of a string
-//                 const capitalizeFirstLetter = (label) => {
-//                     return label.charAt(0).toUpperCase() + label.slice(1).toLowerCase();
-//                 };
-
-//                 // Format crop labels to have capitalized first letters
-//                 const formattedLabels = cropData.labels.map(capitalizeFirstLetter);
-
-//                 // Ensure previous chart is cleared if it exists
-//                 const ctx = document.getElementById("cropPieChart").getContext("2d");
-//                 const existingChart = Chart.getChart("cropPieChart"); // Get existing chart instance
-
-//                 if (existingChart) {
-//                     existingChart.destroy(); // Destroy existing chart if present
-//                 }
-
-//                 // Create a new pie chart with the fetched data
-//                 const chartOptions = {
-//                     type: 'pie',
-//                     data: {
-//                         labels: formattedLabels, // Use formatted labels
-//                         datasets: [{
-//                             label: 'Production Yield Per Crop',
-//                             data: cropData.data, // Series data (yield per crop)
-//                             backgroundColor: ['#009e2e', '#FFCE56', '#e3004d', '#4BC0C0', '#9966FF', '#FF9F40', '#ff0000'],
-//                             borderColor: '#fff',
-//                             borderWidth: 1
-//                         }]
-//                     },
-//                     options: {
-//                         responsive: true,
-//                         plugins: {
-//                             legend: {
-//                                 position: 'bottom',
-//                                 labels: {
-//                                     usePointStyle: true, // Use point style for circular labels
-//                                     pointStyle: 'circle' // Make labels circular
-//                                 }
-//                             },
-//                             tooltip: {
-//                                 callbacks: {
-//                                     label: function(tooltipItem) {
-//                                         return `${tooltipItem.label}: ${tooltipItem.raw.toFixed(2)} kg`; // Display yield in tons
-//                                     }
-//                                 },
-//                                 // Custom tooltip styling to make it circular
-//                                 // backgroundColor: 'rgba(255, 255, 255, 0.9)',
-//                                 borderColor: '#ddd',
-//                                 borderWidth: 1,
-//                                 borderRadius: 10
-//                             }
-//                         }
-//                     }
-//                 };
-
-//                 // Initialize the chart using Chart.js
-//                 const chart = new Chart(ctx, chartOptions);
-//             } else {
-//                 console.error('No data returned from the server.');
-//             }
-//         },
-//         error: function(error) {
-//             console.error('Error fetching data:', error);
-//         }
-//     });
-// });
 $(document).ready(function() {
     const userId = {{ auth()->user()->id }}; // Get the authenticated user ID dynamically
 
@@ -1238,98 +1406,6 @@ $(document).ready(function() {
 });
 
 
-// $(document).ready(function() {
-//     const userId = {{ auth()->user()->id }}; // Get the authenticated user ID dynamically
-
-//     // Function to capitalize the first letter of a string
-//     const capitalizeFirstLetter = (label) => {
-//         return label.charAt(0).toUpperCase() + label.slice(1).toLowerCase();
-//     };
-
-//     // Perform the AJAX request to fetch the gross income data
-//     $.ajax({
-//         url: `/user-farmer-Profiling`, // Update with your actual route URL
-//         method: 'GET',
-//         success: function(response) {
-//             // Check if data is returned successfully
-//             if (response && response.formattedIncomeData) {
-//                 const incomeData = response.formattedIncomeData;
-
-//                 // Capitalize the first letter of each label
-//                 const capitalizedLabels = incomeData.labels.map(label => capitalizeFirstLetter(label));
-
-//                 // Ensure previous chart is cleared if it exists
-//                 const ctx = document.getElementById("grossIncomeChart").getContext("2d");
-//                 const existingChart = Chart.getChart("grossIncomeChart"); // Get existing chart instance
-
-//                 if (existingChart) {
-//                     existingChart.destroy(); // Destroy existing chart if present
-//                 }
-
-//                 // Create a new line chart with the fetched data
-//                 const chartOptions = {
-//                     type: 'line',
-//                     data: {
-//                         labels: capitalizedLabels, // Use capitalized labels
-//                         datasets: [{
-//                             label:capitalizedLabels , // Capitalized dataset label
-//                             data: incomeData.data, // Series data (gross income per crop)
-//                             borderColor: ['#009e2e', '#FFCE56', '#e3004d', '#4BC0C0', '#9966FF', '#FF9F40', '#ff0000'], // Line color
-//                             backgroundColor: ['#009e2e', '#FFCE56', '#e3004d', '#4BC0C0', '#9966FF', '#FF9F40', '#ff0000'], // Area color
-//                             borderWidth: 2,
-//                             fill: true // Fill the area under the line
-                           
-//                         }]
-//                     },
-//                     options: {
-//                         responsive: true,
-//                         plugins: {
-//                             legend: {
-//                                 display: true,
-//                                 position: 'bottom',
-//                                 labels: {
-//                                     usePointStyle: true, // Use point style for circular labels
-//                                     pointStyle: 'circle' // Make labels circular
-//                                 }
-//                             },
-//                             tooltip: {
-//                                 callbacks: {
-//                                     label: function(tooltipItem) {
-//                                         return `${tooltipItem.label}: Php${tooltipItem.raw.toFixed(2)}`; // Format display
-//                                     }
-//                                 }
-                                
-//                             }
-//                         },
-//                         scales: {
-//                             y: {
-//                                 beginAtZero: true,
-//                                 title: {
-//                                     display: true,
-//                                     text: 'Gross Income (Php)',
-//                                 }
-//                             },
-//                             x: {
-//                                 title: {
-//                                     display: true,
-//                                     text: 'Crops',
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 };
-
-//                 // Initialize the chart using Chart.js
-//                 const chart = new Chart(ctx, chartOptions);
-//             } else {
-//                 console.error('No data returned from the server.');
-//             }
-//         },
-//         error: function(error) {
-//             console.error('Error fetching data:', error);
-//         }
-//     });
-// });
 $(document).ready(function() {
     const userId = {{ auth()->user()->id }}; // Get the authenticated user ID dynamically
 
@@ -1408,61 +1484,6 @@ $(document).ready(function() {
 });
 
 
-// $(document).ready(function() {
-//     // Fetch the data using jQuery AJAX
-//     $.ajax({
-//         url: '/user-farmer-Profiling', // Update with your actual route
-//         method: 'GET',
-//         dataType: 'json',
-//         success: function(data) {
-//             const ctx = document.getElementById('yieldChart').getContext('2d');
-
-//             const yieldChart = new Chart(ctx, {
-//                 type: 'bar',
-//                 data: {
-//                     labels: data.labels, // Cropping numbers
-//                     datasets: [{
-//                         label: 'Total Yield (Tons)',
-//                         data: data.yields, // Yield data in tons
-//                         backgroundColor: ['#009e2e', '#FFCE56', '#e3004d', '#4BC0C0', '#9966FF', '#FF9F40', '#ff0000'],
-//                         borderColor: ['#009e2e', '#FFCE56', '#e3004d', '#4BC0C0', '#9966FF', '#FF9F40', '#ff0000'],
-//                         borderWidth: 1
-//                     }]
-//                 },
-//                 options: {
-//                     scales: {
-//                         y: {
-//                             beginAtZero: true,
-//                             title: {
-//                                 display: true,
-//                                 text: 'Yield (Tons)'
-//                             }
-//                         },
-//                         x: {
-//                             title: {
-//                                 display: true,
-//                                 text: 'Cropping Number'
-//                             }
-//                         }
-//                     },
-//                     plugins: {
-//                         legend: {
-//                             display: true,
-//                             position: 'bottom', // Set legend position to bottom
-//                             labels: {
-//                                     usePointStyle: true, // Use point style for circular labels
-//                                     pointStyle: 'circle' // Make labels circular
-//                                 }
-//                         }
-//                     }
-//                 }
-//             });
-//         },
-//         error: function(xhr, status, error) {
-//             console.error('Error fetching data:', error);
-//         }
-//     });
-// });
 $(document).ready(function() {
     // Fetch the data using jQuery AJAX
     $.ajax({
@@ -1513,5 +1534,64 @@ $(document).ready(function() {
 
 
 </script>
+<script>
 
+$(document).ready(function() {
+    $('#cropNameFilter').on('change', function() {
+        let cropName = $(this).val(); // Get selected crop name
+
+        $.ajax({
+            url: '/user-farmer-Profiling', // Laravel route
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}', // Include CSRF token
+                crop_name: cropName // Send selected crop name
+            },
+            success: function(response) {
+                if (response.success) {
+                    let farmProfiles = response.data;
+
+                    // Clear previous data
+                    $('#farmDataContainer').empty();
+
+                    // Loop through and display filtered farm profiles
+                    $.each(farmProfiles, function(index, farmProfile) {
+                        let cropFarms = farmProfile.cropFarms;
+
+                        $.each(cropFarms, function(index, cropFarm) {
+                            let totalAreaPlanted = cropFarm.total_area_planted ?? 'N/A';
+                            let variableCosts = cropFarm.variableCosts[0]?.total_variable_cost || 'N/A';
+                            let lastProduction = cropFarm.lastProductionDatas[0] || {};
+                            let croppingNo = lastProduction.cropping_no || 'N/A';
+                            let harvestDate = lastProduction.harvest_date ? new Date(lastProduction.harvest_date).toLocaleDateString() : 'N/A';
+                            let yieldTonsKg = lastProduction.yield_tons_kg || 'N/A';
+
+                            let averageCostPerAreaPlanted = (totalAreaPlanted > 0 && variableCosts > 0) 
+                                ? (variableCosts / totalAreaPlanted).toFixed(2) : 'N/A';
+
+                            $('#farmDataContainer').append(`
+                                <tr class="table-light">
+                                    <td>${cropFarm.crop_name}</td>
+                                    <td>₱${Number(variableCosts).toLocaleString()}</td>
+                                    <td>${croppingNo}</td>
+                                    <td>${harvestDate}</td>
+                                    <td>${yieldTonsKg} kg</td>
+                                    <td>₱${averageCostPerAreaPlanted}/ha</td>
+                                </tr>
+                            `);
+                        });
+                    });
+                } else {
+                    alert('No data found.');
+                }
+            },
+            error: function(error) {
+                console.error('Error fetching data', error);
+            }
+        });
+    });
+});
+</script>
+
+</script>
 @endsection
