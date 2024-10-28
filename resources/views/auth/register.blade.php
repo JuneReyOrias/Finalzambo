@@ -85,16 +85,16 @@
                                                  </div>
                                         <div class="col-md-6">
                                           <label for="agri_district" class="form-label">Agri District</label>
-                                          <select class="form-control  @error('agri_district') is-invalid @enderror"  name="agri_district"id="validationCustom01" aria-label="Floating label select e">
+                                          <select class="form-control  @error('district') is-invalid @enderror"  name="district"id="validationCustom01" aria-label="Floating label select e">
                                             <option selected disabled>Select Agri-District</option>
-                                               <option value="ayala" {{ old('agri_district') == 'ayala' ? 'selected' : '' }}>Ayala Distict</option>
-                                                 <option value="tumaga" {{ old('agri_district') == 'tumaga' ? 'selected' : '' }}>Tumaga District</option>
-                                                   <option value="culianan" {{ old('agri_district') == 'culianan' ? 'selected' : '' }}>Culianan District</option>
-                                                     <option value="Manicahan District" {{ old('agri_district') == 'manicahan' ? 'selected' : '' }}>Manicahan District</option>
-                                                       <option value="curuan" {{ old('agri_district') == 'curuan' ? 'selected' : '' }}>Curuan District</option>
-                                                         <option value="vitali" {{ old('agri_district') == 'vitali' ? 'selected' : '' }}>Vitali District</option>
+                                               <option value="ayala" {{ old('district') == 'ayala' ? 'selected' : '' }}>Ayala Distict</option>
+                                                 <option value="tumaga" {{ old('district') == 'tumaga' ? 'selected' : '' }}>Tumaga District</option>
+                                                   <option value="culianan" {{ old('district') == 'culianan' ? 'selected' : '' }}>Culianan District</option>
+                                                     <option value="Manicahan District" {{ old('district') == 'manicahan' ? 'selected' : '' }}>Manicahan District</option>
+                                                       <option value="curuan" {{ old('district') == 'curuan' ? 'selected' : '' }}>Curuan District</option>
+                                                         <option value="vitali" {{ old('district') == 'vitali' ? 'selected' : '' }}>Vitali District</option>
                                                             </select>
-                                                                 @error('agri_district')
+                                                                 @error('district')
                                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                                       @enderror
                                                                </div>
