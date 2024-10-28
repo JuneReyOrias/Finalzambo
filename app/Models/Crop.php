@@ -68,4 +68,25 @@ class Crop extends Model
     {
         return $this->belongsTo(Crop::class, 'crop_name', 'crop_name');
     }
+    public function lastProductionDatas()
+    {
+        return $this->hasMany(LastProductionDatas::class, 'crops_farms_id');
+    }
+
+    public function fixedCosts()
+    {
+        return $this->hasMany(FixedCost::class, 'crops_farms_id');
+    }
+
+    public function machineries()
+    {
+        return $this->hasMany(MachineriesUsed::class, 'crops_farms_id');
+    }
+
+  
+    public function productionSolds()
+    {
+        return $this->hasMany(ProductionSold::class, 'crops_farms_id');
+    }
+
 }
