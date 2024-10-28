@@ -29,12 +29,14 @@
                             <img src="/upload/profile.jpg" alt="Profile Image" class="img-fluid rounded-circle">
                           @endif
                         </div>
+                        @foreach ($gpsData as $data)
                         <div class="profile-head text-center mt-3"> <!-- Centered the profile head -->
                             <h5 class="mb-1">{{ $data['farmerName'] }}</h5>
                             <h5  class="h5 rofile-rating">Age: <span>{{ $data['age'] }}</span></p> <!-- Age -->
                             {{-- <h5 class="mb-1">Web Developer and Designer</h5>
                             <p class="profile-rating">RANKINGS : <span class="text-success">8/10</span></p> --}}
                         </div>
+                        @endforeach
                     </div>
                 </div>
                 
