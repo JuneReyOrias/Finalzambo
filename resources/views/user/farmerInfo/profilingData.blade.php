@@ -808,7 +808,7 @@
                         @if ($user->image)
                         <img src="../assets/logo/Citylogo.jpg" alt="Right Logo" class="img-fluid rounded-circles"style="max-height: 90px;">
                       @else
-                        <img src="/upload/profile.jpg" alt="Profile Image" class="img-fluid">
+                        <img src="../assets/logo/default_logo.png" alt="Profile Image" class="img-fluid rounded-circles">
                       @endif
                     </div>
                 
@@ -825,7 +825,7 @@
                         @if ($user->image)
                         <img src="../assets/logo/agriculture.jpg" alt="Right Logo"  class="img-fluid rounded-circles"style="max-height: 90px; max-width:80">
                       @else
-                        <img src="/upload/profile.jpg" alt="Profile Image" class="img-fluid">
+                        <img src="../assets/logo/default_logo.png" alt="Profile Image" class="img-fluid rounded-circles">
                       @endif
                     </div>
                 </div>
