@@ -43,7 +43,7 @@ class RegisteredUserController extends Controller
              $user->email = $request['email'];
              $user->agri_district = $request['agri_district'];
              $user->password = bcrypt($request['password']); // Hash the password for security
-             $user->role = $request['role'];
+            //  $user->role = $request['role'];
             //  dd($user);
              $user->save();
              
