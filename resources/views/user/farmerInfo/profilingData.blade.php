@@ -806,9 +806,13 @@
                         {{-- <img src="path_to_right_logo.png" alt="Right Logo" class="img-fluid" style="max-height: 60px;"> --}}
                         
                         @if ($user->image)
-                        <img src="../assets/logo/Citylogo.jpg" alt="Right Logo" class="img-fluid rounded-circles"style="max-height: 90px;">
+                        <img src="../assets/logo/Citylogo.jpg" alt="Right Logo" class="img-fluid rounded-circles"style=" border-radius: 50% !important;
+                        width: 80px;
+                        height: 70px;">>
                       @else
-                        <img src="../assets/logo/default_logo.png" alt="Profile Image" class="img-fluid rounded-circles">
+                        <img src="../assets/logo/default_logo.png" alt="Profile Image" class="img-fluid rounded-circles" style=" border-radius: 50% !important;
+                        width: 80px;
+                        height: 70px;">>
                       @endif
                     </div>
                 
@@ -823,9 +827,13 @@
                     <div class="left-logo  ml-5">
                         {{-- <img src="path_to_left_logo.png" alt="Left Logo" class="img-fluid" style="max-height: 60px;"> --}}
                         @if ($user->image)
-                        <img src="../assets/logo/agriculture.jpg" alt="Right Logo"  class="img-fluid rounded-circles"style="max-height: 90px; max-width:80">
+                        <img src="../assets/logo/agriculture.jpg" alt="Right Logo"  class="img-fluid rounded-circles"style=" border-radius: 50% !important;
+                        width: 80px;
+                        height: 70px;">
                       @else
-                        <img src="../assets/logo/default_logo.png" alt="Profile Image" class="img-fluid rounded-circles">
+                        <img src="../assets/logo/default_logo.png" alt="Profile Image" class="img-fluid rounded-circles"style=" border-radius: 50% !important;
+                        width: 80px;
+                        height: 70px;">
                       @endif
                     </div>
                 </div>
