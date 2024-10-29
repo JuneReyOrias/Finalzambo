@@ -810,7 +810,7 @@
                         width: 80px;
                         height: 70px;">
                       @else
-                        <img src="../assets/logo/default_logo.png" alt="Profile Image" class="img-fluid rounded-circles" style=" border-radius: 50% !important;
+                        <img src="../assets/logo/Citylogo.jpg" alt="Profile Image" class="img-fluid rounded-circles" style=" border-radius: 50% !important;
                         width: 80px;
                         height: 70px;">
                       @endif
@@ -831,7 +831,7 @@
                         width: 80px;
                         height: 70px;">
                       @else
-                        <img src="../assets/logo/default_logo.png" alt="Profile Image" class="img-fluid rounded-circles"style=" border-radius: 50% !important;
+                        <img src="../assets/logo/agriculture.jpg" alt="Profile Image" class="img-fluid rounded-circles"style=" border-radius: 50% !important;
                         width: 80px;
                         height: 70px;">
                       @endif
