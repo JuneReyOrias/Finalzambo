@@ -808,11 +808,11 @@
                         @if ($user->image)
                         <img src="../assets/logo/Citylogo.jpg" alt="Right Logo" class="img-fluid rounded-circles"style=" border-radius: 50% !important;
                         width: 80px;
-                        height: 70px;">>
+                        height: 70px;">
                       @else
                         <img src="../assets/logo/default_logo.png" alt="Profile Image" class="img-fluid rounded-circles" style=" border-radius: 50% !important;
                         width: 80px;
-                        height: 70px;">>
+                        height: 70px;">
                       @endif
                     </div>
                 
