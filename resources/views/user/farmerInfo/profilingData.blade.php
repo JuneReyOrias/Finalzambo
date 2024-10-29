@@ -886,106 +886,62 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($gpsData as $data)
-                                <tr>
-                                    <td class="text-black">Total Area Planted</td>
-
-                                    <td id="totalAreaPlanted">{{ number_format($data['totalPhysicalArea'], 1) }} ha</td>
-                                </tr>
-                                
-                                @php
-                                    $totalAreaPlanted = $data['totalPhysicalArea'];
-                                    $totalYield = $data['Yield'];
-                                    $yieldPerAreaPlanted = ($totalAreaPlanted > 0) ? ($totalYield / $totalAreaPlanted) : 0;
-                                @endphp
-                
-                                <tr>
-                                    <td class="text-black">Yield/Area Planted</td>
-                                    <td id="yieldPerAreaPlanted">{{ number_format($yieldPerAreaPlanted, 2) }} tons/ha</td>
-                                </tr>
-                            @endforeach
-                
-                            {{-- @foreach ($farmProfiles as $farmProfile)
-                                @foreach ($farmProfile->cropFarms as $cropFarm)
-                                @php
-                                $cropFarm = $productionData->crop_name;
-                           
-                            @endphp
-                                    @foreach ($cropFarm->lastProductionDatas as $productionData)
-                                        @php
-                                            $noOfCropping = $productionData->cropping_no;
-                                            $harvestDate = \Carbon\Carbon::parse($productionData->date_harvested)->format('F d, Y');
-                                            $croppingLabel = "Cropping No. " . $noOfCropping;
-                                            $yieldTonsKg = $productionData->yield_tons_per_kg;
-                                        @endphp
-                
-                                        <tr class="table-secondary">
-                                            <td colspan="2">
-                                                <strong>{{ $croppingLabel }} (Harvest Date: {{ $harvestDate }})</strong>
-                                            </td>
-                                        </tr>
+                            @foreach ($farmProfiles as $farmProfile)
+                            @foreach ($farmProfile->cropFarms as $cropFarm)
+                                @foreach ($cropFarm->lastProductionDatas as $productionData)
+                                    @php
+                                        $noOfCropping = $productionData->cropping_no;
+                                        $harvestDate = \Carbon\Carbon::parse($productionData->date_harvested)->format('F d, Y');
+                                        $croppingLabel = "Cropping No. " . $noOfCropping;
+                                        $yieldTonsKg = $productionData->yield_tons_per_kg;
+                                        $cropName = $cropFarm->crop_name; // Get the crop name for each crop farm
+                                        $areaPlanted = $productionData->area_planted; // Assuming area_planted is available in productionData
+                                        
+                                        // Calculate yield per area planted
+                                        $yieldPerAreaPlanted = ($areaPlanted > 0) ? ($yieldTonsKg / $areaPlanted) : 0;
+                                    @endphp
+                        
+                                    <tr class="table-secondary" style="  background-color: #f1f3f5;
+    font-weight: bold;
+    font-size: 1.1em;
+    text-align: center;">
+                                        <td colspan="2">
+                                            <strong>{{ $croppingLabel }} (Harvest Date: {{ $harvestDate }}) for {{ ucwords(strtolower($cropName)) }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-black">Total Area Planted</td>
+                                        <td id="totalAreaPlanted">{{ number_format($areaPlanted, 2) }} ha</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-black">Yield (Tons/Kg)</td>
+                                        <td id="yieldTonsKg">{{ number_format($yieldTonsKg, 2) }} kg</td>
+                                    </tr>
+                                 
+                                    <tr>
+                                        <td class="text-black">Yield per Area Planted</td>
+                                        <td id="yieldPerAreaPlanted">{{ number_format($yieldPerAreaPlanted, 2) }} kg/ha</td>
+                                    </tr>
+                        
+                                    @foreach ($cropFarm->variableCosts as $variableCostsData)
                                         <tr>
-                                            <td class="text-black">Yield (Tons/Kg) for {{ $croppingLabel }}</td>
-                                            <td id="yieldTonsKg">{{ number_format($yieldTonsKg, 2) }} kg</td>
+                                            <td class="text-black">Total Cost</td>
+                                            <td id="totalCostForCropping">₱{{ number_format($variableCostsData->total_variable_cost, 2) }}</td>
                                         </tr>
-                
-                                        @foreach ($cropFarm->variableCosts as $variableCostsData)
-                                            <tr>
-                                                <td class="text-black">Total Cost for {{ $croppingLabel }}</td>
-                                                <td id="totalCostForCropping">₱{{ number_format($variableCostsData->total_variable_cost, 2) }}</td>
-                                            </tr>
-                
-                                            @php
-                                                $averageCostPerAreaPlanted = ($totalAreaPlanted > 0) ? ($variableCostsData->total_variable_cost / $totalAreaPlanted) : 0;
-                                            @endphp
-                
-                                            <tr>
-                                                <td class="text-black">Average Cost/Area Planted for {{ $croppingLabel }}</td>
-                                                <td id="averageCostPerAreaPlantedForCropping">₱{{ number_format($averageCostPerAreaPlanted, 2) }}/ha</td>
-                                            </tr>
-                                        @endforeach
+                        
+                                        @php
+                                            $averageCostPerAreaPlanted = ($areaPlanted > 0) ? ($variableCostsData->total_variable_cost / $areaPlanted) : 0;
+                                        @endphp
+                        
+                                        <tr>
+                                            <td class="text-black">Average Cost/Area Planted</td>
+                                            <td id="averageCostPerAreaPlantedForCropping">₱{{ number_format($averageCostPerAreaPlanted, 2) }}/ha</td>
+                                        </tr>
                                     @endforeach
                                 @endforeach
-                            @endforeach --}}
-                            @foreach ($farmProfiles as $farmProfile)
-    @foreach ($farmProfile->cropFarms as $cropFarm)
-        @foreach ($cropFarm->lastProductionDatas as $productionData)
-            @php
-                $noOfCropping = $productionData->cropping_no;
-                $harvestDate = \Carbon\Carbon::parse($productionData->date_harvested)->format('F d, Y');
-                $croppingLabel = "Cropping No. " . $noOfCropping;
-                $yieldTonsKg = $productionData->yield_tons_per_kg;
-                $cropName = $cropFarm->crop_name; // Get the crop name for each crop farm
-            @endphp
-
-            <tr class="table-secondary">
-                <td colspan="2">
-                    <strong>{{ $croppingLabel }} (Harvest Date: {{ $harvestDate }}) for {{ $cropName }}</strong>
-                </td>
-            </tr>
-            <tr>
-                <td class="text-black">Yield (Tons/Kg) for {{ $croppingLabel }}</td>
-                <td id="yieldTonsKg">{{ number_format($yieldTonsKg, 2) }} kg</td>
-            </tr>
-
-            @foreach ($cropFarm->variableCosts as $variableCostsData)
-                <tr>
-                    <td class="text-black">Total Cost for {{ $croppingLabel }}</td>
-                    <td id="totalCostForCropping">₱{{ number_format($variableCostsData->total_variable_cost, 2) }}</td>
-                </tr>
-
-                @php
-                    $averageCostPerAreaPlanted = ($totalAreaPlanted > 0) ? ($variableCostsData->total_variable_cost / $totalAreaPlanted) : 0;
-                @endphp
-
-                <tr>
-                    <td class="text-black">Average Cost/Area Planted for {{ $croppingLabel }}</td>
-                    <td id="averageCostPerAreaPlantedForCropping">₱{{ number_format($averageCostPerAreaPlanted, 2) }}/ha</td>
-                </tr>
-            @endforeach
-        @endforeach
-    @endforeach
-@endforeach
+                            @endforeach
+                        @endforeach
+                        
                         </tbody>
                     </table>
                 </div>
