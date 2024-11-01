@@ -8,7 +8,7 @@ use App\Models\LandingPage;
 use Illuminate\Http\Request;
 use App\Http\Requests\ParcellaryBoundariesRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Models\crop;
+use App\Models\Crop;
 use App\Models\FarmProfile;
 use App\Models\Fertilizer;
 use App\Models\FixedCost;
