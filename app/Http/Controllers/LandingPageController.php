@@ -54,10 +54,10 @@ class LandingPageController extends Controller
         $features = json_decode($landingPageData->agri_feature, true) ?? []; 
 
         $data = [
-            'home_title' => $dataContact->home_title ?? '',
-            'home_description' => $dataContact->home_description ?? '',
-            'feature_header' => $dataContact->feature_header ?? '',
-            'feature_description' => $dataContact->feature_description ?? '',
+            'home_title' => $landingPageData->home_title ?? '',
+            'home_description' => $landingPageData->home_description ?? '',
+            'feature_header' => $landingPageData->feature_header ?? '',
+            'feature_description' => $landingPageData->feature_description ?? '',
             'features'=> $features
         ];
 
