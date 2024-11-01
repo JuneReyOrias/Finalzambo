@@ -72,6 +72,11 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     // farmer profiling
     Route::get('/user-farmer-Profiling',[FarmProfileController::class, 'FarmerProfiling'])->name('user.farmerInfo.profilingData');
 
+    // LANDING PAGE FETCH DATA
+    Route::get('/farmer-profile-data',[LandingPageController::class, 'FarmersProfile']);
+    Route::get('/landing-page-data',[LandingPageController::class, 'fetchData']);
+    Route::get('/About-Us',[LandingPageController::class, 'AboutUs']);
+    Route::get('/Contact-Us',[LandingPageController::class, 'ContactUs']);
 
 // agent accent all farners
 Route::post('/admin-view-polygon',[adminController ::class,'store']);
@@ -284,7 +289,7 @@ Route::get('/admin-view-General-Farmers',[AdminController::class,'GenFarmers'])-
 
 
              // agent corn map 
-        Route::get('agent-view-corn-map',[AgentController::class,'CornMap'])->name('agent.agri.cornmap');
+        Route::get('agent-view-crops-map',[AgentController::class,'CornMap'])->name('agent.agri.cornmap');
 
         // agent coconut map 
         Route::get('agent-view-coconut-map',[AgentController::class,'CoconutMaps'])->name('agent.agri.coconutmap');
