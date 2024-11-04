@@ -166,6 +166,11 @@ Route::get('/admin-delete-crop-farms/{farmData}',[FarmProfileController ::class,
 // view admin survey
 Route::get('/admin-view-Farmers-survey-form',[PersonalInformationsController ::class,'samplefolder'])->name('admin.farmersdata.samplefolder.farm_edit');
 Route::post('/admin-view-Farmers-survey-form',[PersonalInformationsController ::class,'test']);
+
+// routes/web.php
+Route::post('/check-farmer-existence', [PersonalInformationsController::class, 'checkFarmerExistence']);
+
+
 // Route::get('/admin-edit-crop-farms/{farmData}',[FarmProfileController ::class,'CropEdit'])->name('admin.farmersdata.cropsdata.delete');
 
 
