@@ -484,8 +484,11 @@
                                         <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p>
                                         <br>
                                         <h3>a. Personal Info</h3>
+                                        <div id="error-message" class="text-danger" style="display: none;"></div>
+
                                         <div class="input-box col-md-4">
                                             <input type="hidden" class="form-control light-gray-placeholder users_id" name="users_id" value="{{$userId}}">
+                                        
                                         </div>
                                         <div class="user-details">
                                             <!-- Existing fields here -->
@@ -554,7 +557,7 @@
                                                 {{-- <div id="date_of_birth_error" class="invalid-feedback"></div> --}}
                                             </div>
                                          {{-- <div id="error-message" class="text-danger" style="display: none;"></div> --}}
-                                            <button type="button" class="btn btn-success" id="nextButton" disabled onclick="nextStep()">Next</button>
+                                            <button type="button" class="btn btn-success" id="nextButton"onclick="nextStep()" >Next</button>
                                         </div>
                                         
                                     
@@ -579,7 +582,7 @@
                                     
                                  
                                    
-                    <div class="input-box col-md-4">
+                    {{-- <div class="input-box col-md-4">
                         <span class="details">Street</span>
                         <input type="text" name="street" id="street" class="form-control street light-gray-placeholder @error('street') is-invalid @enderror" placeholder="Street" autocomplete="new-password" value="{{ old('street') }}">
                         @error('street')
@@ -593,16 +596,10 @@
                                     <option selected value="7000" {{ old('zip_code') == '7000' ? 'selected' : '' }}>7000</option>
 
                                     </select>
-                                    </div>
+                                    </div> --}}
+                                  
                                     <div class="input-box col-md-4">
-                                    <span class="details">Contact No.</span>
-                                    <input type="number" name="contact_no" id="contact_no" class="form-control contact_no light-gray-placeholder @error('contact_no') is-invalid @enderror"placeholder="Contact no." autocomplete="new-password" value="{{ old('contact_no') }}" >
-                                    @error('contact_no')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    </div>
-                                    <div class="input-box col-md-4">
-                                        <span class="details">Sex</span>
+                                        <span class="details">Gender</span>
                                         <div class="d-flex align-items-center">
                                             <select class="form-control custom-select sex light-gray-placeholder @error('sex') is-invalid @enderror" name="sex" id="selectSex" aria-label="Floating label select e" onchange="handleSexChange()">
                                                 <option value="" disabled selected>Select</option>
@@ -644,7 +641,13 @@
                                         </div>
                                         
                                     </div>
-                                    
+                                    <div class="input-box col-md-4">
+                                        <span class="details">Contact No.</span>
+                                        <input type="number" name="contact_no" id="contact_no" class="form-control contact_no light-gray-placeholder @error('contact_no') is-invalid @enderror"placeholder="Contact no." autocomplete="new-password" value="{{ old('contact_no') }}" >
+                                        @error('contact_no')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        </div>
                                     
                               
                                   
@@ -865,7 +868,7 @@
 
                                     </div>
                                             <!-- Add other personal information fields -->
-                                            <button type="button" class="btn btn-primary" onclick="previousStep()">Previous</button>
+                                            <button type="button" class="btn btn-primary" id="previousButton" onclick="previousStep()" style="display: none;">Previous</button>
                                             <button type="button" class="btn btn-success" id="nextButton" onclick="nextStep()">Next</button>
                                         </div>
 
@@ -912,19 +915,7 @@
                   
                     
 
-                                {{-- <!-- Organization Selection -->
-                                    <div class="input-box col-md-4" id="YesFarmersGroup" style="display: none;">
-                                        <span class="details">Name of Ass/Org/Coop</span>
-                                        <div class="d-flex align-items-center">
-                                            <!-- Select dropdown -->
-                                            <select class="organizationSelect form-control nameof_farmers custom-select light-gray-placeholder gray-text @error('organization') is-invalid @enderror" name="organization" id="SelectOrganization" aria-label="Floating label select e">
-                                                <option value="" disabled selected>Select Organization</option>
-                                                <option value="add">Add New Organization...</option>
-                                            </select>
-
-                                        
-                                        </div>
-                                    </div> --}}
+                               
                                     <div class="input-box col-md-4" id="YesFarmersGroup" style="display: none;">
                                         <span class="details">Name of Ass/Org/Coop</span>
                                         <div class="d-flex align-items-center">
@@ -956,7 +947,8 @@
                         <span class="details">Date of Interview</span>
                         <input type="text" class="form-control light-gray-placeholder date_of_interviewed @error('date_of_interview') is-invalid @enderror" name="date_interview" id="datepicker" placeholder="Date of Interview" value="{{ old('date_of_interview') }}" data-input='true' required>
                         @error('date_of_interview')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div id="date-error-message" class="invalid-feedback" style="display: none;"></div>
+
                         @enderror
                     </div>
                     
@@ -1633,49 +1625,6 @@
   
   
 
-  
-  {{-- <!-- Success Modal -->
-<!-- Success Modal -->
-<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content shadow-lg">
-            <div class="modal-header border-0">
-                <h5 class="modal-title" id="successModalLabel">Success</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- Success message will be displayed here -->
-            </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="proceedToNextStep()">Proceed</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Error Modal -->
-<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content shadow-lg">
-            <div class="modal-header border-0">
-                <h5 class="modal-title" id="errorModalLabel">Error</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="errorModalBody">
-                <!-- Error message will be displayed here -->
-            </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-  
-  
-   --}}
 
 
  <!-- Modal for Adding New Barangay -->
@@ -3167,8 +3116,8 @@ form.on('submit', function(event) {
         'city': $('input.city').val(),
         'agri_district': $('select.agri_district').val(),
         'barangay': $('select.barangay').val(),
-        'street': $('input.street').val(),
-        'zip_code': $('select.zip_code').val(),
+        // 'street': $('input.street').val(),
+        // 'zip_code': $('select.zip_code').val(),
         'contact_no': $('input.contact_no').val(),
         'sex': $('select.sex').val(),
         'religion': $('select.religion').val(),
@@ -3421,7 +3370,7 @@ let dataobject = {
     'crops': cropInfo,
 };
 
-// Log the entire data object to the console for debugging
+// // Log the entire data object to the console for debugging
 // console.log("Data Object:", dataobject);
 
 // const csrfToken = $('input[name="_token"]').attr('value');
@@ -3450,7 +3399,7 @@ let dataobject = {
 //     }); 
 
 
-// // Function to open confirmation modal with data preview
+// Function to open confirmation modal with data preview
 function openConfirmModal(data) {
     // Check and populate the modal with the farmer's details
     $('#farmerFirstname').text(data.farmer?.first_name || 'N/A');
@@ -3643,17 +3592,21 @@ $('#confirmSave').on('click', function() {
             console.log(response);
             if (response.success) {
                 var successModal = new bootstrap.Modal(document.getElementById('successModal'), {
-                        keyboard: false
+                    keyboard: false
+                });
+                successModal.show(); // Show success modal
 
-                    });
-                    successModal.show(); // Show success modal
-                    
-                    // Close the confirmation modal after successful save
-                    var confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
-                    if (confirmModal) {
-                        confirmModal.hide();
-                    }
+                // Close the confirmation modal after successful save
+                var confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+                if (confirmModal) {
+                    confirmModal.hide();
                 }
+
+                // Add event listener to reload the page when success modal is closed
+                $('#successModal').on('hidden.bs.modal', function() {
+                    location.reload(); // Reload the page
+                });
+            }
         },
         error: function(xhr) {
             console.error('Error:', xhr.responseJSON.error);
@@ -3661,50 +3614,20 @@ $('#confirmSave').on('click', function() {
             // Display the error message in the modal body
             $('#errorModalBody').text(xhr.responseJSON.error);
 
+            // Show the error modal
+            $('#errorModal').modal('show');
 
-    // Show the modal
-    $('#errorModal').modal('show');
-}
-
-
+            // Add event listener to reload the page when error modal is closed
+            $('#errorModal').on('hidden.bs.modal', function() {
+                location.reload(); // Reload the page
+            });
+        }
     });
 });
+
 });
 
 
-
-let currentStep = 0;
-    const steps = document.querySelectorAll('.step');
-
-    function showStep(step) {
-        steps.forEach((stepElement, index) => {
-            stepElement.classList.toggle('active', index === step);
-        });
-    }
-
-    function nextStep() {
-        if (validateStep(currentStep)) {
-            currentStep++;
-            showStep(currentStep);
-        }
-    }
-
-    function previousStep() {
-        currentStep--;
-        showStep(currentStep);
-    }
-
-    function validateStep(step) {
-        const currentStepElement = steps[step];
-        const inputs = currentStepElement.querySelectorAll('input');
-        let isValid = true;
-        inputs.forEach(input => {
-            if (!input.checkValidity()) {
-                isValid = false;
-            }
-        });
-        return isValid;
-    }
   </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -3719,93 +3642,154 @@ let currentStep = 0;
 </script>
 
 <script type="text/javascript">
-    var map;
-    var markers = [];
-    var selectedLatLng;
-  
-    function initMap() {
-      var initialLocation = { lat: 6.9214, lng: 122.0790 };
-  
-      map = new google.maps.Map(document.getElementById('map'), {
+ var map;
+var markers = [];
+var selectedLatLng;
+var polygons = []; // Array to hold the saved polygons
+
+// Load polygons from mapdata and parceldata and plot them on the map
+function loadPolygons() {
+    var mapdata = @json($mapdata); // Existing data from the view
+    var parceldata = @json($parceldata); // Data from ParcellaryBoundaries
+
+    function plotPolygon(parcel, isParcelData = false) {
+        var polygon = new google.maps.Polygon({
+            paths: parcel.coordinates.map(coord => new google.maps.LatLng(coord.lat, coord.lng)),
+            strokeColor: parcel.strokecolor || '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: parcel.fillcolor || '#FF0000',
+            fillOpacity: 0.02
+        });
+        polygon.setMap(map);
+        polygons.push(polygon);
+
+        google.maps.event.addListener(polygon, 'click', function () {
+            var contentString;
+            if (isParcelData) {
+                contentString = 'Parcel Name: ' + parcel.parcel_name + '<br>' +
+                                'ARPOwner Name: ' + parcel.arpowner_na + '<br>' +
+                                'Agri-District: ' + parcel.agri_districts + '<br>' +
+                                'Brgy. Name: ' + parcel.barangay_name + '<br>' +
+                                'Title name: ' + parcel.tct_no + '<br>' +
+                                'Property kind description: ' + parcel.pkind_desc + '<br>' +
+                                'Property Used description: ' + parcel.puse_desc + '<br>' +
+                                'Actual Used: ' + parcel.actual_used + '<br>' +
+                                'Area: ' + parcel.area + ' sq. meters<br>' +
+                                'Altitude: ' + parcel.altitude + ' meters<br>';
+            } else {
+                contentString = 'Polygon Name: ' + parcel.polygon_name + '<br>' +
+                                'Area: ' + parcel.area + ' sq. meters<br>' +
+                                'Altitude: ' + parcel.altitude + ' meters';
+            }
+
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+            infowindow.setPosition(parcel.coordinates[0]);
+            infowindow.open(map);
+        });
+    }
+
+    mapdata.forEach(function (parcel) {
+        plotPolygon(parcel);
+    });
+
+    parceldata.forEach(function (parcel) {
+        plotPolygon(parcel, true);
+    });
+
+    var bounds = new google.maps.LatLngBounds();
+    mapdata.concat(parceldata).forEach(function (parcel) {
+        parcel.coordinates.forEach(function (coord) {
+            bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
+        });
+    });
+    map.fitBounds(bounds);
+}
+
+function initMap() {
+    var initialLocation = { lat: 6.9214, lng: 122.0790 };
+
+    map = new google.maps.Map(document.getElementById('map'), {
         zoom: 13,
         center: initialLocation,
-        mapTypeId: 'terrain'
-      });
-  
-      // When the map is clicked, set latitude and longitude in modal and main inputs
-      map.addListener('click', function(event) {
+        mapTypeId: 'satellite'
+    });
+
+    map.addListener('click', function (event) {
         if (markers.length >= 1) {
-          deleteMarkers();
+            deleteMarkers();
         }
-  
+
         selectedLatLng = event.latLng;
         addMarker(selectedLatLng);
         $('#modal_latitude').val(selectedLatLng.lat());
         $('#modal_longitude').val(selectedLatLng.lng());
-      });
-  
-      // Add marker on the map
-      function addMarker(location) {
+    });
+
+    function addMarker(location) {
         var marker = new google.maps.Marker({
-          position: location,
-          map: map
+            position: location,
+            map: map,
+            draggable: true // Make the marker draggable
         });
         markers.push(marker);
-      }
-  
-      // Clear markers from the map
-      function deleteMarkers() {
+
+        // Update latitude and longitude on marker drag end
+        google.maps.event.addListener(marker, 'dragend', function (event) {
+            $('#modal_latitude').val(event.latLng.lat());
+            $('#modal_longitude').val(event.latLng.lng());
+        });
+    }
+
+    function deleteMarkers() {
         markers.forEach(marker => {
-          marker.setMap(null);
+            marker.setMap(null);
         });
         markers = [];
-      }
-  
-      // Listen for manual input in modal latitude/longitude fields
-      $('#modal_latitude, #modal_longitude').on('change', function() {
+    }
+
+    $('#modal_latitude, #modal_longitude').on('change', function () {
         var lat = parseFloat($('#modal_latitude').val());
         var lng = parseFloat($('#modal_longitude').val());
-  
+
         if (!isNaN(lat) && !isNaN(lng)) {
-          var location = { lat: lat, lng: lng };
-          map.setCenter(location);
-          deleteMarkers();
-          addMarker(location);
+            var location = { lat: lat, lng: lng };
+            map.setCenter(location);
+            deleteMarkers();
+            addMarker(location);
         }
-      });
-    }
-  
-    $(document).ready(function() {
-      // Show the modal when latitude or longitude input is focused
-      $('#gps_latitude_0, #gps_longitude_0').on('focus', function() {
+    });
+}
+
+$(document).ready(function () {
+    $('#gps_latitude_0, #gps_longitude_0').on('focus', function () {
         $('#mapModal').modal('show');
-      });
-  
-      // Reinitialize the map each time the modal is opened
-      $('#mapModal').on('shown.bs.modal', function() {
+    });
+
+    $('#mapModal').on('shown.bs.modal', function () {
         if (selectedLatLng) {
-          map.setCenter(selectedLatLng); // Center map on previously selected location
+            map.setCenter(selectedLatLng);
         }
         google.maps.event.trigger(map, 'resize');
-      });
-  
-      // Clear previous markers when modal is closed
-      $('#mapModal').on('hidden.bs.modal', function() {
-        deleteMarkers(); // Clear markers when modal is closed
-      });
-  
-      // Handle the Save Location button click
-      $('#saveLocation').on('click', function() {
-        // Save the latitude and longitude to the main input fields
+    });
+
+    $('#mapModal').on('hidden.bs.modal', function () {
+        deleteMarkers();
+    });
+
+    $('#saveLocation').on('click', function () {
         var lat = $('#modal_latitude').val();
         var lng = $('#modal_longitude').val();
         $('#gps_latitude_0').val(lat);
         $('#gps_longitude_0').val(lng);
         
-        // Close the modal
         $('#mapModal').modal('hide');
-      });
     });
+    
+    loadPolygons(); // Load polygons when the map is initialized
+});
 
 // Function to check membership and display organization input accordingly
 function checkMmbership() {
@@ -4022,14 +4006,14 @@ $(document).ready(function() {
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script>
+  {{-- <script>
     document.addEventListener('DOMContentLoaded', function () {
         flatpickr("#datepicker", {
             dateFormat: "Y-m-d", // Date format (YYYY-MM-DD)
             // Additional options can be added here
         });
     });
-  </script>
+  </script> --}}
 <!-- Include jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -4050,7 +4034,7 @@ $(document).ready(function() {
     });
     </script>
 
-<script>
+{{-- <script>
     // Example for initializing jQuery UI Datepicker
     $(function() {
         $("#datepicker").datepicker({
@@ -4067,5 +4051,128 @@ $(document).ready(function() {
     function hideDateOfBirthError() {
         $("#date_of_birth_error").hide();
     }
+</script> --}}
+
+
+
+<script>
+let currentStep = 0;
+const steps = document.querySelectorAll('.step');
+
+function showStep(step) {
+    steps.forEach((stepElement, index) => {
+        stepElement.classList.toggle('active', index === step);
+    });
+
+    // Show "Previous" button if not on the first step
+    document.getElementById('previousButton').style.display = step > 0 ? 'inline-block' : 'none';
+
+    // Show "Next" button or change to "Submit" on the last step
+    document.getElementById('nextButton').innerText = step === steps.length - 1 ? 'Submit' : 'Next';
+}
+
+function nextStep() {
+    if (validateStep(currentStep)) {
+        if (currentStep === 0) {  // Check data existence only on the first step
+            checkDataExistence()
+                .then(dataExists => {
+                    if (!dataExists) {
+                        currentStep++;
+                        showStep(currentStep);
+                    } else {
+                        document.getElementById('error-message').innerText = "A record with this information already exists.";
+                        document.getElementById('error-message').style.display = 'block';
+                    }
+                })
+                .catch(error => console.error("Error checking data existence:", error));
+        } else {
+            currentStep++;
+            showStep(currentStep);
+        }
+    }
+}
+
+function previousStep() {
+    if (currentStep > 0) {
+        currentStep--;
+        showStep(currentStep);
+    }
+}
+
+function validateStep(step) {
+    const currentStepElement = steps[step];
+    const inputs = currentStepElement.querySelectorAll('input');
+    let isValid = true;
+
+    inputs.forEach(input => {
+        if (!input.checkValidity()) {
+            input.classList.add("is-invalid");
+            isValid = false;
+        } else {
+            input.classList.remove("is-invalid");
+        }
+    });
+
+    // Additional check for the Date of Interview field
+    const dateOfInterview = document.getElementById('#datepicker');
+    if (dateOfInterview) {
+        if (!dateOfInterview.value) {
+            dateOfInterview.classList.add("is-invalid");
+            isValid = false;
+            // Alert the user or display an error message
+            const errorMessage = document.getElementById('date-error-message');
+            if (errorMessage) {
+                errorMessage.innerText = "Date of Interview is required.";
+                errorMessage.style.display = 'block'; // Show error message
+            }
+        } else {
+            dateOfInterview.classList.remove("is-invalid");
+            // Hide the error message if the date is filled
+            const errorMessage = document.getElementById('date-error-message');
+            if (errorMessage) {
+                errorMessage.style.display = 'none'; // Hide error message
+            }
+        }
+    }
+
+    return isValid;
+}
+
+async function checkDataExistence() {
+    const firstName = document.getElementById('firstName').value;
+    const lastName = document.getElementById('lastName').value;
+    const mothersMaidenName = document.getElementById('mothersMaidenName').value;
+    const dateOfBirth = document.getElementById('datepicker').value;
+
+    try {
+        const response = await fetch('/check-farmer-existence', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                first_name: firstName,
+                last_name: lastName,
+                mothers_maiden_name: mothersMaidenName,
+                date_of_birth: dateOfBirth
+            })
+        });
+        
+        const result = await response.json();
+        return result.exists;
+    } catch (error) {
+        console.error('Error:', error);
+        return false;
+    }
+}
+
+// Initialize the first step on page load
+showStep(currentStep);
+
 </script>
+
+
+
+
   @endsection

@@ -30,9 +30,12 @@ use App\Models\User;
 use App\Models\AgriDistrict;
 use App\Models\FarmProfile;
 use App\Models\Seed;
+use App\Models\Polygon;
+use App\Models\CropParcel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Validator;
 class PersonalInformationsController extends Controller
 {
 
@@ -1393,7 +1396,7 @@ public function productionAdd(Request $request,$id)
             $salesModel = new ProductionSold();
             
             // Assign values to the new sale model from the request data
-            $salesModel->last_production_datas_id = $productionId; // Assuming $productionId is set earlier in the code
+            $salesModel->last_production_datas_id = $productionId;
             $salesModel->crops_farms_id = $crop_id; // Assuming $cropsId is set earlier in the code
             $salesModel->sold_to = $sale['soldTo'];
             $salesModel->measurement = $sale['measurement'];
@@ -3061,31 +3064,139 @@ public function productionAdd(Request $request,$id)
 
              // samplefolder
 
-public function samplefolder(Request $request)
-{
+// public function samplefolder(Request $request)
+// {
+//     // Check if the user is authenticated
+//     if (Auth::check()) {
+//         // User is authenticated, proceed with retrieving the user's ID
+//         $user = Auth::user(); // You can use Auth::user() directly
+//         $userId = $user->id; // Get the authenticated user's ID
+//         $admin = User::find($userId); // Fetch user details
+
+//         if ($admin) {
+//             // Fetch agri_district and select_member from the user
+//             $agri_district = $user->agri_district;
+//             $selectMember = $user->select_member; // Assuming `select_member` is the correct attribute
+
+//             // Find the user's personal information
+//             $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+//             // Fetch the farm ID and agri district ID associated with the user
+//             $farmId = $user->farm_id;
+//             $agri_districts_id = $user->agri_districts_id;
+
+//             // Find the farm profile using the fetched farm ID
+//             $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
+
+//             // Handle AJAX requests
+//             if ($request->ajax()) {
+//                 $type = $request->input('type');
+
+//                 // Handle requests for agri-districts
+//                 if ($type === 'districts') {
+//                     $districts = AgriDistrict::pluck('district', 'district'); // Fetch agri-district names
+//                     return response()->json($districts);
+//                 }
+
+//                 // Handle requests for barangays based on the selected district
+//                 if ($type === 'barangays') {
+//                     $district = $request->input('district');
+//                     if (!$district) {
+//                         return response()->json(['error' => 'District is required.'], 400);
+//                     }
+//                     $barangays = Barangay::where('district', $district)->pluck('barangay_name', 'barangay_name');
+//                     return response()->json($barangays);
+//                 }
+
+//                 // Handle requests for organizations based on the selected district
+//                 if ($type === 'organizations') {
+//                     $district = $request->input('district');
+//                     if (!$district) {
+//                         return response()->json(['error' => 'District is required.'], 400);
+//                     }
+//                     $organizations = FarmerOrg::where('district', $district)->pluck('organization_name', 'organization_name');
+//                     return response()->json($organizations);
+//                 }
+
+//                 // Handle requests for crop names
+//                 if ($type === 'crops') {
+//                     $crops = CropCategory::pluck('crop_name', 'crop_name');
+//                     return response()->json($crops);
+//                 }
+
+//                 // Handle requests for crop varieties based on the selected crop name
+//                 if ($type === 'varieties') {
+//                     $cropName = $request->input('crop_name');
+//                     if (!$cropName) {
+//                         return response()->json(['error' => 'Crop name is required.'], 400);
+//                     }
+//                     $varieties = Categorize::where('crop_name', $cropName)->pluck('variety_name', 'variety_name');
+//                     return response()->json($varieties);
+//                 }
+
+//                 // Handle requests for seed names based on the selected variety name
+//                 if ($type === 'seedname') {
+//                     $varietyName = $request->input('variety_name');
+//                     if (!$varietyName) {
+//                         return response()->json(['error' => 'Variety name is required.'], 400);
+//                     }
+//                     $seeds = Seed::where('variety_name', $varietyName)->pluck('seed_name', 'seed_name');
+//                     return response()->json($seeds);
+//                 }
+
+//                 // Invalid request type
+//                 return response()->json(['error' => 'Invalid type parameter.'], 400);
+//             }
+
+//             // For non-AJAX requests, continue rendering the view
+//             $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+//             return view('admin.farmersdata.samplefolder.farm_edit', compact(
+//                 'admin', 
+//                 'profile', 
+//                 'farmProfile', 
+//                 'totalRiceProduction', 
+//                 'userId', 
+//                 'agri_district', 
+//                 'agri_districts_id', 
+//                 'selectMember'
+//             ));
+//         } else {
+//             return redirect()->route('login')->with('error', 'User not found.');
+//         }
+//     } else {
+//         return redirect()->route('login');
+//     }
+// }
+public function samplefolder(Request $request) {
     // Check if the user is authenticated
     if (Auth::check()) {
-        // User is authenticated, proceed with retrieving the user's ID
+        // User is authenticated
         $user = Auth::user(); // You can use Auth::user() directly
         $userId = $user->id; // Get the authenticated user's ID
-        $admin = User::find($userId); // Fetch user details
-
+    
+        $admin = User::find($userId);
+        
         if ($admin) {
-            // Fetch agri_district and select_member from the user
-            $agri_district = $user->agri_district;
-            $selectMember = $user->select_member; // Assuming `select_member` is the correct attribute
+    // Fetch agri_district and select_member from the user
+    $agri_district = $user->agri_district;
+    $selectMember = $user->select_member; // Assuming `select_member` is the correct attribute
 
-            // Find the user's personal information
+    // Find the user's personal information
+    $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+    // Fetch the farm ID and agri district ID associated with the user
+    $farmId = $user->farm_id;
+    $agri_districts_id = $user->agri_districts_id;
+            // Find the user's personal information by their ID
             $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+            $polygons = Polygon::all();
+            // Fetch all farm profiles
+            $farmProfiles = FarmProfile::with(['cropFarms', 'personalInformation'])->get();
 
-            // Fetch the farm ID and agri district ID associated with the user
-            $farmId = $user->farm_id;
-            $agri_districts_id = $user->agri_districts_id;
 
-            // Find the farm profile using the fetched farm ID
-            $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
-
-            // Handle AJAX requests
+            // Fetch all agri districts
+            $agriDistricts = AgriDistrict::all(); // Get all agri districts
+// Handle AJAX requests
             if ($request->ajax()) {
                 $type = $request->input('type');
 
@@ -3144,271 +3255,164 @@ public function samplefolder(Request $request)
                 // Invalid request type
                 return response()->json(['error' => 'Invalid type parameter.'], 400);
             }
+            // Check if there are any farm profiles
+            if ($farmProfiles->isEmpty() && $agriDistricts->isEmpty()) {
+                return response()->json(['error' => 'No farm profiles or agri districts found.'], 404);
+            }
 
-            // For non-AJAX requests, continue rendering the view
+            // Fetch total rice production
             $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-            return view('admin.farmersdata.samplefolder.farm_edit', compact(
-                'admin', 
-                'profile', 
-                'farmProfile', 
-                'totalRiceProduction', 
-                'userId', 
-                'agri_district', 
-                'agri_districts_id', 
-                'selectMember'
-            ));
-        } else {
+
+              
+
+            // Prepare agri district GPS coordinates
+            $districtsData = [];
+            foreach ($agriDistricts as $district) {
+                $districtsData[] = [
+                    'gpsLatitude' => $district->latitude,
+                    'gpsLongitude' => $district->longitude,
+                    'districtName' => $district->district,
+                    'description' => $district->description,
+              
+                ];
+            }
+            $polygonsData = [];
+            foreach ($polygons as $polygon) {
+                // Prepare coordinates array from vertex fields
+                $coordinates = [
+                    ['lat' => $polygon->verone_latitude, 'lng' => $polygon->verone_longitude],
+                    ['lat' => $polygon->vertwo_latitude, 'lng' => $polygon->vertwo_longitude],
+                    ['lat' => $polygon->verthree_latitude, 'lng' => $polygon->verthree_longitude],
+                    ['lat' => $polygon->vertfour_latitude, 'lng' => $polygon->vertfour_longitude],
+                    ['lat' => $polygon->verfive_latitude, 'lng' => $polygon->verfive_longitude],
+                    ['lat' => $polygon->versix_latitude, 'lng' => $polygon->versix_longitude],
+                    ['lat' => $polygon->verseven_latitude, 'lng' => $polygon->verseven_longitude],
+                    ['lat' => $polygon->vereight_latitude, 'lng' => $polygon->verteight_longitude]
+                ];
+                
+                // Push to polygonData
+                $polygonsData[] = [
+                    'id' => $polygon->id,
+                    'name' => $polygon->poly_name,
+                    'coordinates' => $coordinates,
+                    'strokeColor' => $polygon->strokecolor, // Stroke color of the polygon
+                    'area' => $polygon->area, // Area of the polygon (if applicable)
+                    'perimeter' => $polygon->perimeter // Perimeter of the polygon (if applicable)
+                ];
+            }
+            
+         
+
+            // Fetch all CropParcel records and transform them
+            $mapdata = CropParcel::all()->map(function($parcel) {
+            
+                // Decode the JSON coordinates
+                $coordinates = json_decode($parcel->coordinates);
+                
+                // Check if the coordinates are valid and properly formatted
+                if (!is_array($coordinates)) {
+                //   echo "Invalid coordinates for parcel ID {$parcel->id}: " . $parcel->coordinates . "\n";
+                    return null; // Return null for invalid data
+                }
+
+                return [
+                    'polygon_name' => $parcel->polygon_name, // Include the ID for reference
+                    'coordinates' => $coordinates, // Include the decoded coordinates
+                    'area' => $parcel->area, // Assuming there's an area field
+                    'altitude' => $parcel->altitude, // Assuming there's an altitude field
+                    'strokecolor' => $parcel->strokecolor, // Include the stroke color
+                    'fillColor' => $parcel->fillColor // Optionally include the fill color if available
+                ];
+            })->filter(); // Remove any null values from the collection
+
+            
+                $parceldata = ParcellaryBoundaries::all()->map(function($parcel) {
+                    // Output the individual parcel data for debugging
+                //   echo "Parcel data fetched: " . json_encode($parcel) . "\n";
+
+                    // Decode the JSON coordinates
+                    $coordinates = json_decode($parcel->coordinates);
+                    
+                    // Check if the coordinates are valid and properly formatted
+                    if (!is_array($coordinates)) {
+                    //   echo "Invalid coordinates for parcel ID {$parcel->id}: " . $parcel->coordinates . "\n";
+                        return null; // Return null for invalid data
+                    }
+
+                    return [
+                        'parcel_name' => $parcel->parcel_name, // Include the ID for reference
+                        'arpowner_na' => $parcel->arpowner_na, 
+                        'agri_districts' => $parcel->agri_districts, 
+                        'barangay_name' => $parcel->barangay_name, 
+                        'tct_no' => $parcel->tct_no, 
+                        'lot_no' => $parcel->lot_no, 
+                        'pkind_desc' => $parcel->pkind_desc, 
+                        'puse_desc' => $parcel->puse_desc, 
+                        'actual_used' => $parcel->actual_used, 
+                        'coordinates' => $coordinates, // Include the decoded coordinates
+                        'area' => $parcel->area, // Assuming there's an area field
+                        'altitude' => $parcel->altitude, // Assuming there's an altitude field
+                        'strokecolor' => $parcel->strokecolor, // Include the stroke color
+                    
+                    ];
+                })->filter(); // Remove any null values from the collection
+
+
+
+            // Check if the request is an AJAX request
+            if ($request->ajax()) {
+                // Return the response as JSON for AJAX requests
+                return response()->json([
+                    'admin' => $admin,
+                    'profile' => $profile,
+                    'farmProfiles' => $farmProfiles,
+                    'totalRiceProduction' => $totalRiceProduction,
+                
+                    'polygons' => $polygonsData,
+                    'districtsData' => $districtsData // Send all district GPS coordinates
+                ]);
+            } else {
+                // Return the view with the fetched data for regular requests
+                return view('admin.farmersdata.samplefolder.farm_edit', [
+                    'admin' => $admin,
+                    'profile' => $profile,
+                    'farmProfiles' => $farmProfiles,
+                    'totalRiceProduction' => $totalRiceProduction,
+                    'userId' =>$userId, 
+                    'agri_district'=>$agri_district, 
+                    'agri_districts_id'=>$agri_districts_id, 
+                    'selectMember'=>$selectMember,
+             
+                    'districtsData' => $districtsData,
+                    'mapdata' => $mapdata, // Pass to view
+                    'parceldata'=> $parceldata 
+                ]);
+            }
+        }  else {
+            // Handle the case where the user is not found
+            // You can redirect the user or display an error message
             return redirect()->route('login')->with('error', 'User not found.');
         }
-    } else {
+        } else {
+        // Handle the case where the user is not authenticated
+        // Redirect the user to the login page
         return redirect()->route('login');
-    }
+        }
 }
 
 
-// public function samplefolder(Request $request)
-// {
-//     // Check if the user is authenticated
-//     if (Auth::check()) {
-//         // User is authenticated, proceed with retrieving the user's ID
-//         $userId = Auth::id();
-//         $admin = User::find($userId);
-
-//         if ($admin) {
-//             // Fetch user information
-//             $user = auth()->user();
-//             $agri_district = $admin->agri_district;
-//             $selectMember = $user->select_member; // Assuming `select_member` is the correct attribute
-
-//             // Check if user is authenticated before proceeding
-//             if (!$user) {
-//                 return redirect()->route('login');
-//             }
-
-//             // Find the user's personal information
-//             $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
-
-//             // Fetch the farm ID associated with the user
-//             $farmId = $user->farm_id;
-//             $agri_districts_id = $user->agri_districts_id;
-
-//             // Find the farm profile using the fetched farm ID
-//             $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
-
-//             // Handle AJAX requests
-//             // if ($request->ajax()) {
-//             //     $type = $request->input('type');
-
-//             //     // Handle requests for barangays and organizations
-//             //     if ($type === 'barangays' || $type === 'organizations') {
-//             //         $district = $request->input('district');
-        
-//             //         if ($type === 'barangays') {
-//             //             $barangays = Barangay::where('district', $district)->get(['id', 'barangay_name']);
-//             //             return response()->json($barangays);
-        
-//             //         } elseif ($type === 'organizations') {
-//             //             $organizations = FarmerOrg::where('district', $district)->get(['id', 'organization_name']);
-//             //             return response()->json($organizations);
-//             //         }
-        
-//             //         return response()->json(['error' => 'Invalid type parameter.'], 400);
-//             //     }
-//                  // Handle requests for agri-districts
-                
 
 
-//                  if ($request->ajax()) {
-//                     $type = $request->input('type');
-                
-//                     // Handle requests for agri-districts
-//                     if ($type === 'districts') {
-//                         $districts = AgriDistrict::pluck('district', 'district'); // Fetch agri-district names
-//                         return response()->json($districts); // Added missing semicolon here
-//                     }
-                
-//                     // Handle requests for barangays based on the selected district
-//                     if ($type === 'barangays') {
-//                         $district = $request->input('district');
-//                         if (!$district) {
-//                             return response()->json(['error' => 'District is required.'], 400);
-//                         }
-                
-//                         $barangays = Barangay::where('district', $district)->pluck('barangay_name', 'barangay_name');
-//                         return response()->json($barangays);
-//                     }
-                
-//                     // Handle requests for organizations based on the selected district
-//                     if ($type === 'organizations') {
-//                         $district = $request->input('district');
-//                         if (!$district) {
-//                             return response()->json(['error' => 'District is required.'], 400);
-//                         }
-                
-//                         $organizations = FarmerOrg::where('district', $district)->pluck('organization_name', 'organization_name');
-//                         return response()->json($organizations);
-//                     }
-                
-//                     // Handle requests for crop names
-//                     if ($type === 'crops') {
-//                         $crops = CropCategory::pluck('crop_name', 'crop_name');
-//                         return response()->json($crops);
-//                     }
-                
-//                     // Handle requests for crop varieties based on the selected crop name
-//                     if ($type === 'varieties') {
-//                         $cropName = $request->input('crop_name');
-//                         if (!$cropName) {
-//                             return response()->json(['error' => 'Crop name is required.'], 400);
-//                         }
-                
-//                         $varieties = Categorize::where('crop_name', $cropName)->pluck('variety_name', 'variety_name');
-//                         return response()->json($varieties);
-//                     }
-                
-//                     // Handle requests for seed names based on the selected variety name
-//                     if ($type === 'seedname') {
-//                         $varietyName = $request->input('variety_name');
-//                         if (!$varietyName) {
-//                             return response()->json(['error' => 'Variety name is required.'], 400);
-//                         }
-                
-//                         $seeds = Seed::where('variety_name', $varietyName)->pluck('seed_name', 'seed_name');
-//                         return response()->json($seeds);
-//                     }
-                
-//                     // Invalid request type
-//                     return response()->json(['error' => 'Invalid type parameter.'], 400);
-//                 }
-                
-//             // For non-AJAX requests, continue rendering the view
-//             $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-//             return view('admin.farmersdata.samplefolder.farm_edit', compact('admin', 'profile', 'farmProfile', 
-//             'totalRiceProduction', 'userId', 'agri_district', 'agri_districts_id', 'selectMember'));
-//         } else {
-//             return redirect()->route('login')->with('error', 'User not found.');
-//         }
-//     } else {
-//         return redirect()->route('login');
-//     }
-// }
+public function checkFarmerExistence(Request $request)
+{
+    $exists = PersonalInformations::where('first_name', $request->first_name)
+        ->where('last_name', $request->last_name)
+        ->where('mothers_maiden_name', $request->mothers_maiden_name)
+        // ->where('date_of_birth', $request->date_of_birth)
+        ->exists();
 
-// public function samplefolder(Request $request)
-// {
-//     // Check if the user is authenticated
-//     if (Auth::check()) {
-//         // User is authenticated, proceed with retrieving the user's ID
-//         $userId = Auth::id();
-//         $admin = User::find($userId);
-
-//         if ($admin) {
-//             // Fetch user information
-//             $user = auth()->user();
-//             $agri_district = $admin->agri_district;
-//             $selectMember = $user->select_member; // Assuming `select_member` is the correct attribute
-
-//             // Check if user is authenticated before proceeding
-//             if (!$user) {
-//                 return redirect()->route('login');
-//             }
-
-//             // Find the user's personal information
-//             $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
-
-//             // Fetch the farm ID associated with the user
-//             $farmId = $user->farm_id;
-//             $agri_districts_id = $user->agri_districts_id;
-
-//             // Find the farm profile using the fetched farm ID
-//             $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
-
-//             // Handle AJAX requests
-//             if ($request->ajax()) {
-//                 $type = $request->input('type');
-
-//                 // Search for an existing farmer with the same details
-//                 if ($type === 'check-farmer') {
-//                     // Validate the input data
-//                     $validated = $request->validate([
-//                         'first_name' => 'required|string|max:255',
-//                         'last_name' => 'required|string|max:255',
-//                         'mothers_maiden_name' => 'required|string|max:255',
-//                         'date_of_birth' => 'required|date',
-//                     ]);
-
-//                     // Check if a farmer with the same details already exists
-//                     $farmerExists = PersonalInformations::where('first_name', $validated['first_name'])
-//                         ->where('last_name', $validated['last_name'])
-//                         ->where('mothers_maiden_name', $validated['mothers_maiden_name'])
-//                         ->where('date_of_birth', $validated['date_of_birth'])
-//                         ->exists();
-
-//                     // Return a response indicating if the farmer exists or not
-//                     if ($farmerExists) {
-//                         return response()->json(['exists' => true, 'message' => 'This farmer already exists in the database.']);
-//                     } else {
-//                         return response()->json(['exists' => false]);
-//                     }
-//                 }
-
-//                 // Handle requests for barangays and organizations
-//                 if ($type === 'barangays' || $type === 'organizations') {
-//                     $district = $request->input('district');
-        
-//                     if ($type === 'barangays') {
-//                         $barangays = Barangay::where('district', $district)->get(['id', 'barangay_name']);
-//                         return response()->json($barangays);
-        
-//                     } elseif ($type === 'organizations') {
-//                         $organizations = FarmerOrg::where('district', $district)->get(['id', 'organization_name']);
-//                         return response()->json($organizations);
-//                     }
-        
-//                     return response()->json(['error' => 'Invalid type parameter.'], 400);
-//                 }
-
-//                 // Handle requests for crop names and crop varieties
-//                 if ($type === 'crops') {
-//                     $crops = CropCategory::pluck('crop_name', 'crop_name');
-//                     return response()->json($crops);
-//                 }
-
-//                 if ($type === 'varieties') {
-//                     $cropId = $request->input('crop_name');
-//                     $varieties = Categorize::where('crop_name', $cropId)->pluck('variety_name', 'variety_name');
-//                     return response()->json($varieties);
-//                 }
-
-//                 if ($type === 'seedname') {
-//                     // Retrieve the 'variety_name' from the request
-//                     $varietyId = $request->input('variety_name');
-                
-//                     // Fetch the seeds based on the variety name and return the result as a JSON response
-//                     $seeds = Seed::where('variety_name', $varietyId)->pluck('seed_name', 'seed_name');
-                
-//                     // Return the seeds as a JSON response for the frontend
-//                     return response()->json($seeds);
-//                 }
-
-//                 return response()->json(['error' => 'Invalid type parameter.'], 400);
-//             }
-
-//             // For non-AJAX requests, continue rendering the view
-//             $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-
-//             return view('admin.farmersdata.samplefolder.farm_edit', compact(
-//                 'admin', 'profile', 'farmProfile', 'totalRiceProduction', 
-//                 'userId', 'agri_district', 'agri_districts_id', 'selectMember'
-//             ));
-//         } else {
-//             return redirect()->route('login')->with('error', 'User not found.');
-//         }
-//     } else {
-//         return redirect()->route('login');
-//     }
-// }
-
-
+    return response()->json(['exists' => $exists]);
+}
 
 
 
@@ -3426,12 +3430,20 @@ public function test(Request $request)
       ->where('mothers_maiden_name', $farmerdata['mothers_maiden_name'])
       ->where('date_of_birth', $farmerdata['date_of_birth'])
       ->first();
-
-      if ($existingFarmer) {
-          return response()->json([
-              'error' => 'A record with this last name, first name, mother\'s maiden name, and date of birth already exists.'
-          ], 400); // Send a 400 Bad Request status code
-      }
+  
+  if ($existingFarmer) {
+      return response()->json([
+          'error' => 'A record with this last name, first name, mother\'s maiden name, and date of birth already exists.',
+          'existing_data' => [
+              'last_name' => $existingFarmer->last_name,
+              'first_name' => $existingFarmer->first_name,
+              'mothers_maiden_name' => $existingFarmer->mothers_maiden_name,
+              'date_of_birth' => $existingFarmer->date_of_birth,
+              // Add other relevant fields here if needed
+          ]
+      ], 400); // Send a 400 Bad Request status code
+  }
+  
       $farmerModel = new PersonalInformations();
       $farmerModel -> users_id = $farmerdata['users_id'];
       $farmerModel -> first_name = $farmerdata['first_name'];
@@ -3444,8 +3456,8 @@ public function test(Request $request)
       $farmerModel -> district= $farmerdata['agri_district'];
       $farmerModel -> barangay= $farmerdata['barangay'];
       
-      $farmerModel -> street= $farmerdata['street'];
-      $farmerModel -> zip_code= $farmerdata['zip_code'];
+    //   $farmerModel -> street= $farmerdata['street'];
+    //   $farmerModel -> zip_code= $farmerdata['zip_code'];
       $farmerModel -> sex= $farmerdata['sex'];
       $farmerModel -> religion = $farmerdata['religion'];
       $farmerModel -> date_of_birth= $farmerdata['date_of_birth'];
