@@ -38,6 +38,737 @@ class FarmProfileController extends Controller
 {
    
 
+   
+        public function showFarmerProfiles(Request $request,$id)
+        {
+            // Fetch the farm profile data
+            $farmProfile = FarmProfile::with('cropFarms')->find($id);
+        
+            // You might also want to fetch the admin data if necessary
+            $admin = Auth::user(); // Assuming you are using Laravel's Auth to get the currently logged-in user
+        
+            // Check if farm profile exists
+            if (!$farmProfile) {
+                return redirect()->route('farmProfiles.index')->with('error', 'Farm profile not found.');
+            }
+        
+            // Prepare data for view
+               // Fetch the farm profile data with all the related data
+    $farmProfile = FarmProfile::with([
+        'cropFarms.lastProductionDatas', 
+        'cropFarms.fixedCosts', 
+        'cropFarms.machineries', 
+        'cropFarms.variableCosts', 
+        'cropFarms.productionSolds',
+        'personalInformation' // Include personalInformation relationship
+    ])->find($id);
+
+    // Check if the farm profile exists
+  
+ // Check if there are any farm profiles before processing
+//  if ($farmProfile->isEmpty()) {
+//     // Return an empty response if no farm profiles are found
+//     return response()->json([
+//         'message' => 'No farm profiles found',
+//         'formattedIncomeData' => [],
+//         'croppingLabels' => [],
+//         'croppingYields' => [],
+//     ]);
+// }
+//     // Prepare data for crops
+    $cropsData = $farmProfile->cropFarms->map(function ($crop) {
+        return [
+            'cropName' => $crop->crop_name,
+            'typeOfVariety' => $crop->type_of_variety_planted ?? $crop->preferred_variety, // Use preferred_variety if type_of_variety_planted is null
+
+            'yield' => $crop->yield_kg_ha,
+            'plantingScheduleWet' => $crop->planting_schedule_wetseason 
+                ? Carbon::parse($crop->planting_schedule_wetseason)->format('F D Y') : null,
+            'plantingScheduleDry' => $crop->planting_schedule_dryseason 
+                ? Carbon::parse($crop->planting_schedule_dryseason)->format('F D Y') : null,
+            'lastHarvestDate' => $crop->last_harvest_date,
+            'croppingNumberperyear' => $crop->no_of_cropping_per_year,
+            'lastProductionDatas' => $crop->lastProductionDatas,
+            'fixedCosts' => $crop->fixedCosts,
+            'machineries' => $crop->machineries,
+            'variableCosts' => $crop->variableCosts,
+            'productionSolds' => $crop->productionSolds,
+        ];
+    });
+
+    // Prepare GPS data
+    $gpsData = [
+        // 'farmAddress' => $farmProfile->address,
+        'gpsLatitude' => $farmProfile->gps_latitude,
+        'gpsLongitude' => $farmProfile->gps_longitude,
+                                          'FarmAddress' => $farmProfile->farm_address,
+                                  'NoYears' => $farmProfile->no_of_years_as_farmers,
+                                  'totalPhysicalArea' => $farmProfile->total_physical_area,
+                                  'TotalCultivated' => $farmProfile->total_area_cultivated,
+                                  'tenurial_status' => $farmProfile->tenurial_status,
+                                  'area_prone_to' => $farmProfile->area_prone_to,
+                                  'ecosystem' => $farmProfile->ecosystem,
+                                  'rsba_registered' => $farmProfile->rsba_registered,
+                                  'pcic_insured' => $farmProfile->pcic_insured,
+                                  'government_assisted' => $farmProfile->government_assisted,
+                                  'source_of_capital' => $farmProfile->tenurial_status,
+    ];
+         // Get personal information if exists
+         $personalInfo = $farmProfile->personalInformation;
+
+         $data = [
+             'full_name' => $personalInfo ? 
+                 ($personalInfo->first_name . 
+                 ($personalInfo->middle_name ? ' ' . $personalInfo->middle_name : '') . 
+                 ' ' . $personalInfo->last_name) : 
+                 null,
+             'civilStatus' => $personalInfo ? $personalInfo->civil_status : null,
+             'orgName' => $personalInfo ? $personalInfo->nameof_farmers_ass_org_coop : null,
+             'address' => collect([$personalInfo->barangay ?? null, $personalInfo->district ?? null, $personalInfo->city ?? null])
+                             ->filter()
+                             ->implode(', ') ?: null,
+             'homeAddress' => $personalInfo->home_address ?: null,
+             'land_title_no' => $personalInfo->land_title_no,
+             'lot_no' => $personalInfo->lot_no,
+             'province' => $personalInfo->province,
+             'country' => $personalInfo->country,
+             'street' => $personalInfo->street,
+             'zip_code' => $personalInfo->zip_code,
+             'sex' => $personalInfo->sex,
+             'religion' => $personalInfo->religion,
+             'place_of_birth' => $personalInfo->place_of_birth,
+             'contact_no' => $personalInfo->contact_no,
+             'name_legal_spouse' => $personalInfo->name_legal_spouse,
+             'no_of_children' => $personalInfo->no_of_children,
+             'mothers_maiden_name' => $personalInfo->mothers_maiden_name,
+             'highest_formal_education' => $personalInfo->highest_formal_education,
+             'person_with_disability' => $personalInfo->person_with_disability,
+             'pwd_id_no' => $personalInfo->pwd_id_no,
+             'id_type' => $personalInfo->id_type,
+             'gov_id_no' => $personalInfo->gov_id_no,
+             'name_contact_person' => $personalInfo->name_contact_person,
+             'cp_tel_no' => $personalInfo->cp_tel_no,
+             'date_of_birth' => $personalInfo->date_of_birth,
+             'age' => $personalInfo->date_of_birth ? Carbon::now()->diffInYears(Carbon::parse($personalInfo->date_of_birth)) : null,
+         ];
+
+        $grossIncomeData = [];
+        $croppingData = [];
+        $cropYieldData = [];
+
+        // Process gross income data for each crop in $cropsData
+        foreach ($cropsData as $cropData) {
+            // Sum the gross income from production sold data
+            $productionSoldIncome = $cropData['productionSolds']->sum('gross_income');
+        
+            // Determine the crop name
+            $cropName = $cropData['cropName'];
+        
+            // Initialize the crop name key in gross income data if it doesn't exist
+            if (!isset($grossIncomeData[$cropName])) {
+                $grossIncomeData[$cropName] = 0;
+            }
+        
+            if ($productionSoldIncome > 0) {
+                // Accumulate the income
+                $grossIncomeData[$cropName] += $productionSoldIncome;
+            } else {
+                // Fallback to last production data if production sold data is unavailable
+                $lastProductionIncome = $cropData['lastProductionDatas']->sum(function($lastProductionData) {
+                    return $lastProductionData->gross_income_palay + $lastProductionData->gross_income_rice;
+                });
+        
+                // Accumulate the income from last production data
+                $grossIncomeData[$cropName] += $lastProductionIncome;
+            }
+        
+            // Process cropping data for each last production data
+            foreach ($cropData['lastProductionDatas'] as $productionData) {
+                $croppingNo = $productionData->cropping_no; // Get cropping number
+                $totalYieldKg = $productionData->yield_tons_per_kg; // Total yield in kg
+        
+                // Initialize cropping number in croppingData if it doesn't exist
+                if (!isset($croppingData[$croppingNo])) {
+                    $croppingData[$croppingNo] = 0;
+                }
+                // Accumulate the yield per cropping number
+                $croppingData[$croppingNo] += $totalYieldKg;
+            }
+        }
+        // Process crop yield data for each crop in $cropsData
+foreach ($cropsData as $cropData) {
+    // Determine the crop name
+    $cropName = $cropData['cropName'];
+
+    // Initialize the crop name key in crop yield data if it doesn't exist
+    if (!isset($cropYieldData[$cropName])) {
+        $cropYieldData[$cropName] = 0;
+    }
+
+    // Process yield from last production data
+    foreach ($cropData['lastProductionDatas'] as $productionData) {
+        $totalYieldKg = $productionData->yield_tons_per_kg; // Total yield in kg
+
+        // Accumulate the yield for the crop
+        $cropYieldData[$cropName] += $totalYieldKg;
+    }
+}
+
+        // Prepare formatted income data for the chart
+                $formattedIncomeData = [
+                    'labels' => array_keys($grossIncomeData),
+                    'data' => array_values($grossIncomeData),
+                ];
+                
+                // Prepare formatted cropping data for the chart
+                $formattedCroppingData = [
+                    'labels' => array_keys($croppingData),
+                    'data' => array_map(fn($kg) => $kg / 1000, array_values($croppingData)), // Convert kg to tons
+                ];
+                // Format the data for Chart.js
+                $formattedYieldData = [
+                    'labels' => array_map('ucfirst', array_keys($cropYieldData)), // Capitalize the first letter of each crop name
+                    'data' => array_values($cropYieldData),  // Assuming this is the yield in kg or tons
+                ];
+
+        // Check if the request is AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'formattedIncomeData' => $formattedIncomeData,
+                'formattedCroppingData' => $formattedCroppingData,
+                'formattedYieldData' => $formattedYieldData,
+            ]);
+        }
+        
+
+            // Return the view with the necessary data
+            return view('farm_profile.farmer_profile', compact('farmProfile', 'cropsData', 'gpsData', 'admin','data','farmProfile'));
+        }
+            
+        // public function showFarmerProfiles(Request $request,$id)
+        // {
+        //     // Check if the user is authenticated
+        //     if (Auth::check()) {
+        //         // User is authenticated, proceed with retrieving the user's ID
+        //         $userId = Auth::id();
+        
+        //         // Find the user based on the retrieved ID
+        //         $admin = User::find($userId);
+        
+        //         if ($admin) {
+        //             // Assuming $user represents the currently logged-in user
+        //             $admin = auth()->user();
+        
+        //             // Check if user is authenticated before proceeding
+        //             if (!$admin) {
+        //                 // Handle unauthenticated user, for example, redirect them to login
+        //                 return redirect()->route('login');
+        //             }
+        
+        //             // Find the user's personal information by their ID
+        //             $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+        
+        //             // Fetch the farm ID associated with the user
+        //             $farmId = $admin->farm_id;
+        
+        //             // Find the farm profile using the fetched farm ID
+        //             $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
+        
+        //             // $farmProfiles = FarmProfile::with(['cropFarms', 'personalInformation'])
+        //             //     ->where('users_id', $userId) // Filter based on user_id
+        //             //     ->get();
+        //             $farmData = FarmProfile::find($id);
+        //             $farmProfiles = FarmProfile::with([
+        //                 'cropFarms', 
+        //                 'cropFarms.lastProductionDatas', 
+        //                 'cropFarms.fixedCosts', 
+        //                 'cropFarms.machineries', 
+        //                 'cropFarms.variableCosts', 
+        //                 'cropFarms.productionSolds',
+        //                 'personalInformation'
+        //             ])
+        //             // ->where('users_id', $userId) // Filter based on user_id
+        //             ->get();
+                 
+            
+        //             // Format the data for the pie chart (label and data pairs)
+                
+        //                   // Prepare an array for GPS coordinates
+        //                   $gpsData = [];
+        //                   foreach ($farmProfiles as $farmProfile) {
+        //                       // Concatenate all crop names associated with the farm profile
+        //                   // This will create a comma-separated string of crop names
+        //                   foreach ($farmProfile->cropFarms as $cropFarm) {
+        //                       $cropNames = $cropFarm->crop_name; // Fetch individual crop name
+        //                       $cropVariety = $cropFarm->type_of_variety_planted ?? $cropFarm->preferred_variety; // Fetch individual crop variety or preferred variety // Fetch individual crop variety
+        //                       $croppingperYear = $cropFarm->no_of_cropping_per_year; // Fetch individual cropping per year
+        //                       $yield = $cropFarm->yield_kg_ha; // Fetch individual yield
+        //                       $planting_schedule_wetseason = $cropFarm->planting_schedule_wetseason;
+        //                       $planting_schedule_dryseason = $cropFarm->planting_schedule_dryseason;
+                             
+                              
+                      
+        //                       // Now you can use these variables as needed
+        //                       // For example, you could print them
+        //                       // echo "Crop Name: $cropNames, Crop Variety: $cropVariety, Cropping/Year: $croppingperYear, Yield: $yield kg/ha\n";
+        //                   }
+        
+        
+        //                       // Access personal information (if it exists)
+        //                           $farmerName = $farmProfile->personalInformation ? 
+        //                           ($farmProfile->personalInformation->first_name . 
+        //                           ($farmProfile->personalInformation->middle_name ? ' ' . $farmProfile->personalInformation->middle_name : '') . 
+        //                           ' ' . $farmProfile->personalInformation->last_name) : 
+        //                           null;
+                                  
+        
+        //                       $civilStatus = $farmProfile->personalInformation ? $farmProfile->personalInformation->civil_status : null; // Adjust field name as needed
+        //                       $orgName = $farmProfile->personalInformation ? $farmProfile->personalInformation->nameof_farmers_ass_org_coop: null; // Adjust field name as needed
+        //                      // Fetch the city, district, and barangay from personal information
+        //                         $city = $farmProfile->personalInformation ? $farmProfile->personalInformation->city : null;
+        //                         $district = $farmProfile->personalInformation ? $farmProfile->personalInformation->district : null;
+        //                         $barangay = $farmProfile->personalInformation ? $farmProfile->personalInformation->barangay : null; 
+        
+        //                         // Join city, district, and barangay into a single string, skipping null values
+        //                         $completeAddress = collect([$barangay, $district, $city])
+        //                                             ->filter()
+        //                                             ->implode(', ');
+        
+        //                         // Fetch home_address and fallback to completeAddress if home_address is null
+        //                         $homeAddress = $farmProfile->personalInformation && $farmProfile->personalInformation->home_address 
+        //                                     ? $farmProfile->personalInformation->home_address 
+        //                                     : $completeAddress;
+        
+        //                       $landtitleNo = $farmProfile->personalInformation ? $farmProfile->personalInformation->land_title_no: null;
+        //                       $lotNo = $farmProfile->personalInformation ? $farmProfile->personalInformation->lot_no: null;
+        //                       $province = $farmProfile->personalInformation ? $farmProfile->personalInformation->province: null;
+        //                       $country = $farmProfile->personalInformation ? $farmProfile->personalInformation->country: null;
+                              
+        //                       $street = $farmProfile->personalInformation ? $farmProfile->personalInformation->street: null;
+        //                       $zip_code = $farmProfile->personalInformation ? $farmProfile->personalInformation->zip_code: null;
+        //                       $sex = $farmProfile->personalInformation ? $farmProfile->personalInformation->sex: null;
+        //                       $religion = $farmProfile->personalInformation ? $farmProfile->personalInformation->religion: null;
+        //                       $place_of_birth = $farmProfile->personalInformation ? $farmProfile->personalInformation->place_of_birth: null;
+        //                       $contact_no = $farmProfile->personalInformation ? $farmProfile->personalInformation->contact_no: null;
+        //                       $civil_status = $farmProfile->personalInformation ? $farmProfile->personalInformation->civil_status: null;
+        //                       $name_legal_spouse = $farmProfile->personalInformation ? $farmProfile->personalInformation->name_legal_spouse: null;
+        //                       $no_of_children = $farmProfile->personalInformation ? $farmProfile->personalInformation->no_of_children: null;
+        //                       $mothers_maiden_name = $farmProfile->personalInformation ? $farmProfile->personalInformation->mothers_maiden_name: null;
+        //                       $highest_formal_education = $farmProfile->personalInformation ? $farmProfile->personalInformation->highest_formal_education: null;
+        //                       $person_with_disability = $farmProfile->personalInformation ? $farmProfile->personalInformation->person_with_disability: null;
+        //                       $pwd_id_no = $farmProfile->personalInformation ? $farmProfile->personalInformation->pwd_id_no: null;
+        //                       $id_type = $farmProfile->personalInformation ? $farmProfile->personalInformation->id_type: null;
+        //                       $gov_id_no = $farmProfile->personalInformation ? $farmProfile->personalInformation->gov_id_no: null;
+        //                       $nameof_farmers_ass_org_coop = $farmProfile->personalInformation ? $farmProfile->personalInformation->nameof_farmers_ass_org_coop: null;
+        //                       $name_contact_person = $farmProfile->personalInformation ? $farmProfile->personalInformation->name_contact_person: null;
+        //                       $cp_tel_no = $farmProfile->personalInformation ? $farmProfile->personalInformation->cp_tel_no: null;
+        
+                            
+        //                   // Fetch date_of_birth from the related personalInformation model
+        //                   $dateOfBirth = $farmProfile->personalInformation ? $farmProfile->personalInformation->date_of_birth : null;
+        
+        //                   // Calculate age based only on the year (ignores month/day)
+        //                   $age = null;
+        //                   if ($dateOfBirth) {
+        //                       $birthYear = Carbon::parse($dateOfBirth)->year; // Extract year of birth
+        //                       $currentYear = Carbon::now()->year; // Get the current year
+        
+        //                       // Debugging: check the values of birthYear and currentYear
+        //                       // dd($birthYear, $currentYear); // This will dump the values to the screen and stop execution
+        
+        //                       $age = $currentYear - $birthYear; // Calculate the difference in years
+        //                   }
+        
+        //                       $gpsData[] = [
+        //                           'gpsLatitude' => $farmProfile->gps_latitude,
+        //                           'gpsLongitude' => $farmProfile->gps_longitude,
+        //                           'FarmAddress' => $farmProfile->farm_address,
+        //                           'NoYears' => $farmProfile->no_of_years_as_farmers,
+        //                           'totalPhysicalArea' => $farmProfile->total_physical_area,
+        //                           'TotalCultivated' => $farmProfile->total_area_cultivated,
+        //                           'tenurial_status' => $farmProfile->tenurial_status,
+        //                           'area_prone_to' => $farmProfile->area_prone_to,
+        //                           'ecosystem' => $farmProfile->ecosystem,
+        //                           'rsba_registered' => $farmProfile->rsba_registered,
+        //                           'pcic_insured' => $farmProfile->pcic_insured,
+        //                           'government_assisted' => $farmProfile->government_assisted,
+        //                           'source_of_capital' => $farmProfile->tenurial_status,
+        
+        //                           'cropName' => $cropNames, // List of crops
+        //                           'cropVariety' => $cropVariety,
+        //                           'croppingperYear' => $croppingperYear,
+        //                           'planting_schedule_wetseason' => $planting_schedule_wetseason ? Carbon::parse($planting_schedule_wetseason)->format('F d, Y') : 'N/A',
+        //                           'planting_schedule_dryseason' => $planting_schedule_dryseason ? Carbon::parse($planting_schedule_dryseason)->format('F d, Y') : 'N/A',
+        //                           'Yield' => $yield,
+        
+        //                           'farmerName' => $farmerName, // Farmer's name from personal information
+        //                           'civilStatus' => $civilStatus,
+        //                           'orgName' => $orgName,
+        //                           'homeAddress' => $homeAddress,
+        //                           'landtitleNo' => $landtitleNo,
+        //                           'lotNo' => $lotNo,
+        //                           'age' => $age,
+        
+        //                           'country'=>$country,
+        //                           'province'=>$province,
+        //                           'street'=>$street,
+        //                           'zip_code'=>$zip_code,
+        //                           'sex'=>$sex,
+        //                           'religion'=>$religion,
+        //                           'mothers_maiden_name'=>$mothers_maiden_name,
+        //                           'place_of_birth'=>$place_of_birth,
+        //                           'contact_no'=>$contact_no,
+        //                           'name_legal_spouse'=>$name_legal_spouse,
+        //                           'no_of_children'=>$no_of_children,
+        //                           'highest_formal_education'=>$highest_formal_education,
+        //                           'person_with_disability'=>$person_with_disability,
+        //                           'pwd_id_no'=>$pwd_id_no,
+        //                           'gov_id_no'=>$gov_id_no,
+        //                           'id_type'=>$id_type,
+        //                           'name_contact_person'=>$name_contact_person,
+        //                           'cp_tel_no'=>$cp_tel_no,
+                                
+        
+        //                       ];
+        //                   }
+        
+        
+        //                 // Initialize an array to hold crop data
+        //                     $cropData = [];
+        
+        //                     // Loop through each farm profile to gather crop farm data
+        //                     foreach ($farmProfiles as $farmProfile) {
+        //                         foreach ($farmProfile->cropFarms as $cropFarm) {
+        //                             $cropName = $cropFarm->crop_name; // Assuming there is a crop_name field
+        //                             $totalYield = $cropFarm->lastProductionDatas->sum('yield_tons_per_kg'); // Sum of yield per crop
+        
+        //                             // Initialize crop data if not set
+        //                             if (!isset($cropData[$cropName])) {
+        //                                 $cropData[$cropName] = 0;
+        //                             }
+                                    
+        //                             // Accumulate total yield for the crop
+        //                             $cropData[$cropName] += $totalYield;
+        //                         }
+        //                     }
+        
+        //                     // Format the data for Chart.js
+        //                     $formattedData = [
+        //                         'labels' => array_map('ucfirst', array_keys($cropData)), // Capitalize the first letter of each crop name
+        //               'data' => array_values($cropData),  
+                    
+        //             ];
+        
+        //             // Initialize an array to hold the gross income per crop
+        //                         $grossIncomeData = [];
+        
+        //                         // Loop through the farm profiles
+        //                         foreach ($farmProfiles as $farmProfile) {
+        //                             foreach ($farmProfile->cropFarms as $cropFarm) {
+        //                                 // Check for production sold data
+        //                                 $productionSold = $cropFarm->productionSolds->sum('gross_income'); // Assuming 'income' is the field for gross income
+        
+        //                                 // If there's no production sold data, fallback to last production data
+        //                                 if ($productionSold > 0) {
+        //                                     if (!isset($grossIncomeData[$cropFarm->crop_name])) {
+        //                                         $grossIncomeData[$cropFarm->crop_name] = 0;
+        //                                     }
+        //                                     $grossIncomeData[$cropFarm->crop_name] += $productionSold; // Store the production sold income
+        //                                 } else {
+        //                                     // Calculate the total income from last production data
+        //                                     $lastProductionIncome = $cropFarm->lastProductionDatas->sum(function($lastProductionData) {
+        //                                         return $lastProductionData->gross_income_palay + $lastProductionData->gross_income_rice; // Sum the relevant income fields
+        //                                     });
+        
+        //                                     if (!isset($grossIncomeData[$cropFarm->crop_name])) {
+        //                                         $grossIncomeData[$cropFarm->crop_name] = 0;
+        //                                     }
+        //                                     $grossIncomeData[$cropFarm->crop_name] += $lastProductionIncome; // Store the last production income
+        //                                 }
+        //                             }
+        //                         }
+        
+        //                         // Prepare formatted data for the response
+        //                         $formattedIncomeData = [
+        //                             'labels' => array_keys($grossIncomeData),
+        //                             'data' => array_values($grossIncomeData),
+        //                         ];
+        
+        
+        
+        //                             // Prepare the data for the chart
+        //                         $croppingData = [];
+        //                         foreach ($farmProfiles as $farmProfile) {
+        //                             foreach ($farmProfile->cropFarms as $cropFarm) {
+        //                                 foreach ($cropFarm->lastProductionDatas as $productionData) {
+        //                                     $noOfCropping = $productionData->cropping_no;
+        //                                     $totalYieldKg = $productionData->yield_tons_per_kg; // Assuming you have a field for total yield in kg
+                                            
+        //                                     if (!isset($croppingData[$noOfCropping])) {
+        //                                         $croppingData[$noOfCropping] = 0;
+        //                                     }
+        //                                     $croppingData[$noOfCropping] += $totalYieldKg; // Aggregate total yield
+        //                                 }
+        //                             }
+        //                         }
+        //                         // Convert data to a format suitable for Chart.js
+        //                         $labels = array_keys($croppingData); // Number of cropping
+        //                         $yields = array_map(fn($kg) => $kg / 1000, array_values($croppingData)); // Convert kg to tons
+        
+        //                    // Check if the request is AJAX
+        //             if (request()->ajax()) {
+        //                 return response()->json([
+        //                     'formattedData' => $formattedData,
+        //                     'formattedIncomeData' => $formattedIncomeData,
+        //                     'labels' => $labels,
+        //                      'yields' => $yields,
+        //                 ]);
+        //             }
+        
+        
+        //             // Return the view with the fetched data (non-AJAX)
+        //             return view('farm_profile.farmer_profile', compact('admin', 'gpsData', 'farmProfiles','farmData'));
+        
+        //         } else {
+        //             // Handle the case where the user is not found
+        //             return redirect()->route('login')->with('error', 'User not found.');
+        //         }
+        //     } else {
+        //         // Handle the case where the user is not authenticated
+        //         return redirect()->route('login');
+        //     }
+        // }
+         
+
+//         public function showFarmerProfiles(Request $request, $id)
+// {
+//     // Check if the user is authenticated
+//     if (Auth::check()) {
+//         // User is authenticated, proceed with retrieving the user's ID
+//         $userId = Auth::id();
+
+//         // Find the user based on the retrieved ID
+//         $admin = User::find($userId);
+
+//         if ($admin) {
+//             // Check if user is authenticated before proceeding
+//             if (!$admin) {
+//                 // Handle unauthenticated user, for example, redirect them to login
+//                 return redirect()->route('login');
+//             }
+
+//             // Find the user's personal information by their ID
+//             $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+
+//             // Fetch the farm ID associated with the user
+//             $farmId = $admin->farm_id;
+
+//             // Find the farm profile using the fetched farm ID
+//             $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
+
+//             // Find the specific farm profile by the provided ID
+//             $farmData = FarmProfile::find($id);
+
+//             // Fetch all farm profiles with related models
+//             $farmProfiles = FarmProfile::with([
+//                 'cropFarms', 
+//                 'cropFarms.lastProductionDatas', 
+//                 'cropFarms.fixedCosts', 
+//                 'cropFarms.machineries', 
+//                 'cropFarms.variableCosts', 
+//                 'cropFarms.productionSolds',
+//                 'personalInformation'
+//             ])
+//             // Uncomment if you want to filter by user_id
+//             // ->where('users_id', $userId) 
+//             ->get();
+
+//             // Initialize arrays for data collection
+//             $gpsData = [];
+//             $cropsData = []; // To store crop-related data
+            
+//             // Variables for aggregated data
+//             $totalAreaPlanted = 0;
+//             $totalYield = 0;
+//             $totalCost = 0; // For any financial costs
+//             $averageYieldPerArea = 0;
+
+//             foreach ($farmProfiles as $farmProfile) {
+//                 // Access personal information (if it exists)
+//                 foreach ($farmProfile->cropFarms as $cropFarm) {
+//                                           $cropNames = $cropFarm->crop_name; // Fetch individual crop name
+//                                           $cropVariety = $cropFarm->type_of_variety_planted ?? $cropFarm->preferred_variety; // Fetch individual crop variety or preferred variety // Fetch individual crop variety
+//                                           $croppingperYear = $cropFarm->no_of_cropping_per_year; // Fetch individual cropping per year
+//                                           $yield = $cropFarm->yield_kg_ha; // Fetch individual yield
+//                                           $planting_schedule_wetseason = $cropFarm->planting_schedule_wetseason;
+//                                           $planting_schedule_dryseason = $cropFarm->planting_schedule_dryseason;
+                                         
+                                          
+//                 $farmerName = $farmProfile->personalInformation ? 
+//                     ($farmProfile->personalInformation->first_name . 
+//                     ($farmProfile->personalInformation->middle_name ? ' ' . $farmProfile->personalInformation->middle_name : '') . 
+//                     ' ' . $farmProfile->personalInformation->last_name) : 
+//                     null;
+
+
+                    
+//                               $civilStatus = $farmProfile->personalInformation ? $farmProfile->personalInformation->civil_status : null; // Adjust field name as needed
+//                               $orgName = $farmProfile->personalInformation ? $farmProfile->personalInformation->nameof_farmers_ass_org_coop: null; // Adjust field name as needed
+//                              // Fetch the city, district, and barangay from personal information
+//                                 $city = $farmProfile->personalInformation ? $farmProfile->personalInformation->city : null;
+//                                 $district = $farmProfile->personalInformation ? $farmProfile->personalInformation->district : null;
+//                                 $barangay = $farmProfile->personalInformation ? $farmProfile->personalInformation->barangay : null; 
+        
+//                                 // Join city, district, and barangay into a single string, skipping null values
+//                                 $completeAddress = collect([$barangay, $district, $city])
+//                                                     ->filter()
+//                                                     ->implode(', ');
+        
+//                                 // Fetch home_address and fallback to completeAddress if home_address is null
+//                                 $homeAddress = $farmProfile->personalInformation && $farmProfile->personalInformation->home_address 
+//                                             ? $farmProfile->personalInformation->home_address 
+//                                             : $completeAddress;
+        
+//                               $landtitleNo = $farmProfile->personalInformation ? $farmProfile->personalInformation->land_title_no: null;
+//                               $lotNo = $farmProfile->personalInformation ? $farmProfile->personalInformation->lot_no: null;
+//                               $province = $farmProfile->personalInformation ? $farmProfile->personalInformation->province: null;
+//                               $country = $farmProfile->personalInformation ? $farmProfile->personalInformation->country: null;
+                              
+//                               $street = $farmProfile->personalInformation ? $farmProfile->personalInformation->street: null;
+//                               $zip_code = $farmProfile->personalInformation ? $farmProfile->personalInformation->zip_code: null;
+//                               $sex = $farmProfile->personalInformation ? $farmProfile->personalInformation->sex: null;
+//                               $religion = $farmProfile->personalInformation ? $farmProfile->personalInformation->religion: null;
+//                               $place_of_birth = $farmProfile->personalInformation ? $farmProfile->personalInformation->place_of_birth: null;
+//                               $contact_no = $farmProfile->personalInformation ? $farmProfile->personalInformation->contact_no: null;
+//                               $civil_status = $farmProfile->personalInformation ? $farmProfile->personalInformation->civil_status: null;
+//                               $name_legal_spouse = $farmProfile->personalInformation ? $farmProfile->personalInformation->name_legal_spouse: null;
+//                               $no_of_children = $farmProfile->personalInformation ? $farmProfile->personalInformation->no_of_children: null;
+//                               $mothers_maiden_name = $farmProfile->personalInformation ? $farmProfile->personalInformation->mothers_maiden_name: null;
+//                               $highest_formal_education = $farmProfile->personalInformation ? $farmProfile->personalInformation->highest_formal_education: null;
+//                               $person_with_disability = $farmProfile->personalInformation ? $farmProfile->personalInformation->person_with_disability: null;
+//                               $pwd_id_no = $farmProfile->personalInformation ? $farmProfile->personalInformation->pwd_id_no: null;
+//                               $id_type = $farmProfile->personalInformation ? $farmProfile->personalInformation->id_type: null;
+//                               $gov_id_no = $farmProfile->personalInformation ? $farmProfile->personalInformation->gov_id_no: null;
+//                               $nameof_farmers_ass_org_coop = $farmProfile->personalInformation ? $farmProfile->personalInformation->nameof_farmers_ass_org_coop: null;
+//                               $name_contact_person = $farmProfile->personalInformation ? $farmProfile->personalInformation->name_contact_person: null;
+//                               $cp_tel_no = $farmProfile->personalInformation ? $farmProfile->personalInformation->cp_tel_no: null;
+        
+                            
+//                     $dateOfBirth = $farmProfile->personalInformation ? $farmProfile->personalInformation->date_of_birth : null;
+        
+//                     //                   // Calculate age based only on the year (ignores month/day)
+//                                       $age = null;
+//                                       if ($dateOfBirth) {
+//                                           $birthYear = Carbon::parse($dateOfBirth)->year; // Extract year of birth
+//                                           $currentYear = Carbon::now()->year; // Get the current year
+                    
+//                                           // Debugging: check the values of birthYear and currentYear
+//                                           // dd($birthYear, $currentYear); // This will dump the values to the screen and stop execution
+                    
+//                                           $age = $currentYear - $birthYear; // Calculate the difference in years
+//                                       }
+                    
+//                 // Collect all relevant farm data for GPS and other details
+//                 $gpsData[] = [
+//                     'gpsLatitude' => $farmProfile->gps_latitude,
+//                                               'gpsLongitude' => $farmProfile->gps_longitude,
+//                                               'FarmAddress' => $farmProfile->farm_address,
+//                                               'NoYears' => $farmProfile->no_of_years_as_farmers,
+//                                               'totalPhysicalArea' => $farmProfile->total_physical_area,
+//                                               'TotalCultivated' => $farmProfile->total_area_cultivated,
+//                                               'tenurial_status' => $farmProfile->tenurial_status,
+//                                               'area_prone_to' => $farmProfile->area_prone_to,
+//                                               'ecosystem' => $farmProfile->ecosystem,
+//                                               'rsba_registered' => $farmProfile->rsba_registered,
+//                                               'pcic_insured' => $farmProfile->pcic_insured,
+//                                               'government_assisted' => $farmProfile->government_assisted,
+//                                               'source_of_capital' => $farmProfile->tenurial_status,
+                    
+//                                             //   'cropName' => $cropNames, // List of crops
+//                                             //   'cropVariety' => $cropVariety,
+//                                             //   'croppingperYear' => $croppingperYear,
+//                                             //   'planting_schedule_wetseason' => $planting_schedule_wetseason ? Carbon::parse($planting_schedule_wetseason)->format('F d, Y') : 'N/A',
+//                                             //   'planting_schedule_dryseason' => $planting_schedule_dryseason ? Carbon::parse($planting_schedule_dryseason)->format('F d, Y') : 'N/A',
+//                                             //   'Yield' => $yield,
+                    
+//                                               'farmerName' => $farmerName, // Farmer's name from personal information
+//                                               'civilStatus' => $civilStatus,
+//                                               'orgName' => $orgName,
+//                                               'homeAddress' => $homeAddress,
+//                                               'landtitleNo' => $landtitleNo,
+//                                               'lotNo' => $lotNo,
+//                                               'age' => $age,
+                    
+//                                               'country'=>$country,
+//                                               'province'=>$province,
+//                                               'street'=>$street,
+//                                               'zip_code'=>$zip_code,
+//                                               'sex'=>$sex,
+//                                               'religion'=>$religion,
+//                                               'mothers_maiden_name'=>$mothers_maiden_name,
+//                                               'place_of_birth'=>$place_of_birth,
+//                                               'contact_no'=>$contact_no,
+//                                               'name_legal_spouse'=>$name_legal_spouse,
+//                                               'no_of_children'=>$no_of_children,
+//                                               'highest_formal_education'=>$highest_formal_education,
+//                                               'person_with_disability'=>$person_with_disability,
+//                                               'pwd_id_no'=>$pwd_id_no,
+//                                               'gov_id_no'=>$gov_id_no,
+//                                               'id_type'=>$id_type,
+//                                               'name_contact_person'=>$name_contact_person,
+//                                               'cp_tel_no'=>$cp_tel_no,
+                                            
+                    
+//                 ];
+//             }
+//                 // Process crop data
+//                 foreach ($farmProfile->cropFarms as $cropFarm) {
+//                     // Prepare crop data
+//                     $cropName = $cropFarm->crop_name; // Fetch individual crop name
+//                     $cropYield = $cropFarm->yield_kg_ha;
+//                     $totalAreaPlanted += $farmProfile->total_physical_area_has; // Sum up the total area planted
+//                     $totalYield += $cropYield; // Sum up total yield
+                    
+//                     // You can add fixed costs and variable costs to totalCost
+//                     $totalCost += $cropFarm->fixedCosts->sum('amount') + $cropFarm->variableCosts->sum('amount');
+
+//                     $cropsData[] = [
+//                         'cropName' => $cropFarm->crop_name, // Crop name
+//                         'cropVariety' => $cropFarm->type_of_variety_planted ?? $cropFarm->preferred_variety, // Crop variety or preferred variety
+//                         'croppingPerYear' => $cropFarm->no_of_cropping_per_year, // Cropping per year
+//                         'yield' => $cropYield, // Yield in kg per hectare
+//                         'plantingScheduleWetSeason' => $cropFarm->planting_schedule_wetseason, // Wet season planting schedule
+//                         'plantingScheduleDrySeason' => $cropFarm->planting_schedule_dryseason, // Dry season planting schedule
+//                         'lastHarvestDate' => $cropFarm->lastProductionDatas->pluck('harvest_date')->last(), // Last harvest date
+//                         'croppingNumber' => $cropFarm->lastProductionDatas->pluck('cropping_no')->last(), // Cropping number
+//                     ];
+//                 }
+//             }
+
+//             // Calculate average yield per area planted
+//             if ($totalAreaPlanted > 0) {
+//                 $averageYieldPerArea = $totalYield / $totalAreaPlanted; // Calculate average yield
+//             }
+
+//             // Prepare data for charts or additional processing
+//             $chartData = [
+//                 'totalAreaPlanted' => $totalAreaPlanted,
+//                 'totalYield' => $totalYield,
+//                 'totalCost' => $totalCost,
+//                 'averageYieldPerArea' => $averageYieldPerArea,
+//                 'cropsData' => $cropsData,
+//             ];
+
+//             // Return the view with the necessary data
+//             return view('farm_profile.farmer_profile', compact('farmData', 'farmProfiles', 'gpsData', 'chartData')); // Adjust 'your_view' to your actual view file name
+//         } else {
+//             return redirect()->route('login')->withErrors(['error' => 'User not found.']);
+//         }
+//     } else {
+//         return redirect()->route('login'); // Redirect unauthenticated users
+//     }
+// }
+
         // adding new farm profile data
                     public function FarmProfile(Request $request,$id)
             {
@@ -396,7 +1127,7 @@ public function FarmerProfiling(Request $request)
 
 
                 // Initialize an array to hold crop data
-                    $cropData = [];
+                    $cropYield = [];
 
                     // Loop through each farm profile to gather crop farm data
                     foreach ($farmProfiles as $farmProfile) {

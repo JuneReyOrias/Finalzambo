@@ -723,6 +723,8 @@ Route::controller(PersonalInformationsController::class)->group(function () {
     Route::post('/admin-delete-farmprofile/{personalinfos}',[ FarmProfileController::class,'deletetFarmProfile'])->name('farm_profile.delete');
 
 
+    Route::get('/admin-view-farmer-profile/{farmProfile}',[ FarmProfileController::class,'showFarmerProfiles'])->name('farm_profile.farmer_profile');
+
 
     Route::get('/admin-add-farm/{personalinfos}',[FarmProfileController::class ,'FarmProfile'])->name('farm_profile.farm_index');
     Route::post('/admin-add-farm/{personalinfos}',[FarmProfileController::class, 'saveFarms']);

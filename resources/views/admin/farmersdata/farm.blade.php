@@ -200,6 +200,11 @@
                               <i class="fa fa-eye" aria-hidden="true"></i>
                             </button>
                         </a>
+                        <a href="{{route('farm_profile.farmer_profile', $farmprofile->id)}}" title="View farmer Profile">
+                            <button class="btn btn-success btn-sm">
+                              <i class="fa fa-eye" aria-hidden="true"></i>
+                            </button>
+                        </a>
                         <a href="javascript:void(0);" class="viewfarmBtn" data-bs-toggle="modal" title="View farm" data-bs-target="#farmModal" data-id="{{ $farmprofile->id }}">
                             <button class="btn btn-warning btn-sm" style="border-color: #54d572;">
                                 <img src="../assets/logo/farm.png" alt="Crop Icon" style="width: 20px; height: 20px;" class="me-1">
