@@ -484,8 +484,11 @@
                                         <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p>
                                         <br>
                                         <h3>a. Personal Info</h3>
+                                        <div id="error-message" class="text-danger" style="display: none;"></div>
+
                                         <div class="input-box col-md-4">
                                             <input type="hidden" class="form-control light-gray-placeholder users_id" name="users_id" value="{{$userId}}">
+                                        
                                         </div>
                                         <div class="user-details">
                                             <!-- Existing fields here -->
@@ -554,7 +557,7 @@
                                                 {{-- <div id="date_of_birth_error" class="invalid-feedback"></div> --}}
                                             </div>
                                          {{-- <div id="error-message" class="text-danger" style="display: none;"></div> --}}
-                                            <button type="button" class="btn btn-success" id="nextButton" disabled onclick="nextStep()">Next</button>
+                                            <button type="button" class="btn btn-success" id="nextButton"onclick="nextStep()" >Next</button>
                                         </div>
                                         
                                     
@@ -618,7 +621,7 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                                   
+{{--                                    
                     <div class="input-box col-md-4">
                         <span class="details">Street</span>
                         <input type="text" name="street" id="street" class="form-control street light-gray-placeholder @error('street') is-invalid @enderror" placeholder="Street" autocomplete="new-password" value="{{ old('street') }}">
@@ -633,7 +636,7 @@
                                     <option selected value="7000" {{ old('zip_code') == '7000' ? 'selected' : '' }}>7000</option>
 
                                     </select>
-                                    </div>
+                                    </div> --}}
                                     <div class="input-box col-md-4">
                                     <span class="details">Contact No.</span>
                                     <input type="number" name="contact_no" id="contact_no" class="form-control contact_no light-gray-placeholder @error('contact_no') is-invalid @enderror"placeholder="Contact no." autocomplete="new-password" value="{{ old('contact_no') }}" >
@@ -1305,8 +1308,8 @@
                         <li><strong>City:</strong> <span id="farmerCity"></span></li>
                         <li><strong>Agri District:</strong> <span id="farmerAgriDistrict"></span></li>
                         <li><strong>Barangay:</strong> <span id="farmerBarangay"></span></li>
-                        <li><strong>Street:</strong> <span id="farmerStreet"></span></li>
-                        <li><strong>Zip Code:</strong> <span id="farmerZipCode"></span></li>
+                        {{-- <li><strong>Street:</strong> <span id="farmerStreet"></span></li>
+                        <li><strong>Zip Code:</strong> <span id="farmerZipCode"></span></li> --}}
                         <li><strong>Contact Number:</strong> <span id="farmerContactNo"></span></li>
                         <li><strong>Sex:</strong> <span id="farmerSex"></span></li>
                         <li><strong>Religion:</strong> <span id="farmerReligion"></span></li>
@@ -3207,8 +3210,8 @@ form.on('submit', function(event) {
         'city': $('input.city').val(),
         'agri_district': $('select.agri_district').val(),
         'barangay': $('select.barangay').val(),
-        'street': $('input.street').val(),
-        'zip_code': $('select.zip_code').val(),
+        'home_address': $('input.home_address').val(),
+        // 'zip_code': $('select.zip_code').val(),
         'contact_no': $('input.contact_no').val(),
         'sex': $('select.sex').val(),
         'religion': $('select.religion').val(),
@@ -3502,7 +3505,7 @@ function openConfirmModal(data) {
     $('#farmerCity').text(data.farmer?.city || 'N/A');
     $('#farmerAgriDistrict').text(data.farmer?.agri_district || 'N/A');
     $('#farmerBarangay').text(data.farmer?.barangay || 'N/A');
-    $('#farmerStreet').text(data.farmer?.street || 'N/A');
+    $('#HomeAddress').text(data.farmer?.home_address || 'N/A');
     $('#farmerZipCode').text(data.farmer?.zip_code || 'N/A');
     $('#farmerContactNo').text(data.farmer?.contact_no || 'N/A');
     $('#farmerSex').text(data.farmer?.sex || 'N/A');
@@ -3666,6 +3669,9 @@ data.crops.forEach(function(crop, index) {
 // Call this function to show the confirmation modal when needed
 openConfirmModal(dataobject);
 
+
+
+
 /// Confirm and Save event
 $('#confirmSave').on('click', function() {
     const csrfToken = $('input[name="_token"]').attr('value');
@@ -3683,17 +3689,21 @@ $('#confirmSave').on('click', function() {
             console.log(response);
             if (response.success) {
                 var successModal = new bootstrap.Modal(document.getElementById('successModal'), {
-                        keyboard: false
+                    keyboard: false
+                });
+                successModal.show(); // Show success modal
 
-                    });
-                    successModal.show(); // Show success modal
-                    
-                    // Close the confirmation modal after successful save
-                    var confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
-                    if (confirmModal) {
-                        confirmModal.hide();
-                    }
+                // Close the confirmation modal after successful save
+                var confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+                if (confirmModal) {
+                    confirmModal.hide();
                 }
+
+                // Add event listener to reload the page when success modal is closed
+                $('#successModal').on('hidden.bs.modal', function() {
+                    location.reload(); // Reload the page
+                });
+            }
         },
         error: function(xhr) {
             console.error('Error:', xhr.responseJSON.error);
@@ -3701,50 +3711,21 @@ $('#confirmSave').on('click', function() {
             // Display the error message in the modal body
             $('#errorModalBody').text(xhr.responseJSON.error);
 
+            // Show the error modal
+            $('#errorModal').modal('show');
 
-    // Show the modal
-    $('#errorModal').modal('show');
-}
-
-
+            // Add event listener to reload the page when error modal is closed
+            $('#errorModal').on('hidden.bs.modal', function() {
+                location.reload(); // Reload the page
+            });
+        }
     });
 });
 });
 
 
 
-let currentStep = 0;
-    const steps = document.querySelectorAll('.step');
 
-    function showStep(step) {
-        steps.forEach((stepElement, index) => {
-            stepElement.classList.toggle('active', index === step);
-        });
-    }
-
-    function nextStep() {
-        if (validateStep(currentStep)) {
-            currentStep++;
-            showStep(currentStep);
-        }
-    }
-
-    function previousStep() {
-        currentStep--;
-        showStep(currentStep);
-    }
-
-    function validateStep(step) {
-        const currentStepElement = steps[step];
-        const inputs = currentStepElement.querySelectorAll('input');
-        let isValid = true;
-        inputs.forEach(input => {
-            if (!input.checkValidity()) {
-                isValid = false;
-            }
-        });
-        return isValid;
-    }
   </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -3759,94 +3740,154 @@ let currentStep = 0;
 </script>
 
 <script type="text/javascript">
-    var map;
-    var markers = [];
-    var selectedLatLng;
-  
-    function initMap() {
-      var initialLocation = { lat: 6.9214, lng: 122.0790 };
-  
-      map = new google.maps.Map(document.getElementById('map'), {
+   var map;
+var markers = [];
+var selectedLatLng;
+var polygons = []; // Array to hold the saved polygons
+
+// Load polygons from mapdata and parceldata and plot them on the map
+function loadPolygons() {
+    var mapdata = @json($mapdata); // Existing data from the view
+    var parceldata = @json($parceldata); // Data from ParcellaryBoundaries
+
+    function plotPolygon(parcel, isParcelData = false) {
+        var polygon = new google.maps.Polygon({
+            paths: parcel.coordinates.map(coord => new google.maps.LatLng(coord.lat, coord.lng)),
+            strokeColor: parcel.strokecolor || '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: parcel.fillcolor || '#FF0000',
+            fillOpacity: 0.02
+        });
+        polygon.setMap(map);
+        polygons.push(polygon);
+
+        google.maps.event.addListener(polygon, 'click', function () {
+            var contentString;
+            if (isParcelData) {
+                contentString = 'Parcel Name: ' + parcel.parcel_name + '<br>' +
+                                'ARPOwner Name: ' + parcel.arpowner_na + '<br>' +
+                                'Agri-District: ' + parcel.agri_districts + '<br>' +
+                                'Brgy. Name: ' + parcel.barangay_name + '<br>' +
+                                'Title name: ' + parcel.tct_no + '<br>' +
+                                'Property kind description: ' + parcel.pkind_desc + '<br>' +
+                                'Property Used description: ' + parcel.puse_desc + '<br>' +
+                                'Actual Used: ' + parcel.actual_used + '<br>' +
+                                'Area: ' + parcel.area + ' sq. meters<br>' +
+                                'Altitude: ' + parcel.altitude + ' meters<br>';
+            } else {
+                contentString = 'Polygon Name: ' + parcel.polygon_name + '<br>' +
+                                'Area: ' + parcel.area + ' sq. meters<br>' +
+                                'Altitude: ' + parcel.altitude + ' meters';
+            }
+
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+            infowindow.setPosition(parcel.coordinates[0]);
+            infowindow.open(map);
+        });
+    }
+
+    mapdata.forEach(function (parcel) {
+        plotPolygon(parcel);
+    });
+
+    parceldata.forEach(function (parcel) {
+        plotPolygon(parcel, true);
+    });
+
+    var bounds = new google.maps.LatLngBounds();
+    mapdata.concat(parceldata).forEach(function (parcel) {
+        parcel.coordinates.forEach(function (coord) {
+            bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
+        });
+    });
+    map.fitBounds(bounds);
+}
+
+function initMap() {
+    var initialLocation = { lat: 6.9214, lng: 122.0790 };
+
+    map = new google.maps.Map(document.getElementById('map'), {
         zoom: 13,
         center: initialLocation,
-        mapTypeId: 'terrain'
-      });
-  
-      // When the map is clicked, set latitude and longitude in modal and main inputs
-      map.addListener('click', function(event) {
+        mapTypeId: 'satellite'
+    });
+
+    map.addListener('click', function (event) {
         if (markers.length >= 1) {
-          deleteMarkers();
+            deleteMarkers();
         }
-  
+
         selectedLatLng = event.latLng;
         addMarker(selectedLatLng);
         $('#modal_latitude').val(selectedLatLng.lat());
         $('#modal_longitude').val(selectedLatLng.lng());
-      });
-  
-      // Add marker on the map
-      function addMarker(location) {
+    });
+
+    function addMarker(location) {
         var marker = new google.maps.Marker({
-          position: location,
-          map: map
+            position: location,
+            map: map,
+            draggable: true // Make the marker draggable
         });
         markers.push(marker);
-      }
-  
-      // Clear markers from the map
-      function deleteMarkers() {
+
+        // Update latitude and longitude on marker drag end
+        google.maps.event.addListener(marker, 'dragend', function (event) {
+            $('#modal_latitude').val(event.latLng.lat());
+            $('#modal_longitude').val(event.latLng.lng());
+        });
+    }
+
+    function deleteMarkers() {
         markers.forEach(marker => {
-          marker.setMap(null);
+            marker.setMap(null);
         });
         markers = [];
-      }
-  
-      // Listen for manual input in modal latitude/longitude fields
-      $('#modal_latitude, #modal_longitude').on('change', function() {
+    }
+
+    $('#modal_latitude, #modal_longitude').on('change', function () {
         var lat = parseFloat($('#modal_latitude').val());
         var lng = parseFloat($('#modal_longitude').val());
-  
+
         if (!isNaN(lat) && !isNaN(lng)) {
-          var location = { lat: lat, lng: lng };
-          map.setCenter(location);
-          deleteMarkers();
-          addMarker(location);
+            var location = { lat: lat, lng: lng };
+            map.setCenter(location);
+            deleteMarkers();
+            addMarker(location);
         }
-      });
-    }
-  
-    $(document).ready(function() {
-      // Show the modal when latitude or longitude input is focused
-      $('#gps_latitude_0, #gps_longitude_0').on('focus', function() {
+    });
+}
+
+$(document).ready(function () {
+    $('#gps_latitude_0, #gps_longitude_0').on('focus', function () {
         $('#mapModal').modal('show');
-      });
-  
-      // Reinitialize the map each time the modal is opened
-      $('#mapModal').on('shown.bs.modal', function() {
+    });
+
+    $('#mapModal').on('shown.bs.modal', function () {
         if (selectedLatLng) {
-          map.setCenter(selectedLatLng); // Center map on previously selected location
+            map.setCenter(selectedLatLng);
         }
         google.maps.event.trigger(map, 'resize');
-      });
-  
-      // Clear previous markers when modal is closed
-      $('#mapModal').on('hidden.bs.modal', function() {
-        deleteMarkers(); // Clear markers when modal is closed
-      });
-  
-      // Handle the Save Location button click
-      $('#saveLocation').on('click', function() {
-        // Save the latitude and longitude to the main input fields
+    });
+
+    $('#mapModal').on('hidden.bs.modal', function () {
+        deleteMarkers();
+    });
+
+    $('#saveLocation').on('click', function () {
         var lat = $('#modal_latitude').val();
         var lng = $('#modal_longitude').val();
         $('#gps_latitude_0').val(lat);
         $('#gps_longitude_0').val(lng);
         
-        // Close the modal
         $('#mapModal').modal('hide');
-      });
     });
-
+    
+    loadPolygons(); // Load polygons when the map is initialized
+});
 // Function to check membership and display organization input accordingly
 function checkMmbership() {
     var membership = document.getElementById("selectMember").value;
@@ -4248,4 +4289,121 @@ $(document).ready(function() {
         $("#date_of_birth_error").hide();
     }
 </script>
+
+<script>
+    let currentStep = 0;
+    const steps = document.querySelectorAll('.step');
+    
+    function showStep(step) {
+        steps.forEach((stepElement, index) => {
+            stepElement.classList.toggle('active', index === step);
+        });
+    
+        // Show "Previous" button if not on the first step
+        document.getElementById('previousButton').style.display = step > 0 ? 'inline-block' : 'none';
+    
+        // Show "Next" button or change to "Submit" on the last step
+        document.getElementById('nextButton').innerText = step === steps.length - 1 ? 'Submit' : 'Next';
+    }
+    
+    function nextStep() {
+        if (validateStep(currentStep)) {
+            if (currentStep === 0) {  // Check data existence only on the first step
+                checkDataExistence()
+                    .then(dataExists => {
+                        if (!dataExists) {
+                            currentStep++;
+                            showStep(currentStep);
+                        } else {
+                            document.getElementById('error-message').innerText = "A record with this information already exists.";
+                            document.getElementById('error-message').style.display = 'block';
+                        }
+                    })
+                    .catch(error => console.error("Error checking data existence:", error));
+            } else {
+                currentStep++;
+                showStep(currentStep);
+            }
+        }
+    }
+    
+    function previousStep() {
+        if (currentStep > 0) {
+            currentStep--;
+            showStep(currentStep);
+        }
+    }
+    
+    function validateStep(step) {
+        const currentStepElement = steps[step];
+        const inputs = currentStepElement.querySelectorAll('input');
+        let isValid = true;
+    
+        inputs.forEach(input => {
+            if (!input.checkValidity()) {
+                input.classList.add("is-invalid");
+                isValid = false;
+            } else {
+                input.classList.remove("is-invalid");
+            }
+        });
+    
+        // Additional check for the Date of Interview field
+        const dateOfInterview = document.getElementById('#datepicker');
+        if (dateOfInterview) {
+            if (!dateOfInterview.value) {
+                dateOfInterview.classList.add("is-invalid");
+                isValid = false;
+                // Alert the user or display an error message
+                const errorMessage = document.getElementById('date-error-message');
+                if (errorMessage) {
+                    errorMessage.innerText = "Date of Interview is required.";
+                    errorMessage.style.display = 'block'; // Show error message
+                }
+            } else {
+                dateOfInterview.classList.remove("is-invalid");
+                // Hide the error message if the date is filled
+                const errorMessage = document.getElementById('date-error-message');
+                if (errorMessage) {
+                    errorMessage.style.display = 'none'; // Hide error message
+                }
+            }
+        }
+    
+        return isValid;
+    }
+    
+    async function checkDataExistence() {
+        const firstName = document.getElementById('firstName').value;
+        const lastName = document.getElementById('lastName').value;
+        const mothersMaidenName = document.getElementById('mothersMaidenName').value;
+        const dateOfBirth = document.getElementById('datepicker').value;
+    
+        try {
+            const response = await fetch('/check-farmer-existence', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    first_name: firstName,
+                    last_name: lastName,
+                    mothers_maiden_name: mothersMaidenName,
+                    date_of_birth: dateOfBirth
+                })
+            });
+            
+            const result = await response.json();
+            return result.exists;
+        } catch (error) {
+            console.error('Error:', error);
+            return false;
+        }
+    }
+    
+    // Initialize the first step on page load
+    showStep(currentStep);
+    
+    </script>
   @endsection

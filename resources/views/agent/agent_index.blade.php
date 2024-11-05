@@ -2,7 +2,6 @@
 
 @section('agent')
 
-
 @extends('layouts._footer-script')
 @extends('layouts._head')
 <style>
@@ -740,7 +739,7 @@ canvas {
             <div class="col-md-4">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <canvas id="lineChart" width="50px" height="50px"></canvas>
+                        <canvas id="radialChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -820,7 +819,7 @@ canvas {
             // Function to fetch and update chart data based on the selected crop, date range, and district
             function fetchDataAndUpdateChart(cropName, dateFrom, dateTo, district) {
                 $.ajax({
-                    url: '/admin/dashboard',
+                    url: '/agent/dashboard',
                     method: 'GET',
                     data: { crop_name: cropName, dateFrom: dateFrom, dateTo: dateTo, district: district },
                     success: function(response) {
@@ -853,7 +852,7 @@ canvas {
     <script>
 $(document).ready(function () {
 // Initialize chart variables
-let pieChart, barChart, donutChart, lineChart;
+let pieChart, barChart, donutChart,  radialChart;
 
 // Function to format numbers with commas
 function formatNumber(number, decimals = 2) {
@@ -872,7 +871,7 @@ function fetchData() {
 
     // AJAX request for dashboard data
     $.ajax({
-        url: '/admin/dashboard',
+        url: '/agent/dashboard',
         method: 'GET',
         data: {
             crop_name: cropName,
@@ -900,9 +899,9 @@ function fetchData() {
             if (data.donutChartData) {
                 updateDonutChart(data.donutChartData);
             }
-            if (data.lineChartData) {
-                updateLineChart(data.lineChartData);
-            }
+            if (data.radialChartData) {
+                      updateRadialChart(data.radialChartData, 'Tenurial Status Distribution');
+                  }
 
             // Populate farmers' data
             // populateFarmers(data.farmers.data); // Assuming data.farmers is the paginated farmers array
@@ -937,7 +936,7 @@ function fetchData() {
     // Initial fetch to display default data
     fetchData();
 
-
+   
     
             // Function to update the Pie Chart
        // Function to update the Pie Chart
@@ -946,6 +945,10 @@ function fetchData() {
         console.error('Invalid pie chart data:', pieChartData);
         return;
     }
+    const totalYield = pieChartData.datasets[0].data
+        .reduce((acc, value) => acc + value, 0)
+        .toFixed(2)  // Format to two decimal places
+        .toLocaleString();
 
     const ctx = document.getElementById('pieChart').getContext('2d');
     if (typeof pieChart !== 'undefined') {
@@ -985,7 +988,7 @@ function fetchData() {
                 },
                 title: {
                     display: true,
-                    text: 'Farmers Yield/District',
+                    text: `Farmers Yield/District (Total: ${totalYield} kg)`,
                     font: {
                         size: 11
                     },
@@ -1036,7 +1039,10 @@ function updateBarChart(barChartData) {
             return char.toUpperCase();
         });
     }
-
+ // Calculate the total count across all datasets
+ const totalCount = barChartData.datasets.reduce((acc, dataset) => {
+        return acc + dataset.data.reduce((sum, value) => sum + value, 0);
+    }, 0);
     // Define an array of colors for each district
     const colors = ['#ff0000', '#55007f', '#e3004d', '#ff00ff', '#ff5500', '#00aa00', '#008FFB'];
 
@@ -1084,7 +1090,7 @@ function updateBarChart(barChartData) {
                 },
                 title: {
                     display: true,
-                    text: 'Number of Varieties per Crop and District', // Updated title
+                    text: ` Number of Varieties per Crop and District Total: ${totalCount}`, // Updated title
                     font: {
                         size: 16, // Title font size
                         weight: 'bold' // Title font weight
@@ -1117,6 +1123,8 @@ function updateDonutChart(donutChartData, centerText, chartTitle) {
             return char.toUpperCase();
         });
     }
+    // Calculate total production
+    const totalProduction = donutChartData.datasets[0].data.reduce((acc, value) => acc + value, 0);
 
     // Custom plugin to add text in the center
     const centerTextPlugin = {
@@ -1199,41 +1207,73 @@ function updateDonutChart(donutChartData, centerText, chartTitle) {
 
 
 
-            // Function to update the Line Chart
-            function updateLineChart(lineChartData) {
-                if (!lineChartData || !lineChartData.labels || !lineChartData.datasets) {
-                    console.error('Invalid line chart data:', lineChartData);
-                    return;
-                }
-    
-                const ctx = document.getElementById('lineChart').getContext('2d');
-                if (typeof lineChart !== 'undefined') {
-                    lineChart.destroy();
-                }
-    
-                lineChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: lineChartData.labels,
-                        datasets: lineChartData.datasets.map((dataset, index) => ({
-                            label: dataset.label,
-                            data: dataset.data,
-                            borderColor: dataset.borderColor || 'rgba(75, 192, 192, 1)',
-                            backgroundColor: dataset.backgroundColor || 'rgba(75, 192, 192, 0.2)',
-                            fill: true
-                        }))
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
+               
+function updateRadialChart(radialChartData, chartTitle) {
+    if (!radialChartData || !radialChartData.labels || !radialChartData.datasets) {
+        console.error('Invalid radial chart data:', radialChartData);
+        return;
+    }
+
+    const ctx = document.getElementById('radialChart').getContext('2d'); // Get the context for the chart
+
+    // If a chart instance already exists, destroy it
+    if (radialChart) {
+        radialChart.destroy();
+    }
+
+    // Calculate the total count
+    const totalCount = radialChartData.datasets.reduce((total, dataset) => {
+        return total + dataset.data.reduce((sum, value) => sum + value, 0);
+    }, 0);
+
+    // Create a new radial chart instance
+    radialChart = new Chart(ctx, {
+        type: 'doughnut', // Change to 'pie' if you prefer a pie chart
+        data: {
+            labels: radialChartData.labels, // Use labels from data
+            datasets: radialChartData.datasets.map((dataset) => ({
+                label: dataset.label, // Label for the dataset
+                data: dataset.data, // Data for the dataset
+                backgroundColor: dataset.backgroundColor, // Background colors for the segments
+                hoverOffset: 4 // Optional hover effect
+            }))
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: `Tenurial Status Distribution (Total: ${totalCount})`, // Include total in the title
+                    font: {
+                        size: 12,
+                        weight: 'bold'
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            const datasetLabel = tooltipItem.dataset.label || '';
+                            const dataValue = tooltipItem.raw;
+                            return `${datasetLabel}: ${dataValue}`;
                         }
                     }
-                });
+                },
+                legend: {
+                    display: true,
+                    position: 'bottom', // Position of the legend
+                    labels: {
+                        boxWidth: 10, // Size of the box next to each legend label
+                        padding: 8, // Padding between legend items
+                        font: {
+                            size: 12 // Font size for legend labels
+                        }
+                    }
+                }
             }
-    
+        }
+    });
+}
+       
             $(document).ready(function () {
     $('#printButton').click(function () {
         printReport();
@@ -1244,7 +1284,7 @@ function printReport() {
     const pieChartContent = document.getElementById('pieChart').toDataURL(); // Get chart image as data URL
     const barChartContent = document.getElementById('barChart').toDataURL();
     const donutChartContent = document.getElementById('donutChart').toDataURL();
-    const lineChartContent = document.getElementById('lineChart').toDataURL();
+    const lineChartContent = document.getElementById('radialChart').toDataURL();
 
     // Dynamic data (Farmer name, Signature)
     const farmerName = "John Doe"; // Replace with dynamic data
@@ -1604,7 +1644,7 @@ $('#areaPlantedModal').on('hidden.bs.modal', function () {
 
         // Make the AJAX request to the Laravel route
         $.ajax({
-            url: '/admin/dashboard', // Update this with the correct route
+            url: '/agent/dashboard', // Update this with the correct route
             method: 'GET',
             data: { district: selectedDistrict }, // Send the selected district
             success: function(data) {
@@ -1647,7 +1687,7 @@ $('#areaPlantedModal').on('hidden.bs.modal', function () {
                     $('.pagination-btn').on('click', function() {
                         let page = $(this).data('page');
                         $.ajax({
-                            url: '/admin/dashboard', // Update this with the correct route
+                            url: '/agent/dashboard', // Update this with the correct route
                             method: 'GET',
                             data: { district: selectedDistrict, page: page },
                             success: function(newData) {
@@ -1705,7 +1745,7 @@ $(document).ready(function () {
     // Function to fetch farmers data
     function fetchFarmers(page = 1) {
         $.ajax({
-            url: '/admin/dashboard', // Replace with your actual API endpoint
+            url: '/agent/dashboard', // Replace with your actual API endpoint
             method: 'GET',
             data: {
                 page: page // Pass the page number to fetch
@@ -1740,7 +1780,7 @@ $(document).ready(function() {
     // Function to fetch and display the pie chart
     function fetchAndDisplayChart() {
         $.ajax({
-            url: '/admin/dashboard', // Adjust to your Laravel route
+            url: '/agent/dashboard', // Adjust to your Laravel route
             method: 'GET', // or 'POST' depending on your route method
             dataType: 'json',
             success: function(response) {
@@ -1813,7 +1853,7 @@ $(document).ready(function() {
 
     function fetchFarmDistribution(selectedDistrict = null) {
         $.ajax({
-            url: '/admin/dashboard', // Adjust to your Laravel route
+            url: '/agent/dashboard', // Adjust to your Laravel route
             method: 'GET',
             data: {
                 selected_district: selectedDistrict
@@ -1896,7 +1936,7 @@ $(document).ready(function() {
 
 //     function fetchTotalCostsByDistrict() {
 //         $.ajax({
-//             url: '/admin/dashboard', // Adjust to your Laravel route
+//             url: '/agent/dashboard', // Adjust to your Laravel route
 //             method: 'GET',
 //             dataType: 'json',
 //             success: function(data) {
@@ -1981,7 +2021,7 @@ $(document).ready(function () {
     // Function to fetch total cost data based on crop name and district
     function fetchTotalCost(cropName, district) {
         $.ajax({
-            url: '/admin/dashboard', // Update with your actual endpoint
+            url: '/agent/dashboard', // Update with your actual endpoint
             method: 'GET',
             data: {
                 crop_name: cropName,
@@ -2032,7 +2072,7 @@ $(document).ready(function() {
         const selectedDateTo = $('#dateTo').val(); // Get selected date to
 
         $.ajax({
-            url: '/admin/dashboard', // URL of the API endpoint
+            url: '/agent/dashboard', // URL of the API endpoint
             type: 'GET',
             dataType: 'json',
             data: {
