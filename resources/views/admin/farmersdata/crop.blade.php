@@ -276,7 +276,7 @@
                             </div>
                             <!-- Pagination links -->
                             <div class="button-container mt-3 d-flex justify-content-between">
-                                <a href="{{ route('agent.FarmerInfo.farm_view', $farmData->personal_informations_id) }}" button type="button" class="btn btn-primary" onclick="goBack()">Back</button></a>
+                                <a href="{{ route('admin.farmersdata.farm', $farmData->personal_informations_id) }}" button type="button" class="btn btn-primary" onclick="goBack()">Back</button></a>
                               
                             </div>
                             

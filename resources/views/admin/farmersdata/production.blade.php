@@ -57,13 +57,13 @@
                                     <h5 for="personainfo"></h5>
                                 </div>
                                    
-                                @if(isset($cropData) && $productionData->isEmpty())
+                                {{-- @if(isset($cropData) && $productionData->isEmpty()) --}}
                                 <a href="{{ route('admin.farmersdata.crudProduction.add', $cropData->id) }}" title="Add Crop Production">
                                     <button class="btn btn-success btn-sm">
                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                     </button>
                                 </a>
-                            @endif
+                            {{-- @endif --}}
                             
                        
                             </div>
@@ -265,7 +265,7 @@
                             </div>
                             <!-- Pagination links -->
                             <div class="button-container mt-3 d-flex justify-content-between">
-                                <a href="{{ route('agent.FarmerInfo.crops_view', $cropData->farm_profiles_id) }}" button type="button" class="btn btn-primary" onclick="goBack()">Back</button></a>
+                                <a href="{{ route('admin.farmersdata.crop', $cropData->farm_profiles_id) }}" button type="button" class="btn btn-primary" onclick="goBack()">Back</button></a>
                               
                             </div>
                             
