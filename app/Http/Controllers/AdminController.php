@@ -349,50 +349,32 @@ class AdminController extends Controller
        // Now you can pass $barChartData to your JavaScript function
             
  // Prepare tenurial status data
- $tenurialStatusCounts = $farmProfilesQuery->select('tenurial_status', DB::raw('count(*) as count'))
- ->groupBy('tenurial_status')
- ->get();
+// Prepare tenurial status data
+$tenurialStatusCounts = $farmProfilesQuery->select('tenurial_status', DB::raw('count(*) as count'))
+->groupBy('tenurial_status')
+->get();
 
-// Structure the tenurial status data for the line graph
+// Structure the tenurial status data for the radial chart
+$tenurialStatusData = [];
 foreach ($tenurialStatusCounts as $statusCount) {
- $tenurialStatusData[$statusCount->tenurial_status] = $statusCount->count;
+$tenurialStatusData[$statusCount->tenurial_status] = $statusCount->count;
 }
 
-// Prepare data for line chart
-$lineChartData = [
-    'labels' => array_keys($tenurialStatusData), // Tenurial status labels
-    'datasets' => [
-        [
-            'label' => 'Tenurial Status', // Label for the dataset
-            'data' => array_values($tenurialStatusData), // Corresponding counts
-            'borderColor' =>[ '#009e2e', '#FFCE56','#2e009e', '#4BC0C0', '#9966FF', '#FF9F40'],// Customize color if needed
-            'backgroundColor' => ['#d6c5ff', '#009e2e', '#FFCE56','#2e009e', '#4BC0C0', '#9966FF', '#FF9F40'], // Customize background if needed
-        ]
+// Prepare data for radial chart
+$radialChartData = [
+'labels' => array_keys($tenurialStatusData), // Tenurial status labels
+'datasets' => [
+    [
+        'label' => '', // Label for the dataset
+        'data' => array_values($tenurialStatusData), // Corresponding counts
+        'backgroundColor' => [
+           '#ff0000', '#55007f', '#e3004d', '#ff00ff', '#ff5500', '#00aa00', '#008FFB'
+        ],
+        'hoverOffset' => 4 // Optional hover effect
     ]
+]
 ];
 
-//    // Fetch all districts for dropdowns
-//    $districts = AgriDistrict::all();
-
-//    // Initialize the FarmProfile query
-//    $farmProfilesQuery = FarmProfile::with('personalInformation', 'agriDistrict');
-
-//    // Apply filters based on the selected criteria
-//    if ($selectedDistrict && $selectedDistrict !== 'All') {
-//        $farmProfilesQuery->whereHas('agriDistrict', function ($query) use ($selectedDistrict) {
-//            $query->where('district', $selectedDistrict);
-//        });
-//    }
-
-//    if ($selectedCropName && $selectedCropName !== 'All') {
-//        $farmProfilesQuery->whereHas('crops', function ($query) use ($selectedCropName) {
-//            $query->where('name', $selectedCropName);
-//        });
-//    }
-
-//    if ($selectedDateFrom && $selectedDateTo) {
-//        $farmProfilesQuery->whereBetween('created_at', [$selectedDateFrom, $selectedDateTo]);
-//    }
 // Fetch district names
 $farmProfilesQuery = FarmProfile::query();
 
@@ -546,7 +528,7 @@ return response()->json([
     'averageCostPerAreaPlanted' => $averageCostPerAreaPlanted,
     'totalRiceProduction' => $totalRiceProduction,
     'pieChartData' => $pieChartData,
-    'lineChartData' => $lineChartData,
+    'radialChartData' => $radialChartData,
     'donutChartData' => $donutChartData, // Include donut chart data
     'barChartLabels' => $barChartLabels,
     'barChartData' => $barChartData,
