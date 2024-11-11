@@ -24,19 +24,20 @@
                             </div> --}}
 
                             @if ($user->image)
-                            <img src="/agentimages/{{$user->image}}" alt="Profile Image" class="img-fluid rounded-circle">
+                            <img src="/agentimages/{{$user->image}}" alt="Profile Image" class="img-fluid rounded-circle"style="border-radius: 50% !important;
+        width: 99px;
+        height: 90px;">
                           @else
                             <img src="/upload/profile.jpg" alt="Profile Image" class="img-fluid rounded-circle">
                           @endif
                         </div>
-                        @foreach ($gpsData as $data)
                         <div class="profile-head text-center mt-3"> <!-- Centered the profile head -->
+                            @foreach ($gpsData as $data)
                             <h5 class="mb-1">{{ $data['farmerName'] }}</h5>
                             <h5  class="h5 rofile-rating">Age: <span>{{ $data['age'] }}</span></p> <!-- Age -->
-                            {{-- <h5 class="mb-1">Web Developer and Designer</h5>
-                            <p class="profile-rating">RANKINGS : <span class="text-success">8/10</span></p> --}}
-                        </div>
+                         
                         @endforeach
+                        </div>
                     </div>
                 </div>
                 
@@ -806,13 +807,9 @@
                         {{-- <img src="path_to_right_logo.png" alt="Right Logo" class="img-fluid" style="max-height: 60px;"> --}}
                         
                         @if ($user->image)
-                        <img src="../assets/logo/Citylogo.jpg" alt="Right Logo" class="img-fluid rounded-circles"style=" border-radius: 50% !important;
-                        width: 80px;
-                        height: 70px;">
+                        <img src="../assets/logo/Citylogo.jpg" alt="Right Logo" class="img-fluid rounded-circles"style="max-height: 90px;">
                       @else
-                        <img src="../assets/logo/Citylogo.jpg" alt="Profile Image" class="img-fluid rounded-circles" style=" border-radius: 50% !important;
-                        width: 80px;
-                        height: 70px;">
+                        <img src="../assets/logo/default_logo.png" alt="Profile Image" class="img-fluid">
                       @endif
                     </div>
                 
@@ -827,21 +824,22 @@
                     <div class="left-logo  ml-5">
                         {{-- <img src="path_to_left_logo.png" alt="Left Logo" class="img-fluid" style="max-height: 60px;"> --}}
                         @if ($user->image)
-                        <img src="../assets/logo/agriculture.jpg" alt="Right Logo"  class="img-fluid rounded-circles"style=" border-radius: 50% !important;
-                        width: 80px;
-                        height: 70px;">
+                        <img src="../assets/logo/agriculture.jpg" alt="Right Logo"  class="img-fluid rounded-circles"style="max-height: 90px; max-width:80">
                       @else
-                        <img src="../assets/logo/agriculture.jpg" alt="Profile Image" class="img-fluid rounded-circles"style=" border-radius: 50% !important;
-                        width: 80px;
-                        height: 70px;">
+                        <img src="../assets/logo/agriculture.jpg" alt="Profile Image" class="img-fluid">
                       @endif
                     </div>
                 </div>
                 
                    <!-- Farmer Profile -->
                    <div class="profile-head text-center mt-5">
+                    @foreach ($gpsData as $data)
                     <h5 class="mb-1">{{ $data['farmerName'] }}</h5>
-                    <h5 class="h5 profile-rating">Age: <span>{{ $data['age'] }}</span></h5>
+                    <h5  class="h5 rofile-rating">Age: <span>{{ $data['age'] }}</span></p> <!-- Age -->
+                 
+                @endforeach
+                    {{-- <h5 class="mb-1">{{ $data['farmerName'] }}</h5>
+                    <h5 class="h5 profile-rating">Age: <span>{{ $data['age'] }}</span></h5> --}}
                 </div>
                 <!-- Filter Inputs -->
                 {{-- <div class="row g-2 align-items-center mb-3">
@@ -894,6 +892,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                        
                             @foreach ($farmProfiles as $farmProfile)
                             @foreach ($farmProfile->cropFarms as $cropFarm)
                                 @foreach ($cropFarm->lastProductionDatas as $productionData)
