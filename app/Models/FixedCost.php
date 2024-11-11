@@ -13,9 +13,12 @@ class FixedCost extends Model
         'users_id',
         'personal_informations_id',
         'farm_profiles_id',
-         'no_of_ha',
+        'last_production_datas_id',
+        'crops_farms_id',
+        'particular',
+        'no_of_ha',
          'cost_per_ha',
-         'total_amount'
+         'total_amount',
     ];
     public function cropFarm()
     {

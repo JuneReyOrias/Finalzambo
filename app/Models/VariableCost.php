@@ -12,20 +12,34 @@ class VariableCost extends Model
     protected $fillable=[
         'personal_informations_id',
         'farm_profiles_id',
-        'seeds_id',
-        'labors_id',
-        'fertilizers_id',
-        'pesticides_id',
-        'transports_id',
-       ' total_seed_cost',
-       'total_labor_cost',
-       'total_cost_fertilizers',
-       'total_cost_pesticides', 
-       'total_transport_per_deliverycost',
-        'total_machinery_fuel_cost',
-        'total_variable_cost',
+        'last_production_datas_id',
+        'crops_farms_id',
         'users_id',
-        'personal_informations_id'
+           // SEED 
+           'unit',
+           'quantity',
+           'unit_price',
+           'total_seed_cost',
+
+           // Labor
+           'labor_no_of_person',
+           'rate_per_person',
+           'total_labor_cost',
+           // fertilizers
+           'no_of_sacks',
+           'unit_price_per_sacks',
+           'total_cost_fertilizers',
+           // pesticides
+           'no_of_l_kg',
+           'unit_price_of_pesticides',
+           'total_cost_pesticides',
+           // transport
+           'total_transport_delivery_cost',
+
+           // total
+           'total_machinery_fuel_cost',
+           'total_variable_cost',
+     
 
     ];
     public function cropFarm()

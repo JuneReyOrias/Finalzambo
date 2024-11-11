@@ -11,14 +11,14 @@ class Crop extends Model
     protected $table="crops_farms";
     protected $fillable=[
         'users_id',
-        'categorizes_id',
-        'crop_categorys_id',
+        'farm_profiles_id',
         'crop_name',
-        'crop_variety',
-        'crop_planting_season',
-        'crop_harvesting_season',
-        'crop_type_soil',
-        'crop_description',
+        'type_of_variety_planted',
+        'preferred_variety' ,
+       'planting_schedule_wetseason',
+        'planting_schedule_dryseason',
+        'no_of_cropping_per_year',
+        'yield_kg_ha',
     ];
     
      // Relationship with CropFarm
@@ -88,5 +88,6 @@ class Crop extends Model
     {
         return $this->hasMany(ProductionSold::class, 'crops_farms_id');
     }
+    
 
 }

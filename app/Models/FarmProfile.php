@@ -58,6 +58,10 @@ class FarmProfile extends Model
   'users_id', 
   'personal_informations_id',
     ];
+
+    // In the FarmProfile model
+
+
     public function cropFarms()
     {
         return $this->hasMany(Crop::class, 'farm_profiles_id'); // Adjust the foreign key if necessary
@@ -160,23 +164,5 @@ public function personalInformations()
         return $this->hasMany(Transport::class,'id','farm_profiles_id');
     }
     
-    // public function getPersonalInformationsPrimaryKey()
-    // {
-    //     $personalInformations = $this->personalInformations;
-
-    //     return $personalInformations ? $personalInformations->getPrimaryKey();
-    // }
-    // public function farm_profiles(){
-    //     return $this->belongsTo(FarmProfile::class,'farm_profiles_id', )->withDefault();
-    // }
-    // protected static function boot()
-    // {
-    //     parent::boot();
-
-    //     // Listen for the 'created' event
-    //     static::created(function ($farmProfile) {
-    //         // Automatically fetch the related PersonalInformation
-    //         $farmProfile->load('personalInformations');
-    //     });
-    // }
+ 
 }

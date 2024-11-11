@@ -13,11 +13,16 @@ class MachinesImport implements ToModel, WithHeadingRow
 
     protected $personalInformationId;
     protected $farmProfileId;
+ 
+    protected $CropId;
+    protected $ProductionId;
 
-    public function __construct($personalInformationId, $farmProfileId)
+    public function __construct($personalInformationId, $farmProfileId, $CropId,$ProductionId)
     {
         $this->personalInformationId = $personalInformationId;
         $this->farmProfileId = $farmProfileId;
+        $this->ProductionId= $ProductionId;
+        $this->CropId= $CropId;
     }
 
 
@@ -31,7 +36,7 @@ class MachinesImport implements ToModel, WithHeadingRow
         $agri_district = $user->agri_district;
 
         // Check if all required keys exist in the row
-        $requiredKeys = ['plowing_cost', 'harrowing_cost', 'harvesting_cost','post_harvest_cost','total_cost_for_machineries'];
+        $requiredKeys = ['plowing_cost_total', 'harrowing_cost_total', 'harvesting_cost_total','post_harvest_cost','total_cost_for_machineries'];
         foreach ($requiredKeys as $key) {
             if (!isset($row[$key])) {
                 Log::error("Undefined array key '$key'. Row: " . json_encode($row));
@@ -55,12 +60,15 @@ class MachinesImport implements ToModel, WithHeadingRow
         
          
         ], [
-            'plowing_cost'=>$row['plowing_cost'],
-            'harrowing_cost'=>$row['harrowing_cost'],
-            'harvesting_cost'=>$row['harvesting_cost'],
+            'plowing_cost_total'=>$row['plowing_cost_total'],
+            'harrowing_cost_total'=>$row['harrowing_cost_total'],
+            'harvesting_cost_total'=>$row['harvesting_cost_total'],
             'post_harvest_cost'=>$row['post_harvest_cost'],
             'total_cost_for_machineries'=>$row['total_cost_for_machineries'],
             'farm_profiles_id' => $this->farmProfileId,
+            'crops_farms_id' => $this->CropId,
+            'last_production_datas_id' => $this->ProductionId,
+            
         ]);
     }
 }

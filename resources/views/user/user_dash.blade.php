@@ -741,7 +741,7 @@ canvas {
             <div class="col-md-4">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <canvas id="lineChart" width="50px" height="50px"></canvas>
+                        <canvas id="radialChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -854,7 +854,7 @@ canvas {
     <script>
 $(document).ready(function () {
 // Initialize chart variables
-let pieChart, barChart, donutChart, lineChart;
+let pieChart, barChart, donutChart, radialChart;
 
 // Function to format numbers with commas
 function formatNumber(number, decimals = 2) {
@@ -901,9 +901,9 @@ function fetchData() {
             if (data.donutChartData) {
                 updateDonutChart(data.donutChartData);
             }
-            if (data.lineChartData) {
-                updateLineChart(data.lineChartData);
-            }
+            if (data.radialChartData) {
+                      updateRadialChart(data.radialChartData, 'Tenurial Status Distribution');
+                  }
 
             // Populate farmers' data
             // populateFarmers(data.farmers.data); // Assuming data.farmers is the paginated farmers array
@@ -938,7 +938,71 @@ function fetchData() {
     // Initial fetch to display default data
     fetchData();
 
+    function updateRadialChart(radialChartData, chartTitle) {
+    if (!radialChartData || !radialChartData.labels || !radialChartData.datasets) {
+        console.error('Invalid radial chart data:', radialChartData);
+        return;
+    }
 
+    const ctx = document.getElementById('radialChart').getContext('2d'); // Get the context for the chart
+
+    // If a chart instance already exists, destroy it
+    if (radialChart) {
+        radialChart.destroy();
+    }
+
+    // Calculate the total count
+    const totalCount = radialChartData.datasets.reduce((total, dataset) => {
+        return total + dataset.data.reduce((sum, value) => sum + value, 0);
+    }, 0);
+
+    // Create a new radial chart instance
+    radialChart = new Chart(ctx, {
+        type: 'doughnut', // Change to 'pie' if you prefer a pie chart
+        data: {
+            labels: radialChartData.labels, // Use labels from data
+            datasets: radialChartData.datasets.map((dataset) => ({
+                label: dataset.label, // Label for the dataset
+                data: dataset.data, // Data for the dataset
+                backgroundColor: dataset.backgroundColor, // Background colors for the segments
+                hoverOffset: 4 // Optional hover effect
+            }))
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: `Tenurial Status Distribution (Total: ${totalCount})`, // Include total in the title
+                    font: {
+                        size: 12,
+                        weight: 'bold'
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            const datasetLabel = tooltipItem.dataset.label || '';
+                            const dataValue = tooltipItem.raw;
+                            return `${datasetLabel}: ${dataValue}`;
+                        }
+                    }
+                },
+                legend: {
+                    display: true,
+                    position: 'bottom', // Position of the legend
+                    labels: {
+                        boxWidth: 10, // Size of the box next to each legend label
+                        padding: 8, // Padding between legend items
+                        font: {
+                            size: 12 // Font size for legend labels
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
     
             // Function to update the Pie Chart
        // Function to update the Pie Chart
@@ -947,7 +1011,10 @@ function fetchData() {
         console.error('Invalid pie chart data:', pieChartData);
         return;
     }
-
+    const totalYield = pieChartData.datasets[0].data
+        .reduce((acc, value) => acc + value, 0)
+        .toFixed(2)  // Format to two decimal places
+        .toLocaleString();
     const ctx = document.getElementById('pieChart').getContext('2d');
     if (typeof pieChart !== 'undefined') {
         pieChart.destroy();
@@ -986,7 +1053,7 @@ function fetchData() {
                 },
                 title: {
                     display: true,
-                    text: 'Farmers Yield/District',
+                    text: `Farmers Yield/District (Total: ${totalYield} kg)`,
                     font: {
                         size: 11
                     },
@@ -1106,7 +1173,8 @@ function updateDonutChart(donutChartData, centerText, chartTitle) {
         console.error('Invalid donut chart data:', donutChartData);
         return;
     }
-
+ // Calculate total production
+ const totalProduction = donutChartData.datasets[0].data.reduce((acc, value) => acc + value, 0);
     const ctx = document.getElementById('donutChart').getContext('2d');
     if (typeof donutChart !== 'undefined') {
         donutChart.destroy();
@@ -1167,7 +1235,7 @@ function updateDonutChart(donutChartData, centerText, chartTitle) {
                 },
                 title: {
                     display: true,
-                    text: chartTitle || 'Crops Production',
+                    text: `${chartTitle || 'Crops Production'} (Total ${totalProduction.toFixed(2)} tons)`,
                     font: {
                         size: 11,
                         weight: 'bold'
@@ -1200,40 +1268,7 @@ function updateDonutChart(donutChartData, centerText, chartTitle) {
 
 
 
-            // Function to update the Line Chart
-            function updateLineChart(lineChartData) {
-                if (!lineChartData || !lineChartData.labels || !lineChartData.datasets) {
-                    console.error('Invalid line chart data:', lineChartData);
-                    return;
-                }
-    
-                const ctx = document.getElementById('lineChart').getContext('2d');
-                if (typeof lineChart !== 'undefined') {
-                    lineChart.destroy();
-                }
-    
-                lineChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: lineChartData.labels,
-                        datasets: lineChartData.datasets.map((dataset, index) => ({
-                            label: dataset.label,
-                            data: dataset.data,
-                            borderColor: dataset.borderColor || 'rgba(75, 192, 192, 1)',
-                            backgroundColor: dataset.backgroundColor || 'rgba(75, 192, 192, 0.2)',
-                            fill: true
-                        }))
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-            }
+          
     
             $(document).ready(function () {
     $('#printButton').click(function () {

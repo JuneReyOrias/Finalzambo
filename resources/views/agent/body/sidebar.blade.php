@@ -72,13 +72,13 @@
           <div class="collapse" id="Forms">
             <ul class="nav sub-menu"  style="padding-left: 70px;">
 
-              {{-- <li class="nav-item">
-                <a href="{{route('admin.corn.forms.corn_form')}}" class="nav-link">Survey Form</a>
-              </li> --}}
+           
               <li class="nav-item">
                 <a href="{{route('agent.SurveyForm.new_farmer')}}" class="nav-link">Survey Form</a>
               </li>
-
+   <li class="nav-item">
+                <a href="{{route('agent.mutipleFile.import_excelFile')}}" class="nav-link">Excel Import</a>
+              </li>
 
              
             </ul>

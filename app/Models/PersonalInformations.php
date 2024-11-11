@@ -45,6 +45,7 @@ class PersonalInformations extends Model
       'personal_photo',
       'city',
       'image',
+        'date_interview'
       
     ];
     public function farmProfile()
@@ -82,10 +83,8 @@ class PersonalInformations extends Model
     }
 
     // Define the relationship with FarmProfile
-    // public function farmProfiles()
-    // {
-    //     return $this->hasMany(FarmProfile::class,'id','personal_informations_id')->withDefault();
-    // }
+    
+
     public function fixedcost()
     {
         return $this->hasMany(FixedCost::class, 'id','personal_informations_id');
@@ -99,31 +98,9 @@ class PersonalInformations extends Model
         return $this->hasMany(VariableCost::class, 'id','personal_informations_id');
     }
     
-    // protected static function boot()
-    // {
-    //     parent::boot();
 
-    //     // Listen for the 'created' event
-    //     static::created(function ($personalInformations) {
-    //         // Automatically fetch the related PersonalInformation
-    //         $personalInformations->load('farmProfile');
-    //     });
-    // }
+   
 }
-//     public function VariableCost(){
-//         return$this->hasOne(\app\VariableCost::class);
-//     }
-//     public function FixedCost(){
-//         return$this->hasOne(\app\FixedCost::class);
-//     }
-//     public function LastProduction(){
-//         return$this->hasOne(\app\LastProduction::class);
-//     }
-//     public function MachineriesUsed(){
-//         return$this->hasMany(\app\MachineriesUsed::class);
-//     }
-//     public function LastProductionData(){
-//         return$this->hasMany(\app\LastProductionData::class);
-// }
+
 
 

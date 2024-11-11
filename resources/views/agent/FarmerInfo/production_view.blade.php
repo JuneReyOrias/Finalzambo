@@ -57,13 +57,13 @@
                                     <h5 for="personainfo"></h5>
                                 </div>
                                    
-                                @if(isset($cropData) && $productionData->isEmpty())
+                                {{-- @if(isset($cropData) && $productionData->isEmpty()) --}}
                                 <a href="{{ route('agent.FarmerInfo.product.new_data', $cropData->id) }}" title="Add Crop Production">
                                     <button class="btn btn-success btn-sm">
                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                     </button>
                                 </a>
-                            @endif
+                            {{-- @endif --}}
                             
                        
                             </div>
@@ -1163,7 +1163,7 @@
 </div>
 
 <div class="modal fade" id="SoldsModal" tabindex="-1" aria-labelledby="SoldsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header text-white">
                 <h5 class="modal-title" id="SoldsModalLabel">Production Sold Data</h5>
@@ -1180,7 +1180,7 @@
                                  class="img-fluid rounded-circle" 
                                  style="width: 150px; height: 150px; object-fit: cover;">
                         </div> --}}
-                        <div class="col-md-9">
+                        {{-- <div class="col-md-9">
                             <!-- Farmer Information -->
                             <h5>Farmer: {{ $personalInfos->isNotEmpty() ? $personalInfos->first()->first_name . ' ' . $personalInfos->first()->last_name : 'N/A' }}</h5>
                             
@@ -1211,7 +1211,7 @@
                                 @endif
                             </div>
                         </div>
-                  
+                   --}}
             
 
                 <!-- Production Data -->
@@ -1244,7 +1244,7 @@
                     
                         
                         
-                    
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -1256,7 +1256,7 @@
 </div>
 {{-- varaible cost --}}
 <div class="modal fade" id="VariableModal" tabindex="-1" aria-labelledby="VariableModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header text-white">
                 <h5 class="modal-title" id="VariableModalLabel">VariableCost Data</h5>
@@ -1273,7 +1273,7 @@
                                  class="img-fluid rounded-circle" 
                                  style="width: 150px; height: 150px; object-fit: cover;">
                         </div> --}}
-                        <div class="col-md-9">
+                        {{-- <div class="col-md-9">
                             <!-- Farmer Information -->
                             <h5>Farmer: {{ $personalInfos->isNotEmpty() ? $personalInfos->first()->first_name . ' ' . $personalInfos->first()->last_name : 'N/A' }}</h5>
                             
@@ -1303,7 +1303,7 @@
                                     <h5>No crop data available.</h5>
                                 @endif
                             </div>
-                        </div>
+                        </div> --}}
                   
             
 
@@ -1427,7 +1427,7 @@
 
 {{-- machineries --}}
 <div class="modal fade" id="MachineModal" tabindex="-1" aria-labelledby="MachineModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header text-white">
                 <h5 class="modal-title" id="MachineModalLabel">MachineriCost Data</h5>
@@ -1444,7 +1444,7 @@
                                  class="img-fluid rounded-circle" 
                                  style="width: 150px; height: 150px; object-fit: cover;">
                         </div> --}}
-                        <div class="col-md-9">
+                        {{-- <div class="col-md-9">
                             <!-- Farmer Information -->
                             <h5>Farmer: {{ $personalInfos->isNotEmpty() ? $personalInfos->first()->first_name . ' ' . $personalInfos->first()->last_name : 'N/A' }}</h5>
                             
@@ -1474,7 +1474,7 @@
                                     <h5>No crop data available.</h5>
                                 @endif
                             </div>
-                        </div>
+                        </div> --}}
                   
             
 
@@ -1575,7 +1575,7 @@
 
 {{-- fixedCost --}}
 <div class="modal fade" id="fixedcostModal" tabindex="-1" aria-labelledby="fixedcostModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header text-white">
                 <h5 class="modal-title" id="fixedcostModalLabel">FixedCost Data</h5>
@@ -1585,7 +1585,7 @@
                 <!-- Farmer Details -->
         
                  
-                     
+{{--                      
                         <div class="col-md-9">
                             <!-- Farmer Information -->
                             <h5>Farmer: {{ $personalInfos->isNotEmpty() ? $personalInfos->first()->first_name . ' ' . $personalInfos->first()->last_name : 'N/A' }}</h5>
@@ -1617,7 +1617,7 @@
                                 @endif
                             </div>
                        
-                        </div>
+                        </div> --}}
                   
             
 
@@ -1659,7 +1659,7 @@
 
 {{-- production --}}
 <div class="modal fade" id="productionModal" tabindex="-1" aria-labelledby="productionModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header text-white">
                 <h5 class="modal-title" id="productionModalLabel">Production Data</h5>
@@ -1676,7 +1676,7 @@
                                  class="img-fluid rounded-circle" 
                                  style="width: 150px; height: 150px; object-fit: cover;">
                         </div> --}}
-                        <div class="col-md-9">
+                        {{-- <div class="col-md-9">
                             <!-- Farmer Information -->
                             <h5>Farmer: {{ $personalInfos->isNotEmpty() ? $personalInfos->first()->first_name . ' ' . $personalInfos->first()->last_name : 'N/A' }}</h5>
                             
@@ -1707,44 +1707,45 @@
                                 @endif
                             </div>
                        
-                        </div>
+                        </div> --}}
                   
             
 
                 <!-- Production Data -->
+            
+               
                 <div class="container mt-4">
                     <h6 class="fw-bold mb-3">Production Details</h6>
-             
-
-                </ul><div class="accordion" id="machineryAccordion">
-                    <!-- Plowing Accordion -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="plowingHeading">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#plowingCollapse" aria-expanded="true" aria-controls="plowingCollapse">
-                                a. ProductionInfo
-                            </button>
-                        </h2>
-                        <div id="plowingCollapse" class="accordion-collapse collapse show" aria-labelledby="plowingHeading" data-bs-parent="#machineryAccordion">
-                            <div class="accordion-body">
-                                <ul class="list-unstyled farmer-details">
-                                   
-                        <li><strong>Seed Type Used:</strong> <span id="seeds_typed_used"></span></li>
-                        <li><strong>Seeds Used (kg):</strong> <span id="seeds_used_in_kg"></span></li>
-                        <li><strong>Seed Source:</strong> <span id="seed_source"></span></li>
-                        <li><strong>Unit:</strong> <span id="unit"></span></li>
-                        <li><strong>No of Fertilizer Used (bags):</strong> <span id="no_of_fertilizer_used_in_bags"></span></li>
-                        <li><strong>No of Pesticides Used (L/kg):</strong> <span id="no_of_pesticides_used_in_l_per_kg"></span></li>
-                        <li><strong>No of Insecticides Used (L):</strong> <span id="no_of_insecticides_used_in_l"></span></li>
-                        <li><strong>Area Planted:</strong> <span id="area_planted"></span></li>
-                        <li><strong>Date Planted:</strong> <span id="date_planted"></span></li>
-                        <li><strong>Date Harvested:</strong> <span id="date_harvested"></span></li>
-                        <li><strong>Yield (Kg/Tons):</strong> <span id="yield_tons_per_kg"></span></li>
-                                </ul>
+                    
+                    </ul><div class="accordion" id="machineryAccordion">
+                        <!-- Plowing Accordion -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="plowingHeading">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#plowingCollapse" aria-expanded="true" aria-controls="plowingCollapse">
+                                    a.  Production Info
+                                </button>
+                            </h2>
+                            <div id="plowingCollapse" class="accordion-collapse collapse show" aria-labelledby="plowingHeading" data-bs-parent="#machineryAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled farmer-details">
+                                        <li><strong>Seed Type Used:</strong> <span id="seeds_typed_used"></span></li>
+                                        <li><strong>Seeds Used (kg):</strong> <span id="seeds_used_in_kg"></span></li>
+                                        <li><strong>Seed Source:</strong> <span id="seed_source"></span></li>
+                                        <li><strong>Unit:</strong> <span id="unit"></span></li>
+                                        <li><strong>No of Fertilizer Used (bags):</strong> <span id="no_of_fertilizer_used_in_bags"></span></li>
+                                        <li><strong>No of Pesticides Used (L/kg):</strong> <span id="no_of_pesticides_used_in_l_per_kg"></span></li>
+                                        <li><strong>No of Insecticides Used (L):</strong> <span id="no_of_insecticides_used_in_l"></span></li>
+                                        <li><strong>Area Planted:</strong> <span id="area_planted"></span></li>
+                                        <li><strong>Date Planted:</strong> <span id="date_planted"></span></li>
+                                        <li><strong>Date Harvested:</strong> <span id="date_harvested"></span></li>
+                                        <li><strong>Yield (Kg/Tons):</strong> <span id="yield_tons_per_kg"></span></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-            </div>
+                </div>
+                    
                 </div>
             </div>
             <div class="modal-footer">
@@ -1843,7 +1844,7 @@ function productionCostData(id) {
         url: '/agent-edit-farmer-production/' + id, // Adjust the URL to match your route
         type: 'GET',
         dataType: 'json',
-        data: { type: 'LastProductionDatas' }, // Send type parameter for AJAX request
+        data: { type: 'production' }, // Send type parameter for AJAX request
         success: function(response) {
             if (response.error) {
                 alert(response.error); // Display error message if provided
@@ -2027,17 +2028,14 @@ $(document).on('click', '.viewSoldsCostBtn', function() {
     SoldsCostData(id); // Fetch data and show the modal
 });
 
-$(document).on('click', '.viewSoldsCostBtn', function() {
-    var id = $(this).data('id'); // Get the ID from the data attribute
-    SoldsCostData(id); // Fetch data and show the modal
-});
+
 
 function SoldsCostData(id) {
     $.ajax({
         url: '/agent-edit-farmer-Production-sold/' + id, // Adjust the URL to match your route
         type: 'GET',
         dataType: 'json',
-        data: { type: 'Solds' }, // Send type parameter for AJAX request
+        data: { type: 'ProductionSolds' }, // Send type parameter for AJAX request
         success: function(response) {
             if (response.error) {
                 alert(response.error); // Display error message if provided
@@ -2049,25 +2047,7 @@ function SoldsCostData(id) {
                 $('#quantity').text(response.quantity ? parseFloat(response.quantity).toFixed(2) : 'N/A');
                 $('#gross_income').text(response.gross_income ? parseFloat(response.gross_income).toFixed(2) : 'N/A');
 
-                // $('#labor_no_of_person').text(response.labor_no_of_person || 'N/A');
-                // $('#rate_per_person').text(response.rate_per_person ? parseFloat(response.rate_per_person).toFixed(2) : 'N/A');
-                // $('#total_labor_cost').text(response.total_labor_cost ? parseFloat(response.total_labor_cost).toFixed(2) : 'N/A');
-            
-                // $('#name_of_fertilizer').text(response.name_of_fertilizer || 'N/A');
-                // $('#no_of_sacks').text(response.no_of_sacks || 'N/A');
-                // $('#unit_price_per_sacks').text(response.unit_price_per_sacks ? parseFloat(response.unit_price_per_sacks).toFixed(2) : 'N/A');
-                // $('#total_cost_fertilizers').text(response.total_cost_fertilizers ? parseFloat(response.total_cost_fertilizers).toFixed(2) : 'N/A');
-           
-                // $('#pesticide_name').text(response.pesticide_name || 'N/A');
-                // $('#no_of_l_kg').text(response.no_of_l_kg ? parseFloat(response.no_of_l_kg).toFixed(2) : 'N/A');
-                // $('#unit_price_of_pesticides').text(response.unit_price_of_pesticides ? parseFloat(response.unit_price_of_pesticides).toFixed(2) : 'N/A');
-                // $('#total_cost_pesticides').text(response.total_cost_pesticides ? parseFloat(response.total_cost_pesticides).toFixed(2) : 'N/A');
-           
-                // $('#name_of_vehicle').text(response.name_of_vehicle || 'N/A');
-                // $('#total_transport_delivery_cost').text(response.total_transport_delivery_cost ? parseFloat(response.total_transport_delivery_cost).toFixed(2) : 'N/A');
-                // $('#total_machinery_fuel_cost').text(response.total_machinery_fuel_cost ? parseFloat(response.total_machinery_fuel_cost).toFixed(2) : 'N/A');
-                // $('#total_variable_cost').text(response.total_variable_cost ? parseFloat(response.total_variable_cost).toFixed(2) : 'N/A');
-           
+               
             }
         },
         error: function(xhr) {

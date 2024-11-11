@@ -55,19 +55,29 @@ use Illuminate\Support\Facades\Auth;
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard'); 
 
-// Route::get('dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified',])->name('dashboard');
+Route::get('dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified',])->name('dashboard');
 // Protected route with auth middleware
 
-Route::get('/dashboard', function () {
-    if (Auth::check()) {
-        return view('dashboard'); // User is authenticated, show dashboard
-    }
+// Route::get('/dashboard', function () {
+//     if (Auth::check()) {
+//         return view('dashboard'); // User is authenticated, show dashboard
+//     }
 
-    return redirect()->route('login')->with('error', 'Please log in to access the dashboard.'); // Redirect to login if not authenticated
-});
+//     return redirect()->route('login')->with('error', 'Please log in to access the dashboard.'); // Redirect to login if not authenticated
+// });
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+
+
+Route::get('/notifications', [NotificationController::class, 'index']);
+Route::post('/notifications/clear', [NotificationController::class, 'clearNotifications']);
+Route::get('/agent-import-multipleFile', [FileController::class, 'downloadTemplate']);
+
+    // fetching the users
+    Route::get('/get-users', [AgentController::class, 'getUsers']);
+    Route::post('/update-farm-profile', [AgentController::class, 'updateFarmProfile']);
+
 
     // farmer profiling
     Route::get('/user-farmer-Profiling',[FarmProfileController::class, 'FarmerProfiling'])->name('user.farmerInfo.profilingData');
@@ -526,6 +536,8 @@ Route::post('/agent-update-fixed-cost/{fixedcosts}',[AgentController::class,'Upd
 // add farm profile by agent
 Route::get('/add-farm-profile',[AgentController::class, 'farmprofiles'])->name('agent.farmprofile.add_profile');
 Route::post('/add-farm-profile',[AgentController::class, 'AddFarmProfile']);
+Route::get('/agent-view-farmer-profile/{farmProfile}',[ AgentController::class,'showFarmerProfiles'])->name('agent.farmprofile.profile_farmers');
+
 
 // fetching of data from 3 tables to be inserted in farm profiles
 // Route::get('/add-farm-profile',[AgentController::class, 'fetchtables'])->name('agent.farmprofile.add_profile');

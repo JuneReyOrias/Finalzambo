@@ -13,10 +13,15 @@ class FixedsImport implements ToModel, WithHeadingRow
     protected $personalInformationId;
     protected $farmProfileId;
 
-    public function __construct($personalInformationId, $farmProfileId)
+    protected $CropId;
+    protected $ProductionId;
+
+    public function __construct($personalInformationId, $farmProfileId, $CropId,$ProductionId)
     {
         $this->personalInformationId = $personalInformationId;
         $this->farmProfileId = $farmProfileId;
+        $this->ProductionId= $ProductionId;
+        $this->CropId= $CropId;
     }
     public function model(array $row)
     {
@@ -28,7 +33,7 @@ class FixedsImport implements ToModel, WithHeadingRow
         $agri_district = $user->agri_district;
 
         // Check if all required keys exist in the row
-        $requiredKeys = ['no_of_ha', 'cost_per_ha', 'total_amount'];
+        $requiredKeys = ['total_amount'];
         foreach ($requiredKeys as $key) {
             if (!isset($row[$key])) {
                 Log::error("Undefined array key '$key'. Row: " . json_encode($row));
@@ -49,13 +54,17 @@ class FixedsImport implements ToModel, WithHeadingRow
         return FixedCost::firstOrCreate([
             'personal_informations_id' => $this->personalInformationId,
             'users_id' => $userId,
-        
+            'farm_profiles_id' => $this->farmProfileId,
+         
+           'crops_farms_id' => $this->CropId,
+           'last_production_datas_id' => $this->ProductionId,
          
         ], [
+            'particular' => $row['particular'],
             'no_of_ha' => $row['no_of_ha'],
             'cost_per_ha' => $row['cost_per_ha'],
             'total_amount' => $row['total_amount'],
-            'farm_profiles_id' => $this->farmProfileId,
+          
         ]);
     }
 }

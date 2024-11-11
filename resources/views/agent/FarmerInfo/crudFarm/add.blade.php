@@ -550,7 +550,7 @@
                               </div>
                             
                                     <!-- Map Modal -->
-                        <div id="mapModal" class="modal fade" tabindex="-1" role="dialog">
+                        {{-- <div id="mapModal" class="modal fade" tabindex="-1" role="dialog">
                             <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -574,12 +574,41 @@
                                 </div>
                                 <div class="modal-footer">
                                
-                                <button type="button" class="btn btn-primary" id="saveLocation">Close</button>
+                                <button type="button" class="btn btn-primary" id="saveLocation">Confirm</button>
                                 </div>
                             </div>
                             </div>
+                        </div> --}}
+                        <div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header text-white">
+                                        <h5 class="modal-title" id="mapModalLabel">Select Location on Map</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div id="map" style="height: 400px; width: 100%;"></div>
+                                        <div class="form-row mt-3">
+                                            <div class="col">
+                                            <label for="modal_latitude">Latitude:</label>
+                                            <input type="text" class="form-control light-gray-placeholder"placeholder="Enter latitude" id="modal_latitude">
+                                            </div>
+                                            <div class="col">
+                                            <label for="modal_longitude">Longitude:</label>
+                                            <input type="text" class="form-control light-gray-placeholder"placeholder="Enter longitude" id="modal_longitude">
+                                            </div>
+                                        </div>
+                                       
+                                        
+                                    </div>
+                                    
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" id="saveLocation">Confirm</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-  
                        
                             <div class="input-box col-md-4">
                                 <span class="details">Total Physical Area (has):</span>
@@ -1474,6 +1503,10 @@ $(document).ready(function() {
                                            <h3>a. Seed info and Usage details: </h3>
                                            <div class="user-details">
                                         <!-- Production Fields -->
+                                        //   <div class="input-box col-md-4"">
+                                        //       <span class="details">Cropping No.:</span>
+                                        //     <input type="number" class="form-control cropping_no" name="crop_profiles[${cropCounter}][cropping_no]" placeholder=" Enter Cropping No" id="cropping_no_${cropCounter}">
+                                        // </div>
                                         <div class="input-box col-md-4"">
                                               <span class="details">Seed type Used:</span>
                                             <input type="text" class="form-control seed-type" name="crop_profiles[${cropCounter}][seeds_typed_used]" placeholder=" Enter Seed type used" id="seeds_typed_used_${cropCounter}" onkeypress="return blockSymbolsAndNumbers(event)">
@@ -2595,6 +2628,7 @@ form.on('submit', function(event) {
     // Gather farmer info from the form inputs
     let farmerInfo = {
         'users_id': $('input.users_id').val(),
+        
         'first_name': $('input.first_name').val(),
         'middle_name': $('input.middle_name').val(),
         'last_name': $('input.last_name').val(),
@@ -2688,6 +2722,8 @@ form.on('submit', function(event) {
     let YieldkgHa = getValue('.yield_kg_ha');
 
     // Production
+
+    let CropNo =getValue('.cropping_no');
     let seedType = getValue('.seed-type');
     let seedUsed = getValue('.seed-used');
     let seedSource = getValue('.seed-source');
@@ -2785,6 +2821,7 @@ form.on('submit', function(event) {
             yield_kg_ha: YieldkgHa
         },
         production: {
+            Cropping:CropNo,
             seedtype: seedType,
             seedUsed: seedUsed,
             seedSource: seedSource,
@@ -3206,33 +3243,46 @@ $('#confirmSave').on('click', function() {
         success: function(response) {
             console.log(response);
             if (response.success) {
+                // Show the success modal
                 var successModal = new bootstrap.Modal(document.getElementById('successCropModal'), {
-                        keyboard: false
+                    keyboard: false
+                });
+                successModal.show();
 
-                    });
-                    successModal.show(); // Show success modal
-                    
-                    // Close the confirmation modal after successful save
-                    var confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
-                    if (confirmModal) {
-                        confirmModal.hide();
-                    }
+                // Hide the confirmation modal if open
+                var confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+                if (confirmModal) {
+                    confirmModal.hide();
                 }
+
+                // Reload the page when the success modal is closed or a confirmation button inside is clicked
+                $('#successCropModal').on('hidden.bs.modal', function() {
+                    location.reload();
+                });
+
+                $('#successConfirmButton').on('click', function() {
+                    $('#successCropModal').modal('hide'); // Hide the modal
+                    location.reload(); // Reload the page
+                });
+            }
         },
         error: function(xhr) {
-            console.error('Error:', xhr.responseJSON.error);
+            console.error('Error:', xhr); // Log error details to the console
 
-            // Display the error message in the modal body
-            $('#errorModalBody').text(xhr.responseJSON.error);
+            // Display error in the error modal
+            if (xhr.responseJSON && xhr.responseJSON.error) {
+                $('#errorModalBody').text(xhr.responseJSON.error);
+            } else {
+                $('#errorModalBody').text('An unexpected error occurred. Please try again.');
+            }
 
-
-    // Show the modal
-    $('#errorModal').modal('show');
-}
-
-
+            // Show the error modal
+            $('#errorModal').modal('show');
+        }
     });
 });
+
+
 });
 
 
@@ -3284,92 +3334,153 @@ let currentStep = 0;
 
 <script type="text/javascript">
     var map;
-    var markers = [];
-    var selectedLatLng;
-  
-    function initMap() {
-      var initialLocation = { lat: 6.9214, lng: 122.0790 };
-  
-      map = new google.maps.Map(document.getElementById('map'), {
+var markers = [];
+var selectedLatLng;
+var polygons = []; // Array to hold the saved polygons
+
+// Load polygons from mapdata and parceldata and plot them on the map
+function loadPolygons() {
+    var mapdata = @json($mapdata); // Existing data from the view
+    var parceldata = @json($parceldata); // Data from ParcellaryBoundaries
+
+    function plotPolygon(parcel, isParcelData = false) {
+        var polygon = new google.maps.Polygon({
+            paths: parcel.coordinates.map(coord => new google.maps.LatLng(coord.lat, coord.lng)),
+            strokeColor: parcel.strokecolor || '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: parcel.fillcolor || '#FF0000',
+            fillOpacity: 0.02
+        });
+        polygon.setMap(map);
+        polygons.push(polygon);
+
+        google.maps.event.addListener(polygon, 'click', function () {
+            var contentString;
+            if (isParcelData) {
+                contentString = 'Parcel Name: ' + parcel.parcel_name + '<br>' +
+                                'ARPOwner Name: ' + parcel.arpowner_na + '<br>' +
+                                'Agri-District: ' + parcel.agri_districts + '<br>' +
+                                'Brgy. Name: ' + parcel.barangay_name + '<br>' +
+                                'Title name: ' + parcel.tct_no + '<br>' +
+                                'Property kind description: ' + parcel.pkind_desc + '<br>' +
+                                'Property Used description: ' + parcel.puse_desc + '<br>' +
+                                'Actual Used: ' + parcel.actual_used + '<br>' +
+                                'Area: ' + parcel.area + ' sq. meters<br>' +
+                                'Altitude: ' + parcel.altitude + ' meters<br>';
+            } else {
+                contentString = 'Polygon Name: ' + parcel.polygon_name + '<br>' +
+                                'Area: ' + parcel.area + ' sq. meters<br>' +
+                                'Altitude: ' + parcel.altitude + ' meters';
+            }
+
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+            infowindow.setPosition(parcel.coordinates[0]);
+            infowindow.open(map);
+        });
+    }
+
+    mapdata.forEach(function (parcel) {
+        plotPolygon(parcel);
+    });
+
+    parceldata.forEach(function (parcel) {
+        plotPolygon(parcel, true);
+    });
+
+    var bounds = new google.maps.LatLngBounds();
+    mapdata.concat(parceldata).forEach(function (parcel) {
+        parcel.coordinates.forEach(function (coord) {
+            bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
+        });
+    });
+    map.fitBounds(bounds);
+}
+
+function initMap() {
+    var initialLocation = { lat: 6.9214, lng: 122.0790 };
+
+    map = new google.maps.Map(document.getElementById('map'), {
         zoom: 13,
         center: initialLocation,
-        mapTypeId: 'terrain'
-      });
-  
-      // When the map is clicked, set latitude and longitude in modal and main inputs
-      map.addListener('click', function(event) {
+        mapTypeId: 'satellite'
+    });
+
+    map.addListener('click', function (event) {
         if (markers.length >= 1) {
-          deleteMarkers();
+            deleteMarkers();
         }
-  
+
         selectedLatLng = event.latLng;
         addMarker(selectedLatLng);
         $('#modal_latitude').val(selectedLatLng.lat());
         $('#modal_longitude').val(selectedLatLng.lng());
-      });
-  
-      // Add marker on the map
-      function addMarker(location) {
+    });
+
+    function addMarker(location) {
         var marker = new google.maps.Marker({
-          position: location,
-          map: map
+            position: location,
+            map: map,
+            draggable: true // Make the marker draggable
         });
         markers.push(marker);
-      }
-  
-      // Clear markers from the map
-      function deleteMarkers() {
+
+        // Update latitude and longitude on marker drag end
+        google.maps.event.addListener(marker, 'dragend', function (event) {
+            $('#modal_latitude').val(event.latLng.lat());
+            $('#modal_longitude').val(event.latLng.lng());
+        });
+    }
+
+    function deleteMarkers() {
         markers.forEach(marker => {
-          marker.setMap(null);
+            marker.setMap(null);
         });
         markers = [];
-      }
-  
-      // Listen for manual input in modal latitude/longitude fields
-      $('#modal_latitude, #modal_longitude').on('change', function() {
+    }
+
+    $('#modal_latitude, #modal_longitude').on('change', function () {
         var lat = parseFloat($('#modal_latitude').val());
         var lng = parseFloat($('#modal_longitude').val());
-  
+
         if (!isNaN(lat) && !isNaN(lng)) {
-          var location = { lat: lat, lng: lng };
-          map.setCenter(location);
-          deleteMarkers();
-          addMarker(location);
+            var location = { lat: lat, lng: lng };
+            map.setCenter(location);
+            deleteMarkers();
+            addMarker(location);
         }
-      });
-    }
-  
-    $(document).ready(function() {
-      // Show the modal when latitude or longitude input is focused
-      $('#gps_latitude_0, #gps_longitude_0').on('focus', function() {
+    });
+}
+
+$(document).ready(function () {
+    $('#gps_latitude_0, #gps_longitude_0').on('focus', function () {
         $('#mapModal').modal('show');
-      });
-  
-      // Reinitialize the map each time the modal is opened
-      $('#mapModal').on('shown.bs.modal', function() {
+    });
+
+    $('#mapModal').on('shown.bs.modal', function () {
         if (selectedLatLng) {
-          map.setCenter(selectedLatLng); // Center map on previously selected location
+            map.setCenter(selectedLatLng);
         }
         google.maps.event.trigger(map, 'resize');
-      });
-  
-      // Clear previous markers when modal is closed
-      $('#mapModal').on('hidden.bs.modal', function() {
-        deleteMarkers(); // Clear markers when modal is closed
-      });
-  
-      // Handle the Save Location button click
-      $('#saveLocation').on('click', function() {
-        // Save the latitude and longitude to the main input fields
+    });
+
+    $('#mapModal').on('hidden.bs.modal', function () {
+        deleteMarkers();
+    });
+
+    $('#saveLocation').on('click', function () {
         var lat = $('#modal_latitude').val();
         var lng = $('#modal_longitude').val();
         $('#gps_latitude_0').val(lat);
         $('#gps_longitude_0').val(lng);
         
-        // Close the modal
         $('#mapModal').modal('hide');
-      });
     });
+    
+    loadPolygons(); // Load polygons when the map is initialized
+});
 
 // Function to check membership and display organization input accordingly
 function checkMmbership() {

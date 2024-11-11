@@ -2,13 +2,13 @@
 
 namespace App\Imports;
 
-use App\Models\VariableCost;
+use App\Models\ProductionSold;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class ImportVariableCost implements ToModel,WithHeadingRow
+class SoldsImport implements ToModel, WithHeadingRow
 {
     // /**
     // * @param array $row
@@ -17,7 +17,7 @@ class ImportVariableCost implements ToModel,WithHeadingRow
     // */
     // public function model(array $row)
     // {
-    //     return new VariableCost([
+    //     return new ProductionSold([
     //         'total_machinery_fuel_cost'=>$row ['total_machinery_fuel_cost'],
     //         'total_variable_cost'=>$row ['total_variable_cost'],
     //     ]);
@@ -50,8 +50,7 @@ class ImportVariableCost implements ToModel,WithHeadingRow
         $agri_district = $user->agri_district;
 
         // Check if all required keys exist in the row
-        $requiredKeys = ['total_seed_cost','total_labor_cost','total_cost_fertilizers','total_cost_pesticides',
-         'total_transport_delivery_cost', 'total_machinery_fuel_cost', 'total_variable_cost'];
+        $requiredKeys = ['gross_income'];
         foreach ($requiredKeys as $key) {
             if (!isset($row[$key])) {
                 Log::error("Undefined array key '$key'. Row: " . json_encode($row));
@@ -74,44 +73,23 @@ class ImportVariableCost implements ToModel,WithHeadingRow
         // ]);
 
         // Create or update FixedCost instance
-        return VariableCost::firstOrCreate([
+        return ProductionSold::firstOrCreate([
             'personal_informations_id' => $this->personalInformationId,
             'users_id' => $userId,
         
          
         ], [
-                    // SEED 
-                    'unit'=>$row ['unit'],
-                    'quantity'=>$row ['quantity'],
-                    'unit_price'=>$row ['unit_price'],
-                    'total_seed_cost'=>$row ['total_seed_cost'],
-
-                    // Labor
-                    'labor_no_of_person'=>$row ['labor_no_of_person'],
-                    'rate_per_person'=>$row ['rate_per_person'],
-                    'total_labor_cost'=>$row ['total_labor_cost'],
-                    // fertilizers
-                    'no_of_sacks'=>$row ['no_of_sacks'],
-                    'unit_price_per_sacks'=>$row ['unit_price_per_sacks'],
-                    'total_cost_fertilizers'=>$row ['total_cost_fertilizers'],
-                    // pesticides
-                    'no_of_l_kg'=>$row ['no_of_l_kg'],
-                    'unit_price_of_pesticides'=>$row ['unit_price_of_pesticides'],
-                    'total_cost_pesticides'=>$row ['total_cost_pesticides'],
-                    // transport
-                    'total_transport_delivery_cost'=>$row ['total_transport_delivery_cost'],
-
-                    // total
-                    'total_machinery_fuel_cost'=>$row ['total_machinery_fuel_cost'],
-                    'total_variable_cost'=>$row ['total_variable_cost'],
                 
+                    'sold_to'=>$row ['sold_to'],
+                    'measurement'=>$row ['measurement'],
+                    'unit_price_rice_per_kg'=>$row ['unit_price_rice_per_kg'],
+                    'quantity'=>$row ['quantity'],
+                    'gross_income'=>$row ['gross_income'],
+                    
                     'farm_profiles_id' => $this->farmProfileId,
                     'crops_farms_id' => $this->CropId,
                     'last_production_datas_id' => $this->ProductionId,
-                    // 'labors_id'=>$this->laborsIds,
-                    // 'fertilizers_id'=> $this->fertilizerIds,
-                    // 'pesticides_id'=>$this->pesticidesIds,
-                    // 'transports_id'=>$this->transportIds,
+                 
                     
         ]);
     }

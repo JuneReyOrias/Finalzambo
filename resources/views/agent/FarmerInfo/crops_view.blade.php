@@ -117,11 +117,25 @@
                                 <a href="{{route('admin.farmersdata.genfarmers')}}" title="back">
 
                                  </a>
-                                 @foreach ($cropFarms as $crop)
-                                 <div class="input-group mb-3">
-                                     <h5 for="personainfo">Farm: {{ formatName($crop->farmprofile->tenurial_status) }}</h5>
-                                 </div>
-                             @endforeach
+                                  {{-- Loop through each crop in $cropFarms --}}
+                            @php
+                            // Array to track displayed farm profiles by their unique ID
+                            $displayedFarms = [];
+                        @endphp
+                        
+                        @foreach ($cropFarms as $crop)
+                            {{-- Check if the farm profile has already been displayed --}}
+                            @if (!in_array($crop->farmprofile->id, $displayedFarms))
+                                <div class="input-group mb-3">
+                                    <h5 for="personainfo">Farm: {{ formatName($crop->farmprofile->tenurial_status) }}</h5>
+                                </div>
+                        
+                                {{-- Add the farm profile ID to the array to mark it as displayed --}}
+                                @php
+                                    $displayedFarms[] = $crop->farmprofile->id;
+                                @endphp
+                            @endif
+                        @endforeach
                              
                                 
                            
@@ -278,7 +292,7 @@
     </div>
 </div>
 <div class="modal fade" id="CropModal" tabindex="-1" aria-labelledby="CropModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header text-white">
                 <h5 class="modal-title" id="CropModalLabel">Crop Data</h5>
@@ -301,65 +315,44 @@
                             
                             <!-- Farm Profile Information -->
                             <h6>Farm Status: {{ $farmData ? formatName($farmData->tenurial_status) : 'No farm information available.' }}</h6>
-                        
-                            <div class="input-group mb-3">
-                                @if($cropData->isNotEmpty())
-                                    <h5>Crops:</h5>
-                                    
-                                    @php
-                                        // Array to store displayed crop names
-                                        $displayedCrops = [];
-                                    @endphp
-                                    
-                                    @foreach($cropData as $crop)
-                                        @if($crop->crop && !in_array($crop->crop->crop_name, $displayedCrops))
-                                            <h6>{{ formatName($crop->crop->crop_name) }}</h6> <!-- Capitalize the first letter of each word -->
-                                            
-                                            @php
-                                                // Add the crop name to the displayedCrops array to avoid duplication
-                                                $displayedCrops[] = $crop->crop->crop_name;
-                                            @endphp
-                                        @endif
-                                    @endforeach
-                                @else
-                                    <h5>No crop data available.</h5>
-                                @endif
-                            </div>
                         </div>
                         
                         
                         
             
-
-                <!-- Production Data -->
-                <div class="container mt-4">
-                    <h6 class="fw-bold mb-3">Production Solds Details</h6>
-                    
-                    </ul><div class="accordion" id="machineryAccordion">
-                        <!-- Plowing Accordion -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="plowingHeading">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#plowingCollapse" aria-expanded="true" aria-controls="plowingCollapse">
-                                    a. Solds Info
-                                </button>
-                            </h2>
-                            <div id="plowingCollapse" class="accordion-collapse collapse show" aria-labelledby="plowingHeading" data-bs-parent="#machineryAccordion">
-                                <div class="accordion-body">
-                                    <ul class="list-unstyled farmer-details">
-                                      
-                                        <li><strong>Variety Planted</strong> <span id="type_of_variety_planted"></span></li>
-                                        <li><strong>Planting schedule(Wet):</strong> <span id="planting_schedule_wetseason"></span></li>
-                                        <li><strong>Planting schedule(Dry):</strong> <span id="planting_schedule_dryseason"></span></li>
-                                        <li><strong>No of cropping:</strong> <span id="no_of_cropping_per_year"></span></li>
-                                        <li><strong>Yield:</strong> <span id="yield_kg_ha"></span></li>
-                                    </ul>
+                     
+                        <div class="container mt-4">
+                            <h6 class="fw-bold mb-3">Crops Details</h6>
+                            
+                            </ul><div class="accordion" id="machineryAccordion">
+                                <!-- Plowing Accordion -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="plowingHeading">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#plowingCollapse" aria-expanded="true" aria-controls="plowingCollapse">
+                                            a. Crops Info
+                                        </button>
+                                    </h2>
+                                    <div id="plowingCollapse" class="accordion-collapse collapse show" aria-labelledby="plowingHeading" data-bs-parent="#machineryAccordion">
+                                        <div class="accordion-body">
+                                            <ul class="list-unstyled farmer-details">
+                                                <li><strong>Crop Name</strong> <span id="crop_name"></span></li>
+                                                <li><strong>Variety Planted</strong> <span id="type_of_variety_planted"></span></li>
+                                                <li><strong>Planting schedule(Wet):</strong> <span id="planting_schedule_wetseason"></span></li>
+                                                <li><strong>Planting schedule(Dry):</strong> <span id="planting_schedule_dryseason"></span></li>
+                                                <li><strong>No of cropping:</strong> <span id="no_of_cropping_per_year"></span></li>
+                                                <li><strong>Yield:</strong> <span id="yield_kg_ha"></span></li>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
+                            
+                                <!-- Harrowing Accordion -->
+                             
+                            
+                                
+                                
                             </div>
                         </div>
-                    
-                        <!-- Harrowing Accordion -->
-                     
-                    
                         
                         
                     

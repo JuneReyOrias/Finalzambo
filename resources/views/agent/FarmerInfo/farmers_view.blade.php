@@ -224,16 +224,19 @@
 
 {{-- farmt --}}
 <div class="modal fade" id="farmerModal" tabindex="-1" aria-labelledby="farmerModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header text-white">
                 <h5 class="modal-title" id="farmerModalLabel">Farmer Data</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Farmer Details -->
-        
-                
+             
+           
+                <div class="container mt-3">
+                    <h6 class="fw-bold">Full Name: <span id="full_name" class="text-primary"></span></h6>
+                    <h6 class="text-secondary mb-3">Age: <span id="age"></span></h6> <!-- Age display here -->
+                </div>
 
                 <!-- Production Data -->
                 <div class="container mt-4">
@@ -394,6 +397,70 @@ $(document).on('click', '.viewfarmerBtn', function() {
    FarmerData(id); // Fetch data and show the modal
 });
 
+// function FarmerData(id) {
+//     $.ajax({
+//         url: '/agent-edit-farmers/' + id, // Adjust the URL to match your route
+//         type: 'GET',
+//         dataType: 'json',
+//         data: { type: 'personalinfos' }, // Send type parameter for AJAX request
+//         success: function(response) {
+//             if (response.error) {
+//                 alert(response.error); // Display error message if provided
+//             } else {
+
+                
+//                 // Populate the modal with the fetched data
+//                 $('#date_of_birth').text(response.date_of_birth || 'N/A');
+//                 $('#mothers_maiden_name').text(response.mothers_maiden_name || 'N/A');
+//                 $('#district').text(response.district || 'N/A');
+//                 $('#barangay').text(response.barangay || 'N/A');
+              
+
+              
+//                 $('#country').text(response.country || 'N/A');
+//                 $('#province').text(response.province || 'N/A');
+//                 $('#city').text(response.city || 'N/A');
+
+//                 $('#home_address').text(response.home_address || 'N/A');
+//                 $('#street').text(response.street || 'N/A');
+
+//                 $('#zip_code').text(response.zip_code || 'N/A');
+//                 $('#contact_no').text(response.contact_no || 'N/A');
+//                 $('#sex').text(response.sex || 'N/A');
+
+//                 $('#religion').text(response.religion || 'N/A');
+//                 $('#place_of_birth').text(response.place_of_birth || 'N/A');
+              
+
+//                 $('#civil_status').text(response.civil_status || 'N/A');
+//                 $('#name_legal_spouse').text(response.name_legal_spouse || 'N/A');
+//                 $('#no_of_children').text(response.no_of_children || 'N/A');
+
+//                 $('#highest_formal_education').text(response.highest_formal_education || 'N/A');
+//                 $('#street').text(response.street || 'N/A');
+
+//                 $('#person_with_disability').text(response.person_with_disability || 'N/A');
+//                 $('#pwd_id_no').text(response.pwd_id_no || 'N/A');
+//                 $('#government_issued_id').text(response.government_issued_id || 'N/A');
+
+//                 $('#id_type').text(response.id_type || 'N/A');
+//                 $('#gov_id_no').text(response.gov_id_no || 'N/A');
+
+                
+//                 $('#member_ofany_farmers_ass_org_coop').text(response.member_ofany_farmers_ass_org_coop || 'N/A');
+//                 $('#nameof_farmers_ass_org_coop').text(response.nameof_farmers_ass_org_coop || 'N/A');
+//                 $('#name_contact_person').text(response.name_contact_person || 'N/A');
+
+//                 $('#cp_tel_no').text(response.cp_tel_no || 'N/A');
+//                 $('#date_interview').text(response.date_interview || 'N/A');
+//             }
+//         },
+//         error: function(xhr) {
+//             console.error('Error fetching data:', xhr.responseText);
+//             alert('An error occurred: ' + xhr.statusText); // Provide user-friendly error message
+//         }
+//     });
+// }
 function FarmerData(id) {
     $.ajax({
         url: '/agent-edit-farmers/' + id, // Adjust the URL to match your route
@@ -405,7 +472,45 @@ function FarmerData(id) {
                 alert(response.error); // Display error message if provided
             } else {
                 // Populate the modal with the fetched data
-                $('#date_of_birth').text(response.date_of_birth || 'N/A');
+                $('#first_name').text(response.first_name || 'N/A');
+                $('#middle_name').text(response.middle_name || 'N/A');
+                $('#last_name').text(response.last_name || 'N/A');
+                $('#extension_name').text(response.extension_name || 'N/A');
+
+                // Function to capitalize the first letter of each word
+                function capitalizeFirstLetter(string) {
+                    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+                }
+
+                // Concatenate full name with proper capitalization
+                let fullName = [
+                    response.first_name, 
+                    response.middle_name, 
+                    response.last_name, 
+                    response.extension_name
+                ]
+                .filter(Boolean)
+                .map(name => capitalizeFirstLetter(name)) // Capitalize each name part
+                .join(' ')
+                .trim();
+
+                // If all fields are empty, set 'N/A'
+                if (!fullName) {
+                    fullName = 'N/A';
+                }
+
+                // Display the concatenated and formatted full name
+                $('#full_name').text(fullName);
+
+                            // Display Age
+                var dateOfBirth = response.date_of_birth ? new Date(response.date_of_birth) : null;
+                if (dateOfBirth) {
+                    var age = calculateAge(dateOfBirth);
+                    $('#age').text(age + ' years old');
+                } else {
+                    $('#age').text('N/A');
+                }
+
                 $('#mothers_maiden_name').text(response.mothers_maiden_name || 'N/A');
                 $('#district').text(response.district || 'N/A');
                 $('#barangay').text(response.barangay || 'N/A');
@@ -455,7 +560,19 @@ function FarmerData(id) {
             alert('An error occurred: ' + xhr.statusText); // Provide user-friendly error message
         }
     });
+    // Function to calculate age based on date of birth
+function calculateAge(dateOfBirth) {
+    var today = new Date();
+    var age = today.getFullYear() - dateOfBirth.getFullYear();
+    var monthDifference = today.getMonth() - dateOfBirth.getMonth();
+    
+    // If the birth date hasn't happened yet this year, subtract one year from age
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < dateOfBirth.getDate())) {
+        age--;
+    }
+    
+    return age;
 }
-
+}
   </script>
 @endsection

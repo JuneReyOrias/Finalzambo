@@ -1,6 +1,7 @@
 @extends('agent.agent_Dashboard')
 
 @section('agent')
+
     @extends('layouts._footer-script')
     @extends('layouts._head')
     
@@ -483,19 +484,7 @@
         <div class="step active farm-info" id="step2">
             <!-- Farm Profile and Crop Accordion -->
             <div class="accordion farm-info" id="accordionFarmProfile">
-                <!-- Farm Profile Section -->
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center" id="headingFarmProfile" style="background-color: #f8f9fa; border: none; padding: 10px 20px;">
-                        <h5 class="mb-0" style="margin: 0;">
-                            <button class="btn btn-modern" type="button" data-toggle="collapse" data-target="#collapseFarmProfile" aria-expanded="true" aria-controls="collapseFarmProfile">
-                                New Crop Production 
-                                {{-- <button class="btn btn-secondary ml-auto" type="button" id="addCropButton">Add Crop</button> --}}
-                            </button>
-                        </h5>
-                
-                <!-- Button to Add New Crop Section (aligned to the right) -->
-                {{-- <button class="btn btn-secondary ml-auto" type="button" id="addCropButton">Add Crop</button> --}}
-            </div>
+              
             <div class="card crop-section mb-3" id="crop">
                 <div class="card-header d-flex justify-content-between align-items-center" id="headingCrop" style="background-color: #f8f9fa; border: none; padding: 10px 20px;">
                     <h5 class="mb-0" style="margin: 0;">
@@ -541,6 +530,12 @@
                                            <h3>a. Seed info and Usage details: </h3>
                                            <div class="user-details">
                                         <!-- Production Fields -->
+
+                                        <div class="input-box col-md-4">
+                                            <label for="cropping_no">Cropping No.:</label>
+                                            <input type="number" class="form-control light-gray-placeholder cropping_no" name="crop_profiles[${cropCounter}][cropping_no]"placeholder=" Enter Cropping No" id="cropping_no">
+                                            
+                                            </div>
                                         <div class="input-box col-md-4">
                                             <label for="seeds_typed_used">Seed type Used:</label>
                                             <input type="text" class="form-control light-gray-placeholder seed-type" name="crop_profiles[${cropCounter}][seeds_typed_used]" placeholder=" Enter Seed type used" id="seeds_typed_used" onkeypress="return blockSymbolsAndNumbers(event)">
@@ -1223,7 +1218,7 @@
 
         <!-- Buttons outside the accordions -->
             <div class="button-container mt-3 d-flex justify-content-between">
-                <button type="button" class="btn btn-primary" onclick="goBack()">Back</button>
+                <a href="{{ route('agent.FarmerInfo.production_view', $cropData->id) }}" button type="button" class="btn btn-primary">Back</button></a>
                 <button type="submit" class="btn btn-success" id="submitButton">Save</button>
             </div>
                                     </div>
@@ -1628,9 +1623,9 @@
         </div>
         <div class="modal-footer">
           {{-- <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button> --}}
-          <a href="{{route('admin.farmersdata.samplefolder.farm_edit')}}" class="btn btn-success">Famer Survey Form</a>
+          {{-- <a href="{{ route('admin.farmersdata.production', $cropData->id) }}" class="btn btn-success">add Form</a> --}}
             <!-- Link to proceed to another page -->
-            <a href="{{route('admin.farmersdata.genfarmers')}}" class="btn btn-success">Proceed to Farmer Info</a>
+            <a href="{{ route('agent.FarmerInfo.production_view', $cropData->id) }}"class="btn btn-success">Proceed to Production Info</a>
         </div>
       </div>
     </div>
@@ -2197,6 +2192,7 @@ form.on('submit', function(event) {
     // Gather production info from the form inputs
     let production = {
         'crops_farms_id': $('select.crops_farms_id').val(),
+        'cropping_no': $('input.cropping_no').val(),
         'seed-type': $('input.seed-type').val(),
         'seed-used': $('input.seed-used').val(),
         'seed-source': $('select.seed-source').val(),
@@ -2504,37 +2500,40 @@ let dataobject = {
     'productions': production,
 };
 
-// Log the entire data object to the console for debugging
+// // Log the entire data object to the console for debugging
 console.log("Data Object:", dataobject);
 
 const csrfToken = $('input[name="_token"]').attr('value');
 
-    // Send the AJAX request
-    $.ajax({
-        url: '/agent-add-farmer-production/{cropData}',
-        method: 'POST',
-        contentType: 'application/json', // Set content type for JSON
-        data: JSON.stringify(dataobject), // Attach the prepared data here
-        headers: {
-            'X-CSRF-TOKEN': csrfToken // Include the CSRF token in the headers
-        },
-        success: function(response) {
+// Send the AJAX request
+$.ajax({
+    url: '/agent-add-farmer-production/{cropData}',
+    method: 'POST',
+    contentType: 'application/json', // Set content type for JSON
+    data: JSON.stringify(dataobject), // Attach the prepared data here
+    headers: {
+        'X-CSRF-TOKEN': csrfToken // Include the CSRF token in the headers
+    },
+    success: function(response) {
+        console.log(response);
 
-            console.log(response);
-
-            if (response.success) {
+        if (response.success) {
             // Set the success message in the modal
             $('#successMessage').text(response.success);
             // Show the modal
             $('#successModal').modal('show');
-        }
-        },
-        error: function(error) {
-            console.error('Error:', error.responseJSON.message);
-        }
-    }); 
-}); 
 
+            // Reload the page after a brief delay (e.g., 2 seconds)
+            setTimeout(function() {
+                location.reload();
+            }, 2000);
+        }
+    },
+    error: function(error) {
+        console.error('Error:', error.responseJSON.message);
+    }
+});
+});
 // // Function to open confirmation modal with data preview
 // function openConfirmModal(data) {
 //     // Check and populate the modal with the farmer's details
@@ -3335,7 +3334,7 @@ function isNumberKey(evt) {
 document.addEventListener('DOMContentLoaded', () => {
     updateRemoveButtonVisibility();
 });
-
+</script>
 <script>
 // Plowing
 document.addEventListener("DOMContentLoaded", function () {
