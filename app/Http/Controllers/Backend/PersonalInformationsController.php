@@ -45,6 +45,28 @@ public function __construct() {
 
 }
 
+public function checkCroppingNo(Request $request)
+{
+    // Validate that cropping_no is provided
+    $request->validate([
+        'cropping_no' => 'required|numeric',
+    ]);
+
+  // Check if the cropping_no already exists for the given crops_farms_id
+  // Check if the cropping_no already exists for the given crops_farms_id
+  $existingCroppingNo = LastProductionDatas::where('crops_farms_id', $request->crops_farms_id)
+  ->where('cropping_no', $request->cropping_no)
+  ->first();
+
+if ($existingCroppingNo) {
+return response()->json([
+    'success' => false,
+    'message' => 'The cropping number already exists for this crop farm. Please choose a different one.'
+]);
+}
+
+   
+}
 
 // join table for farmprfofiles
 
@@ -903,6 +925,31 @@ public function farmview($id)
             $agri_district = $admin->agri_district;
             $agri_districts_id = $admin->agri_districts_id;
 
+     
+                                // Get the currently logged-in user
+                        $loggedInUser = auth()->user();
+
+                        // Check if the logged-in user is an admin
+                        if ($loggedInUser->role === 'admin') {
+                            // Admin can view all users
+                            $users = User::where('role', 'user')
+                                        ->select('id', 'first_name', 'last_name')
+                                        ->get();
+                        } elseif ($loggedInUser->role === 'agent') {
+                            // For agents, get users within the same district
+                            $agentDistrict = $loggedInUser->district;
+
+                            // Fetch users with role 'user' who belong to the same district
+                            $users = User::where('role', 'user')
+                                        ->where('district', $agentDistrict)
+                                        ->select('id', 'first_name', 'last_name')
+                                        ->get();
+                        } else {
+                            // Handle other roles or set $users as an empty collection if needed
+                            $users = collect();
+                        }
+
+
             // Find the farm profile using the fetched farm ID
             $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
             $farmData = FarmProfile::with('personalInformation')
@@ -923,7 +970,7 @@ public function farmview($id)
             // Return the view with the fetched data
             return view('admin.farmersdata.farm', compact(
                 'admin', 'profile', 'farmProfile', 'totalRiceProduction',
-                'personalinfos', 'userId', 'agri_district', 'agri_districts_id', 'farmData'
+                'personalinfos', 'userId', 'agri_district', 'agri_districts_id', 'farmData','users'
             ));
         } else {
             // Handle the case where the user is not found
@@ -965,6 +1012,28 @@ public function  cropview(Request $request, $id)
             $agri_district = $user->agri_district;
             $agri_districts_id = $user->agri_districts_id;
 
+                                // Get the currently logged-in user
+                                $loggedInUser = auth()->user();
+
+                                // Check if the logged-in user is an admin
+                                if ($loggedInUser->role === 'admin') {
+                                    // Admin can view all users
+                                    $users = User::where('role', 'agent')
+                                                ->select('id', 'first_name', 'last_name', 'district')
+                                                ->get();
+                                } elseif ($loggedInUser->role === 'agent') {
+                                    // For agents, get users within the same district
+                                    $agentDistrict = $loggedInUser->district;
+        
+                                    // Fetch users with role 'user' who belong to the same district
+                                    $users = User::where('role', 'user')
+                                                ->where('district', $agentDistrict)
+                                                ->select('id', 'first_name', 'last_name')
+                                                ->get();
+                                } else {
+                                    // Handle other roles or set $users as an empty collection if needed
+                                    $users = collect();
+                                }
                     // Find the farm profile using the fetched farm ID
                     $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
 
@@ -1003,7 +1072,7 @@ public function  cropview(Request $request, $id)
             $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
             // Return the view with the fetched data
             return view('admin.farmersdata.crop', compact('admin', 'profile', 'farmProfile','totalRiceProduction'
-            ,'farmData','userId','agri_district','agri_districts_id','cropData','id','personalInfos', 'cropFarms'
+            ,'farmData','userId','agri_district','agri_districts_id','cropData','id','personalInfos', 'cropFarms','users'
             
             ));
         } else {
@@ -1356,11 +1425,13 @@ public function productionAdd(Request $request,$id)
 }
 
     // store new production
-    
+
+
     public function productionSave(Request $request)
     {
    
-      
+        try {
+
           
         $production = $request->productions;  // Assuming 'production' is a field in the request
         // return $production;
@@ -1370,6 +1441,7 @@ public function productionAdd(Request $request,$id)
               //    $productionModel -> users_id = $users_id;
               //    $productionModel -> farm_profiles_id =  $cropModel -> farm_profiles_id;
                  $productionModel -> crops_farms_id = $production['crops_farms_id'];
+                 $productionModel -> cropping_no = $production['cropping_no'];
                  $productionModel -> seed_source = $production['seed-source'];
                  $productionModel -> seeds_used_in_kg = $production['seed-used'];
                  $productionModel -> seeds_typed_used = $production['seed-type'];
@@ -1503,10 +1575,14 @@ public function productionAdd(Request $request,$id)
                    
             
              // Return success message
-             return [
-                 'success' => "Saved to database" // Corrected the syntax here
-             ];
+             return response()->json(['success' => 'Data saved successfully!']);
+
+            } catch (\Exception $e) {
+                // Catch any errors during the save process
+                return response()->json(['error' => 'Failed to save data: ' . $e->getMessage()], 500);
+            }
          }  
+        
 
 
          public function productionEdit(Request $request,$id)

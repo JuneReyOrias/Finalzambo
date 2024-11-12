@@ -202,7 +202,7 @@
                         </a>
                         <a href="{{route('farm_profile.farmer_profile', $farmprofile->id)}}" title="View farmer Profile">
                             <button class="btn btn-success btn-sm">
-                              <i class="fa fa-eye" aria-hidden="true"></i>
+                                <img src="../assets/logo/farmer-profile.png" alt="Crop Icon" style="width: 20px; height: 15px;" class="me-1">
                             </button>
                         </a>
                         <a href="javascript:void(0);" class="viewfarmBtn" data-bs-toggle="modal" title="View farm" data-bs-target="#farmModal" data-id="{{ $farmprofile->id }}">
@@ -211,7 +211,12 @@
                                 <i class="fas fa-rice" aria-hidden="true"></i>
                             </button>
                         </a>
-                        
+                        <a href="javascript:void(0);" class="viewfarmBtn" data-bs-toggle="modal" title="User Assign as Farmers" data-bs-target="#UserprofileAssignModal" data-id="{{ $farmprofile->id }}">
+                            <button class="btn btn-warning btn-sm" style="border-color: #54d572;">
+                                <img src="../assets/logo/farmer-Assign.png" alt="Crop Icon" style="width: 20px; height:15px;" class="me-1">
+                                <i class="" aria-hidden="true"></i>
+                            </button>
+                        </a>
                                                    
                         <a href="{{route('farm_profile.farm_edit', $farmprofile->id)}}" title="view farm"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a> 
                 
@@ -278,7 +283,7 @@
 
 {{-- farmt --}}
 <div class="modal fade" id="farmModal" tabindex="-1" aria-labelledby="farmModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header text-white">
                 <h5 class="modal-title" id="farmModalLabel">Farm Data</h5>
@@ -389,6 +394,86 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="UserprofileAssignModal" tabindex="-1" aria-labelledby="UserprofileAssignModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header text-white">
+                <h5 class="modal-title" id="UserprofileAssignModalLabel">Assign Farmer Profile to User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{-- <div class="form-group mt-3">
+                    <label for="user_id">Select User:</label>
+                    <select class="form-control" id="user_id">
+                        <option value="">Select a user</option>
+                        @foreach ($users as $item)
+                        <option value="{{$item->id}}">{{$item->first_name.' '.$item->last_name}}</option>
+                            
+                        @endforeach
+                    </select>
+                </div> --}}
+               
+                    <div class="row">
+                        <!-- User Selection -->
+                       
+                
+                        <!-- Farmer Information -->
+                        <div class="col-md-9">
+                            @php
+                                // Check if the formatName function is not already defined
+                                if (!function_exists('formatName')) {
+                                    function formatName($name) {
+                                        return ucwords(strtolower(trim($name))); // Converts to "Title Case"
+                                    }
+                                }
+                
+                                // Create an array to track unique personal_informations_id
+                                $uniqueFarmers = [];
+                            @endphp
+                
+                            @if($farmData->isNotEmpty())
+                                @foreach($farmData as $farm)
+                                    @if($farm->personalInformation && !in_array($farm->personalInformation->id, $uniqueFarmers))
+                                        <h5 for="personainfo" class="mt-3">
+                                            Farmer: 
+                                            {{ formatName($farm->personalInformation->first_name) . ' ' . formatName($farm->personalInformation->last_name) }}
+                                        </h5>
+                                        @php
+                                            // Add this personal_informations_id to the uniqueFarmers array
+                                            $uniqueFarmers[] = $farm->personalInformation->id;
+                                        @endphp
+                                    @endif
+                                @endforeach
+                            @else
+                                <h5 for="personainfo" class="mt-3">No farm data available.</h5>
+                            @endif
+                        </div>
+                        <h5 for="personainfo" class="mt-3">
+                           Tenurial Status: <span id="tenurial_status"></span>
+                        </h5>
+                        <div class="form-group mt-3">
+                            <label for="user_id">Select User:</label>
+                            <select class="form-control" id="users_id">
+                                <option value="">Select a user</option>
+                                @foreach ($users as $item)
+                                <option value="{{$item->id}}">{{$item->first_name.' '.$item->last_name}}</option>
+                                    
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+               
+                
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveUserProfile" data-id="{{ $farmprofile->id }}">Save</button>
             </div>
         </div>
     </div>
@@ -513,5 +598,43 @@ function FarmData(id) {
         }
     });
 }
+
+
+$('#saveUserProfile').on('click', function () {
+    const farmProfileId = $(this).data('id'); // Fetch farmProfileId from the data-id attribute
+    const userId = $('#users_id').val(); // Get the selected user ID
+
+    // Log the farmProfileId and userId to check if they're correct
+    console.log('Farm Profile ID:', farmProfileId);
+    console.log('Selected User ID:', userId);
+
+    if (userId) {
+        $.ajax({
+            url: '/admin-update-farm-profile', // The route where you handle the request
+            type: 'POST',
+            data: {
+                user_id: userId,
+                farm_profile_id: farmProfileId,
+                _token: '{{ csrf_token() }}' // CSRF token for Laravel
+            },
+            success: function(response) {
+                console.log('Server Response:', response);
+
+                if (response.success) {
+                    alert('Farmer Profile updated successfully!');
+                    location.reload(); // Optionally refresh the page or update the UI
+                } else {
+                    alert(response.message || 'Failed to update user ID.');
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('AJAX error:', textStatus, errorThrown);
+                alert('An error occurred while saving.');
+            }
+        });
+    } else {
+        alert('Please select a user.');
+    }
+});
   </script>
 @endsection

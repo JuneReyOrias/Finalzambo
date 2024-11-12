@@ -152,11 +152,13 @@
                        
                             
                             <div class="table-responsive">
+                                <form id="multipleDeleteForm" method="POST">
+                                    @csrf
                                 <table class="table table-bordered datatable">
                                     <!-- Table content here -->
                                     <thead class="thead-light">
                                         <tr >
-                    
+                                            <th><input type="checkbox" id="selectAll"></th>
                                             <th>#</th>
                                            
                                             <th>cropping <p>no</p></th>
@@ -175,6 +177,7 @@
                                       @if($productionData->count() > 0)
                                     @foreach($productionData as $lastproductdata)      
                                 <tr class="table-light">
+                                    <td><input type="checkbox" name="ids[]" class="recordCheckbox" value="{{ $lastproductdata->id }}"></td>
                                     {{-- <td>{{ $loop->iteration }}</td> --}}
                                     <td>{{  $lastproductdata->id }}</td>
                                    
@@ -250,7 +253,8 @@
                                         @endif
                                     </tbody>
                                 </table>
-                                
+                                <button type="button" id="deleteSelected" class="btn btn-danger">Delete Selected</button>
+                            </form>
                                 <!-- Pagination links -->
                                 {{-- <ul class="pagination">
                                     <li><a href="{{ $farmData->previousPageUrl() }}">Previous</a></li>
@@ -1155,7 +1159,7 @@
 </div>
 
 <div class="modal fade" id="SoldsModal" tabindex="-1" aria-labelledby="SoldsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header text-white">
                 <h5 class="modal-title" id="SoldsModalLabel">Production Sold Data</h5>
@@ -1172,7 +1176,7 @@
                                  class="img-fluid rounded-circle" 
                                  style="width: 150px; height: 150px; object-fit: cover;">
                         </div> --}}
-                        <div class="col-md-9">
+                        {{-- <div class="col-md-9">
                             <!-- Farmer Information -->
                             <h5>Farmer: {{ $personalInfos->isNotEmpty() ? $personalInfos->first()->first_name . ' ' . $personalInfos->first()->last_name : 'N/A' }}</h5>
                             
@@ -1202,7 +1206,7 @@
                                     <h5>No crop data available.</h5>
                                 @endif
                             </div>
-                        </div>
+                        </div> --}}
                   
             
 
@@ -1248,7 +1252,7 @@
 </div>
 {{-- varaible cost --}}
 <div class="modal fade" id="VariableModal" tabindex="-1" aria-labelledby="VariableModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header text-white">
                 <h5 class="modal-title" id="VariableModalLabel">VariableCost Data</h5>
@@ -1265,7 +1269,7 @@
                                  class="img-fluid rounded-circle" 
                                  style="width: 150px; height: 150px; object-fit: cover;">
                         </div> --}}
-                        <div class="col-md-9">
+                        {{-- <div class="col-md-9">
                             <!-- Farmer Information -->
                             <h5>Farmer: {{ $personalInfos->isNotEmpty() ? $personalInfos->first()->first_name . ' ' . $personalInfos->first()->last_name : 'N/A' }}</h5>
                             
@@ -1295,7 +1299,7 @@
                                     <h5>No crop data available.</h5>
                                 @endif
                             </div>
-                        </div>
+                        </div> --}}
                   
             
 
@@ -1419,7 +1423,7 @@
 
 {{-- machineries --}}
 <div class="modal fade" id="MachineModal" tabindex="-1" aria-labelledby="MachineModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header text-white">
                 <h5 class="modal-title" id="MachineModalLabel">MachineriCost Data</h5>
@@ -1436,7 +1440,7 @@
                                  class="img-fluid rounded-circle" 
                                  style="width: 150px; height: 150px; object-fit: cover;">
                         </div> --}}
-                        <div class="col-md-9">
+                        {{-- <div class="col-md-9">
                             <!-- Farmer Information -->
                             <h5>Farmer: {{ $personalInfos->isNotEmpty() ? $personalInfos->first()->first_name . ' ' . $personalInfos->first()->last_name : 'N/A' }}</h5>
                             
@@ -1466,7 +1470,7 @@
                                     <h5>No crop data available.</h5>
                                 @endif
                             </div>
-                        </div>
+                        </div> --}}
                   
             
 
@@ -1567,7 +1571,7 @@
 
 {{-- fixedCost --}}
 <div class="modal fade" id="fixedcostModal" tabindex="-1" aria-labelledby="fixedcostModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header text-white">
                 <h5 class="modal-title" id="fixedcostModalLabel">FixedCost Data</h5>
@@ -1578,7 +1582,7 @@
         
                  
                      
-                        <div class="col-md-9">
+                        {{-- <div class="col-md-9">
                             <!-- Farmer Information -->
                             <h5>Farmer: {{ $personalInfos->isNotEmpty() ? $personalInfos->first()->first_name . ' ' . $personalInfos->first()->last_name : 'N/A' }}</h5>
                             
@@ -1609,7 +1613,7 @@
                                 @endif
                             </div>
                        
-                        </div>
+                        </div> --}}
                   
             
 
@@ -1651,7 +1655,7 @@
 
 {{-- production --}}
 <div class="modal fade" id="productionModal" tabindex="-1" aria-labelledby="productionModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header text-white">
                 <h5 class="modal-title" id="productionModalLabel">Production Data</h5>
@@ -1668,7 +1672,7 @@
                                  class="img-fluid rounded-circle" 
                                  style="width: 150px; height: 150px; object-fit: cover;">
                         </div> --}}
-                        <div class="col-md-9">
+                        {{-- <div class="col-md-9">
                             <!-- Farmer Information -->
                             <h5>Farmer: {{ $personalInfos->isNotEmpty() ? $personalInfos->first()->first_name . ' ' . $personalInfos->first()->last_name : 'N/A' }}</h5>
                             
@@ -1700,7 +1704,7 @@
                             </div>
                        
                        
-                        </div>
+                        </div> --}}
                   
             
 
@@ -1747,6 +1751,7 @@
     </div>
 </div>
 
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 
 
@@ -2064,6 +2069,46 @@ function SoldsCostData(id) {
     });
 }
 // </script>
+
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+    // Select/Deselect all checkboxes
+    const selectAllCheckbox = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('.recordCheckbox');
+
+    selectAllCheckbox.addEventListener('change', function() {
+        checkboxes.forEach(checkbox => checkbox.checked = selectAllCheckbox.checked);
+    });
+
+    // Handle multiple delete
+    document.getElementById('deleteSelected').addEventListener('click', function() {
+        const selectedIds = Array.from(checkboxes)
+                                .filter(checkbox => checkbox.checked)
+                                .map(cb => cb.value);
+
+        if (selectedIds.length > 0) {
+            if (confirm('Are you sure you want to delete the selected records?')) {
+                fetch('/admin-multipleDelete', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ ids: selectedIds })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    location.reload();
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        } else {
+            alert('No records selected.');
+        }
+    });
+});
+
 
 </script>
 

@@ -46,6 +46,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\UserDataUpdated;
 
 use Exception;
 class AdminController extends Controller
@@ -61,6 +62,123 @@ class AdminController extends Controller
                                ->header('Expires', '0');
      });
  }
+// Variable cost multiple delete
+public function multipleDeleteSoldscost(Request $request)
+{
+    $ids = $request->input('ids');
+
+    if (empty($ids)) {
+        return response()->json(['message' => 'No records selected'], 400);
+    }
+
+    // Assuming 'YourModel' is the model associated with the data
+    // Replace 'YourModel' with the actual model you're using
+    VariableCost::whereIn('id', $ids)->delete();
+
+    return response()->json(['message' => 'Selected records have been deleted successfully']);
+}
+
+ // Variable cost multiple delete
+ public function multipleDeleteVariablecost(Request $request)
+ {
+     $ids = $request->input('ids');
+ 
+     if (empty($ids)) {
+         return response()->json(['message' => 'No records selected'], 400);
+     }
+ 
+     // Assuming 'YourModel' is the model associated with the data
+     // Replace 'YourModel' with the actual model you're using
+     VariableCost::whereIn('id', $ids)->delete();
+ 
+     return response()->json(['message' => 'Selected records have been deleted successfully']);
+ }
+ // Machineries cost multiple delete
+ public function multipleDeleteMachineries(Request $request)
+ {
+     $ids = $request->input('ids');
+ 
+     if (empty($ids)) {
+         return response()->json(['message' => 'No records selected'], 400);
+     }
+ 
+     // Assuming 'YourModel' is the model associated with the data
+     // Replace 'YourModel' with the actual model you're using
+     MachineriesUseds::whereIn('id', $ids)->delete();
+ 
+     return response()->json(['message' => 'Selected records have been deleted successfully']);
+ }
+// fixed cost multiple delete
+ public function multipleDeleteFixedCost(Request $request)
+ {
+     $ids = $request->input('ids');
+ 
+     if (empty($ids)) {
+         return response()->json(['message' => 'No records selected'], 400);
+     }
+ 
+     // Assuming 'YourModel' is the model associated with the data
+     // Replace 'YourModel' with the actual model you're using
+     FixedCost::whereIn('id', $ids)->delete();
+ 
+     return response()->json(['message' => 'Selected records have been deleted successfully']);
+ }
+// production multiple delete
+public function multipleDelete(Request $request)
+{
+    $ids = $request->input('ids');
+
+    if (empty($ids)) {
+        return response()->json(['message' => 'No records selected'], 400);
+    }
+
+    // Assuming 'YourModel' is the model associated with the data
+    // Replace 'YourModel' with the actual model you're using
+    LastProductionDatas::whereIn('id', $ids)->delete();
+
+    return response()->json(['message' => 'Selected records have been deleted successfully']);
+}
+ public function updateCropLocation(Request $request)
+ {
+     // Validate incoming data
+     $request->validate([
+         'user_id' => 'required|exists:users,id', // Ensure the user_id exists in the users table
+         'crops_farms_id' => 'required|exists:crops_farms,id' // Ensure the crops_farms_id exists
+     ]);
+ 
+    //  // Check if the user_id is already associated with another farm profile
+    //  $existingProfile = Crop::where('users_id', $request->user_id)
+    //                                 ->where('id', '!=', $request->crops_farms_id)
+    //                                 ->first();
+ 
+    //  if ($existingProfile) {
+    //      // Respond with a failure message if the user is already associated with another farm profile
+    //      return response()->json([
+    //          'success' => false,
+    //          'message' => 'The selected agent is already associated with another Crop farms Location. Please choose a different agent.'
+    //      ]);
+    //  }
+ 
+     // Update the farm profile with the new user_id
+     $farmProfile = Crop::findOrFail($request->crops_farms_id);
+     $farmProfile->users_id = $request->user_id;
+     $farmProfile->save();
+ 
+     // // Send a notification to the user about the update
+    //  $user = $farmProfile->user; // Assuming you have a relation to the User model
+    //  $user->notify(new UserDataUpdated($farmProfile));
+ 
+     // Return a success response
+     return response()->json([
+         'success' => true,
+         'message' => 'Crop farms Location updated successfully! The Agent has been notified.'
+     ]);
+ }
+
+
+
+
+
         public function AdminLogout(Request $request)
     {
         Auth::guard('web')->logout();
@@ -346,9 +464,7 @@ class AdminController extends Controller
                     'datasets' => $datasets // Use the datasets array
                 ];
                 
-       // Now you can pass $barChartData to your JavaScript function
-            
- // Prepare tenurial status data
+
 // Prepare tenurial status data
 $tenurialStatusCounts = $farmProfilesQuery->select('tenurial_status', DB::raw('count(*) as count'))
 ->groupBy('tenurial_status')
@@ -580,118 +696,7 @@ protected function resourcesExist($cropName, $district)
     return $cropExists && $districtExists;
 }
 
-//   public function adminDashb(Request $request)
-// {
-//     if (Auth::check()) {
-//         $userId = Auth::id();
-//         $admin = User::find($userId);
 
-//         if ($admin) {
-//             $totalfarms = FarmProfile::count();
-//             $totalAreaPlanted = FarmProfile::sum('total_physical_area');
-//             $totalAreaYield = FarmProfile::sum('yield_kg_ha');
-//             $totalCost = VariableCost::sum('total_variable_cost');
-//             $yieldPerAreaPlanted = ($totalAreaPlanted != 0) ? $totalAreaYield / $totalAreaPlanted : 0;
-//             $averageCostPerAreaPlanted = ($totalAreaPlanted != 0) ? $totalCost / $totalAreaPlanted : 0;
-//             $totalRiceProductionInkg = LastProductionDatas::sum('yield_tons_per_kg');
-//             $totalRiceProduction = $totalRiceProductionInkg / 1000;
-//             $districts = AgriDistrict::all();
-
-//             $selectedCrop = $request->input('crop', 'Rice');
-//             $selectedDate = $request->input('harvestDate', '');
-//             $selectedCycle = $request->input('croppingCycle', '');
-
-//             // Fetch farm data grouped by district based on selected crop
-//             $data = FarmProfile::join('crops_farms', 'farm_profiles.id', '=', 'crops_farms.farm_profiles_id')
-//                 ->where('crops_farms.crop_name', $selectedCrop)
-//                 ->with('district')  // Assuming you have a relationship 'district' defined
-//                 ->get()
-//                 ->groupBy('district.agri_districts_id');
-
-//             // Fetch yield data dynamically
-//             $yieldDataQuery = FarmProfile::join('crops_farms', 'farm_profiles.id', '=', 'crops_farms.farm_profiles_id')
-//                 ->join('last_production_datas', 'crops_farms.id', '=', 'last_production_datas.crops_farms_id')
-//                 ->where('crops_farms.crop_name', $selectedCrop)
-//                 ->when($selectedDate, function ($query, $selectedDate) {
-//                     return $query->where('last_production_datas.date_harvested', $selectedDate);
-//                 })
-//                 ->when($selectedCycle, function ($query, $selectedCycle) {
-//                     return $query->where('last_production_datas.cropping_no', $selectedCycle);
-//                 })
-//                 ->select('farm_profiles.agri_districts_id', 'last_production_datas.yield_tons_per_kg')
-//                 ->get()
-//                 ->groupBy('agri_districts_id')
-//                 ->map(function ($districtData) {
-//                     return $districtData->sum('yield_tons_per_kg');
-//                 });
-
-//             $availableCycles = $yieldDataQuery->keys();
-//             $selectedCycle = !empty($selectedCycle) && $availableCycles->contains($selectedCycle) ? $selectedCycle : $availableCycles->first();
-
-//             // Fetch total production data for the pie chart
-//             $totalProductionData = FarmProfile::join('crops_farms', 'farm_profiles.id', '=', 'crops_farms.farm_profiles_id')
-//                 ->where('crops_farms.crop_name', $selectedCrop)
-//                 ->select('crops_farms.crop_name', DB::raw('SUM(last_production_datas.yield_tons_per_kg) as total_yield'))
-//                 ->join('last_production_datas', 'crops_farms.id', '=', 'last_production_datas.crops_farms_id')
-//                 ->groupBy('crops_farms.crop_name')
-//                 ->get()
-//                 ->mapWithKeys(function ($item) {
-//                     return [$item->crop_name => $item->total_yield];
-//                 });
-
-//             // If the request is AJAX, return JSON data
-//             if ($request->ajax()) {
-//                 return response()->json([
-//                     'yieldData' => $yieldDataQuery,
-//                     'totalProduction' => $totalRiceProduction
-//                 ]);
-//             }
-
-//             // Otherwise, return the normal view
-//             return view('admin.index', compact(
-//                 'data', 'yieldDataQuery', 'selectedCrop', 'selectedDate', 'selectedCycle', 'totalfarms', 'districts', 'admin',
-//                 'totalAreaPlanted', 'totalAreaYield', 'totalCost', 'yieldPerAreaPlanted',
-//                 'averageCostPerAreaPlanted', 'totalRiceProduction', 'totalProductionData'
-//             ));
-//         } else {
-//             return redirect()->route('login')->with('error', 'User not found.');
-//         }
-//     } else {
-//         return redirect()->route('login');
-//     }
-// }
-  
-    // public function getFarmerReports($district)
-    // {
-    //     // Fetch farmer reports based on the selected district
-    //     $FarmersData = DB::table('personal_informations')
-    //         ->leftJoin('farm_profiles', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-    //         ->leftJoin('fixed_costs', 'fixed_costs.personal_informations_id', '=', 'personal_informations.id')
-    //         ->leftJoin('machineries_useds', 'machineries_useds.personal_informations_id', '=', 'personal_informations.id')
-    //         ->leftJoin('variable_costs', 'variable_costs.personal_informations_id', '=', 'personal_informations.id')
-    //         ->leftJoin('last_production_datas', 'last_production_datas.personal_informations_id', '=', 'personal_informations.id')
-    //         ->select(
-    //             'personal_informations.*',
-    //             'farm_profiles.*',
-    //             'fixed_costs.*',
-    //             'machineries_useds.*',
-    //             'variable_costs.*',
-    //             'last_production_datas.*'
-    //         )
-    //         ->where('farm_profiles.district', $district)
-    //         ->orderBy('personal_informations.id', 'desc')
-    //         ->get();
-
-    //     return response()->json($FarmersData);
-    // }
-
-
-
-
-
-    // public function AdminLogin(){
-    //      return view('admin.admin_login');
-    // }//end
 
  
     // update the profile data 
@@ -750,11 +755,11 @@ protected function resourcesExist($cropName, $district)
                $data->image = $imagename;
            }
    
-       $data->name= $request->name;
-       $data->email= $request->email;
-       $data->agri_district= $request->agri_district;
-       $data->password= $request->password;
-       $data->role= $request->role;
+    //    $data->name= $request->name;
+    //    $data->email= $request->email;
+    //    $data->agri_district= $request->agri_district;
+    //    $data->password= $request->password;
+    //    $data->role= $request->role;
     
         
       $data->save();

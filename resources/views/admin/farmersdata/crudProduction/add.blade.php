@@ -529,6 +529,14 @@
                                            <h3>a. Seed info and Usage details: </h3>
                                            <div class="user-details">
                                         <!-- Production Fields -->
+                                        
+                                        <meta name="csrf-token" content="{{ csrf_token() }}">
+                                        <div class="input-box col-md-4">
+                                            <label for="cropping_no">Cropping No.:</label>
+                                            <input type="number" class="form-control light-gray-placeholder cropping_no" name="crop_profiles[${cropCounter}][cropping_no]" placeholder="Enter Cropping No" id="cropping_no">
+                                            <span id="cropping_no_error" class="text-danger" style="display: none;">The cropping number already exists. Please choose a different one.</span>
+                                        </div>
+                                        
                                         <div class="input-box col-md-4">
                                             <label for="seeds_typed_used">Seed type Used:</label>
                                             <input type="text" class="form-control light-gray-placeholder seed-type" name="crop_profiles[${cropCounter}][seeds_typed_used]" placeholder=" Enter Seed type used" id="seeds_typed_used" onkeypress="return blockSymbolsAndNumbers(event)">
@@ -1738,6 +1746,26 @@
                     </div>
                     </div>
                 </div> 
+
+                <!-- Error Modal -->
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="errorMessage"></p> <!-- This will display the error message -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -2076,10 +2104,7 @@ function addSale() {
                 <label for="sold_to_${saleCounter}">Sold To:</label>
                 <input type="text" class="form-control light-gray-placeholder sold_to" name="crop_profiles[${}][sales][${saleCounter}][sold_to]" id="sold_to_${saleCounter}" placeholder="Enter sold to">
             </div>
-            <div class="input-box col-md-3">
-                <label for="measurement_${saleCounter}">Measurement/unit:</label>
-                <input type="text" class="form-control light-gray-placeholder measurement"  name="crop_profiles[${}][sales][${saleCounter}][measurement]" id="measurement_${saleCounter}" placeholder="Enter measurement">
-            </div>
+         
             <div class="input-box col-md-3">
                 <label for="unit_price_per_kg_${saleCounter}">Unit Price/kg:</label>
                 <input type="text" class="form-control light-gray-placeholder unit_price_sold"  name="crop_profiles[${}][sales][${saleCounter}][unit_price]" id="unit_price_per_kg_${saleCounter}" placeholder="Enter unit price">
@@ -2087,6 +2112,10 @@ function addSale() {
             <div class="input-box col-md-3">
                 <label for="quantity_${saleCounter}">Quantity:</label>
                 <input type="text" class="form-control light-gray-placeholder quantity"  name="crop_profiles[${}][sales][${saleCounter}][quantity]" id="quantity_${saleCounter}" placeholder="Enter quantity">
+            </div>
+               <div class="input-box col-md-3">
+                <label for="measurement_${saleCounter}">Measurement/unit:</label>
+                <input type="text" class="form-control light-gray-placeholder measurement"  name="crop_profiles[${}][sales][${saleCounter}][measurement]" id="measurement_${saleCounter}" placeholder="Enter measurement">
             </div>
             <div class="input-box col-md-3">
                 <label for="gross_income_${saleCounter}">Gross Income:</label>
@@ -2185,6 +2214,7 @@ form.on('submit', function(event) {
     // Gather production info from the form inputs
     let production = {
         'crops_farms_id': $('select.crops_farms_id').val(),
+        'cropping_no': $('input.cropping_no').val(),
         'seed-type': $('input.seed-type').val(),
         'seed-used': $('input.seed-used').val(),
         'seed-source': $('select.seed-source').val(),
@@ -2300,187 +2330,6 @@ form.on('submit', function(event) {
 
                     console.log(salesData); // Output the collected sales data
 
-    
-//     const cropSections = document.querySelectorAll('#cropProfiles .crop-section','#salesSection .sale-entry');
-        
-//         // Initialize an array to store crop data
-//         let cropInfo = [];
-        
-
-//     let cropName = getValue('.crop_name');
-//     let cropVariety = getValue('.crop_variety');
-//     let PreferredVariety = getValue('.preferred_variety');
-//     let drySeason = getValue('.dry_season');
-//     let wetSeason = getValue('.wet_season');
-//     let noCroppingYear = getValue('.no_crop_year');
-//     let YieldkgHa = getValue('.yield_kg_ha');
-//     let farmid = getValue('.farm_id');
-//     // Production
-//     let seedType = getValue('.seed-type');
-//     let seedUsed = getValue('.seed-used');
-//     let seedSource = getValue('.seed-source');
-//     let Unit = getValue('.unit');
-//     let fertilizedUsed = getValue('.fertilized-used');
-//     let pesticidesUsed = getValue('.pesticides-used');
-//     let insecticidesUsed = getValue('.insecticides-used');
-//     let areaplanted = getValue('.area-planted');
-//     let Dateplanted = getValue('.date-planted');
-//     let Dateharvested= getValue('.date-harvested');
-//     let Yieldkg = getValue('.yield-kg');
-
-//     // Fixed cost
-//     let particular = getValue('.particular');
-//     let no_of_Has = getValue('.no-has');
-//     let costPer_has = getValue('.cost-has');
-//     let TotalFixed = getValue('.total-amount');
-
-//     // Machineries
-//     let PlowingMachine = getValue('.plowing-machine');
-//     let plow_status = getValue('.plow_status');
-//     let no_of_plowing = getValue('.no_of_plowing');
-//     let cost_per_plowing = getValue('.cost_per_plowing');
-//     let plowing_cost = getValue('.plowing_cost');
-//     let harro_machine = getValue('.harro_machine');
-//     let harro_ownership_status = getValue('.harro_ownership_status');
-//     let no_of_harrowing = getValue('.no_of_harrowing');
-//     let cost_per_harrowing = getValue('.cost_per_harrowing');
-//     let harrowing_cost_total = getValue('.harrowing_cost_total');
-//     let harvest_machine = getValue('.harvest_machine');
-//     let harvest_ownership_status = getValue('.harvest_ownership_status');
-//     let no_of_Harvesting = getValue('.no_of_Harvesting');
-//     let cost_per_Harvesting = getValue('.cost_per_Harvesting');
-//     let Harvesting_cost_total = getValue('.Harvesting_cost_total');
-//     let postharv_ownership_status = getValue('.postharv_ownership_status');
-//     let postharves_machine = getValue('.postharves_machine');
-//     let postharvestCost = getValue('.postharvestCost');
-//     let total_cost_for_machineries = getValue('.total_cost_for_machineries');
-
-//     // Variables cost
-//     let var_seed_variety = getValue('.seed_name');
-//     let seed_name = getValue('.seed_name');
-//     let unit = getValue('.unit');
-//     let quantity = getValue('.quantity');
-//     let unit_price_seed = getValue('.unit_price_seed');
-//     let total_seed_cost = getValue('.total_seed_cost');
-//     let no_of_person = getValue('.no_of_person');
-//     let rate_per_person = getValue('.rate_per_person');
-//     let total_labor_cost = getValue('.total_labor_cost');
-//     let name_of_fertilizer = getValue('.name_of_fertilizer');
-//     let no_ofsacks = getValue('.no_ofsacks');
-//     let unitprice_per_sacks = getValue('.unitprice_per_sacks');
-//     let total_cost_fertilizers = getValue('.total_cost_fertilizers');
-//     let pesticides_name = getValue('.pesticides_name');
-//     let no_of_l_kg = getValue('.no_of_l_kg');
-//     let unitprice_ofpesticides = getValue('.unitprice_ofpesticides');
-//     let total_cost_pesticides = getValue('.total_cost_pesticides');
-//     let type_of_vehicle = getValue('.type_of_vehicle');
-//     let Total_DeliveryCost = getValue('.Total_DeliveryCost');
-//     let total_machinery_fuel_cost = getValue('.total_machinery_fuel_cost');
-//     let total_variable_costs = getValue('.total_variable_costs');
-
-//     // Check if any field has value to avoid empty entries
-//     let salesData = [];
-
-//     let saleEntries = section.querySelectorAll('.sale-entry');
-//     saleEntries.forEach((entry) => {
-//         let saleId = entry.id.split('_')[2]; // Adjust based on your ID format
-
-//         let soldTo = getValue('.sold_to');
-//         let measurement = getValue('.measurement');
-//         let unit_price_sold = getValue('.unit_price_sold');
-//         let grossIncometotal = getValue('.gross_income');
-        
-//         // Store sale data
-//         salesData.push({
-//             saleId: saleId,
-//             soldTo: soldTo,
-//             measurement: measurement,
-//             unit_price: unit_price_sold,
-//             quantity: quantity,
-//             grossIncome: grossIncometotal
-//         });
-//     });
-
-//     cropInfo.push({
-//         id: cropId,
-//         crop_name: cropName,
-//         variety: {
-//             type_variety: cropVariety,
-//             preferred: PreferredVariety,
-//             wet_season: wetSeason,
-//             dry_season: drySeason,
-//             no_cropping_year: noCroppingYear,
-//             yield_kg_ha: YieldkgHa,
-//             farmId:farmid
-//         },
-//         production: {
-//             seedtype: seedType,
-//             seedUsed: seedUsed,
-//             seedSource: seedSource,
-//             unit: Unit,
-//             fertilizedUsed: fertilizedUsed,
-//             pesticidesUsed: pesticidesUsed,
-//             insecticide: insecticidesUsed,
-//             areaPlanted: areaplanted,
-//             datePlanted: Dateplanted,
-//             Dateharvested:Dateharvested,
-//             yieldkg: Yieldkg
-//         },
-//         sales: salesData,
-//         fixedCost: {
-//             particular: particular,
-//             no_of_has: no_of_Has,
-//             costperHas: costPer_has,
-//             TotalFixed: TotalFixed
-//         },
-//         machineries: {
-//             PlowingMachine: PlowingMachine,
-//             plow_status: plow_status,
-//             no_of_plowing: no_of_plowing,
-//             cost_per_plowing: cost_per_plowing,
-//             plowing_cost: plowing_cost,
-//             harro_machine: harro_machine,
-//             harro_ownership_status: harro_ownership_status,
-//             no_of_harrowing: no_of_harrowing,
-//             cost_per_harrowing: cost_per_harrowing,
-//             harrowing_cost_total: harrowing_cost_total,
-//             harvest_machine: harvest_machine,
-//             harvest_ownership_status: harvest_ownership_status,
-//             no_of_Harvesting: no_of_Harvesting,
-//             cost_per_Harvesting: cost_per_Harvesting,
-//             Harvesting_cost_total: Harvesting_cost_total,
-//             postharv_ownership_status: postharv_ownership_status,
-//             postharves_machine: postharves_machine,
-//             postharvestCost: postharvestCost,
-//             total_cost_for_machineries: total_cost_for_machineries
-//         },
-//         variables: {
-//             seed_name: seed_name,
-//             unit: unit,
-//             quantity: quantity,
-//             unit_price_seed: unit_price_seed,
-//             total_seed_cost: total_seed_cost,
-//             no_of_person: no_of_person,
-//             rate_per_person: rate_per_person,
-//             total_labor_cost: total_labor_cost,
-//             name_of_fertilizer: name_of_fertilizer,
-//             no_ofsacks: no_ofsacks,
-//             unitprice_per_sacks: unitprice_per_sacks,
-//             total_cost_fertilizers: total_cost_fertilizers,
-//             pesticides_name: pesticides_name,
-//             no_of_l_kg: no_of_l_kg,
-//             unitprice_ofpesticides: unitprice_ofpesticides,
-//             total_cost_pesticides: total_cost_pesticides,
-//             type_of_vehicle: type_of_vehicle,
-//             Total_DeliveryCost: Total_DeliveryCost,
-//             total_machinery_fuel_cost: total_machinery_fuel_cost,
-//             total_variable_costs: total_variable_costs
-//         }
-//     });
-// });
-
-// console.log(cropInfo);
-
 
      
 //   // Create the final data object
@@ -2493,35 +2342,48 @@ let dataobject = {
 };
 
 // Log the entire data object to the console for debugging
-console.log("Data Object:", dataobject);
 
 const csrfToken = $('input[name="_token"]').attr('value');
 
-    // Send the AJAX request
-    $.ajax({
-        url: '/admin-add-Farmers-productions/{cropData}',
-        method: 'POST',
-        contentType: 'application/json', // Set content type for JSON
-        data: JSON.stringify(dataobject), // Attach the prepared data here
-        headers: {
-            'X-CSRF-TOKEN': csrfToken // Include the CSRF token in the headers
-        },
-        success: function(response) {
+// Send the AJAX request
+$.ajax({
+    url: '/admin-add-Farmers-productions/{cropData}',
+    method: 'POST',
+    contentType: 'application/json', // Set content type for JSON
+    data: JSON.stringify(dataobject), // Attach the prepared data here
+    headers: {
+        'X-CSRF-TOKEN': csrfToken // Include the CSRF token in the headers
+    },
+    success: function(response) {
+        console.log(response);
 
-            console.log(response);
-
-            if (response.success) {
+        if (response.success) {
             // Set the success message in the modal
             $('#successMessage').text(response.success);
-            // Show the modal
+            // Show the success modal with default backdrop (clicking outside closes it)
             $('#successModal').modal('show');
         }
-        },
-        error: function(error) {
-            console.error('Error:', error.responseJSON.message);
-        }
-    }); 
-}); 
+    },
+    error: function(error) {
+        console.error('Error:', error.responseJSON.message);
+
+        // Set the error message in the error modal
+        $('#errorMessage').text(error.responseJSON.message);
+        // Show the error modal with default backdrop (clicking outside closes it)
+        $('#errorModal').modal('show');
+    }
+});
+
+// Event listener to reload the page when the modal is closed
+$('#successModal, #errorModal').on('hidden.bs.modal', function () {
+    console.log("Modal closed, reloading...");
+    window.location.reload(); // This will reload the page when the modal closes
+});
+
+});
+
+
+
 
 // // Function to open confirmation modal with data preview
 // function openConfirmModal(data) {
@@ -3075,71 +2937,6 @@ $(document).ready(function() {
 
 
 
-
-
-// Function to populate organizations based on agri_district
-// function populateOrganizations(agriDistrict) {
-//     var organizationSelect = document.getElementById("SelectOrganization");
-
-//     // Clear previous options
-//     organizationSelect.innerHTML = '';
-
-//     // AJAX call to get organizations
-//     $.ajax({
-//         url: '/admin-view-Farmers-survey-form',
-//         method: 'GET',
-//         data: { district: agriDistrict, type: 'organizations' },
-//         success: function(response) {
-//             console.log('Organizations Response:', response);
-
-//             if (response.length > 0) {
-//                 response.forEach(function(organization) {
-//                     var option = document.createElement("option");
-//                     option.text = organization.organization_name;
-//                     option.value = organization.organization_name;
-//                     organizationSelect.appendChild(option);
-//                 });
-//             } else {
-//                 var noOption = document.createElement("option");
-//                 noOption.text = "No organizations found";
-//                 noOption.disabled = true;
-//                 organizationSelect.appendChild(noOption);
-//             }
-
-//             // Option to add new organization
-//             var addNewOption = document.createElement("option");
-//             addNewOption.text = "Add New Organization";
-//             addNewOption.value = "addNew";
-//             organizationSelect.appendChild(addNewOption);
-//         },
-//         error: function(xhr, status, error) {
-//             console.log("Error fetching organizations:", error);
-//         }
-//     });
-// }
-
-// // Function to handle the organization selection
-// function handleOrganizationSelection() {
-//     var organizationSelect = document.getElementById("SelectOrganization");
-//     var selectedOption = organizationSelect.value;
-
-//     if (selectedOption === "addNew") {
-//         var newOrganization = prompt("Enter new organization name:");
-//         if (newOrganization !== null && newOrganization !== "") {
-//             // Add the new organization to the dropdown
-//             var option = document.createElement("option");
-//             option.text = newOrganization;
-//             option.value = newOrganization;
-//             organizationSelect.insertBefore(option, organizationSelect.lastChild); // Add option before the last option ("Add New Organization")
-//             // Select the newly added organization
-//             organizationSelect.value = newOrganization;
-//         }
-//     }
-// }
-
-
-
-
   </script>
   
 
@@ -3582,5 +3379,135 @@ document.addEventListener("DOMContentLoaded", function () {
     calculateTotalVariableCost();
 });
 
+
+
+
 </script>
+<script>
+
+$(document).ready(function() {
+    // Event listener for the cropping number input
+    $('.cropping_no').on('input', function(e) {
+        // Prevent form submission or page reload if the event is triggered by a submit action
+        e.preventDefault();  // This prevents the default behavior of the event
+
+        // Get the cropping number value
+        var croppingNo = $(this).val().trim(); // Use `this` to refer to the specific input
+
+        // Check if the cropping number is empty, and if so, exit
+        if (croppingNo === '') {
+            // Optional: Clear any previous alert or validation message if input is empty
+            return;
+        }
+
+        // Perform AJAX request to check if cropping number exists
+        $.ajax({
+            url: '/check-cropping-no',  // Route for the validation
+            type: 'POST',
+            data: {
+                cropping_no: croppingNo,
+                _token: $('meta[name="csrf-token"]').attr('content')  // CSRF Token for security
+            },
+            success: function(response) {
+                if (response.success === false) {
+                    // Show an alert if cropping number exists
+                    alert('The cropping number already exists. Please choose a different cropping number.');
+
+                    // Reload the page after showing the alert
+                    window.location.reload(); // This will reload the current page
+                } else {
+                    // Optionally clear any alert if the number is valid
+                }
+            },
+            error: function(xhr, status, error) {
+                // Handle AJAX error (optional)
+                alert('An error occurred while checking the cropping number.');
+                
+                // Reload the page if an error occurs
+                window.location.reload(); // This will reload the current page
+            }
+        });
+    });
+});
+
+// $(document).ready(function() {
+//     // Event listener for the cropping number input
+//     $('.cropping_no').on('input', function() {
+//         // Get the cropping number value
+//         var croppingNo = $(this).val().trim(); // Use `this` to refer to the specific input
+
+//         // Check if the cropping number is empty, and if so, exit
+//         if (croppingNo === '') {
+//             // Optional: Clear any previous alert or validation message if input is empty
+//             return;
+//         }
+
+//         // Perform AJAX request to check if cropping number exists
+//         $.ajax({
+//             url: '/check-cropping-no',  // Route for the validation
+//             type: 'POST',
+//             data: {
+//                 cropping_no: croppingNo,
+//                 _token: $('meta[name="csrf-token"]').attr('content')  // CSRF Token for security
+//             },
+//             success: function(response) {
+//                 if (response.success === false) {
+//                     // Show an alert if cropping number exists
+//                     alert('The cropping number already exists. Please choose a different cropping number.');
+//                 } else {
+//                     // Optionally clear any alert if the number is valid
+//                 }
+//             },
+//             error: function() {
+//                 // Handle AJAX error (optional)
+//                 alert('An error occurred while checking the cropping number.');
+//             }
+//         });
+//     });
+// });
+
+// $(document).ready(function() {
+//     // Event listener for the submit button
+//     $('#submitButton').on('click', function(event) {
+//         // Prevent the form from submitting immediately
+//         event.preventDefault();
+
+//         // Get the cropping number value
+//         var croppingNo = $('.cropping_no').val(); // Adjust selector if multiple inputs are used
+
+//         // Check if the cropping number is empty
+//         if (croppingNo.trim() === '') {
+//             alert('Please enter a cropping number.');
+//             return;  // Stop further execution if the input is empty
+//         }
+
+//         // Perform AJAX request to check if cropping number exists
+//         $.ajax({
+//             url: '/check-cropping-no',  // Route where the validation happens
+//             type: 'POST',
+//             data: {
+//                 cropping_no: croppingNo,
+//                 _token: $('meta[name="csrf-token"]').attr('content')  // CSRF Token for security
+//             },
+//             success: function(response) {
+//                 if (response.success === false) {
+//                     // Show an alert if cropping number exists
+//                     alert('The cropping number already exists. Please choose a different cropping number.');
+//                 } else {
+//                     // Submit the form if cropping number is valid
+//                     $('form').submit();  // Assuming the form is the parent of the button
+//                 }
+//             },
+//             error: function() {
+//                 // Handle AJAX error (optional)
+//                 alert('An error occurred while checking the cropping number.');
+//             }
+//         });
+//     });
+// });
+
+
+</script>
+
+
   @endsection

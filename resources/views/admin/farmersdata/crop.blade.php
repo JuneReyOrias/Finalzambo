@@ -99,20 +99,6 @@
                                 </div>
                                 
                                 
-                                
-                                
-                                   
-                              
-{{--                             
-                                <form id="farmProfileSearchForm" action="{{ route('admin.farmersdata.genfarmers') }}" method="GET">
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
-                                        <button class="btn btn-outline-success" type="submit">Search</button>
-                                    </div>
-                                </form>
-                                <form id="showAllForm" action="{{ route('admin.farmersdata.genfarmers') }}" method="GET">
-                                    <button class="btn btn-outline-success" type="submit">All</button>
-                                </form> --}}
                             </div>
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <a href="{{route('admin.farmersdata.genfarmers')}}" title="back">
@@ -128,9 +114,40 @@
                             {{-- Check if the farm profile has already been displayed --}}
                             @if (!in_array($crop->farmprofile->id, $displayedFarms))
                                 <div class="input-group mb-3">
-                                    <h5 for="personainfo">Farm: {{ formatName($crop->farmprofile->tenurial_status) }}</h5>
+                                    <h5 for="personainfo">Farm Status: {{ formatName($crop->farmprofile->tenurial_status) }}</h5>
                                 </div>
+                                
+                              
+                                {{-- Add the farm profile ID to the array to mark it as displayed --}}
+                                @php
+                                    $displayedFarms[] = $crop->farmprofile->id;
+                                @endphp
+                            @endif
+                        @endforeach
                         
+
+                                
+                           
+
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="{{route('admin.farmersdata.genfarmers')}}" title="back">
+
+                                 </a>
+                            {{-- Loop through each crop in $cropFarms --}}
+                            @php
+                            // Array to track displayed farm profiles by their unique ID
+                            $displayedFarms = [];
+                        @endphp
+                        
+                        @foreach ($cropFarms as $crop)
+                            {{-- Check if the farm profile has already been displayed --}}
+                            @if (!in_array($crop->farmprofile->id, $displayedFarms))
+                              
+                                <div class="input-group mb-3">
+                                    <h5 for="personainfo">Agri-District: {{ formatName($crop->farmprofile->agri_districts) }}</h5>
+                                </div>
                                 {{-- Add the farm profile ID to the array to mark it as displayed --}}
                                 @php
                                     $displayedFarms[] = $crop->farmprofile->id;
@@ -241,7 +258,14 @@
                             <button class="btn btn-success btn-sm">
                                 <i class="fa fa-leaf" aria-hidden="true"></i>
                             </button>
-                        </a>                              
+                        </a> 
+                        
+                        <a href="javascript:void(0);" class="viewCrop" data-bs-toggle="modal" title="Assign Crop Farms Location in Map Based on Agent per District" data-bs-target="#CropLocationModal" data-id="{{ $cropdata->id }}">
+                            <button class="btn btn-warning btn-sm" style="border-color: #54d572;">
+                                <img src="../assets/logo/farmer-Assign.png" alt="Crop Icon" style="width: 20px; height:15px;" class="me-1">
+                                <i class="" aria-hidden="true"></i>
+                            </button>
+                        </a>
                         <a href="{{route('admin.farmersdata.cropsdata.edit_crops', $cropdata->id)}}" title="view farm"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a> 
                 
                         <form  action="{{ route('admin.farmersdata.cropsdata.delete', $cropdata->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
@@ -294,7 +318,7 @@
     </div>
 </div>
 <div class="modal fade" id="CropModal" tabindex="-1" aria-labelledby="CropModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header text-white">
                 <h5 class="modal-title" id="CropModalLabel">Crop Data</h5>
@@ -318,29 +342,7 @@
                             <!-- Farm Profile Information -->
                             <h6>Farm Status: {{ $farmData ? formatName($farmData->tenurial_status) : 'No farm information available.' }}</h6>
                         
-                            {{-- <div class="input-group mb-3">
-                                @if($cropData->isNotEmpty())
-                                    <h5>Crops:</h5>
-                                    
-                                    @php
-                                        // Array to store displayed crop names
-                                        $displayedCrops = [];
-                                    @endphp
-                                    
-                                    @foreach($cropData as $crop)
-                                        @if($crop->crop && !in_array($crop->crop->crop_name, $displayedCrops))
-                                            <h6>{{ formatName($crop->crop->crop_name) }}</h6> <!-- Capitalize the first letter of each word -->
-                                            
-                                            @php
-                                                // Add the crop name to the displayedCrops array to avoid duplication
-                                                $displayedCrops[] = $crop->crop->crop_name;
-                                            @endphp
-                                        @endif
-                                    @endforeach
-                                @else
-                                    <h5>No crop data available.</h5>
-                                @endif
-                            </div> --}}
+                           
                         </div>
                         
                         
@@ -388,6 +390,66 @@
     </div>
 </div>
 
+</div>
+<div class="modal fade" id="CropLocationModal" tabindex="-1" aria-labelledby="CropLocationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header text-white">
+                <h5 class="modal-title" id="CropLocationModalLabel">Assign Crop Farms Location in Map Based on Agent per District</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <hr>
+            <div class="modal-body">
+                {{-- <div class="form-group mt-3">
+                    <label for="user_id">Select User:</label>
+                    <select class="form-control" id="user_id">
+                        <option value="">Select a user</option>
+                        @foreach ($users as $item)
+                        <option value="{{$item->id}}">{{$item->first_name.' '.$item->last_name}}</option>
+                            
+                        @endforeach
+                    </select>
+                </div> --}}
+               
+                    <div class="row">
+                     
+                
+                        <!-- Farmer Information -->
+                        <div class="col-md-9">
+                            <!-- Farmer Information -->
+                            <h5>Farmer: {{ $personalInfos->isNotEmpty() ? formatName($personalInfos->first()->first_name . ' ' . $personalInfos->first()->last_name) : 'N/A' }}</h5>
+                            
+                            <!-- Farm Profile Information -->
+                            <h6>Farm Status: {{ $farmData ? formatName($farmData->tenurial_status) : 'No farm information available.' }}</h6>
+                            <h6>Agri-District: {{ $farmData ? formatName($farmData->agri_districts) : 'No farm information available.' }}</h6>
+                           
+                        </div>
+                        <h5 for="personainfo" class="mt-3">
+                          CropName: <span id="cropname"></span>
+                        </h5>
+                        <div class="form-group mt-3">
+                            <label for="user_id">Select Agent:</label>
+                            <select class="form-control" id="users_id">
+                                <option value="">Select a Agent</option>
+                                @foreach ($users as $item)
+                                <option value="{{ $item->id }}">{{ $item->first_name }} {{ $item->last_name }} - {{ ucfirst($item->district) }} District</option>
+
+                                    
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+               
+                
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveUserProfile" data-id="{{ $cropdata->id }}">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <style>
     /* Modal Content Styling */
@@ -493,11 +555,6 @@ $(document).on('click', '.viewCropBtn', function() {
     CropsData(id); // Fetch data and show the modal
 });
 
-$(document).on('click', '.viewCropBtn', function() {
-    var id = $(this).data('id'); // Get the ID from the data attribute
-    CropsData(id); // Fetch data and show the modal
-});
-
 function CropsData(id) {
     $.ajax({
         url: '/admin-edit-crop-farms/' + id, // Adjust the URL to match your route
@@ -528,6 +585,80 @@ function CropsData(id) {
         }
     });
 }
+$(document).on('click', '.viewCrop', function() {
+    var id = $(this).data('id'); // Get the ID from the data attribute
+    Crops(id); // Fetch data and show the modal
+});
+
+function Crops(id) {
+    $.ajax({
+        url: '/admin-edit-crop-farms/' + id, // Adjust the URL to match your route
+        type: 'GET',
+        dataType: 'json',
+        data: { type: 'cropfarm' }, // Send type parameter for AJAX request
+        success: function(response) {
+            if (response.error) {
+                alert(response.error); // Display error message if provided
+            } else {
+
+                
+                // Populate the modal with the fetched data
+                $('#cropname').text(response.crop_name || 'N/A');
+                $('#type_of_variety_planted').text(response.type_of_variety_planted || 'N/A');
+                $('#planting_schedule_wetseason').text(response.planting_schedule_wetseason || 'N/A');
+                $('#planting_schedule_dryseason').text(response.planting_schedule_dryseason || 'N/A');
+                $('#no_of_cropping_per_year').text(response.no_of_cropping_per_year || 'N/A');
+                $('#yield_kg_ha').text(response.yield_kg_ha ? parseFloat(response.yield_kg_ha).toFixed(2) : 'N/A');
+              
+
+           
+            }
+        },
+        error: function(xhr) {
+            console.error('Error fetching data:', xhr.responseText);
+            alert('An error occurred: ' + xhr.statusText); // Provide user-friendly error message
+        }
+    });
+}
+
+
+
+$('#saveUserProfile').on('click', function () {
+    const CropId = $(this).data('id'); // Fetch CropId from the data-id attribute
+    const userId = $('#users_id').val(); // Get the selected user ID
+
+    // Log the CropId and userId to check if they're correct
+    console.log('Crops Farms ID:', CropId);
+    console.log('Selected User ID:', userId);
+
+    if (userId) {
+        $.ajax({
+            url: '/admin-update-farm-profile', // The route where you handle the request
+            type: 'POST',
+            data: {
+                user_id: userId,
+                crops_farms_id: CropId,
+                _token: '{{ csrf_token() }}' // CSRF token for Laravel
+            },
+            success: function(response) {
+                console.log('Server Response:', response);
+
+                if (response.success) {
+                    alert('Crop Farms Location Per District updated successfully!');
+                    location.reload(); // Optionally refresh the page or update the UI
+                } else {
+                    alert(response.message || 'Failed to update agent ID.');
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('AJAX error:', textStatus, errorThrown);
+                alert('An error occurred while saving.');
+            }
+        });
+    } else {
+        alert('Please select a Agent.');
+    }
+});
     </script>
     
 @endsection
