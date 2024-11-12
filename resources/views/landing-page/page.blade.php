@@ -35,9 +35,9 @@
         <div class="row">
           <div class="col-lg-12">
             <nav class="navbar navbar-expand-lg">
-              <a class="navbar-brand" href="{{url('/')}}">
-                <img src="landing_page/assets/images/logo/logo-main.png" alt="" style="width:50px; border-radius:50%; text-align:left;" />
-              </a>
+                <div class="ud-hero-brands-wrapper wow fadeInUp " data-wow-delay=".3s">
+                    <img src="landing_page/assets/images/logo/logo-main.png" alt="header-logo" style="width: 60px; height:60px;border-radius: 50%; position: absolute; top: 5px; left: 2%; transform: translateX(-50%);" />
+                </div>
               <button class="navbar-toggler">
                 <span class="toggler-icon"> </span>
                 <span class="toggler-icon"> </span>
