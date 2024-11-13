@@ -37,7 +37,7 @@
                                 </div>
                             
                                 <div class="me-md-1">
-                                    <a href="{{ route('admin.farmerOrg.add_form') }}" class="btn btn-success">Add</a>
+                                    <a href="{{ route('admin.farmerOrg.add_form') }}" title="Add" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></a>
                                 </div>
                             
                                 <form id="farmProfileSearchForm" action="" method="GET" class="me-2">
@@ -167,14 +167,14 @@
                           
                                                 <td>
                                                    
-                                                    <a href="{{route('admin.farmerOrg.edit_org',  $org->id)}}" title="Edit Student"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
+                                                     <a href="{{route('admin.farmerOrg.edit_org',  $org->id)}}" title="Edit Student"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a> 
                                         
-                                                    <form  action="{{ route('admin.farmerOrg.delete', $org->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
-                                                   @csrf
-                                                       @method('DELETE')
-                                                       <button type="submit" class="btn btn-danger btn-sm" title="Delete Student" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
-                                                   </form> 
-                                                   
+                                                     <form  action="{{ route('admin.farmerOrg.delete', $org->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
+                                                    @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                                    </form> 
+                                                    
                                                 </td>
                                         </tr>
                                         @endforeach

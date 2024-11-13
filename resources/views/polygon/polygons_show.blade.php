@@ -37,8 +37,8 @@
                                 </div>
                                                         
                                 <div class="me-md-1">
-                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#mapModal">
-                                        Add
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" title="add Polygon" data-bs-target="#mapModal">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
                                       </button>
                                 
                                     {{-- <a href="{{ route('polygon.create') }}" class="btn btn-success">Add</a> --}}
@@ -183,7 +183,7 @@
                                 </div>
                                 </div>
                             </div>
-                                <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET" class="me-2">
+                                {{-- <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET" class="me-2">
                                     <div class="input-group">
                                         <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
                                         <button class="btn btn-outline-success" type="submit">Search</button>
@@ -192,7 +192,7 @@
                             
                                 <form id="showAllForm" action="{{ route('polygon.polygons_show') }}" method="GET">
                                     <button class="btn btn-outline-success" type="submit">All</button>
-                                </form>
+                                </form> --}}
                             </div>
                             
                             
@@ -269,9 +269,9 @@
                                     <h5>b. Parcellary Boarder</h5>
                                 </div>
                                 <div class="me-md-1">
-                                    <a href="{{ route('parcels.new_parcels') }}" class="btn btn-success">Add</a>
+                                    <a href="{{ route('parcels.new_parcels') }}" class="btn btn-success"><i class="fa fa-plus" title="Add Parcel"  aria-hidden="true"></i></a>
                                 </div>
-                                <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET">
+                                {{-- <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET">
                                     <div class="input-group mb-3">
                                         <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
                                         <button class="btn btn-outline-success" type="submit">Search</button>
@@ -279,7 +279,7 @@
                                 </form>
                                 <form id="showAllForm" action="{{ route('polygon.polygons_show') }}" method="GET">
                                     <button class="btn btn-outline-success" type="submit">All</button>
-                                </form>
+                                </form> --}}
                             </div>
                             <div class="table-responsive">
                                 <table class="table table-bordered datatable">
@@ -315,11 +315,11 @@
                                              
                                               <td>
                                                  
-                                                   <a href="{{route('parcels.edit',  $personalinformation->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
+                                                   <a href="{{route('parcels.edit',  $personalinformation->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a> 
                                       
                                                    <form  action="{{ route('parcels.delete',  $personalinformation->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
                                                       {{ csrf_field()}}
-                                                      <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                                                      <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
                                                   </form>
                                                  
                                               </td>
@@ -356,11 +356,11 @@
                                                     <div class="me-md-1">
                                                             <!-- Button trigger modal -->
                                                             <div class="me-md-1">
-                                                                <a href="{{ route('agri_districts.display') }}" class="btn btn-success">Add</a>
+                                                                <a href="{{ route('agri_districts.display') }}" title="Add  Agri-District" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></a>
                                                             </div>
                                                         </div>
                             
-                                                     <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET">
+                                                     {{-- <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET">
                                                          <div class="input-group mb-3">
                                                              <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
                                                              <button class="btn btn-outline-success" type="submit">Search</button>
@@ -368,7 +368,7 @@
                                                      </form>
                                                      <form id="showAllForm" action="{{ route('polygon.polygons_show') }}" method="GET">
                                                          <button class="btn btn-outline-success" type="submit">All</button>
-                                                     </form>
+                                                     </form> --}}
                                                  </div>
 
 
@@ -512,13 +512,13 @@
                                                                   
                                                                    <td>
                                                                       
-                                                                                                                                    <!-- Example link to open edit modal -->
-                                                                                                                                    <a href="{{route('agri_districts.agri_edit', $personalinformation->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> 
+                                                                                                                                 
+                                                                         <a href="{{route('agri_districts.agri_edit', $personalinformation->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a> 
                                                            
 
                                                                             <form  action="{{ route('agri_districts.agri_delete',  $personalinformation->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
                                                                                 {{ csrf_field()}}
-                                                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                                                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
                                                                        </form>
                                                                       
                                                                    </td>
@@ -556,11 +556,11 @@
                                                                 <div class="me-md-1">
                                                                         <!-- Button trigger modal -->
                                                                         <div class="me-md-1">
-                                                                            <a href="{{ route('crop_category.crop_create') }}" class="btn btn-success">Add</a>
+                                                                            <a href="{{ route('crop_category.crop_create') }}" title="Add Category" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></a>
                                                                         </div>
                                                                     </div>
                                         
-                                                                 <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET">
+                                                                 {{-- <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET">
                                                                      <div class="input-group mb-3">
                                                                          <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
                                                                          <button class="btn btn-outline-success" type="submit">Search</button>
@@ -568,7 +568,7 @@
                                                                  </form>
                                                                  <form id="showAllForm" action="{{ route('polygon.polygons_show') }}" method="GET">
                                                                      <button class="btn btn-outline-success" type="submit">All</button>
-                                                                 </form>
+                                                                 </form> --}}
                                                              </div>
             
             
@@ -641,11 +641,11 @@
                                                                  <div class="me-md-1">
                                                                          <!-- Button trigger modal -->
                                                                          <div class="me-md-1">
-                                                                             <a href="{{ route('admin.variety.add_variety') }}" class="btn btn-success">Add</a>
+                                                                             <a href="{{ route('admin.variety.add_variety') }}" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></a>
                                                                          </div>
                                                                      </div>
                                          
-                                                                  <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET">
+                                                                  {{-- <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET">
                                                                       <div class="input-group mb-3">
                                                                           <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
                                                                           <button class="btn btn-outline-success" type="submit">Search</button>
@@ -653,7 +653,7 @@
                                                                   </form>
                                                                   <form id="showAllForm" action="{{ route('polygon.polygons_show') }}" method="GET">
                                                                       <button class="btn btn-outline-success" type="submit">All</button>
-                                                                  </form>
+                                                                  </form> --}}
                                                               </div>
              
              
@@ -846,7 +846,7 @@
 
             // Bind a click event to show parcel details
             google.maps.event.addListener(polygon, 'click', function () {
-                var contentString = 'PolygonName ' + parcel.polygon_name + '<br>' +
+                var contentString = 'Parcel ID: ' + parcel.id + '<br>' +
                                     'Area: ' + parcel.area + ' sq. meters<br>' +
                                     'Altitude: ' + parcel.altitude + ' meters';
                 var infowindow = new google.maps.InfoWindow({

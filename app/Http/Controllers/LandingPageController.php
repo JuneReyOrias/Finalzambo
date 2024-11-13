@@ -920,21 +920,21 @@ return response()->json([
         $page->users_id = $request['users_id'];
         $page->home_title = $request['home_title'];
         $page->home_description = $request['home_description'];
-        $page->home_logo = $request['home_logo'];
-        $page->agri_logo = $request['agri_logo'];      
-        $page->home_imageslider = $request['home_imageslider'];
-        $page->feature_header = $request['feature_header'];
-        $page->feature_description = $request['feature_description'];
-        $page->agri_features = $request['agri_features'];
-        $page->agri_description = $request['agri_description'];
+        // $page->home_logo = $request['home_logo'];
+        // $page->agri_logo = $request['agri_logo'];      
+        // $page->home_imageslider = $request['home_imageslider'];
+        // $page->feature_header = $request['feature_header'];
+        // $page->feature_description = $request['feature_description'];
+        // $page->agri_features = $request['agri_features'];
+        // $page->agri_description = $request['agri_description'];
       
         // dd($page);
         $page->save();
         
         return redirect('/admin-view-homepage-setting')->with('message', 'homepage added successfully');
     } catch(\Exception $ex) {
-        dd($ex);
-        return redirect('/admin-add-homepage')->with('message', 'Something went wrong');
+        // dd($ex);
+        return redirect('/admin-add-homepage')->with('message', 'Please Try again');
     }
 
 
@@ -998,13 +998,13 @@ return response()->json([
             $page->users_id = $request['users_id'];
             $page->home_title = $request['home_title'];
             $page->home_description = $request['home_description'];
-            $page->home_logo = $request['home_logo'];
-            $page->agri_logo = $request['agri_logo'];      
-            $page->home_imageslider = $request['home_imageslider'];
-            $page->feature_header = $request['feature_header'];
-            $page->feature_description = $request['feature_description'];
-            $page->agri_features = $request['agri_features'];
-            $page->agri_description = $request['agri_description'];
+            // $page->home_logo = $request['home_logo'];
+            // $page->agri_logo = $request['agri_logo'];      
+            // $page->home_imageslider = $request['home_imageslider'];
+            // $page->feature_header = $request['feature_header'];
+            // $page->feature_description = $request['feature_description'];
+            // $page->agri_features = $request['agri_features'];
+            // $page->agri_description = $request['agri_description'];
             // dd($page);
             $page->save();
             
@@ -1039,5 +1039,52 @@ return response()->json([
         }
     }
 
+    
+    // Features
+    public function addFeatures(){
+        // Check if the user is authenticated
+    if (Auth::check()) {
+    // User is authenticated, proceed with retrieving the user's ID
+    $userId = Auth::id();
+    
+    // Find the user based on the retrieved ID
+    $admin = User::find($userId);
+    
+    if ($admin) {
+        // Assuming $user represents the currently logged-in user
+        $user = auth()->user();
+    
+        // Check if user is authenticated before proceeding
+        if (!$user) {
+            // Handle unauthenticated user, for example, redirect them to login
+            return redirect()->route('login');
+        }
+    
+        // Find the user's personal information by their ID
+        $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+    
+        // Fetch the farm ID associated with the user
+        $farmId = $user->farm_id;
+    
+        // Find the farm profile using the fetched farm ID
+        $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
+    
+    
+        
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        // Return the view with the fetched data
+        return view('landing-page.Features.add', compact('userId','admin', 'profile', 'farmProfile','totalRiceProduction'
+        ,'userId'));
+    } else {
+        // Handle the case where the user is not found
+        // You can redirect the user or display an error message
+        return redirect()->route('login')->with('error', 'User not found.');
+    }
+    } else {
+    // Handle the case where the user is not authenticated
+    // Redirect the user to the login page
+    return redirect()->route('login');
+    }
+    }
     
 }

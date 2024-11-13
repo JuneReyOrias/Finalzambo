@@ -77,7 +77,13 @@ Route::get('/agent-import-multipleFile', [FileController::class, 'downloadTempla
     // fetching the users
     Route::get('/get-users', [AgentController::class, 'getUsers']);
     Route::post('/update-farm-profile', [AgentController::class, 'updateFarmProfile']);
-
+    Route::post('/admin-update-farm-profile', [AdminController::class, 'updateCropLocation']);
+    // multiple delete Production data, Fixed Costs, Machineries COst, Variable Cost, Solds
+    Route::post('/admin-multipleDelete', [AdminController::class, 'multipleDelete']);
+    Route::post('/admin-multiFixedcost', [AdminController::class, 'multipleDeleteFixedCost']);
+    Route::post('/admin-multiMachineries', [AdminController::class, 'multipleDeleteMachineries']);
+    Route::post('/admin-multiVariablecost', [AdminController::class, 'multipleDeleteVariablecost']);
+    Route::post('/admin-multiSoldcost', [AdminController::class, 'multipleDeleteSoldscost']);
 
     // farmer profiling
     Route::get('/user-farmer-Profiling',[FarmProfileController::class, 'FarmerProfiling'])->name('user.farmerInfo.profilingData');
@@ -101,7 +107,7 @@ Route::post('/agent-edit-farmers/{personalinfos}',[AgentController ::class,'Stor
 Route::post('/agent-delete-farmers/{personalinfos}',[AgentController ::class,'DeleteFarmers'])->name('agent.FarmerInfo.crudfarmer.delete');
 
 // farms access
-Route::get('/agent-view-farms/{personalinfos}',[AgentController ::class,'ViewFarms'])->name('agent.FarmerInfo.farm_view');
+Route::get('/agent-view-farms/{personalinfos}',[AgentController ::class,'Viewfarms'])->name('agent.FarmerInfo.farm_view');
 Route::get('/agent-add-farms/{personalinfos}',[AgentController ::class,'NewAddFarms'])->name('agent.FarmInfo.crudFarm.add');
 Route::post('/agent-add-farms/{personalinfos}',[AgentController ::class,'StoreNewFarms']);
 Route::get('/agent-edit-farms/{personalinfos}',[AgentController ::class,'ViewEditFarms'])->name('agent.FarmInfo.crudFarm.edit');
@@ -179,6 +185,7 @@ Route::post('/admin-view-Farmers-survey-form',[PersonalInformationsController ::
 
 // routes/web.php
 Route::post('/check-farmer-existence', [PersonalInformationsController::class, 'checkFarmerExistence']);
+Route::post('/check-cropping-no', [PersonalInformationsController::class, 'checkCroppingNo']);
 
 
 // Route::get('/admin-edit-crop-farms/{farmData}',[FarmProfileController ::class,'CropEdit'])->name('admin.farmersdata.cropsdata.delete');
@@ -240,6 +247,8 @@ Route::get('/admin-view-General-Farmers',[AdminController::class,'GenFarmers'])-
  Route::post('/admin-edit-homepage/{Page}',[LandingPageController::class,'editSave']);
  Route::delete('/admin-delete-homepage/{Page}',[LandingPageController::class,'DeletePage'])->name('landing-page.delete');
 
+//  admin add features
+Route::get('/admin-add-features',[LandingPageController::class,'addFeatures'])->name('landing-page.Features.add');
 
 //  notification
  Route::get('/admin-view-notification',[NotificationController::class,'addnotification'])->name('admin.notification.view_notif');
