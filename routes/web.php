@@ -878,3 +878,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin-edit-lastproduction-data/{productions}', [LastProductionDataController::class, 'Proddataupdate']);
     Route::delete('/admin-delete-lastproduction-data/{productions}', [LastProductionDataController::class, 'ProdDestroy'])->name('production_data.delete');
 });
+
+
+
+
+
