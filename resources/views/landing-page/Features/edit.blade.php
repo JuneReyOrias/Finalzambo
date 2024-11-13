@@ -304,12 +304,12 @@
 
                         <div class="input-box">
                             <label for="agri_features[]">Agri-Feature</label>
-                            <input type="text" name="agri_features[]" class="form-control" value="{{ $feature['agri_features'] }}" placeholder="Enter agri-feature" required>
+                            <input type="text" name="agri_features[]" class="form-control" value="{{ $feature['agri_features'] }}" placeholder="Enter agri-feature" onkeypress="return blockSymbolsAndNumbers(event)">
                         </div>
         
                         <div class="input-box">
                             <label for="agri_description[]">Agri-Description</label>
-                            <textarea name="agri_description[]" class="form-control" placeholder="Enter description" required>{{ $feature['agri_description'] }}</textarea>
+                            <textarea name="agri_description[]" class="form-control" placeholder="Enter description" onkeypress="return blockSymbolsAndNumbers(event)">{{ $feature['agri_description'] }}</textarea>
                         </div>
         
                         <div class="input-box">

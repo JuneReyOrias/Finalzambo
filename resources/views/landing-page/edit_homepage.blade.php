@@ -299,7 +299,7 @@
                 <div class="user-details">
                     <div class="input-box">
                         <span class="details">Home Title</span>
-                        <input type="text" class="form-control light-gray-placeholder @error('home_title') is-invalid @enderror" value="{{$Page->home_title}}" placeholder="Home title" name="home_title" id="selectReligion" onchange="checkReligion()">
+                        <input type="text" class="form-control light-gray-placeholder @error('home_title') is-invalid @enderror" value="{{$Page->home_title}}" placeholder="Home title" name="home_title" id="selectReligion" onkeypress="return blockSymbolsAndNumbers(event)">
                         @error('home_title')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -307,13 +307,13 @@
             
                     <div class="input-box">
                         <span class="details">Home Description</span>
-                        <textarea class="form-control light-gray-placeholder @error('home_description') is-invalid @enderror" placeholder="Home description" name="home_description" id="selectReligion" onchange="checkReligion()">{{$Page->home_description}}</textarea>
+                        <textarea class="form-control light-gray-placeholder @error('home_description') is-invalid @enderror" placeholder="Home description" name="home_description" id="selectReligion" onkeypress="return blockSymbolsAndNumbers(event)">{{$Page->home_description}}</textarea>
                         @error('home_description')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
             
-                    <div class="input-box">
+                    {{-- <div class="input-box">
                         <span class="details" style="background-color: white; padding: 0 5px;">Home Logo</span>
                         <input type="file" class="light-gray-placeholder @error('home_logo') is-invalid @enderror input-white-bg" name="home_logo" id="homeLogo" accept="image/*" onchange="checkHomeLogo()">
                         @error('home_logo')
@@ -367,7 +367,7 @@
                         @error('agri_description')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                    </div>
+                    </div> --}}
                 </div>
             
                 <div class="form_1_btns">

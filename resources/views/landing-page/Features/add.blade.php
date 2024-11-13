@@ -303,12 +303,12 @@
                     
                                 <div class="input-box">
                                     <label for="agri_features[]">Agri-Feature</label>
-                                    <input type="text" name="agri_features[]" class="form-control" placeholder="Enter agri-feature" required>
+                                    <input type="text" name="agri_features[]" class="form-control" placeholder="Enter agri-feature" onkeypress="return blockSymbolsAndNumbers(event)">
                                 </div>
                     
                                 <div class="input-box">
                                     <label for="agri_description[]">Agri-Description</label>
-                                    <textarea name="agri_description[]" class="form-control" placeholder="Enter description" required></textarea>
+                                    <textarea name="agri_description[]" class="form-control" placeholder="Enter description" onkeypress="return blockSymbolsAndNumbers(event)"></textarea>
                                 </div>
                     
                                 {{-- <div class="input-box">
@@ -384,12 +384,12 @@ document.addEventListener('DOMContentLoaded', function() {
         featureGroup.innerHTML = `
             <div class="input-box">
                 <label for="agri_features[]">Agri-Feature</label>
-                <input type="text" name="agri_features[]" class="form-control" placeholder="Enter agri-feature">
+                <input type="text" name="agri_features[]" class="form-control" placeholder="Enter agri-feature" onkeypress="return blockSymbolsAndNumbers(event)">
             </div>
 
             <div class="input-box">
                 <label for="agri_description[]">Agri-Description</label>
-                <textarea name="agri_description[]" class="form-control" placeholder="Enter description"></textarea>
+                <textarea name="agri_description[]" class="form-control"onkeypress="return blockSymbolsAndNumbers(event)" placeholder="Enter description"></textarea>
             </div>
 
             <div class="input-box">
