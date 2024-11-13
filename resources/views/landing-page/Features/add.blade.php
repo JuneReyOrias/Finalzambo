@@ -276,7 +276,7 @@
               
 
             <div class="content">
-            <form id="multi-step-form" action{{url('SavePage')}} method="post">
+            <form id="multi-step-form" action{{url('saveFeatures')}} method="post" enctype="multipart/form-data">
                 @csrf
                 <div >
 
@@ -307,15 +307,19 @@
                                 </div>
                     
                                 <div class="input-box">
-                                    <label for="feature_description[]">Agri-Description</label>
-                                    <textarea name="feature_description[]" class="form-control" placeholder="Enter description" required></textarea>
+                                    <label for="agri_description[]">Agri-Description</label>
+                                    <textarea name="agri_description[]" class="form-control" placeholder="Enter description" required></textarea>
                                 </div>
                     
-                                <div class="input-box">
+                                {{-- <div class="input-box">
                                     <label for="icon[]">Icon</label>
                                     <input type="text" name="icon[]" class="form-control" placeholder="Enter icon (e.g., 🌱)" required>
+                                </div> --}}
+                                <div class="input-box">
+                                    <label for="icon[]">Icon</label>
+                                    <input type="file" name="icon[]"  accept="image/*" required>
                                 </div>
-                    
+                                
                                 <div class="input-box">
                                     <input type="hidden" name="icon[]" class="form-control" placeholder="Enter icon (e.g., 🌱)">
                                        </div>
@@ -384,14 +388,15 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
 
             <div class="input-box">
-                <label for="feature_description[]">Agri-Description</label>
-                <textarea name="feature_description[]" class="form-control" placeholder="Enter description"></textarea>
+                <label for="agri_description[]">Agri-Description</label>
+                <textarea name="agri_description[]" class="form-control" placeholder="Enter description"></textarea>
             </div>
 
             <div class="input-box">
                 <label for="icon[]">Icon</label>
-                <input type="text" name="icon[]" class="form-control" placeholder="Enter icon (e.g., 🌱)">
+                <input type="file" name="icon[]"  accept="image/*" required>
             </div>
+
 
             <div class="input-box">
                 <input type="hidden" name="icon[]" class="form-control" placeholder="Enter icon (e.g., 🌱)">

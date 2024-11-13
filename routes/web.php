@@ -249,7 +249,9 @@ Route::get('/admin-view-General-Farmers',[AdminController::class,'GenFarmers'])-
 
 //  admin add features
 Route::get('/admin-add-features',[LandingPageController::class,'addFeatures'])->name('landing-page.Features.add');
-
+Route::post('/admin-add-features',[LandingPageController::class,'saveFeatures']);
+Route::get('/admin-edit-features/{Page}',[LandingPageController::class,'editFeatures'])->name('landing-page.Features.edit');
+Route::post('/admin-edit-features/{Page}',[LandingPageController::class,'updateFeatures']);
 //  notification
  Route::get('/admin-view-notification',[NotificationController::class,'addnotification'])->name('admin.notification.view_notif');
  Route::get('/admin-add-notification',[NotificationController::class,'Message'])->name('admin.notification.add_notif');
@@ -876,8 +878,3 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin-edit-lastproduction-data/{productions}', [LastProductionDataController::class, 'Proddataupdate']);
     Route::delete('/admin-delete-lastproduction-data/{productions}', [LastProductionDataController::class, 'ProdDestroy'])->name('production_data.delete');
 });
-
-
-
-
-
