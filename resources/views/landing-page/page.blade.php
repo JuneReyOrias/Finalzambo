@@ -1095,34 +1095,34 @@ $(document).ready(function() {
                 $(this).find('.modal-body').html(data.home_description);
             });
 
-            // Clear the container and loop over each feature
-            $('#featuresContainer').empty(); // Clear existing content if needed
-            let featureHtml = ''; // Initialize an empty string to accumulate feature HTML
+         // Clear the container and loop over each feature
+$('#featuresContainer').empty(); // Clear existing content if needed
+let featureHtml = ''; // Initialize an empty string to accumulate feature HTML
 
-            data.features.forEach(function(feature) {
-                // Use a more descriptive variable for the feature description
-            
-                featureHtml += `
-                    <div class="col-xl-3 col-lg-3 col-sm-6">
-                        <div class="ud-single-feature wow fadeInUp" data-wow-delay=".1s">
-                            <div class="ud-feature-icon">
-                                <i class="${feature.icon}"></i>
-                            </div>
-                            <div class="ud-feature-content">
-                                <h3 class="ud-feature-title">${feature.agri_features}</h3>
-                                <p>${feature.agri_description}</p>
-                                <a href="javascript:void(0)" class="ud-feature-link" 
-                                   data-description="${feature.agri_description}" 
-                                   data-toggle="modal" 
-                                   data-target="#UsedFEAUTUREMODAL">Learn More</a>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
+data.features.forEach(function(feature) {
+    // Construct the feature HTML
+    featureHtml += `
+        <div class="col-xl-3 col-lg-3 col-sm-6">
+            <div class="ud-single-feature wow fadeInUp" data-wow-delay=".1s">
+                <div class="ud-feature-icon">
+                    <!-- Display the image icon instead of using the <i> tag -->
+                    <img src="${feature.icon}" alt="Feature Icon" class="feature-icon">
+                </div>
+                <div class="ud-feature-content">
+                    <h3 class="ud-feature-title">${feature.agri_features}</h3>
+                    <p>${feature.agri_description}</p>
+                    <a href="javascript:void(0)" class="ud-feature-link" 
+                    //    data-description="${feature.agri_description}" 
+                       data-toggle="modal" 
+                       data-target="#UsedFEAUTUREMODAL">Learn More</a>
+                </div>
+            </div>
+        </div>
+    `;
+});
 
-            // Append all features at once, wrapped in a row
-            $('#featuresContainer').append(`<div class="row">${featureHtml}</div>`);
+// Append all features at once, wrapped in a row
+$('#featuresContainer').append(`<div class="row">${featureHtml}</div>`);
 
             // When the UsedFEAUTUREMODAL is shown, populate the modal body with the feature description
             $('#UsedFEAUTUREMODAL').on('show.bs.modal', function (event) {
@@ -1139,6 +1139,7 @@ $(document).ready(function() {
         }
     });
 });
+
 
 
 // fetch contact us
