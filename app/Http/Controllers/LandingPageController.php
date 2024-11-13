@@ -43,11 +43,75 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log; // For logging errors
+use Exception;
 class LandingPageController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+     public function saveFeatures(Request $request)
+     {
+         try {
+            //  // Validate incoming data
+            //  $request->validate([
+            //      'agri_features.*' => 'required|string|max:255',
+            //      'feature_description.*' => 'required|string',
+            //      'icon.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // validate as image
+            //  ]);
+     
+             // Define the storage path for icons
+             $iconFolder = public_path('iconImages');
+     
+             // Create the folder if it doesn't exist
+             if (!File::exists($iconFolder)) {
+                 File::makeDirectory($iconFolder, 0755, true);
+             }
+     
+             $featuresData = []; // Array to store each feature's data
+     
+             foreach ($request->agri_features as $index => $agriFeature) {
+                 $iconPath = [];
+     
+                 // Handle image upload and save path
+                 if ($request->hasFile("icon.$index")) {
+                     $file = $request->file("icon.$index");
+                     $fileName = time() . '_' . $file->getClientOriginalName();
+                     $file->move($iconFolder, $fileName);
+                     $iconPath = 'iconImages/' . $fileName;
+                 }
+     
+                 // Append the feature data to the array
+                 $featuresData[] = [
+                     'agri_features' => $agriFeature,
+                     'agri_description' => $request->agri_description[$index],
+                     'icon' => $iconPath,
+                 ];
+             }
+     
+             // Save the features as JSON in the `agri_feature` column
+             LandingPage::create([
+                 'agri_feature' => json_encode($featuresData),
+             ]);
+     
+             return redirect()->route('landing-page.view_homepage')->with('success', 'Features saved successfully!');
+     
+         } catch (Exception $e) {
+             // Log error and provide feedback to the user
+             Log::error('Error saving features: ' . $e->getMessage());
+             return redirect()->back()->with('error', 'An error occurred while saving features. Please try again later.');
+         }
+        }
+     
+ 
+
+
+
+
+
+     
     public function fetchData()
     {
         $landingPageData = LandingPage::first();
@@ -1087,4 +1151,108 @@ return response()->json([
     }
     }
     
+
+       
+    public function editFeatures($id){
+        // Check if the user is authenticated
+    if (Auth::check()) {
+    // User is authenticated, proceed with retrieving the user's ID
+    $userId = Auth::id();
+    
+    // Find the user based on the retrieved ID
+    $admin = User::find($userId);
+    
+    if ($admin) {
+        // Assuming $user represents the currently logged-in user
+        $user = auth()->user();
+    
+        // Check if user is authenticated before proceeding
+        if (!$user) {
+            // Handle unauthenticated user, for example, redirect them to login
+            return redirect()->route('login');
+        }
+    
+        // Find the user's personal information by their ID
+        $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+    
+        // Fetch the farm ID associated with the user
+        $farmId = $user->farm_id;
+    
+        // Find the farm profile using the fetched farm ID
+        $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
+        // Retrieve the landing page record by ID
+    $Page = LandingPage::findOrFail($id);
+
+    // Decode the agri_feature JSON data
+    $features = json_decode($Page->agri_feature, true);
+    
+        
+        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        // Return the view with the fetched data
+        return view('landing-page.Features.edit', compact('userId','admin', 'profile', 'features', 'Page'));
+    } else {
+        // Handle the case where the user is not found
+        // You can redirect the user or display an error message
+        return redirect()->route('login')->with('error', 'User not found.');
+    }
+    } else {
+    // Handle the case where the user is not authenticated
+    // Redirect the user to the login page
+    return redirect()->route('login');
+    }
+    }
+
+
+    public function updateFeatures(Request $request, $id)
+{
+    try {
+        // Validate incoming data
+        // $request->validate([
+        //     'agri_features.*' => 'required|string|max:255',
+        //     'agri_description.*' => 'required|string',
+        //     'icon.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // allow optional icon upload
+        // ]);
+
+        // Retrieve the landing page record by ID
+        $landingPage = LandingPage::findOrFail($id);
+
+        $featuresData = []; // Array to store updated features data
+
+        foreach ($request->agri_features as $index => $agriFeature) {
+            $iconPath = $landingPage->agri_feature ? json_decode($landingPage->agri_feature, true)[$index]['icon'] : null;
+
+            // Handle image upload and save path if a new image is uploaded
+            if ($request->hasFile("icon.$index")) {
+                // Delete the old icon if it exists
+                if ($iconPath && file_exists(public_path($iconPath))) {
+                    unlink(public_path($iconPath));
+                }
+
+                $file = $request->file("icon.$index");
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('iconImages'), $fileName);
+                $iconPath = 'iconImages/' . $fileName;
+            }
+
+            // Append the updated feature data
+            $featuresData[] = [
+                'agri_features' => $agriFeature,
+                'agri_description' => $request->agri_description[$index],
+                'icon' => $iconPath,
+            ];
+        }
+
+        // Update the agri_feature column with the new data
+        $landingPage->agri_feature = json_encode($featuresData);
+        $landingPage->save();
+
+        return redirect()->route('landing-page.view_homepage')->with('success', 'Features updated successfully!');
+        
+    } catch (Exception $e) {
+        // Log error and provide feedback to the user
+        Log::error('Error updating features: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'An error occurred while updating features. Please try again later.');
+    }
+}
+
 }
