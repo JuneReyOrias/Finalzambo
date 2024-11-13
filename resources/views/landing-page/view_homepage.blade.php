@@ -229,11 +229,12 @@
                                 <div class="input-group mb-3 me-md-1">
                                     <h5 for="Seed" class="me-3">Create Homepage</h5>
                                 </div>
-                            
+                                @if(isset($isCropPage) && $isCropPage && $Page->isEmpty())
                                 <div class="me-md-1">
                                     <a href="{{ route('landing-page.Features.add') }}" title="add" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></a>
 
                                 </div>
+                                @endif
                             
                                 {{-- <form id="farmProfileSearchForm" action="" method="GET" class="me-2">
                                     <div class="input-group">
@@ -398,7 +399,7 @@
                           
                                                 <td>
                                                    
-                                                     <a href="{{route('landing-page.edit_homepage',  $landpage->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a> 
+                                                     <a href="{{route('landing-page.Features.edit',  $landpage->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a> 
                                         
                                                      <form  action="{{ route('landing-page.delete', $landpage->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
                                                     @csrf
