@@ -276,8 +276,13 @@ Route::post('/admin-edit-features/{Page}',[LandingPageController::class,'updateF
     Route::delete('/admin-delete-barangays/{barangay}',[AdminController::class,'destroy'])->name('admin.barangay.delete');
     Route::get('/admin-view-barangays',[AdminController::class,'viewBaranagay'])->name('admin.barangay.view_forms');
 
+
+    Route::middleware(['auth', 'prevent-back-history'])->group(function () {
         // admin corn map 
         Route::get('/admin-view-corn-map',[AdminController::class,'CornMap'])->name('map.cornmap');
+        // Add more protected routes here
+    });
+       
 
         // admin coconut map 
         Route::get('/admin-view-coconut-map',[AdminController::class,'CoconutMap'])->name('map.coconutmap');
@@ -667,9 +672,10 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 Route::get('/personalinformation/agent',[PersonalInformationsController::class,'Agent'])->name('personalinfo.index_agent');
 
-Route::middleware(['auth','role:admin','PreventBackHistory'])->group(function(){
+Route::middleware(['auth','role:admin','prevent-back-history'])->group(function(){
 
-    Route::get('/admin/dashboard', [AdminController::class, 'adminDashb'])->name('admin.dashb');
+    Route::get('/admin/dashboard', [AdminController::class, 'adminDashb'])->name('admin.index');
+
     Route::get('/admin/logout', [AdminController::class, 'AdminLogout'])->name('admin.logout');
     Route::get('/admin-profile', [AdminController::class, 'AdminProfile'])->name('admin.admin_profile');
     Route::post('/admin-profile', [AdminController::class, 'update']);
@@ -686,7 +692,7 @@ Route::get('/edit-accounts/{users}', [AdminController::class, 'editAccount'])->n
 Route::post('/edit-accounts/{users}', [AdminController::class, 'updateAccounts']);
 Route::delete('/delete-accounts/{users}', [AdminController::class, 'deleteusers'])->name('admin.create_account.delete');
 //agent route
-Route::middleware(['auth','role:agent','PreventBackHistory'])->group(function(){
+Route::middleware(['auth','role:agent','prevent-back-history'])->group(function(){
 Route::get('/agent/dashboard', [AgentController::class, 'AgentDashboard'])->name('agent.agent_index');
 Route::get('/agent/logout', [AgentController::class, 'agentlog'])->name('agent.logout');
 
