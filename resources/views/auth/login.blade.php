@@ -76,14 +76,14 @@
                    <form class="forms-sample " method="post" action="{{ route('login') }}">
                       @csrf
                     <div class="mb-3">
-                        <label for="login" class="Login-register-label">Email address</label>
+                        <label for="login" class="Login-register">Email address</label>
                         <input id="email" class="form-control" type="email" name="email" :value="old('email')" required autofocus autocomplete="username">
                         @error('email')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                       </div>
                       <div class="mb-3">
-                        <label for="password" class="Login-register-label">Password</label>
+                        <label for="password" class="Login-register">Password</label>
                         <input id="password" class="form-control"
                         type="password"
                         name="password"

@@ -60,14 +60,14 @@
                          <!-- Row with two columns for FullName and Email address -->
                       <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="exampleInputUsername1" class="Login-register-label">FirstName</label>
+                            <label for="exampleInputUsername1" class="Login-register">FirstName</label>
                             <input type="text" class="form-control @error('first_name') is-invalid @enderror" id="exampleInputUsername1" name="first_name" autocomplete="first_name" placeholder="FirstName" value="{{ old('first_name') }}">
                             @error('first_name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-6">
-                          <label for="exampleInputUsername1" class="Login-register-label">LastName</label>
+                          <label for="exampleInputUsername1" class="Login-register">LastName</label>
                           <input type="text" class="form-control @error('last_name') is-invalid @enderror" id="exampleInputUsername1" name="last_name" autocomplete="last_name" placeholder="LastName" value="{{ old('last_name') }}">
                           @error('last_name')
                               <div class="invalid-feedback">{{ $message }}</div>
@@ -77,14 +77,14 @@
                                     </div>
                                       <div class="row mb-3">
                                         <div class="col-md-6">
-                                          <label for="userEmail" class="Login-register-label">Email address</label>
+                                          <label for="userEmail" class="Login-register">Email address</label>
                                              <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="userEmail" placeholder="Email" value="{{ old('email') }}">
                                               @error('email')
                                                  <div class="invalid-feedback">{{ $message }}</div>
                                              @enderror
                                                  </div>
                                         <div class="col-md-6">
-                                          <label for="agri_district" class="Login-register-label">Agri District</label>
+                                          <label for="agri_district" class="Login-register">Agri District</label>
                                           <select class="form-control  @error('district') is-invalid @enderror"  name="district"id="validationCustom01" aria-label="Floating label select e">
                                             <option selected disabled>Select Agri-District</option>
                                                <option value="ayala" {{ old('district') == 'ayala' ? 'selected' : '' }}>Ayala Distict</option>
@@ -99,7 +99,7 @@
                                                                       @enderror
                                                                </div>
                                                               {{-- <div class="col-md-6">
-                                                            <label for="userEmail" class="Login-register-label">Email address</label>
+                                                            <label for="userEmail" class="Login-register">Email address</label>
                                                         <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="userEmail" placeholder="Email" value="{{ old('email') }}">
                                                       @error('email')
                                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -111,7 +111,7 @@
                       <div class="row mb-3">
                         <div class="col-md-6">
                          
-                            <label for="password" class="Login-register-label">Password</label>
+                            <label for="password" class="Login-register">Password</label>
                             <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="password" autocomplete="current-password" placeholder="Password" value="{{ old('password') }}"> 
                             <div class="form-check mb-3">
                                 <input type="checkbox" class="form-check-input"id="togglePasswordVisibilityCheckbox">
@@ -122,7 +122,7 @@
                                             @enderror
                                           </div>
                                            <div class="col-md-6">
-                                            <label for="confirm_password" class="Login-register-label">confirm Password</label>
+                                            <label for="confirm_password" class="Login-register">confirm Password</label>
                                               <input type="password" name="confirm_password" class="form-control @error('confirm_password') is-invalid @enderror" id="confirm_password" autocomplete="current-confirm_password" placeholder="Password" value="{{ old('confirm_password') }}">
                                               {{-- <div class="form-check mb-3">
                                                 <input type="checkbox" class="form-check-input"id="togglePasswordVisibilityCheckbox">
@@ -134,7 +134,7 @@
                                                         </div>
 
                                                         {{-- <div class="col-md-6">
-                                                          <label for="agri_district" class="Login-register-label">Role</label>
+                                                          <label for="agri_district" class="Login-register">Role</label>
                                                           <select class="form-control  @error('agri_district') is-invalid @enderror"  name="role"id="validationCustom01" aria-label="Floating label select e">
                                                             <option selected disabled>Select Agri-District</option>
                                                                <option value="admin" {{ old('agri_district') == 'admin' ? 'selected' : '' }}>admin </option>
