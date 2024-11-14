@@ -13,7 +13,7 @@
     <ul class="nav">
       <li class="nav-item nav-category">Main</li>
       <li class="nav-item">
-        <a href="{{route('admin.dashb')}}" class="nav-link">
+        <a href="{{route('admin.index')}}" class="nav-link">
           <img src="../assets/logo/layout.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
           <span class="link-title"style=",margin-left:12px;">Dashboard</span>
         </a>
