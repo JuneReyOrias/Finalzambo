@@ -45,7 +45,13 @@
 </head>
 <body>
     
+<style>
 
+.Login-register {
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+</style>
 {{-- <div class="main-wrapper" style=" background-image: url(https://watchmendailyjournal.com/wp-content/uploads/2023/04/da.jpg);">
 
 		
