@@ -36,7 +36,10 @@
  
 </head>
 <body>
-  
+  <style> .Login-register {
+    margin-bottom: 0.5rem;
+    color: #fff;
+}</style>
   <div class="main-wrapper"  style=" background-image: url(upload/rice.jpg);">
 		<div class="page-wrapper full-pages">
 			<div class="page-content d-flex align-items-center justify-content-center">
