@@ -152,13 +152,13 @@
                        
                             
                             <div class="table-responsive">
-                                <form id="multipleDeleteForm" method="POST">
-                                    @csrf
+                                {{-- <form id="multipleDeleteForm" method="POST">
+                                    @csrf --}}
                                 <table class="table table-bordered datatable">
                                     <!-- Table content here -->
                                     <thead class="thead-light">
                                         <tr >
-                                            <th><input type="checkbox" id="selectAll"></th>
+                                            {{-- <th><input type="checkbox" id="selectAll"></th> --}}
                                             <th>#</th>
                                            
                                             <th>cropping <p>no</p></th>
@@ -177,7 +177,7 @@
                                       @if($productionData->count() > 0)
                                     @foreach($productionData as $lastproductdata)      
                                 <tr class="table-light">
-                                    <td><input type="checkbox" name="ids[]" class="recordCheckbox" value="{{ $lastproductdata->id }}"></td>
+                                    {{-- <td><input type="checkbox" name="ids[]" class="recordCheckbox" value="{{ $lastproductdata->id }}"></td> --}}
                                     {{-- <td>{{ $loop->iteration }}</td> --}}
                                     <td>{{  $lastproductdata->id }}</td>
                                    
@@ -253,8 +253,8 @@
                                         @endif
                                     </tbody>
                                 </table>
-                                <button type="button" id="deleteSelected" class="btn btn-danger">Delete Selected</button>
-                            </form>
+                                {{-- <button type="button" id="deleteSelected" class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                            </form> --}}
                                 <!-- Pagination links -->
                                 {{-- <ul class="pagination">
                                     <li><a href="{{ $farmData->previousPageUrl() }}">Previous</a></li>
@@ -2088,7 +2088,7 @@ function SoldsCostData(id) {
 
         if (selectedIds.length > 0) {
             if (confirm('Are you sure you want to delete the selected records?')) {
-                fetch('/admin-multipleDelete', {
+                fetch('/admin-view-Farmers-productions/delete', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
