@@ -35,9 +35,12 @@
         <div class="row">
           <div class="col-lg-12">
             <nav class="navbar navbar-expand-lg">
-                <div class="ud-hero-brands-wrapper wow fadeInUp " data-wow-delay=".3s">
-                    <img src="landing_page/assets/images/logo/logo-main.png" alt="header-logo" style="width: 60px; height:60px;border-radius: 50%; position: absolute; top: 5px; left: 2%; transform: translateX(-50%);" />
-                </div>
+              {{-- <a class="navbar-brand" href="{{url('/')}}">
+                <img src="landing_page/assets/images/logo/logo-main.png" alt="" style="width:50px; border-radius:50%; text-align:left;" />
+              </a> --}}
+              <div class="ud-hero-brands-wrapper wow fadeInUp " data-wow-delay=".3s">
+                <img src="landing_page/assets/images/logo/logo-main.png" alt="header-logo" style="width: 60px; height:60px;border-radius: 50%; position: absolute; top: 5px; left: 2%; transform: translateX(-50%);" />
+            </div>
               <button class="navbar-toggler">
                 <span class="toggler-icon"> </span>
                 <span class="toggler-icon"> </span>
@@ -134,6 +137,10 @@
             agricultural data and spatial information, enabling stakeholders to make informed decisions about land use, crop
             planning, and resource allocation.
         </p>
+        <div style="display: flex; justify-content: center; align-items: center;">
+            <div id="map" style="height: 300px; width: 70%;" ></div>
+        </div>
+        
     </div>
 </div>
 
@@ -1141,7 +1148,6 @@ $('#featuresContainer').append(`<div class="row">${featureHtml}</div>`);
 });
 
 
-
 // fetch contact us
 
 $(document).ready(function() {
@@ -1500,7 +1506,7 @@ function updateRadialChart(radialChartData, chartTitle) {
                 },
                 title: {
                     display: true,
-                    text: `Total Yield: ${totalYield} kg`, // Corrected template literal
+                    text: `Total: ${totalYield} kg`, // Corrected template literal
                     font: {
                         size: 12
                     },
@@ -2475,6 +2481,184 @@ function renderVariableCostChart(labels, series) {
     chart.render();
 }
 
+
+</script>
+
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMstylquYwo8gAuOrkrF5IsN6K8gbgV6I&libraries=drawing,geometry&callback=initMap"></script>
+
+<script type="text/javascript">
+ var map;
+var markers = [];
+// var selectedLatLng;
+var polygons = []; // Array to hold the saved polygons
+
+function initMap() {
+    var initialLocation = { lat: 6.9214, lng: 122.0790 };
+    map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 13,
+        center: initialLocation,
+        mapTypeId: 'satellite'
+    });
+
+    // Click event to add a marker and update latitude/longitude inputs
+    // map.addListener('click', function(event) {
+    //     if (markers.length >= 1) {
+    //         deleteMarkers();
+    //     }
+    //     selectedLatLng = event.latLng;
+    //     addMarker(selectedLatLng);
+    //     $('#gps_latitude_0').val(selectedLatLng.lat());
+    //     $('#gps_longitude_0').val(selectedLatLng.lng());
+    // });
+
+    loadPolygons(); // Load polygons when the map is initialized
+    loadDistrictsAndPolygons(); // Load districts and additional polygons
+}
+
+function addMarker(location) {
+    var marker = new google.maps.Marker({
+        position: location,
+        map: map,
+        draggable: true
+    });
+    markers.push(marker);
+
+    google.maps.event.addListener(marker, 'dragend', function(event) {
+        $('#gps_latitude_0').val(event.latLng.lat());
+        $('#gps_longitude_0').val(event.latLng.lng());
+    });
+}
+
+function deleteMarkers() {
+    markers.forEach(marker => marker.setMap(null));
+    markers = [];
+}
+
+function loadPolygons() {
+    var mapdata = @json($mapdata); // Existing data from the view
+
+    function plotPolygon(parcel) {
+        var polygon = new google.maps.Polygon({
+            paths: parcel.coordinates.map(coord => new google.maps.LatLng(coord.lat, coord.lng)),
+            strokeColor: parcel.strokecolor || '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: parcel.fillcolor || '#FF0000',
+            fillOpacity: 0.02
+        });
+        polygon.setMap(map);
+        polygons.push(polygon);
+
+        google.maps.event.addListener(polygon, 'click', function() {
+    var contentString = '<div style="font-size: 14px; color: #333; background-color: #f0f0f0; padding: 10px; border-radius: 5px;">' +
+                        '<strong>' + parcel.polygon_name + '</strong>'+ '<br>' +
+                        '<strong>Area:</strong> ' +'<strong>' + parcel.area + ' sq. meters'+'</strong>' +'<br>'+
+                        '<strong>Altitude:</strong> '+'<strong>' + parcel.altitude +' meters' + '</strong>' +
+                        '</div>';
+
+    var infowindow = new google.maps.InfoWindow({ content: contentString });
+    infowindow.setPosition(parcel.coordinates[0]);
+    infowindow.open(map);
+});
+    }
+
+    // Only process polygons from mapdata, ignoring parceldata
+    mapdata.forEach(parcel => plotPolygon(parcel));
+
+    var bounds = new google.maps.LatLngBounds();
+    mapdata.forEach(parcel => {
+        parcel.coordinates.forEach(coord => bounds.extend(new google.maps.LatLng(coord.lat, coord.lng)));
+    });
+    map.fitBounds(bounds);
+}
+
+
+function loadDistrictsAndPolygons() {
+    $.ajax({
+        url: '/', // Replace with your server endpoint
+        method: 'GET',
+        success: function(response) {
+            var districtsData = response.districtsData;
+            var polygonsData = response.polygonsData;
+
+            // Add district markers
+            districtsData.forEach(function(district) {
+                var position = { lat: parseFloat(district.gpsLatitude), lng: parseFloat(district.gpsLongitude) };
+                console.log('Adding district marker:', district); // Log each district being added
+                addDistrictMarker(position, district.districtName, district.description, district.id); // Pass district ID
+            });
+            console.log('Total district markers added:', districtsData.length); // Log total number of district markers added
+
+            // Draw additional polygons
+            polygonsData.forEach(function(polygonData) {
+                console.log('Drawing polygon with coordinates:', polygonData.coordinates); // Log polygon coordinates
+                drawPolygon(polygonData.coordinates, polygonData); // Assuming polygonData contains options
+            });
+            console.log('Total polygons drawn:', polygonsData.length); // Log total number of polygons drawn
+        },
+        error: function(error) {
+            console.error('Error loading map data:', error); // Log error message
+        }
+    });
+}
+
+function addDistrictMarker(position, districtName, districtType, description, districtId) {
+    var icon = {
+        url: "{{ asset('assets/images/district.png') }}", // Ensure correct path
+        scaledSize: new google.maps.Size(20, 30)
+    };
+
+    // Function to capitalize the first letter of each word
+    function toProperCase(str) {
+        return str.replace(/\w\S*/g, function(txt) {
+            return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase();
+        });
+    }
+
+    // Convert districtName to proper case
+    var formattedDistrictName = toProperCase(districtName);
+
+    var marker = new google.maps.Marker({
+        position: position,
+        map: map,
+        icon: icon,
+        title: formattedDistrictName
+    });
+
+    var infowindow = new google.maps.InfoWindow({
+        content: '<div style="font-size: 14px; color: #333; background-color: #f0f0f0; padding: 10px; border-radius: 5px;">' +
+                 '<strong>' + formattedDistrictName + '</strong><br>' +
+                // Add district type here
+                 '<strong>' + districtType + '</strong>' +
+                 '</div>'
+    });
+
+    marker.addListener('click', function() {
+        infowindow.open(map, marker);
+    });
+}
+
+
+
+
+function drawPolygon(coordinates, options) {
+    var polygonCoords = coordinates.map(coord => new google.maps.LatLng(coord.lat, coord.lng));
+    var polygon = new google.maps.Polygon({
+        paths: polygonCoords,
+        strokeColor: options.strokeColor || '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: options.fillColor || '#FF0000',
+        fillOpacity: options.fillOpacity || 0.35
+    });
+    polygon.setMap(map);
+    polygons.push(polygon);
+}
+
+$(document).ready(function() {
+    initMap();
+});
 
 </script>
   </body>

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\AboutUs;
 use App\Models\ContactUs;
+use App\Models\CropParcel;
 use App\Models\LandingPage;
+use App\Models\Polygon;
 use Illuminate\Http\Request;
 use App\Http\Requests\ParcellaryBoundariesRequest;
 use App\Http\Requests\RegisterRequest;
@@ -350,6 +352,106 @@ class LandingPageController extends Controller
     
     public function LandingPage(Request $request)
     {
+        
+        $polygons = Polygon::all();
+        // Fetch all farm profiles
+        $farmProfiles = FarmProfile::with(['cropFarms', 'personalInformation'])->get();
+
+
+        // Fetch all agri districts
+        $agriDistricts = AgriDistrict::all(); // Get all agri districts
+                   // Prepare agri district GPS coordinates
+                   $districtsData = [];
+                   foreach ($agriDistricts as $district) {
+                       $districtsData[] = [
+                           'gpsLatitude' => $district->latitude,
+                           'gpsLongitude' => $district->longitude,
+                           'districtName' => $district->district,
+                           'description' => $district->description,
+                     
+                       ];
+                   }
+                   $polygonsData = [];
+                   foreach ($polygons as $polygon) {
+                       // Prepare coordinates array from vertex fields
+                       $coordinates = [
+                           ['lat' => $polygon->verone_latitude, 'lng' => $polygon->verone_longitude],
+                           ['lat' => $polygon->vertwo_latitude, 'lng' => $polygon->vertwo_longitude],
+                           ['lat' => $polygon->verthree_latitude, 'lng' => $polygon->verthree_longitude],
+                           ['lat' => $polygon->vertfour_latitude, 'lng' => $polygon->vertfour_longitude],
+                           ['lat' => $polygon->verfive_latitude, 'lng' => $polygon->verfive_longitude],
+                           ['lat' => $polygon->versix_latitude, 'lng' => $polygon->versix_longitude],
+                           ['lat' => $polygon->verseven_latitude, 'lng' => $polygon->verseven_longitude],
+                           ['lat' => $polygon->vereight_latitude, 'lng' => $polygon->verteight_longitude]
+                       ];
+                       
+                       // Push to polygonData
+                       $polygonsData[] = [
+                           'id' => $polygon->id,
+                           'name' => $polygon->poly_name,
+                           'coordinates' => $coordinates,
+                           'strokeColor' => $polygon->strokecolor, // Stroke color of the polygon
+                           'area' => $polygon->area, // Area of the polygon (if applicable)
+                           'perimeter' => $polygon->perimeter // Perimeter of the polygon (if applicable)
+                       ];
+                   }
+                   
+                
+       
+                   // Fetch all CropParcel records and transform them
+                   $mapdata = CropParcel::all()->map(function($parcel) {
+                   
+                       // Decode the JSON coordinates
+                       $coordinates = json_decode($parcel->coordinates);
+                       
+                       // Check if the coordinates are valid and properly formatted
+                       if (!is_array($coordinates)) {
+                       //   echo "Invalid coordinates for parcel ID {$parcel->id}: " . $parcel->coordinates . "\n";
+                           return null; // Return null for invalid data
+                       }
+       
+                       return [
+                           'polygon_name' => $parcel->polygon_name, // Include the ID for reference
+                           'coordinates' => $coordinates, // Include the decoded coordinates
+                           'area' => $parcel->area, // Assuming there's an area field
+                           'altitude' => $parcel->altitude, // Assuming there's an altitude field
+                           'strokecolor' => $parcel->strokecolor, // Include the stroke color
+                           'fillColor' => $parcel->fillColor // Optionally include the fill color if available
+                       ];
+                   })->filter(); // Remove any null values from the collection
+       
+                   
+                       $parceldata = ParcellaryBoundaries::all()->map(function($parcel) {
+                           // Output the individual parcel data for debugging
+                       //   echo "Parcel data fetched: " . json_encode($parcel) . "\n";
+       
+                           // Decode the JSON coordinates
+                           $coordinates = json_decode($parcel->coordinates);
+                           
+                           // Check if the coordinates are valid and properly formatted
+                           if (!is_array($coordinates)) {
+                           //   echo "Invalid coordinates for parcel ID {$parcel->id}: " . $parcel->coordinates . "\n";
+                               return null; // Return null for invalid data
+                           }
+       
+                           return [
+                               'parcel_name' => $parcel->parcel_name, // Include the ID for reference
+                               'arpowner_na' => $parcel->arpowner_na, 
+                               'agri_districts' => $parcel->agri_districts, 
+                               'barangay_name' => $parcel->barangay_name, 
+                               'tct_no' => $parcel->tct_no, 
+                               'lot_no' => $parcel->lot_no, 
+                               'pkind_desc' => $parcel->pkind_desc, 
+                               'puse_desc' => $parcel->puse_desc, 
+                               'actual_used' => $parcel->actual_used, 
+                               'coordinates' => $coordinates, // Include the decoded coordinates
+                               'area' => $parcel->area, // Assuming there's an area field
+                               'altitude' => $parcel->altitude, // Assuming there's an altitude field
+                               'strokecolor' => $parcel->strokecolor, // Include the stroke color
+                           
+                           ];
+                       })->filter(); // Remove any null values from the collection
+       
        
                 // Fetch distinct crops and districts from the database
                 $crops = Crop::distinct()->pluck('crop_name');
@@ -816,6 +918,9 @@ foreach ($totalCostByYear as $cost) {
 }
 
 
+
+        
+
 // Return the data as JSON for AJAX requests
 return response()->json([
     
@@ -843,7 +948,8 @@ return response()->json([
     'years' => $years,
     'totalCosts' => $totalCosts,
     'districtFarmData'=>$districtFarmData,
-  
+    'districtsData' => $districtsData,
+    'polygons' => $polygonsData,
     
 //    '$totalVariableCostsByDistrict'=>$$totalVariableCostsByDistrict
 
@@ -853,22 +959,20 @@ return response()->json([
                 }
     
                 // Pass all data to the view
-                return view('landing-page.page', compact(
-                    'totalFarms',
-                    'totalAreaPlanted',
-                    'totalAreaYield',
-                    'totalCost',
-                    'yieldPerAreaPlanted',
-                    'averageCostPerAreaPlanted',
-                    'totalRiceProduction',
-                    'crops',
+                return view('landing-page.page', [
+                
+                    'crops'=> $crops,
                    
-                    'districts',
-                 
+                    'districts'=> $districts,
+                //    'mapdata' => $mapdata, // Pass to view
+                //     'parceldata'=> $parceldata 
+
+                'mapdata' => $mapdata, // Pass to view
+                    'parceldata'=> $parceldata 
                    
                 
                  
-                ));
+            ]);
             }
  
     
