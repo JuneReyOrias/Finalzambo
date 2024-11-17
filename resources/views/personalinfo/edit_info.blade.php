@@ -482,7 +482,10 @@
                                         <br>
                                         <h3>a. Personal Info</h3>
                                         <div class="input-box col-md-4">
-                                            <input type="hidden" class="form-control light-gray-placeholder users_id" name="users_id" value="{{$personalinfos->users_id}}">
+                                            <input type="hidden" class="form-control light-gray-placeholder users_id" name="users_id" value="{{$userId}}">
+                                            <input type="hidden" class="form-control province light-gray-placeholder @error('last_name') is-invalid @enderror" name="Country" id="validationCustom01" value="Philippines" readonly >
+                                            <input type="hidden" class="form-control province light-gray-placeholder @error('last_name') is-invalid @enderror" name="province" id="validationCustom01" value="Zamboanga del sur" readonly >
+                                            <input type="hidden"name="email" class="form-control city light-gray-placeholder @error('email') is-invalid @enderror" name="city" id="validationCustom01" value="Zamboanga City" readonly >
                                         </div>
                                         <div class="user-details">
                                             <!-- Existing fields here -->
@@ -827,7 +830,7 @@
                                               <div class="user-details">
                                                 <div class="input-box col-md-4">
                                                     <span class="details">Agri-District</span>
-                                                    <select class="form-control light-gray-placeholder gray-text @error('agri_district') is-invalid @enderror" name="agri_district"  id="districtSelect"  aria-label="Floating label select e">
+                                                    <select class="form-control light-gray-placeholder gray-text @error('agri_district') is-invalid @enderror" name="district"  id="districtSelect"  aria-label="Floating label select e">
                                                         <option value="" disabled selected>Select AgriDistrict</option>
                                                         <!-- Add other options as needed -->
                                                     </select>
@@ -841,7 +844,7 @@
                                                         <div class="d-flex align-items-center">
                                                             <!-- Select dropdown -->
                                                             <select class="form-control barangay custom-select light-gray-placeholder gray-text barangaySelect @error('barangay') is-invalid @enderror" name="barangay" id="SelectBarangay" aria-label="Floating label select e">
-                                                                <option value="" disabled selected>Select Barangay</option>
+                                                                <option value="{{$personalinfos->barangay}}">{{$personalinfos->barangay}}</option>
                                                                 <option value="add">Add New Barangay...</option>
                                                             </select>
                                                         </div>
@@ -865,7 +868,7 @@
                                         <div class="d-flex align-items-center">
                                             <!-- Select dropdown -->
                                             <select class="organizationSelect form-control nameof_farmers custom-select light-gray-placeholder gray-text @error('organization') is-invalid @enderror" name="organization" id="SelectOrganization" aria-label="Floating label select e">
-                                                <option value="" disabled selected>Select Organization</option>
+                                                <option value="{{$personalinfos->nameof_farmers_ass_org_coop}}">{{$personalinfos->nameof_farmers_ass_org_coop}}</option>
                                                 <option value="add">Add New Organization...</option>
                                             </select>
 
@@ -3179,8 +3182,8 @@ function checkMmbership() {
         noOrganizationInput.style.display = "none"; // Hide no organization input
         checkAgri(); // Call checkAgri to populate organizations based on selected agri_district
     } else if (membership === "0") { // No
-        organizationInput.style.display = "none"; // Hide organization input
-        noOrganizationInput.style.display = "block"; // Show no organization input
+        organizationInput.style.display = "block"; // Hide organization input
+        noOrganizationInput.style.display = "non"; // Show no organization input
         populateNoOrganizations(); // Populate dropdown with "N/A" or other values if needed
     } else {
         // Handle case if membership value is neither "1" nor "0" (if applicable)

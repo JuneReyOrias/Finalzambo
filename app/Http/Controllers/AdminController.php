@@ -62,6 +62,25 @@ class AdminController extends Controller
                                ->header('Expires', '0');
      });
  }
+
+//farmers data multiple delete
+public function multipleDeletefarmers(Request $request)
+{
+    $ids = $request->input('ids');
+
+    if (empty($ids)) {
+        return response()->json(['message' => 'No records selected'], 400);
+    }
+
+    // Assuming 'YourModel' is the model associated with the data
+    // Replace 'YourModel' with the actual model you're using
+    PersonalInformations::whereIn('id', $ids)->delete();
+
+    return response()->json(['message' => 'Selected records have been deleted successfully']);
+}
+
+
+
 // Variable cost multiple delete
 public function multipleDeleteSoldscost(Request $request)
 {
@@ -217,6 +236,8 @@ public function multipleDelete(Request $request)
         
     public function adminDashb(Request $request)
     {
+
+     
         if (Auth::check()) {
             $userId = Auth::id();
             $admin = User::find($userId);
@@ -683,9 +704,11 @@ return response()->json([
             }
     
             return redirect()->back()->with('error', 'Admin not found.');
+          
         }
     
         return redirect()->route('login')->with('error', 'You need to log in first.');
+        
     }
     
 // Method to check if resources exist
@@ -4171,9 +4194,8 @@ public function CornSave(Request $request)
                 if ($request->has('search')) {
                     $searchTerm = $request->input('search');
                     $barangaysQuery->where(function($query) use ($searchTerm) {
-                        $query->where('no_of_person', 'like', "%$searchTerm%")
-                            ->orWhere('total_labor_cost', 'like', "%$searchTerm%")
-                            ->orWhere('rate_per_person', 'like', "%$searchTerm%");
+                        $query->where('barangay_name', 'like', "%$searchTerm%");
+                           
                     });
                 }
                 $barangays = $barangaysQuery->orderBy('id','asc')->paginate(10);
@@ -4407,9 +4429,9 @@ public function CornSave(Request $request)
                         if ($request->has('search')) {
                             $searchTerm = $request->input('search');
                             $FarmerOrgQuery->where(function($query) use ($searchTerm) {
-                                $query->where('no_of_person', 'like', "%$searchTerm%")
-                                    ->orWhere('total_labor_cost', 'like', "%$searchTerm%")
-                                    ->orWhere('rate_per_person', 'like', "%$searchTerm%");
+                                $query->where('organization_name', 'like', "%$searchTerm%");
+                                  
+                                
                             });
                         }
                         $FarmerOrg = $FarmerOrgQuery->orderBy('id','asc')->paginate(10);

@@ -11,7 +11,8 @@ use App\Models\Barangay;
 use App\Models\CropCategory;
 use App\Models\Categorize;
 use App\Models\PersonalInformations;
-use App\Models\VariableCost;
+use App\Models\VariableCost; 
+use App\Models\PersonalInformationArchive;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\MultipleFile;
 use App\Models\ParcellaryBoundaries;
@@ -510,26 +511,53 @@ if ($request->hasFile('image') && $request->file('image')->isValid()) {
                     $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
                     $personalinfos= PersonalInformations::find($id);
                // Handle AJAX requests
-            if ($request->ajax()) {
+               if ($request->ajax()) {
+                // Get the request type
                 $type = $request->input('type');
-
-                
-                    // Handle the 'fixedData' request type for fetchingMachineriesUseds data
-                    if ($type === 'personalinfos') {
-                        $personalinfos = PersonalInformations::find($id); // Find the fixed cost data by ID
-                        if ($personalinfos) {
-                            return response()->json($personalinfos); // Return the data as JSON
-                        } else {
-                            return response()->json(['error' => 'farm data not found.'], 404);
-                        }
+        
+                // Handle the 'personalinfos' request type
+                if ($type === 'personalinfos') {
+                    // Find the PersonalInformation data by ID
+                    $personalinfos = PersonalInformations::find($id); 
+        
+                    if ($personalinfos) {
+                        return response()->json($personalinfos); // Return the data as JSON
+                    } else {
+                        return response()->json(['error' => 'Personal information not found.'], 404);
                     }
-                // Handle requests for agri-districts
+                }
+   // Handle the 'archives' request type for fetching archives by PersonalInformations ID
+if ($type === 'archives') {
+    // First, check if the PersonalInformation record exists
+    $personalinfos = PersonalInformations::find($id);
+
+    // If the PersonalInformation record is not found, return a 404 with the message
+    if (!$personalinfos) {
+        return response()->json(['message' => 'Personal Information not found.'], 404);
+    }
+
+    // Fetch the archives associated with the PersonalInformation ID
+    $archives = PersonalInformationArchive::where('personal_informations_id', $id)->get();
+
+    // If no archives are found, return a message
+    if ($archives->isEmpty()) {
+        return response()->json(['message' => 'No archive record yet.'], 404);
+    }
+
+    // Return the archives data as JSON
+    return response()->json($archives);
+}
+
+
+
+        
+                // Handle the 'districts' request type
                 if ($type === 'districts') {
                     $districts = AgriDistrict::pluck('district', 'district'); // Fetch agri-district names
                     return response()->json($districts);
                 }
-
-                // Handle requests for barangays based on the selected district
+        
+                // Handle the 'barangays' request type
                 if ($type === 'barangays') {
                     $district = $request->input('district');
                     if (!$district) {
@@ -538,8 +566,8 @@ if ($request->hasFile('image') && $request->file('image')->isValid()) {
                     $barangays = Barangay::where('district', $district)->pluck('barangay_name', 'barangay_name');
                     return response()->json($barangays);
                 }
-
-                // Handle requests for organizations based on the selected district
+        
+                // Handle the 'organizations' request type
                 if ($type === 'organizations') {
                     $district = $request->input('district');
                     if (!$district) {
@@ -548,14 +576,14 @@ if ($request->hasFile('image') && $request->file('image')->isValid()) {
                     $organizations = FarmerOrg::where('district', $district)->pluck('organization_name', 'organization_name');
                     return response()->json($organizations);
                 }
-
-                // Handle requests for crop names
+        
+                // Handle the 'crops' request type
                 if ($type === 'crops') {
                     $crops = CropCategory::pluck('crop_name', 'crop_name');
                     return response()->json($crops);
                 }
-
-                // Handle requests for crop varieties based on the selected crop name
+        
+                // Handle the 'varieties' request type
                 if ($type === 'varieties') {
                     $cropName = $request->input('crop_name');
                     if (!$cropName) {
@@ -564,8 +592,8 @@ if ($request->hasFile('image') && $request->file('image')->isValid()) {
                     $varieties = Categorize::where('crop_name', $cropName)->pluck('variety_name', 'variety_name');
                     return response()->json($varieties);
                 }
-
-                // Handle requests for seed names based on the selected variety name
+        
+                // Handle the 'seedname' request type
                 if ($type === 'seedname') {
                     $varietyName = $request->input('variety_name');
                     if (!$varietyName) {
@@ -574,12 +602,10 @@ if ($request->hasFile('image') && $request->file('image')->isValid()) {
                     $seeds = Seed::where('variety_name', $varietyName)->pluck('seed_name', 'seed_name');
                     return response()->json($seeds);
                 }
-
+        
                 // Invalid request type
                 return response()->json(['error' => 'Invalid type parameter.'], 400);
             }
-
-        
                     
                     $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
                     // Return the view with the fetched data
@@ -598,158 +624,118 @@ if ($request->hasFile('image') && $request->file('image')->isValid()) {
                 return redirect()->route('login');
             }
         }
-        // new update store by admin FOR PERSONAL INFO
-        // public function PersonalInfoUpdate(Request $request, $id)
-        // {
-        //     // Farmer info
-        //     $farmerdata = $request->farmer;
-        
-        //     // Find the PersonalInformation record by ID and check if it exists
-        //     $personalinfos = PersonalInformations::find($id);
-        
-           
-        //     // Proceed with updating if the record is found
-        //     $personalinfos->users_id = $farmerdata['users_id'];
-        //     $personalinfos->first_name = $farmerdata['first_name'];
-        //     $personalinfos->middle_name = $farmerdata['middle_name'];
-        //     $personalinfos->last_name = $farmerdata['last_name'];
-        //     $personalinfos->extension_name = $farmerdata['extension_name'];
-        //     $personalinfos->country = $farmerdata['country'];
-        //     $personalinfos->province = $farmerdata['province'];
-        //     $personalinfos->city = $farmerdata['city'];
-        //     $personalinfos->district = $farmerdata['agri_district'];
-        //     $personalinfos->barangay = $farmerdata['barangay'];
-        //     $personalinfos->street = $farmerdata['street'];
-        //     $personalinfos->zip_code = $farmerdata['zip_code'];
-        //     $personalinfos->sex = $farmerdata['sex'];
-        //     $personalinfos->religion = $farmerdata['religion'];
-        //     $personalinfos->date_of_birth = $farmerdata['date_of_birth'];
-        //     $personalinfos->place_of_birth = $farmerdata['place_of_birth'];
-        //     $personalinfos->contact_no = $farmerdata['contact_no'];
-        //     $personalinfos->civil_status = $farmerdata['civil_status'];
-        //     $personalinfos->name_legal_spouse = $farmerdata['name_legal_spouse'];
-        //     $personalinfos->no_of_children = $farmerdata['no_of_children'];
-        //     $personalinfos->mothers_maiden_name = $farmerdata['mothers_maiden_name'];
-        //     $personalinfos->highest_formal_education = $farmerdata['highest_formal_education'];
-        //     $personalinfos->person_with_disability = $farmerdata['person_with_disability'];
-        //     $personalinfos->pwd_id_no = $farmerdata['YEspwd_id_no'];
-        //     $personalinfos->government_issued_id = $farmerdata['government_issued_id'];
-        //     $personalinfos->id_type = $farmerdata['id_type'];
-        //     $personalinfos->gov_id_no = $farmerdata['add_Idtype'];
-        //     $personalinfos->member_ofany_farmers_ass_org_coop = $farmerdata['member_ofany_farmers'];
-        //     $personalinfos->nameof_farmers_ass_org_coop = $farmerdata['nameof_farmers'];
-        //     $personalinfos->name_contact_person = $farmerdata['name_contact_person'];
-        //     $personalinfos->cp_tel_no = $farmerdata['cp_tel_no'];
-        //     $personalinfos->date_interview = $farmerdata['date_of_interviewed'];
-        //     $personalinfos->save();
-        
-        //     // Continue with the rest of the function (farm, crops, etc.)
-        // }
-        
-        public function PersonalInfoUpdate(Request $request,$id)
+ 
+        public function PersonalInfoUpdate(Request $request, $id)
         {
-  
-             try{
+            try {
+                // Step 1: Find the existing personal information record
+                $data = PersonalInformations::find($id);
         
-
-                    // $data= $request->validated();
-                    // $data= $request->all();
-                    $data= PersonalInformations::find($id);
-                    
-                   
-  // Check if a file is present in the request and if it's valid
-if ($request->hasFile('image') && $request->file('image')->isValid()) {
-    // Retrieve the image file from the request
-    $image = $request->file('image');
-    
-    // Generate a unique image name using current timestamp and file extension
-    $imagename = time() . '.' . $image->getClientOriginalExtension();
-    
-    // Move the uploaded image to the 'personalInfoimages' directory with the generated name
-    $image->move('personalInfoimages', $imagename);
-    
-    // Set the image name in the PersonalInformation model
-    $data->image = $imagename;
-} 
-            $data->users_id =$request->users_id;
-            $data->first_name= $request->first_name;
-            $data->middle_name= $request->middle_name;
-            $data->last_name=  $request->last_name;
-
-            if ($request->extension_name === 'others') {
-                $data->extension_name = $request->add_extName; // Use the value entered in the "add_extenstion name" input field
-           } else {
-                $data->extension_name = $request->extension_name; // Use the selected color from the dropdown
-           }
-            $data->country=  $request->country;
-            $data->province=  $request->province;
-            $data->city=  $request->city;
-            $data->agri_district=  $request->agri_district;
-            $data->barangay=  $request->barangay;
-            
-             $data->home_address=  $request->home_address;
-             $data->sex=  $request->sex;
-
-             if ($request->religion=== 'other') {
-                $data->religion= $request->add_Religion; // Use the value entered in the "religion" input field
-           } else {
-                $data->religion= $request->religion; // Use the selected religion from the dropdown
-           }
-             $data->date_of_birth=  $request->date_of_birth;
-            
-             if ($request->place_of_birth=== 'Add Place of Birth') {
-                $data->place_of_birth= $request->add_PlaceBirth; // Use the value entered in the "place_of_birth" input field
-           } else {
-                $data->place_of_birth= $request->place_of_birth; // Use the selected place_of_birth from the dropdown
-           }
-             $data->contact_no=  $request->contact_no;
-             $data->civil_status=  $request->civil_status;
-             $data->name_legal_spouse=  $request->name_legal_spouse;
-
-             if ($request->no_of_children=== 'Add') {
-                $data->no_of_children= $request->add_noChildren; // Use the value entered in the "no_of_children" input field
-                } else {
-                        $data->no_of_children= $request->no_of_children; // Use the selected no_of_children from the dropdown
+                // Check if data is found
+                if (!$data) {
+                    return redirect()->route('admin.update.personalinfo', $id)
+                        ->with('message', 'Personal information not found');
                 }
-    
-             $data->mothers_maiden_name=  $request->mothers_maiden_name;
-             if ($request->highest_formal_education=== 'Other') {
-                $data->highest_formal_education= $request->add_formEduc; // Use the value entered in the "highest_formal_education" input field
-                } else {
-                        $data->highest_formal_education= $request->highest_formal_education; // Use the selected highest_formal_education from the dropdown
-                }
-             $data->person_with_disability=  $request->person_with_disability;
-             $data->pwd_id_no=  $request->pwd_id_no;
-             $data->government_issued_id=  $request->government_issued_id;
-             $data->id_type=  $request->id_type;
-             $data->gov_id_no=  $request->gov_id_no;
-             $data->member_ofany_farmers_ass_org_coop=  $request->member_ofany_farmers_ass_org_coop;
-             
-             if ($request->nameof_farmers_ass_org_coop === 'add') {
-                $data->nameof_farmers_ass_org_coop = $request->add_FarmersGroup; // Use the value entered in the "add_extenstion name" input field
-           } else {
-                $data->nameof_farmers_ass_org_coop = $request->nameof_farmers_ass_org_coop; // Use the selected color from the dropdown
-           }
-             $data->name_contact_person=  $request->name_contact_person;
-      
-             $data->cp_tel_no=  $request->cp_tel_no;
-            
-
-
-
-                    // dd($data);
-                    $data->save();     
+        
+                // Step 2: Archive the current data before updating it
+                PersonalInformationArchive::create([
+                    'personal_informations_id' => $data->id,  // Foreign key reference to the original record
+                    'users_id' => $data->users_id,
+                    'first_name' => $data->first_name,
+                    'middle_name' => $data->middle_name,
+                    'last_name' => $data->last_name,
+                    'extension_name' => $data->extension_name,
+                    'country' => $data->country,
+                    'province' => $data->province,
+                    'city' => $data->city,
+                    'district' => $data->district,
+                    'barangay' => $data->barangay,
+                    'home_address' => $data->home_address,
+                    'sex' => $data->sex,
+                    'religion' => $data->religion,
+                    'date_of_birth' => $data->date_of_birth,
+                    'place_of_birth' => $data->place_of_birth,
+                    'contact_no' => $data->contact_no,
+                    'civil_status' => $data->civil_status,
+                    'name_legal_spouse' => $data->name_legal_spouse,
+                    'no_of_children' => $data->no_of_children,
+                    'mothers_maiden_name' => $data->mothers_maiden_name,
+                    'highest_formal_education' => $data->highest_formal_education,
+                    'person_with_disability' => $data->person_with_disability,
+                    'pwd_id_no' => $data->pwd_id_no,
+                    'government_issued_id' => $data->government_issued_id,
+                    'id_type' => $data->id_type,
+                    'gov_id_no' => $data->gov_id_no,
+                    'member_ofany_farmers_ass_org_coop' => $data->member_ofany_farmers_ass_org_coop,
+                    'nameof_farmers_ass_org_coop' => $data->nameof_farmers_ass_org_coop,
+                    'name_contact_person' => $data->name_contact_person,
+                    'cp_tel_no' => $data->cp_tel_no,
+                    'date_interview' => $data->date_interview,
+                ]);
+        
+                // Step 3: Handle the image upload if provided
+                if ($request->hasFile('image') && $request->file('image')->isValid()) {
+                    // Retrieve the image file from the request
+                    $image = $request->file('image');
                     
+                    // Generate a unique image name using current timestamp and file extension
+                    $imagename = time() . '.' . $image->getClientOriginalExtension();
+                    
+                    // Move the uploaded image to the 'personalInfoimages' directory with the generated name
+                    $image->move(public_path('personalInfoimages'), $imagename);
+                    
+                    // Update the image name in the PersonalInformation model
+                    $data->image = $imagename;
+                }
+        
+                // Step 4: Update the personal information with the new request data
+                $data->update([
+                    'users_id' => $request->users_id,
+                    'first_name' => $request->first_name,
+                    'middle_name' => $request->middle_name,
+                    'last_name' => $request->last_name,
+                    'extension_name' => ($request->extension_name === 'others') ? $request->add_extName : $request->extension_name,
+                    'country' => $request->country,
+                    'province' => $request->province,
+                    'city' => $request->city,
+                    'district' => $request->district,
+                    'barangay' => $request->barangay,
+                    'home_address' => $request->home_address,
+                    'sex' => $request->sex,
+                    'religion' => ($request->religion === 'other') ? $request->add_Religion : $request->religion,
+                    'date_of_birth' => $request->date_of_birth,
+                    'place_of_birth' => ($request->place_of_birth === 'Add Place of Birth') ? $request->add_PlaceBirth : $request->place_of_birth,
+                    'contact_no' => $request->contact_no,
+                    'civil_status' => $request->civil_status,
+                    'name_legal_spouse' => $request->name_legal_spouse,
+                    'no_of_children' => ($request->no_of_children === 'Add') ? $request->add_noChildren : $request->no_of_children,
+                    'mothers_maiden_name' => $request->mothers_maiden_name,
+                    'highest_formal_education' => ($request->highest_formal_education === 'Other') ? $request->add_formEduc : $request->highest_formal_education,
+                    'person_with_disability' => $request->person_with_disability,
+                    'pwd_id_no' => $request->pwd_id_no,
+                    'government_issued_id' => $request->government_issued_id,
+                    'id_type' => $request->id_type,
+                    'gov_id_no' => $request->gov_id_no,
+                    'member_ofany_farmers_ass_org_coop' => $request->member_ofany_farmers_ass_org_coop,
+                    'nameof_farmers_ass_org_coop' => ($request->nameof_farmers_ass_org_coop === 'add') ? $request->add_FarmersGroup : $request->nameof_farmers_ass_org_coop,
+                    'name_contact_person' => $request->name_contact_person,
+                    'cp_tel_no' => $request->cp_tel_no,
+                    'date_interview' => $request->date_interview,
+                ]);
+        
+                // Step 5: Return a success message and redirect
+                return redirect('/admin-view-General-Farmers')->with('message','Personal informations Updated successsfully');
                 
-                    return redirect('/admin-view-General-Farmers')->with('message','Personal informations Updated successsfully');
-                
-                }
-                catch(\Exception $ex){
-                    // dd($ex); // Debugging statement to inspect the exception
-                    return redirect('/admin-update-personalinfo/{personalinfos}')->with('message','Someting went wrong');
-                    
-                }   
-            } 
+        
+            } catch (\Exception $ex) {
+                // Log the error message for debugging
+                // \Log::error("Error updating personal information: " . $ex->getMessage());
+                dd($ex);
+                // Step 6: Handle the error gracefully and redirect
+                return redirect('/admin-update-personalinfo/{personalinfos}')->with('message','Someting went wrong');
+            }
+        }
+        
 
             // deleting personal info by admin
             public function DeletePersonalInfo($id) {

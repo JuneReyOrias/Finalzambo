@@ -79,12 +79,12 @@ Route::get('/agent-import-multipleFile', [FileController::class, 'downloadTempla
     Route::post('/update-farm-profile', [AgentController::class, 'updateFarmProfile']);
     Route::post('/admin-update-farm-profile', [AdminController::class, 'updateCropLocation']);
     // multiple delete Production data, Fixed Costs, Machineries COst, Variable Cost, Solds
-    Route::post('/admin-multipleDelete', [AdminController::class, 'multipleDelete']);
+    Route::post('admin-view-Farmers-productions/delete', [AdminController::class, 'multipleDelete']);
     Route::post('/admin-multiFixedcost', [AdminController::class, 'multipleDeleteFixedCost']);
     Route::post('/admin-multiMachineries', [AdminController::class, 'multipleDeleteMachineries']);
     Route::post('/admin-multiVariablecost', [AdminController::class, 'multipleDeleteVariablecost']);
     Route::post('/admin-multiSoldcost', [AdminController::class, 'multipleDeleteSoldscost']);
-
+    Route::post('/admin-multiSoldcost', [AdminController::class, 'multipleDeleteSoldscost']);
     // farmer profiling
     Route::get('/user-farmer-Profiling',[FarmProfileController::class, 'FarmerProfiling'])->name('user.farmerInfo.profilingData');
 
@@ -277,12 +277,13 @@ Route::post('/admin-edit-features/{Page}',[LandingPageController::class,'updateF
     Route::get('/admin-view-barangays',[AdminController::class,'viewBaranagay'])->name('admin.barangay.view_forms');
 
 
-    Route::middleware(['auth', 'prevent-back-history'])->group(function () {
+    // Route::middleware(['auth', 'prevent-back-history'])->group(function () {
+    //     Route::get('/dashboard', [DashboardController::class, 'index']);
+    //     Route::get('/profile', [ProfileController::class, 'index']);
+    //     // Add more protected routes here
+    // });
         // admin corn map 
         Route::get('/admin-view-corn-map',[AdminController::class,'CornMap'])->name('map.cornmap');
-        // Add more protected routes here
-    });
-       
 
         // admin coconut map 
         Route::get('/admin-view-coconut-map',[AdminController::class,'CoconutMap'])->name('map.coconutmap');
@@ -672,7 +673,7 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 Route::get('/personalinformation/agent',[PersonalInformationsController::class,'Agent'])->name('personalinfo.index_agent');
 
-Route::middleware(['auth','role:admin','prevent-back-history'])->group(function(){
+Route::middleware(['auth','role:admin','PreventBackHistory'])->group(function(){
 
     Route::get('/admin/dashboard', [AdminController::class, 'adminDashb'])->name('admin.index');
 
@@ -692,7 +693,7 @@ Route::get('/edit-accounts/{users}', [AdminController::class, 'editAccount'])->n
 Route::post('/edit-accounts/{users}', [AdminController::class, 'updateAccounts']);
 Route::delete('/delete-accounts/{users}', [AdminController::class, 'deleteusers'])->name('admin.create_account.delete');
 //agent route
-Route::middleware(['auth','role:agent','prevent-back-history'])->group(function(){
+Route::middleware(['auth','role:agent','PreventBackHistory'])->group(function(){
 Route::get('/agent/dashboard', [AgentController::class, 'AgentDashboard'])->name('agent.agent_index');
 Route::get('/agent/logout', [AgentController::class, 'agentlog'])->name('agent.logout');
 
