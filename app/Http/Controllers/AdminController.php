@@ -47,7 +47,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\UserDataUpdated;
-
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Exception;
 class AdminController extends Controller
 {
@@ -62,6 +63,30 @@ class AdminController extends Controller
                                ->header('Expires', '0');
      });
  }
+
+// update the password
+
+    /**
+     * Update user password.
+     */
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|min:8', // Add more validation rules as needed
+        ]);
+    
+        $user = User::find($request->id);
+    
+        if ($user) {
+            $user->password = bcrypt($request->password);
+            $user->save();
+    
+            return response()->json(['message' => 'Password updated successfully']);
+        }
+    
+        return response()->json(['error' => 'User not found'], 404);
+    }
+    
 
 //farmers data multiple delete
 public function multipleDeletefarmers(Request $request)
@@ -1363,7 +1388,8 @@ public function newAccounts()
             
                     // Find the user based on the retrieved ID
                     $admin = User::find($userId);
-            
+               // Find the user based on the retrieved ID
+                                $admin = User::find($userId);
                     if ($admin) {
                         // Assuming $user represents the currently logged-in user
                         $user = auth()->user();
@@ -1456,6 +1482,101 @@ public function newAccounts()
                                 return redirect()->route('login');
                             }
                         }
+
+
+                        public function  editpassword($id)
+                        {
+                            // Check if the user is authenticated
+                            if (Auth::check()) {
+                                // User is authenticated, proceed with retrieving the user's ID
+                                $userId = Auth::id();
+                        
+                                // Find the user based on the retrieved ID
+                                $admin = User::find($userId);
+                        
+                                if ($admin) {
+                                    // Assuming $user represents the currently logged-in user
+                                    $user = auth()->user();
+                        
+                                    // Check if user is authenticated before proceeding
+                                    if (!$user) {
+                                        // Handle unauthenticated user, for example, redirect them to login
+                                        return redirect()->route('login');
+                                    }
+                        
+                                    // Fetch user's information
+                                    $user_id = $user->id;
+                                    $agri_districts = $user->agri_district;
+                                    $agri_districts_id = $user->agri_districts_id;
+                        
+                                    // Find the user by their ID and eager load the personalInformation relationship
+                                    $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+                                    $users=User::find($id);
+                                    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                                    // Return the view with the fetched data
+                                    return view('admin.create_account.update_password', compact('agri_districts', 'agri_districts_id', 'admin', 'profile',
+                                    'totalRiceProduction','users'));
+                                } else {
+                                    // Handle the case where the user is not found
+                                    // You can redirect the user or display an error message
+                                    return redirect()->route('login')->with('error', 'User not found.');
+                                }
+                            } else {
+                                // Handle the case where the user is not authenticated
+                                // Redirect the user to the login page
+                                return redirect()->route('login');
+                            }
+                        }
+
+                        public function Updatepasswords(Request $request, $id){
+                    
+                            try {
+                                
+                        $data= User:: find($id);
+                        if ($data) {
+                            // Check if a file is present in the request and if it's valid
+                            if ($request->hasFile('image') && $request->file('image')->isValid()) {
+                                // Retrieve the image file from the request
+                                $image = $request->file('image');
+            
+                                // Generate a unique image name using current timestamp and file extension
+                                $imagename = time() . '.' . $image->getClientOriginalExtension();
+            
+                                // Move the uploaded image to the 'productimages' directory with the generated name
+                                $image->move('adminimages', $imagename);
+            
+                                // Delete the previous image file, if exists
+                                if ($data->image) {
+                                    Storage::delete('adminimages/' . $data->image);
+                                }
+            
+                                // Set the image name in the Product data
+                                $data->image = $imagename;
+                            }
+            
+                            // $data->name = $request['name'];
+                            $data->password = $request['new_password'];
+                          
+                            // dd($data);
+                            $data->save();
+            
+                            // Redirect back after processing
+                            return redirect('/view-accounts')->with('message', 'Account updated successfully');
+                        } 
+                        } catch (Exception $e) {
+                        //    dd($e);
+                        // Handle any exceptions and redirect back with error message
+                        return redirect()->back()->with('error', 'Error updating password: ' . $e->getMessage());
+                        }
+                        }
+            
+            
+            
+
+
+
+
+
             public function updateAccounts(Request $request, $id){
                     
                 try {

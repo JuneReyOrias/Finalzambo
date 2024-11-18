@@ -692,6 +692,15 @@ Route::get('/view-accounts', [AdminController::class, 'Accountview'])->name('adm
 Route::get('/edit-accounts/{users}', [AdminController::class, 'editAccount'])->name('admin.create_account.edit_accounts');
 Route::post('/edit-accounts/{users}', [AdminController::class, 'updateAccounts']);
 Route::delete('/delete-accounts/{users}', [AdminController::class, 'deleteusers'])->name('admin.create_account.delete');
+Route::get('/edit-password/{users}', [AdminController::class, 'editpassword'])->name('admin.create_account.update_password');
+Route::post('/edit-password/{users}', [AdminController::class, 'Updatepasswords']);
+
+
+
+// update pasword
+Route::post('/updatePassword', [AdminController::class, 'updatePassword'])->name('updatePassword');
+
+
 //agent route
 Route::middleware(['auth','role:agent','PreventBackHistory'])->group(function(){
 Route::get('/agent/dashboard', [AgentController::class, 'AgentDashboard'])->name('agent.agent_index');

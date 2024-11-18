@@ -23,13 +23,13 @@ class User extends Authenticatable
     protected $table="users";
     protected $fillable = [
     
-        'name',
+        'first_name',
+        'last_name',
         'email',
-        'agri_district',
-        'password',
+        'district',
         'role',
+        'password',
         'image',
-
       
     ];
     public function notifications()
