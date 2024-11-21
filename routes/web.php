@@ -76,6 +76,7 @@ Route::get('/agent-import-multipleFile', [FileController::class, 'downloadTempla
 
     // fetching the users
     Route::get('/get-users', [AgentController::class, 'getUsers']);
+    Route::post('/admin-asign-farm-profile', [AdminController::class, 'AdminupdateFarmProfile']);
     Route::post('/update-farm-profile', [AgentController::class, 'updateFarmProfile']);
     Route::post('/admin-update-farm-profile', [AdminController::class, 'updateCropLocation']);
     // multiple delete Production data, Fixed Costs, Machineries COst, Variable Cost, Solds

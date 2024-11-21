@@ -610,7 +610,7 @@ $('#saveUserProfile').on('click', function () {
 
     if (userId) {
         $.ajax({
-            url: '/admin-update-farm-profile', // The route where you handle the request
+            url: '/admin-asign-farm-profile', // The route where you handle the request
             type: 'POST',
             data: {
                 user_id: userId,

@@ -64,6 +64,46 @@ class AdminController extends Controller
      });
  }
 
+// admin update assign farm farmers profile based on users register
+public function AdminupdateFarmProfile(Request $request)
+{
+    // Validate incoming data
+    $request->validate([
+        'user_id' => 'required|exists:users,id', // Ensure the user_id exists in the users table
+        'farm_profile_id' => 'required|exists:farm_profiles,id' // Ensure the farm_profile_id exists
+    ]);
+
+    // Check if the user_id is already associated with another farm profile
+    $existingProfile = FarmProfile::where('users_id', $request->user_id)
+                                   ->where('id', '!=', $request->farm_profile_id)
+                                   ->first();
+
+    if ($existingProfile) {
+        // Respond with a failure message if the user is already associated with another farm profile
+        return response()->json([
+            'success' => false,
+            'message' => 'The selected user is already associated with another farm profile. Please choose a different user.'
+        ]);
+    }
+
+    // Update the farm profile with the new user_id
+    $farmProfile = FarmProfile::findOrFail($request->farm_profile_id);
+    $farmProfile->users_id = $request->user_id;
+    $farmProfile->save();
+
+    // // Send a notification to the user about the update
+    $user = $farmProfile->user; // Assuming you have a relation to the User model
+    $user->notify(new UserDataUpdated($farmProfile));
+
+    // Return a success response
+    return response()->json([
+        'success' => true,
+        'message' => 'Farm profile updated successfully! The user has been notified.'
+    ]);
+}
+
+
+
 // update the password
 
     /**
@@ -1637,18 +1677,18 @@ public function deleteusers($id) {
 
         // Check if the personal information exists
         if (!$users) {
-            return redirect()->back()->with('error', 'Farm Profilenot found');
+            return redirect()->back()->with('error', 'Account not found');
         }
 
         // Delete the personal information data from the database
        $users->delete();
 
         // Redirect back with success message
-        return redirect()->back()->with('message', 'Parcellary Boundaries deleted Successfully');
+        return redirect()->back()->with('message', 'Account deleted Successfully');
 
     } catch (Exception $e) {
         // Handle any exceptions and redirect back with error message
-        return redirect()->back()->with('error', 'Error deleting personal information: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Error deleting account ' . $e->getMessage());
     }
 }
 
