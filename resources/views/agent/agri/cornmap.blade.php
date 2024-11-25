@@ -56,6 +56,7 @@
               <div class="modal-body" id="districtInfoBody">
                   <div class="mb-3">
                       <p id="modalFarmerName" class="fw-bold"></p>
+                      <p id="modaltenurial"></p>
                       <p id="modalAge"></p>
                       <p id="modalCropName"></p>
                       <p id="modalCropVariety"></p>
@@ -253,7 +254,7 @@ function populateFarmerDropdown() {
             addMarker(position, location.cropName, location.farmerName, location.districtName, 
                 location.cropVariety, location.FarmAddress, location.NoYears, location.age, 
                 location.orgName, location.landtitleNo, location.totalPhysicalArea, 
-                location.TotalCultivated, location.croppingperYear, location.Yield);
+                location.TotalCultivated, location.tenurial_status, location.croppingperYear, location.Yield);
         }
     });
 }
@@ -289,7 +290,7 @@ addAllFarmerMarkers();
 
   // Function to add marker to the map with customized icon and farmer's name on hover
 function addMarker(location, cropName, farmerName, districtName, cropVariety, FarmAddress, NoYears, age,
- orgName, landtitleNo, totalPhysicalArea, TotalCultivated,croppingperYear, Yield  ) {
+ orgName, landtitleNo, totalPhysicalArea, TotalCultivated, tenurial_status, croppingperYear, Yield  ) {
     var icon = {
         url: markerIcons[cropName] || markerIcons['default'],
         scaledSize: new google.maps.Size(20, 30)
@@ -317,6 +318,7 @@ function addMarker(location, cropName, farmerName, districtName, cropVariety, Fa
     google.maps.event.addListener(marker, 'click', function() {
         // Populate modal with farmer's name, district name, and crop name
         document.getElementById('modalFarmerName').innerText = "Farmer: " + toTitleCase(farmerName);
+        document.getElementById('modaltenurial').innerText = "Farmer: " + toTitleCase(tenurial_status);
         document.getElementById('modalAge').innerText = "Age: " +  age;
         document.getElementById('modalCropName').innerText = "Crop: " +  toTitleCase(cropName);
         document.getElementById('modalCropVariety').innerText = "Crop Variety: " + toTitleCase(cropVariety);
