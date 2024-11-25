@@ -217,7 +217,7 @@ let gpsData = [];
       // console.log('Starting to load initial map data...'); // Indicate start of loading
 
       $.ajax({
-          url: '/admin-view-corn-map', // Your API endpoint
+          url: '/agent-view-all-crops-map', // Your API endpoint
           method: 'GET',
           success: function(data) {
               // console.log('Map data loaded successfully:', data); // Log the received data

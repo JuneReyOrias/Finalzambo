@@ -322,7 +322,7 @@ Route::post('/admin-edit-features/{Page}',[LandingPageController::class,'updateF
 
 
              // agent corn map 
-        Route::get('agent-view-all-crops-map',[AgentController::class,'CornMap'])->name('agent.agri.cornmap');
+        Route::get('/agent-view-all-crops-map',[AgentController::class,'CornMap'])->name('agent.agri.cornmap');
 
         // agent coconut map 
         Route::get('agent-view-coconut-map',[AgentController::class,'CoconutMaps'])->name('agent.agri.coconutmap');
