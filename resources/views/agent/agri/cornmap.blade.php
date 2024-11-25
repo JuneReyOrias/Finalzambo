@@ -56,7 +56,7 @@
               <div class="modal-body" id="districtInfoBody">
                   <div class="mb-3">
                       <p id="modalFarmerName" class="fw-bold"></p>
-                      <p id="modaltenure"></p>
+                      <p id="modaltenurial"></p>
                       <p id="modalAge"></p>
                       <p id="modalCropName"></p>
                       <p id="modalCropVariety"></p>
@@ -318,7 +318,7 @@ function addMarker(location, cropName, farmerName, districtName, cropVariety, Fa
     google.maps.event.addListener(marker, 'click', function() {
         // Populate modal with farmer's name, district name, and crop name
         document.getElementById('modalFarmerName').innerText = "Farmer: " + toTitleCase(farmerName);
-        document.getElementById('modaltenure').innerText = "Tenurial Status: " +  toTitleCase(tenurial_status);
+        document.getElementById('modaltenurial').innerText = "Tenurial Status: " +  toTitleCase(tenurial_status);
         document.getElementById('modalAge').innerText = "Age: " +  age;
         document.getElementById('modalCropName').innerText = "Crop: " +  toTitleCase(cropName);
         document.getElementById('modalCropVariety').innerText = "Crop Variety: " + toTitleCase(cropVariety);
