@@ -6086,7 +6086,7 @@ public function FarmersReport(){
                                 'NoYears' => $farmProfile->no_of_years_as_farmers,
                                 'totalPhysicalArea' => $farmProfile->total_physical_area,
                                 'TotalCultivated' => $farmProfile->total_area_cultivated,
-                                
+                                'tenurial_status' => $farmProfile->tenurial_status,
                                 'cropName' => $cropNames, // List of crops
                                 'cropVariety' => $cropVariety,
                                 'croppingperYear' => $croppingperYear,
