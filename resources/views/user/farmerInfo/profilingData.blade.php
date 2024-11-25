@@ -34,7 +34,7 @@
                         <div class="profile-head text-center mt-3"> <!-- Centered the profile head -->
                             @foreach ($gpsData as $data)
                             <h5 class="mb-1">{{ $data['farmerName'] }}</h5>
-                            <h5  class="h5 rofile-rating">Age: <span>{{ $data['age'] }}</span></p> <!-- Age -->
+                            <h5  class="h5 rofile-rating">Age: <span>{{ $data['age'] }}</span> No Farm Profile Yet</p> <!-- Age -->
                          
                         @endforeach
                         </div>

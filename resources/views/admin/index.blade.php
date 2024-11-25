@@ -476,8 +476,8 @@ canvas {
                     <h5 class="modal-title" id="farmersModalLabel">Farmers Per District </h5>
                     <div class="ms-auto d-flex align-items-center">
                         <!-- Eye Icon Button with Tooltip -->
-                        <button type="button" class="btn btn-light me-2" data-bs-toggle="modal" data-bs-target="#farmerInfoModal" title="View Farmers Information">
-                            <i class="fa fa-eye"> Farmers</i>
+                        <button type="button" class="btn btn-secondary me-2" data-bs-toggle="modal" data-bs-target="#farmerInfoModal" title="View Farmers Information">
+                            <i class="fa fa-eye"></i>Farmers
                         </button>
                         <!-- Close Button -->
                         <button type="button" class="btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1111,7 +1111,9 @@ function updateDonutChart(donutChartData, centerText, chartTitle) {
         console.error('Invalid donut chart data:', donutChartData);
         return;
     }
-
+    // Calculate total production
+    const totalProduction = donutChartData.datasets[0].data.reduce((acc, value) => acc + value, 0);
+    
     const ctx = document.getElementById('donutChart').getContext('2d');
     if (typeof donutChart !== 'undefined') {
         donutChart.destroy();
@@ -1123,8 +1125,7 @@ function updateDonutChart(donutChartData, centerText, chartTitle) {
             return char.toUpperCase();
         });
     }
-    // Calculate total production
-    const totalProduction = donutChartData.datasets[0].data.reduce((acc, value) => acc + value, 0);
+
 
     // Custom plugin to add text in the center
     const centerTextPlugin = {
@@ -1174,7 +1175,7 @@ function updateDonutChart(donutChartData, centerText, chartTitle) {
                 },
                 title: {
                     display: true,
-                    text: chartTitle || 'Crops Production',
+                    text: `${chartTitle || 'Crops Production'} (Total ${totalProduction.toFixed(2)} tons)`,
                     font: {
                         size: 11,
                         weight: 'bold'
@@ -1893,8 +1894,8 @@ $(document).ready(function() {
                 datasets: [{
                     label: 'Total Farms by District',
                     data: dataValues,
-                    backgroundColor: ['#ff0000', '#55007f', '#e3004d', '#ff00ff', '#ff5500', '#00aa00', '#008FFB'],
-                    borderColor: ['#ff0000', '#55007f', '#e3004d', '#ff00ff', '#ff5500', '#00aa00', '#008FFB'],
+                    backgroundColor: ['#ff0000','#009e2e', '#e3004d', '#ff00ff', '#ff5500', '#55007f', '#008FFB','#009e2e'],
+                    borderColor: ['#ff0000', '#55007f', '#e3004d', '#ff00ff', '#ff5500', '#55007f', '#008FFB','#009e2e'],
                     borderWidth: 1
                 }]
             },

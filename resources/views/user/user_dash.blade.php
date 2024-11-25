@@ -527,8 +527,8 @@ canvas {
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Agri-District</th>
-                                                <th>Farmer Name</th>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
                                                 <th>Organization</th>
                                               
                                             </tr>

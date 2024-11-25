@@ -525,9 +525,10 @@ canvas {
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Agri-District</th>
-                                                <th>Farmer Name</th>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
                                                 <th>Organization</th>
+                                              
                                             </tr>
                                         </thead>
                                         <tbody id="farmersTableBody">
@@ -851,7 +852,7 @@ canvas {
     <script>
 $(document).ready(function () {
 // Initialize chart variables
-let pieChart, barChart, donutChart,  radialChart;
+let pieChart, barChart, donutChart, radialChart;
 
 // Function to format numbers with commas
 function formatNumber(number, decimals = 2) {
@@ -1110,7 +1111,9 @@ function updateDonutChart(donutChartData, centerText, chartTitle) {
         console.error('Invalid donut chart data:', donutChartData);
         return;
     }
-
+        // Calculate total production
+        const totalProduction = donutChartData.datasets[0].data.reduce((acc, value) => acc + value, 0);
+        
     const ctx = document.getElementById('donutChart').getContext('2d');
     if (typeof donutChart !== 'undefined') {
         donutChart.destroy();
@@ -1122,8 +1125,7 @@ function updateDonutChart(donutChartData, centerText, chartTitle) {
             return char.toUpperCase();
         });
     }
-    // Calculate total production
-    const totalProduction = donutChartData.datasets[0].data.reduce((acc, value) => acc + value, 0);
+   
 
     // Custom plugin to add text in the center
     const centerTextPlugin = {
@@ -1173,7 +1175,7 @@ function updateDonutChart(donutChartData, centerText, chartTitle) {
                 },
                 title: {
                     display: true,
-                    text: chartTitle || 'Crops Production',
+                    text: `${chartTitle || 'Crops Production'} (Total ${totalProduction.toFixed(2)} tons)`,
                     font: {
                         size: 11,
                         weight: 'bold'
