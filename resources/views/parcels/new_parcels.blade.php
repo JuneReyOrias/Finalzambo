@@ -648,8 +648,6 @@
 <!-- Include the Google Maps API with Drawing and Geometry libraries -->
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMstylquYwo8gAuOrkrF5IsN6K8gbgV6I&libraries=drawing,geometry&callback=initMap"></script>
 
-
-   
 <script type="text/javascript">
     var map;
     var drawingManager;
