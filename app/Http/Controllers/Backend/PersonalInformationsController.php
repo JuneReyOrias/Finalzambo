@@ -3,16 +3,20 @@
 namespace App\Http\Controllers\Backend;
 use App\Models\FarmerOrg;
 use App\Models\FixedCost;
+use App\Models\FixedCostArchive;
 use App\Models\LastProductionDatas;
+use App\Models\MachineriesCostArchive;
 use App\Models\MachineriesUseds;
 use App\Models\ProductionCrop;
 use App\Models\ProductionSold;
+use App\Models\ProductionArchive;
 use App\Models\Barangay;
 use App\Models\CropCategory;
 use App\Models\Categorize;
 use App\Models\PersonalInformations;
 use App\Models\VariableCost; 
 use App\Models\PersonalInformationArchive;
+use App\Models\VariableCostArchive;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\MultipleFile;
 use App\Models\ParcellaryBoundaries;
@@ -46,6 +50,7 @@ public function __construct() {
 
 }
 
+// check cropping no
 public function checkCroppingNo(Request $request)
 {
     // Validate that cropping_no is provided
@@ -526,27 +531,27 @@ if ($request->hasFile('image') && $request->file('image')->isValid()) {
                         return response()->json(['error' => 'Personal information not found.'], 404);
                     }
                 }
-   // Handle the 'archives' request type for fetching archives by PersonalInformations ID
-if ($type === 'archives') {
-    // First, check if the PersonalInformation record exists
-    $personalinfos = PersonalInformations::find($id);
+                    // Handle the 'archives' request type for fetching archives by PersonalInformations ID
+                    if ($type === 'archives') {
+                        // First, check if the PersonalInformation record exists
+                        $personalinfos = PersonalInformations::find($id);
 
-    // If the PersonalInformation record is not found, return a 404 with the message
-    if (!$personalinfos) {
-        return response()->json(['message' => 'Personal Information not found.'], 404);
-    }
+                        // If the PersonalInformation record is not found, return a 404 with the message
+                        if (!$personalinfos) {
+                            return response()->json(['message' => 'Personal Information not found.'], 404);
+                        }
 
-    // Fetch the archives associated with the PersonalInformation ID
-    $archives = PersonalInformationArchive::where('personal_informations_id', $id)->get();
+                        // Fetch the archives associated with the PersonalInformation ID
+                        $archives = PersonalInformationArchive::where('personal_informations_id', $id)->get();
 
-    // If no archives are found, return a message
-    if ($archives->isEmpty()) {
-        return response()->json(['message' => 'No archive record yet.'], 404);
-    }
+                        // If no archives are found, return a message
+                        if ($archives->isEmpty()) {
+                            return response()->json(['message' => 'No archive record yet.'], 404);
+                        }
 
-    // Return the archives data as JSON
-    return response()->json($archives);
-}
+                        // Return the archives data as JSON
+                        return response()->json($archives);
+                    }
 
 
 
@@ -730,7 +735,7 @@ if ($type === 'archives') {
             } catch (\Exception $ex) {
                 // Log the error message for debugging
                 // \Log::error("Error updating personal information: " . $ex->getMessage());
-                dd($ex);
+                // dd($ex);
                 // Step 6: Handle the error gracefully and redirect
                 return redirect('/admin-update-personalinfo/{personalinfos}')->with('message','Someting went wrong');
             }
@@ -1617,6 +1622,28 @@ public function productionAdd(Request $request,$id)
                              }
                          }
          
+
+                             // Handle the 'archives' request type for fetching archives by PersonalInformations ID
+                             if ($type === 'archives') {
+                                // First, check if the PersonalInformation record exists
+                                $production = LastProductionDatas::with('cropFarm')->find($id);
+
+                                // If the PersonalInformation record is not found, return a 404 with the message
+                                if (!$production) {
+                                    return response()->json(['message' => 'Production not found.'], 404);
+                                }
+                            // Fetch the archives associated with the PersonalInformation ID
+                                $archives = ProductionArchive::where('last_production_datas_id', $id)->get();
+
+                                // If no archives are found, return a message
+                                if ($archives->isEmpty()) {
+                                    return response()->json(['message' => 'No archive record yet.'], 404);
+                                }
+
+                                // Return the archives data as JSON
+                                return response()->json($archives);
+                            }
+
                            // Handle requests for barangays and organizations
                            if ($type === 'barangays' || $type === 'organizations') {
                            $district = $request->input('district');
@@ -1684,7 +1711,40 @@ public function productionAdd(Request $request,$id)
                  // $data= $request->all();
                  
                  $data= LastProductionDatas::find($id);
-  
+                 if (!$data) {
+                    return redirect()->route('admin.farmersdata.production', $id)
+                        ->with('message', 'Production not found');
+                }
+                ProductionArchive::create([
+                    'last_production_datas_id' => $data->id,
+                    'users_id' => $data->users_id,
+                    'personal_informations_id' => $data->personal_informations_id,
+                    'farm_profiles_id ' => $data->farm_profiles_id ,
+                    'crops_farms_id' => $data->crops_farms_id,
+                    'seeds_typed_used' => $data->seeds_typed_used,
+                    'seeds_used_in_kg' => $data->seeds_used_in_kg,
+                    'seed_source' => $data->seed_source,
+                    'unit' => $data->unit,
+                    'no_of_fertilizer_used_in_bags' => $data->no_of_fertilizer_used_in_bags,
+                    'no_of_pesticides_used_in_l_per_kg' => $data->no_of_pesticides_used_in_l_per_kg,
+                    'no_of_insecticides_used_in_l' => $data->no_of_insecticides_used_in_l,
+                    'area_planted' => $data->area_planted,
+                    
+                    'date_planted' => $data->date_planted,
+                    'date_harvested' => $data->date_harvested,
+                    'yield_tons_per_kg' => $data->yield_tons_per_kg,
+                    'unit_price_palay_per_kg' => $data->unit_price_palay_per_kg,
+                    'unit_price_rice_per_kg' => $data->unit_price_rice_per_kg,
+                    'type_of_product' => $data->type_of_product,
+
+                    'sold_to' => $data->sold_to,
+                    'if_palay_milled_where' => $data->if_palay_milled_where,
+                    'gross_income_palay' => $data->gross_income_palay,
+                    'gross_income_rice' => $data->gross_income_rice,
+                    'create_at' => $data->created_at,
+    
+                ]);
+                
                 
                  $data->users_id = $request->users_id;
                
@@ -1989,6 +2049,26 @@ public function productionAdd(Request $request,$id)
                                  }
                              }
              
+                                                             // Handle the 'archives' request type for fetching archives by PersonalInformations ID
+                                                             if ($type === 'costArhive') {
+                                                                // First, check if the PersonalInformation record exists
+                                                                $fixedData = FixedCost::find($id);
+                            
+                                                                // If the PersonalInformation record is not found, return a 404 with the message
+                                                                if (!$fixedData ) {
+                                                                    return response()->json(['message' => 'Fixed Cost not found.'], 404);
+                                                                }
+                                                            // Fetch the archives associated with the PersonalInformation ID
+                                                                $archives =  FixedCostArchive::where('fixed_costs_id', $id)->get();
+                            
+                                                                // If no archives are found, return a message
+                                                                if ($archives->isEmpty()) {
+                                                                    return response()->json(['message' => 'No archive record yet.'], 404);
+                                                                }
+                            
+                                                                // Return the archives data as JSON
+                                                                return response()->json($archives);
+                                                            }
                              // Handle requests for barangays and organizations
                              if ($type === 'barangays' || $type === 'organizations') {
                                  $district = $request->input('district');
@@ -2045,7 +2125,27 @@ public function productionAdd(Request $request,$id)
                      // $data= $request->all();
                      
                      $data= FixedCost::find($id);
-      
+                     if (!$data) {
+                        return redirect()->route('admin.farmersdata.production', $id)
+                            ->with('message', 'Fixed Cost not found');
+                    }
+                    FixedCostArchive::create([
+                        'fixed_costs_id' => $data->id,
+                        'crops_farms_id' => $data->crops_farms_id,
+                        'last_production_datas_id' => $data->last_production_datas_id,
+                        'farm_profiles_id' => $data->farm_profiles_id,
+
+                        'users_id' => $data->users_id,
+                        'personal_informations_id' => $data->personal_informations_id,
+                        'crop_name' => $data->crop_name,
+                        'particular' => $data->particular,
+                        'no_of_ha' => $data->no_of_ha,
+                        'cost_per_ha' => $data->cost_per_ha,
+                        'total_amount' => $data->	total_amount,
+                       
+                        'created_at' => $data->created_at,
+        
+                    ]);
                     
                      $data->users_id = $request->users_id;
                    
@@ -2402,7 +2502,45 @@ public function productionAdd(Request $request,$id)
          // $data= $request->all();
 
          $machineused= MachineriesUseds::find($id);
-
+         if (!$machineused) {
+            return redirect()->route('admin.farmersdata.production', $id)
+                ->with('message', 'Fixed Cost not found');
+        }
+        
+        MachineriesCostArchive::create([
+            'machineries_useds_id' => $machineused->id,
+            'crops_farms_id' => $machineused->crops_farms_id,
+            'last_production_machineuseds_id' => $machineused->last_production_machineuseds_id,
+            'farm_profiles_id' => $machineused->farm_profiles_id,
+            'users_id' => $machineused->users_id,
+            'personal_informations_id' => $machineused->personal_informations_id,
+           
+        
+            // New fields
+            
+            'plowing_machineries_used' => $machineused->plowing_machineries_used,
+            'plo_ownership_status' => $machineused->plo_ownership_status,
+            'no_of_plowing' => $machineused->no_of_plowing,
+            'plowing_cost' => $machineused->plowing_cost,
+            'plowing_cost_total' => $machineused->plowing_cost_total,
+        
+            'harrowing_machineries_used' => $machineused->harrowing_machineries_used,
+            'harro_ownership_status' => $machineused->harro_ownership_status,
+            'no_of_harrowing' => $machineused->no_of_harrowing,
+            'harrowing_cost' => $machineused->harrowing_cost,
+            'harrowing_cost_total' => $machineused->harrowing_cost_total,
+        
+            'harvesting_machineries_used' => $machineused->harvesting_machineries_used,
+            'harvest_ownership_status' => $machineused->harvest_ownership_status,
+            'harvesting_cost_total' => $machineused->harvesting_cost_total,
+        
+            'postharvest_machineries_used' => $machineused->postharvest_machineries_used,
+            'postharv_ownership_status' => $machineused->postharv_ownership_status,
+            'post_harvest_cost' => $machineused->post_harvest_cost,
+        
+            'total_cost_for_machineries' => $machineused->total_cost_for_machineries,
+        ]);
+        
 
          $machineused->users_id = $request->users_id;
 
@@ -2780,6 +2918,54 @@ public function productionAdd(Request $request,$id)
     $variable= VariableCost::find($id);
 
 
+    if (!$variable) {
+        return redirect()->route('admin.farmersdata.production', $id)
+            ->with('message', 'Previous Variable Cost data not found');
+    }
+    
+    // Pass the previous data into the new record
+    VariableCostArchive::create([
+        'variable_costs_id' => $variable->id,
+        'personal_informations_id' => $variable->personal_informations_id,
+        'farm_profiles_id' => $variable->farm_profiles_id,
+        'last_production_datas_id' => $variable->last_production_datas_id,
+        'crops_farms_id' => $variable->crops_farms_id,
+        'users_id' => $variable->users_id,
+    
+        // Seed Information
+        'unit' => $variable->unit,
+        'quantity' => $variable->quantity,
+        'unit_price' => $variable->unit_price,
+        'total_seed_cost' => $variable->total_seed_cost,
+    
+        // Labor Information
+        'labor_no_of_person' => $variable->labor_no_of_person,
+        'rate_per_person' => $variable->rate_per_person,
+        'total_labor_cost' => $variable->total_labor_cost,
+    
+        // Fertilizer Information
+        'no_of_sacks' => $variable->no_of_sacks,
+        'unit_price_per_sacks' => $variable->unit_price_per_sacks,
+        'total_cost_fertilizers' => $variable->total_cost_fertilizers,
+    
+        // Pesticides Information
+        'no_of_l_kg' => $variable->no_of_l_kg,
+        'unit_price_of_pesticides' => $variable->unit_price_of_pesticides,
+        'total_cost_pesticides' => $variable->total_cost_pesticides,
+    
+        // Transport Information
+        'total_transport_delivery_cost' => $variable->total_transport_delivery_cost,
+    
+        // Total Costs
+        'total_machinery_fuel_cost' => $variable->total_machinery_fuel_cost,
+        'total_variable_cost' => $variable->total_variable_cost,
+    
+        // Pass the previous created_at timestamp
+        'old_created_at' => $variable->created_at,
+    
+        // Optional: Use the same updated_at timestamp, or set a new one
+        'updated_at' => now(),
+    ]);
     $variable->users_id = $request->users_id;
 
 
@@ -2818,7 +3004,7 @@ public function productionAdd(Request $request,$id)
         ->with('message', 'Variable Cost Data updated successfully');
     } catch (\Exception $ex) {
         // Handle the exception and provide error feedback
-        return redirect()->back()->with('message', 'Something went wrong');
+        return redirect()->back()->with('message', 'Please Try Again');
     }  
     } 
 

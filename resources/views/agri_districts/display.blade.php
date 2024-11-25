@@ -2459,93 +2459,154 @@ let currentStep = 0;
 </script>
 
 <script type="text/javascript">
-    var map;
-    var markers = [];
-    var selectedLatLng;
-  
-    function initMap() {
-      var initialLocation = { lat: 6.9214, lng: 122.0790 };
-  
-      map = new google.maps.Map(document.getElementById('map'), {
+     var map;
+var markers = [];
+var selectedLatLng;
+var polygons = []; // Array to hold the saved polygons
+
+// Load polygons from mapdata and parceldata and plot them on the map
+function loadPolygons() {
+    var mapdata = @json($mapdata); // Existing data from the view
+    var parceldata = @json($parceldata); // Data from ParcellaryBoundaries
+
+    function plotPolygon(parcel, isParcelData = false) {
+        var polygon = new google.maps.Polygon({
+            paths: parcel.coordinates.map(coord => new google.maps.LatLng(coord.lat, coord.lng)),
+            strokeColor: parcel.strokecolor || '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: parcel.fillcolor || '#FF0000',
+            fillOpacity: 0.02
+        });
+        polygon.setMap(map);
+        polygons.push(polygon);
+
+        google.maps.event.addListener(polygon, 'click', function () {
+            var contentString;
+            if (isParcelData) {
+                contentString = 'Parcel Name: ' + parcel.parcel_name + '<br>' +
+                                'ARPOwner Name: ' + parcel.arpowner_na + '<br>' +
+                                'Agri-District: ' + parcel.agri_districts + '<br>' +
+                                'Brgy. Name: ' + parcel.barangay_name + '<br>' +
+                                'Title name: ' + parcel.tct_no + '<br>' +
+                                'Property kind description: ' + parcel.pkind_desc + '<br>' +
+                                'Property Used description: ' + parcel.puse_desc + '<br>' +
+                                'Actual Used: ' + parcel.actual_used + '<br>' +
+                                'Area: ' + parcel.area + ' sq. meters<br>' +
+                                'Altitude: ' + parcel.altitude + ' meters<br>';
+            } else {
+                contentString = 'Polygon Name: ' + parcel.polygon_name + '<br>' +
+                                'Area: ' + parcel.area + ' sq. meters<br>' +
+                                'Altitude: ' + parcel.altitude + ' meters';
+            }
+
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+            infowindow.setPosition(parcel.coordinates[0]);
+            infowindow.open(map);
+        });
+    }
+
+    mapdata.forEach(function (parcel) {
+        plotPolygon(parcel);
+    });
+
+    parceldata.forEach(function (parcel) {
+        plotPolygon(parcel, true);
+    });
+
+    var bounds = new google.maps.LatLngBounds();
+    mapdata.concat(parceldata).forEach(function (parcel) {
+        parcel.coordinates.forEach(function (coord) {
+            bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
+        });
+    });
+    map.fitBounds(bounds);
+}
+
+function initMap() {
+    var initialLocation = { lat: 6.9214, lng: 122.0790 };
+
+    map = new google.maps.Map(document.getElementById('map'), {
         zoom: 13,
         center: initialLocation,
-        mapTypeId: 'terrain'
-      });
-  
-      // When the map is clicked, set latitude and longitude in modal and main inputs
-      map.addListener('click', function(event) {
+        mapTypeId: 'satellite'
+    });
+
+    map.addListener('click', function (event) {
         if (markers.length >= 1) {
-          deleteMarkers();
+            deleteMarkers();
         }
-  
+
         selectedLatLng = event.latLng;
         addMarker(selectedLatLng);
         $('#modal_latitude').val(selectedLatLng.lat());
         $('#modal_longitude').val(selectedLatLng.lng());
-      });
-  
-      // Add marker on the map
-      function addMarker(location) {
+    });
+
+    function addMarker(location) {
         var marker = new google.maps.Marker({
-          position: location,
-          map: map
+            position: location,
+            map: map,
+            draggable: true // Make the marker draggable
         });
         markers.push(marker);
-      }
-  
-      // Clear markers from the map
-      function deleteMarkers() {
+
+        // Update latitude and longitude on marker drag end
+        google.maps.event.addListener(marker, 'dragend', function (event) {
+            $('#modal_latitude').val(event.latLng.lat());
+            $('#modal_longitude').val(event.latLng.lng());
+        });
+    }
+
+    function deleteMarkers() {
         markers.forEach(marker => {
-          marker.setMap(null);
+            marker.setMap(null);
         });
         markers = [];
-      }
-  
-      // Listen for manual input in modal latitude/longitude fields
-      $('#modal_latitude, #modal_longitude').on('change', function() {
+    }
+
+    $('#modal_latitude, #modal_longitude').on('change', function () {
         var lat = parseFloat($('#modal_latitude').val());
         var lng = parseFloat($('#modal_longitude').val());
-  
+
         if (!isNaN(lat) && !isNaN(lng)) {
-          var location = { lat: lat, lng: lng };
-          map.setCenter(location);
-          deleteMarkers();
-          addMarker(location);
+            var location = { lat: lat, lng: lng };
+            map.setCenter(location);
+            deleteMarkers();
+            addMarker(location);
         }
-      });
-    }
-  
-    $(document).ready(function() {
-      // Show the modal when latitude or longitude input is focused
-      $('#gps_latitude_0, #gps_longitude_0').on('focus', function() {
+    });
+}
+
+$(document).ready(function () {
+    $('#gps_latitude_0, #gps_longitude_0').on('focus', function () {
         $('#mapModal').modal('show');
-      });
-  
-      // Reinitialize the map each time the modal is opened
-      $('#mapModal').on('shown.bs.modal', function() {
+    });
+
+    $('#mapModal').on('shown.bs.modal', function () {
         if (selectedLatLng) {
-          map.setCenter(selectedLatLng); // Center map on previously selected location
+            map.setCenter(selectedLatLng);
         }
         google.maps.event.trigger(map, 'resize');
-      });
-  
-      // Clear previous markers when modal is closed
-      $('#mapModal').on('hidden.bs.modal', function() {
-        deleteMarkers(); // Clear markers when modal is closed
-      });
-  
-      // Handle the Save Location button click
-      $('#saveLocation').on('click', function() {
-        // Save the latitude and longitude to the main input fields
+    });
+
+    $('#mapModal').on('hidden.bs.modal', function () {
+        deleteMarkers();
+    });
+
+    $('#saveLocation').on('click', function () {
         var lat = $('#modal_latitude').val();
         var lng = $('#modal_longitude').val();
         $('#gps_latitude_0').val(lat);
         $('#gps_longitude_0').val(lng);
         
-        // Close the modal
         $('#mapModal').modal('hide');
-      });
     });
+    
+    loadPolygons(); // Load polygons when the map is initialized
+});
 
 // Function to check membership and display organization input accordingly
 function checkMmbership() {

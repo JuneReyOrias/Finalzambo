@@ -591,6 +591,7 @@
                             <option value="#ffff33">Corn: #ffff33</option>
                             <option value="#663300">Coconut: #663300</option>
                             <option value="#009900">Banana: #009900</option>
+                            <option value="#0040ff">Residential:#0040ff</option>
                             <option value="custom-stroke">Custom Color</option>
                         </select>
                         <input type="color" id="custom-stroke-color" name="custom_stroke_color" style="display: none; margin-left: 10px;">

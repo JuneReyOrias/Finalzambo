@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Backend;
 use App\Models\AgriDistrict;
+use App\Models\CropFarmsArchive;
 use App\Models\FarmProfile;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FarmProfileRequest;
 use App\Http\Requests\UpdateFarmProfileRequest;
 use App\Models\LastProductionDatas;
 use App\Models\PersonalInformations;
+use App\Models\FarmProfileArchive;
 use App\Models\MachineriesUseds;
 use App\Models\FixedCost;
 use App\Models\ProductionSold;
@@ -1744,6 +1746,28 @@ if (request()->ajax()) {
                                 return response()->json(['error' => 'farm data not found.'], 404);
                             }
                         }
+
+
+                      // Handle the 'archives' request type for fetching archives by PersonalInformations ID
+                    if ($type === 'archives') {
+                        // First, check if the PersonalInformation record exists
+                        $farmprofiles = FarmProfile::find($id);
+
+                        // If the PersonalInformation record is not found, return a 404 with the message
+                        if (!$farmprofiles) {
+                            return response()->json(['message' => 'Farm Profile not found.'], 404);
+                        }
+                       // Fetch the archives associated with the PersonalInformation ID
+                        $archives = FarmProfileArchive::where('farm_profiles_id', $id)->get();
+
+                        // If no archives are found, return a message
+                        if ($archives->isEmpty()) {
+                            return response()->json(['message' => 'No archive record yet.'], 404);
+                        }
+
+                        // Return the archives data as JSON
+                        return response()->json($archives);
+                    }
                     // Handle requests for barangays and organizations
                     if ($type === 'barangays' || $type === 'organizations') {
                     $district = $request->input('district');
@@ -1810,12 +1834,49 @@ if (request()->ajax()) {
             try{
                 
     
-                // $data= $request->validated();
-                // $data= $request->all();
                 
                 $personalinfos= FarmProfile::find($id);
 
                
+                if (!$personalinfos) {
+                    return redirect()->route('admin.farmersdata.farm', $id)
+                        ->with('message', 'Farm Profile not found');
+                }
+                FarmProfileArchive::create([
+                    'farm_profiles_id' => $personalinfos->id,
+                    'users_id' => $personalinfos->users_id,
+                    'personal_informations_id' => $personalinfos->personal_informations_id,
+                    'agri_districts_id' => $personalinfos->agri_districts_id,
+                    'agri_districts' => $personalinfos->agri_districts,
+                    'polygons_id' => $personalinfos->polygons_id,
+                    'tenurial_status' => $personalinfos->tenurial_status,
+                    'farm_address' => $personalinfos->farm_address,
+                    'no_of_years_as_farmers' => $personalinfos->no_of_years_as_farmers,
+                    'gps_longitude' => $personalinfos->gps_longitude,
+                    'gps_latitude' => $personalinfos->gps_latitude,
+                    'total_physical_area' => $personalinfos->total_physical_area,
+                    'total_area_cultivated' => $personalinfos->total_area_cultivated,
+                    'land_title_no' => $personalinfos->land_title_no,
+                    'lot_no' => $personalinfos->lot_no,
+                    'area_prone_to' => $personalinfos->area_prone_to,
+                    'ecosystem' => $personalinfos->ecosystem,
+                    // 'type_rice_variety' => $personalinfos->type_rice_variety,
+                    // 'prefered_variety' => $personalinfos->prefered_variety,
+                    // 'plant_schedule_wetseason' => $personalinfos->plant_schedule_wetseason,
+                    // 'plant_schedule_dryseason' => $personalinfos->plant_schedule_dryseason,
+                    // 'no_of_cropping_yr' => $personalinfos->no_of_cropping_yr,
+                    // 'yield_kg_ha' => $personalinfos->yield_kg_ha,
+                    'rsba_registered' => $personalinfos->rsba_registered,
+                    'pcic_insured' => $personalinfos->pcic_insured,
+                    'government_assisted' => $personalinfos->government_assisted,
+                    'source_of_capital' => $personalinfos->source_of_capital,
+                    'remarks_recommendation' => $personalinfos->remarks_recommendation,
+                    'oca_district_office' => $personalinfos->oca_district_office,
+                    'name_of_field_officer_technician' => $personalinfos->name_of_field_officer_technician,
+                    'date_interviewed' => $personalinfos->date_interviewed,
+                    
+                ]);
+                
                 $personalinfos->users_id = $request->users_id;
                 $personalinfos->personal_informations_id = $request->personal_informations_id;
              
@@ -1832,18 +1893,13 @@ if (request()->ajax()) {
                 $personalinfos->lot_no = $request->lot_no;
                 $personalinfos->area_prone_to = $request->area_prone_to === 'Add Prone' ? $request->add_newProneYear : $request->area_prone_to;
                 $personalinfos->ecosystem = $request->ecosystem === 'Add ecosystem' ? $request->Add_Ecosystem : $request->ecosystem;
-                // $personalinfos->type_rice_variety = $request->type_rice_variety;
-                // $personalinfos->prefered_variety = $request->prefered_variety;
-                // $personalinfos->plant_schedule_wetseason = $request->plant_schedule_wetseason;
-                // $personalinfos->plant_schedule_dryseason = $request->plant_schedule_dryseason;
-                // $personalinfos->no_of_cropping_yr = $request->no_of_cropping_yr === 'Adds' ? $request->add_cropyear : $request->no_of_cropping_yr;
-                // $personalinfos->yield_kg_ha = $request->yield_kg_ha;
+               
                 $personalinfos->rsba_registered = $request->rsba_registered;
                 $personalinfos->pcic_insured = $request->pcic_insured;
                 $personalinfos->government_assisted = $request->government_assisted;
                 $personalinfos->source_of_capital = $request->source_of_capital === 'Others' ? $request->add_sourceCapital : $request->source_of_capital;
                 $personalinfos->remarks_recommendation = $request->remarks_recommendation;
-                // $personalinfos->oca_district_office = $request->oca_district_office;
+       
                 $personalinfos->name_of_field_officer_technician = $request->name_of_field_officer_technician;
                 $personalinfos->date_interviewed = $request->date_interviewed;
 
@@ -1869,7 +1925,7 @@ if (request()->ajax()) {
                                              
                                          } 
         } 
-    
+   
  // fFarm profile delete
 public function farmdelete($id) {
     try {
@@ -2290,6 +2346,29 @@ public function farmdelete($id) {
                                     return response()->json(['error' => 'crop farm cost data not found.'], 404);
                                 }
                             }
+
+                                // Handle the 'archives' request type for fetching archives by PersonalInformations ID
+                                if ($type === 'archives') {
+                                    // First, check if the PersonalInformation record exists
+                                    $cropfarm = Crop::find($id);
+
+                                    // If the PersonalInformation record is not found, return a 404 with the message
+                                    if (!$cropfarm) {
+                                        return response()->json(['message' => 'Crop Farm not found.'], 404);
+                                    }
+                                // Fetch the archives associated with the PersonalInformation ID
+                                    $archives = CropFarmsArchive::where('crops_farms_id', $id)->get();
+
+                                    // If no archives are found, return a message
+                                    if ($archives->isEmpty()) {
+                                        return response()->json(['message' => 'No archive record yet.'], 404);
+                                    }
+
+                                    // Return the archives data as JSON
+                                    return response()->json($archives);
+                                }
+
+
                         // Handle requests for barangays and organizations
                         if ($type === 'barangays' || $type === 'organizations') {
                         $district = $request->input('district');
@@ -2360,28 +2439,48 @@ public function farmdelete($id) {
                // $data= $request->validated();
                // $data= $request->all();
                
-               $data= Crop::find($id);
+                $cropfarm= Crop::find($id);
+               if (!$cropfarm) {
+                return redirect()->route('admin.farmersdata.crop', $id)
+                    ->with('message', 'Crop farm not found');
+            }
+            CropFarmsArchive::create([
+                'crops_farms_id' => $cropfarm->id,
+                'users_id' => $cropfarm->users_id,
+                'personal_informations_id' => $cropfarm->personal_informations_id,
+                'crop_name' => $cropfarm->crop_name,
+                'type_of_variety_planted' => $cropfarm->type_of_variety_planted,
+                'preferred_variety' => $cropfarm->preferred_variety,
+                'planting_schedule_wetseason' => $cropfarm->planting_schedule_wetseason,
+                'planting_schedule_dryseason' => $cropfarm->planting_schedule_dryseason,
+                'no_of_cropping_per_year' => $cropfarm->no_of_cropping_per_year,
+                'quantity' => $cropfarm->quantity,
+               
+                'yield_kg_ha' => $cropfarm->yield_kg_ha,
+                'created_at' => $cropfarm->created_at,
 
+            ]);
+            
               
-               $data->users_id = $request->users_id;
+               $cropfarm->users_id = $request->users_id;
              
             
-               $data->farm_profiles_id = $request->farm_profiles_id;
-               $data->crop_name = $request->crop_name;
-               $data->type_of_variety_planted = $request->type_of_variety_planted;
+               $cropfarm->farm_profiles_id = $request->farm_profiles_id;
+               $cropfarm->crop_name = $request->crop_name;
+               $cropfarm->type_of_variety_planted = $request->type_of_variety_planted;
       
-               $data->preferred_variety = $request->preferred_variety;
-               $data->planting_schedule_wetseason = $request->planting_schedule_wetseason;
-               $data->planting_schedule_dryseason = $request->planting_schedule_dryseason;
-               $data->no_of_cropping_per_year = $request->no_of_cropping_per_year === 'Adds' ? $request->add_cropyear : $request->no_of_cropping_per_year;
-               $data->yield_kg_ha = $request->yield_kg_ha;
+               $cropfarm->preferred_variety = $request->preferred_variety;
+               $cropfarm->planting_schedule_wetseason = $request->planting_schedule_wetseason;
+               $cropfarm->planting_schedule_dryseason = $request->planting_schedule_dryseason;
+               $cropfarm->no_of_cropping_per_year = $request->no_of_cropping_per_year === 'Adds' ? $request->add_cropyear : $request->no_of_cropping_per_year;
+               $cropfarm->yield_kg_ha = $request->yield_kg_ha;
             
 
 
-            //    dd($data);
-               $data->save();     
+            //    dd($cropfarm);
+               $cropfarm->save();     
                
-               return redirect()->route('admin.farmersdata.crop',  $data->farm_profiles_id)
+               return redirect()->route('admin.farmersdata.crop',  $cropfarm->farm_profiles_id)
                ->with('message', 'Crop Farm Data updated successfully');
    
                  }catch(\Exception $ex){

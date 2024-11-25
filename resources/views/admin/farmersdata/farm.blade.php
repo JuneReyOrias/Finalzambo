@@ -12,7 +12,138 @@
     padding: 8px; /* Adjust the padding as needed */
 
 }
-</style>
+
+
+
+/* Style the modal content to make sure the table fits inside */
+#archives-modal-body {
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: 200vh; /* Adjust the height based on your requirements */
+  
+}
+
+/* Table Scroll Container */
+.table-scroll {
+    position: relative;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow-x: auto;  /* Horizontal scrolling */
+    overflow-y: auto;  /* Vertical scrolling */
+}
+
+/* Table Wrapper */
+.table-wrap {
+    width: 100%;
+    overflow: auto;
+}
+
+/* Table styling */
+.main-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* Sticky column */
+.fixed-side {
+    position: sticky;
+    left: 0;
+    background-color: #f8f9fa;
+    z-index: 1;
+    border-right: 1px solid #ddd; /* Optional: adds border between sticky column and content */
+    box-shadow: 1px 0 0 0 #ddd; /* Optional: adds shadow to improve visibility */
+}
+
+/* Styling table headers */
+.main-table th {
+    padding: 10px 15px;
+    text-align: left;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+}
+
+/* Styling table data cells */
+.main-table td {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+}
+
+/* Add styles for table body */
+.main-table tbody {
+    background-color: #fff;
+}
+
+
+
+
+    .fixed-side {
+    position: sticky;
+    left: 0;
+    background-color: #f8f9fa;
+    z-index: 2;
+    border-right: 1px solid #ddd; /* Optional: Adds a border between sticky column and content */
+}
+ .table-scroll {
+    position:relative;
+    max-width:600px;
+    margin:auto;
+    overflow:hidden;
+    border:1px solid #000;
+  }
+.table-wrap {
+	width:100%;
+	overflow:auto;
+}
+.table-scroll table {
+	width:100%;
+	margin:auto;
+	border-collapse:separate;
+	border-spacing:0;
+}
+.table-scroll th, .table-scroll td {
+	padding:5px 10px;
+	border:1px solid #000;
+	background:#fff;
+	white-space:nowrap;
+	vertical-align:top;
+}
+.table-scroll thead, .table-scroll tfoot {
+	background:#f9f9f9;
+}
+.clone {
+	position:absolute;
+	top:0;
+	left:0;
+	pointer-events:none;
+}
+.clone th, .clone td {
+	visibility:hidden
+}
+.clone td, .clone th {
+	border-color:transparent
+}
+.clone tbody th {
+	visibility:visible;
+	color:red;
+}
+.clone .fixed-side {
+	border:1px solid #000;
+	background:#eee;
+	visibility:visible;
+}
+.clone thead, .clone tfoot{background:transparent;}
+
+  </style>
+  <script>// requires jquery library
+  new DataTable('#example');
+    jQuery(document).ready(function() {
+      jQuery(".main-table").clone(true).appendTo('#table-scroll').addClass('clone');   
+     });</script>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>
+
 
 <div class="page-content">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-center">
@@ -192,7 +323,7 @@
                         </td> --}}
                      
                   
-                    <td>{{ $farmprofile->date_interview}}</td>
+                    <td>{{ $farmprofile->date_interviewed}}</td>
                     
                        <td>
                         <a href="{{route('admin.farmersdata.crop', $farmprofile->id)}}" title="View Crop">
@@ -217,7 +348,12 @@
                                 <i class="" aria-hidden="true"></i>
                             </button>
                         </a>
-                                                   
+                        <a href="javascript:void(0);" class="viewFarmArchiv" data-bs-toggle="modal" title="View Farm Archive Data" data-bs-target="#farmArchiveModal" data-id="{{ $farmprofile->id }}">
+                            <button class="btn btn-warning btn-sm" style="border-color: #54d572;">
+                                <img src="../assets/logo/history.png" alt="Crop Icon" style="width: 20px; height: 20px;" class="me-1">
+                                <i class="fas fa-rice" aria-hidden="true"></i>
+                            </button>
+                        </a>                  
                         <a href="{{route('farm_profile.farm_edit', $farmprofile->id)}}" title="view farm"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a> 
                 
                         <form  action="{{ route('agent.farmprofile.delete', $farmprofile->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
@@ -280,8 +416,61 @@
 </div>
 
 
-
-{{-- farmt --}}
+{{-- modal of farm profile archive --}}
+<div class="modal fade" id="farmArchiveModal" tabindex="-1" aria-labelledby="farmArchiveModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title text-white" id="farmArchiveModal">Farm Archive Data History</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="archives-modal-body">
+                <br>
+                <div id="table-scroll" class="table-scroll">
+                    <div class="table-wrap">
+                        <table class="main-table table table-bordered table-striped table-hover">
+                            <thead class="bg-light text-dark text-center sticky-top">
+                                <tr>
+                                    <th class="fixed-side" scope="col"><i class="fas fa-calendar-alt me-1"></i>Date Updated</th>
+                                   <th><i class="fas fa-calendar-alt me-1"></i>Date of Interviewed</th>
+                                   <th scope="col">Tenurial Status</th>
+                                   <th scope="col">Farm Address</th>
+                                   <th scope="col">Years as Farmers</th>
+                                   <th scope="col">GPS Longitude</th>
+                                   <th scope="col">GPS Latitude</th>
+                                   <th scope="col">Total Physical Area</th>
+                                   <th scope="col">Total Area Cultivated</th>
+                                   <th scope="col">Land Title No.</th>
+                                   <th scope="col">Lot No.</th>
+                                   <th scope="col">Area Prone To</th>
+                                   <th scope="col">Ecosystem</th>
+                              
+                                   <th scope="col">RSBA Registered</th>
+                                   <th scope="col">PCIC Insured</th>
+                                   <th scope="col">Government Assisted</th>
+                                   <th scope="col">Source of Capital</th>
+                                   <th scope="col">Remarks/Recommendations</th>
+                                   <th scope="col">OCA District Office</th>
+                                   <th scope="col">Name of Field Officer/Technician</th>
+                                  
+                                    
+                                    
+                                </tr>
+                            </thead>
+                            <tbody id="archiveHistory">
+                                <!-- Rows will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- modal of farm data --}}
 <div class="modal fade" id="farmModal" tabindex="-1" aria-labelledby="farmModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -599,7 +788,7 @@ function FarmData(id) {
     });
 }
 
-
+// assig users farm profile
 $('#saveUserProfile').on('click', function () {
     const farmProfileId = $(this).data('id'); // Fetch farmProfileId from the data-id attribute
     const userId = $('#users_id').val(); // Get the selected user ID
@@ -636,5 +825,91 @@ $('#saveUserProfile').on('click', function () {
         alert('Please select a user.');
     }
 });
+
+
+
+// Handle click event for viewing farm archive
+$(document).on('click', '.viewFarmArchiv', function () {
+    var id = $(this).data('id'); // Get the ID from the data attribute
+    fetchArchiveData(id); // Fetch data and show the modal
+});
+
+// Function to fetch archive data
+function fetchArchiveData(id) {
+    $.ajax({
+        url: `/admin-update-farmprofile/${id}`, // URL to fetch data
+        type: 'GET',
+        dataType: 'json',
+        data: { type: 'archives' }, // Requesting specifically for archives
+        success: function (response) {
+            console.log("Response:", response); // Debugging the response
+
+            // Handle case when no archives are available
+            if (response.message) {
+                alert(response.message); // Display message to the user
+                $('#archiveHistory').empty(); // Clear the table content
+                return; // Stop further processing
+            }
+
+            // Assuming `response` contains the array of archive data
+            const archives = response;
+
+            // Clear the table body
+            $('#archiveHistory').empty();
+
+            // Loop through each archive and create table rows
+            archives.forEach(function (archive) {
+                console.log("Processing Archive:", archive); // Debugging each archive entry
+
+                // Format the updated date
+                const dateUpdated = archive.created_at
+                    ? new Date(archive.created_at).toLocaleDateString() 
+                    : 'N/A';
+
+                // Create a table row with archive data
+                const archiveRow = `
+                    <tr>
+                        <th class="fixed-side">${dateUpdated}</th>
+                        <td>${archive.date_interviewed || 'N/A'}</td>
+                        <td>${archive.tenurial_status || 'N/A'}</td>
+                        <td>${archive.farm_address || 'N/A'}</td>
+                        <td>${archive.no_of_years_as_farmers || 'N/A'}</td>
+                        <td>${archive.gps_longitude || 'N/A'}</td>
+                        <td>${archive.gps_latitude || 'N/A'}</td>
+                        <td>${archive.total_physical_area || 'N/A'}</td>
+                        <td>${archive.total_area_cultivated || 'N/A'}</td>
+                        <td>${archive.land_title_no || 'N/A'}</td>
+                        <td>${archive.lot_no || 'N/A'}</td>
+                        <td>${archive.area_prone_to || 'N/A'}</td>
+                        <td>${archive.ecosystem || 'N/A'}</td>
+                       
+                       <td>${archive.rsba_registered === 1 ? 'Yes' : (archive.rsba_registered === 0 ? 'No' : 'N/A')}</td>
+<td>${archive.pcic_insured === 1 ? 'Yes' : (archive.pcic_insured === 0 ? 'No' : 'N/A')}</td>
+<td>${archive.government_assisted === 1 ? 'Yes' : (archive.government_assisted === 0 ? 'No' : 'N/A')}</td>
+
+                        <td>${archive.source_of_capital || 'N/A'}</td>
+                        <td>${archive.remarks_recommendation || 'N/A'}</td>
+                        <td>${archive.oca_district_office || 'N/A'}</td>
+                        <td>${archive.name_of_field_officer_technician || 'N/A'}</td>
+                    </tr>
+                `;
+
+                // Append the row to the table body
+                $('#archiveHistory').append(archiveRow);
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching data:', xhr.responseText); // Log detailed error
+            if (xhr.status === 404) {
+                alert('Farm Profile not found or no archives available.');
+            } else {
+                alert(`An error occurred: ${xhr.statusText}`); // Display error message
+            }
+            $('#archiveHistory').empty(); // Clear the table in case of error
+        }
+    });
+}
+
+
   </script>
 @endsection

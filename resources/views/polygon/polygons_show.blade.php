@@ -123,6 +123,7 @@
                                                 <option value="#FFBF00">Rice</option>
                                                 <option value="#ffff33">Corn</option>
                                                 <option value="#663300">Coconut</option>
+                                                <option value="#0040ff">Residential</option>
                                                 
                                                 <option value="custom-stroke">Custom Color</option>
                                             </select>
