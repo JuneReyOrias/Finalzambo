@@ -515,7 +515,7 @@
                             </div>
                               <div class="input-box col-md-4">
                                   <span class="details">ARP OwnerName:</span>
-                                  <input type="text" class="form-control light-gray-placeholder arpowner_na" value="{{$parcels->arpowner}}"   name="arpowner_na" placeholder="Enter ARP OwnerName" id="arpowner_na" onkeypress="return blockSymbolsAndNumbers(event)">
+                                  <input type="text" class="form-control light-gray-placeholder arpowner_na"value="{{$parcels->arpowner_na}}"  name="arpowner_na" placeholder="Enter ARP OwnerName" id="arpowner_na" onkeypress="return blockSymbolsAndNumbers(event)">
                               </div>
                               <!-- AgriDistrict Dropdown -->
                                 <div class="input-box col-md-4">
@@ -529,7 +529,8 @@
                                 <div class="input-box col-md-4">
                                   <label for="barangaySelect">Select Barangay:</label>
                                   <select class="form-control barangaySelect" id="barangaySelect" name="barangay_name">
-                                      <option value="" disabled selected>Select Barangay</option>
+                                      <option value="{{$parcels->barangay_name}}" disabled selected>{{$parcels->barangay_name}}</option>
+                                      
                                       <option value="add">Add New Barangay...</option>
                                   </select>
                                 </div>
@@ -1582,12 +1583,18 @@ document.getElementById('save-polygon').addEventListener('click', function (even
     }
 
     // Get other form data
+    var polygonName = document.getElementById('boarder-name').value;
     var area = document.getElementById('area').value;
     var altitude = document.getElementById('altitude').value;
-    var polygonName = document.getElementById('boarder-name').value;
+    var arpowner_na = document.getElementById('arpowner_na').value;
+    var districtSelect = document.getElementById('districtSelect').value;
+    var barangaySelect = document.getElementById('barangaySelect').value;
+    var landTitle = document.getElementById('landTitle').value;
+    var lotNo = document.getElementById('lotNo').value;
+    var pkind_desc = document.getElementById('pkind_desc').value;
+    var puse_desc = document.getElementById('puse_desc').value;
+    var actual_used = document.getElementById('actual_used').value;
     var strokeColor = getSelectedStrokeColor();
-
-    console.log(polygonName); // For debugging
 
     // Create an XMLHttpRequest to send the data
     var xhr = new XMLHttpRequest();
@@ -1596,22 +1603,48 @@ document.getElementById('save-polygon').addEventListener('click', function (even
     xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
 
     xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-                alert("Polygon saved successfully!");
-                location.reload(); // Reload the page after successful save
-            } else {
-                alert("Error saving polygon: " + xhr.statusText); // Handle error
+    if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+            try {
+                // Parse the JSON response
+                var response = JSON.parse(xhr.responseText);
+
+                if (response.success && response.redirect_url) {
+                    alert("Polygon Updated successfully.");
+                    // Redirect to the provided URL
+                    window.location.href = response.redirect_url;
+                } else {
+                    alert("Polygon Updated, but no redirect URL provided.");
+                }
+            } catch (error) {
+                console.error("Error parsing response:", error);
+                console.error("Response text:", xhr.responseText);
+                alert("Failed to process the response. Check the console for more details.");
             }
+        } else {
+            // Log errors for debugging
+            console.error("Error status:", xhr.status);
+            console.error("Error response:", xhr.responseText);
+            alert("Failed to save polygon. Please check the console for more details.");
         }
-    };
+    }
+};
 
     // Create the data object to be sent
     var data = JSON.stringify({
         coordinates: coordinates,
+        parcel_name: polygonName,
         area: area,
         altitude: altitude,
-        parcel_name: polygonName,
+        arpowner_na: arpowner_na,
+        agri_districts: districtSelect,
+        barangay_name: barangaySelect,
+        tct_no: landTitle,
+        lot_no: lotNo,
+        pkind_desc: pkind_desc,
+        puse_desc: puse_desc,
+        actual_used: actual_used,
+       
         strokecolor: strokeColor
     });
 

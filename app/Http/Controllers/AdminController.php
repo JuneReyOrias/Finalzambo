@@ -1057,9 +1057,10 @@ public function Parcel(Request $request)
     // Return a JSON response indicating success and redirection URL
     return response()->json([
         'success' => true, 
-        'redirect_url' => route('polygon.polygons_show') // Replace with the correct route name or URL
+    'redirect_url' => route('polygon.polygons_show') // Replace with the correct route name or URL
     ]);
 }
+
 
 
 public function Parcelshow()
@@ -1272,43 +1273,78 @@ $parceldata = collect([$parcels])->map(function($parcel) {
 // } 
 
 
+// public function ParcelUpdates(Request $request,$id)
+// {
+//     // Validate the incoming data
+//     $request->validate([
+//         'coordinates' => 'required|array',
+       
+      
+//     ]);
+
+//     // Create the polygon record
+//     $parcel =   ParcellaryBoundaries::find($id);
+
+//     $parcel->users_id = $request->users_id;
+              
+//                 $parcel->agri_districts = $request->agri_districts;
+//                 $parcel->barangay_name = $request->barangay_name;
+//                 $parcel->parcel_name = $request->parcel_name;
+//                 $parcel->arpowner_na = $request->arpowner_na;
+//                 $parcel->tct_no = $request->tct_no;
+//                 $parcel->lot_no = $request->lot_no;
+//                 $parcel->pkind_desc = $request->pkind_desc;
+//                 $parcel->puse_desc = $request->puse_desc;
+//                 $parcel->actual_used = $request->actual_used;
+
+//                 $parcel->coordinates = json_encode($request->coordinates); // Save as JSON
+       
+//                 $parcel->area = $request->area;
+//                 $parcel->altitude = $request->altitude;
+//                 $parcel->strokecolor = $request->strokecolor;
+//                 $parcel->save();
+
+//     // Return a response to the frontend
+    
+//     return response()->json(['success' => true, 'parcel_id' => $parcel->id]);
+// }
+
 public function ParcelUpdates(Request $request,$id)
 {
     // Validate the incoming data
     $request->validate([
         'coordinates' => 'required|array',
-       
-      
     ]);
 
     // Create the polygon record
     $parcel =   ParcellaryBoundaries::find($id);
 
     $parcel->users_id = $request->users_id;
-              
-                $parcel->agri_districts = $request->agri_districts;
-                $parcel->barangay_name = $request->barangay_name;
-                $parcel->parcel_name = $request->parcel_name;
-                $parcel->arpowner_na = $request->arpowner_na;
-                $parcel->tct_no = $request->tct_no;
-                $parcel->lot_no = $request->lot_no;
-                $parcel->pkind_desc = $request->pkind_desc;
-                $parcel->puse_desc = $request->puse_desc;
-                $parcel->actual_used = $request->actual_used;
+    $parcel->agri_districts = $request->agri_districts;
+    $parcel->barangay_name = $request->barangay_name;
+    $parcel->parcel_name = $request->parcel_name;
+    $parcel->arpowner_na = $request->arpowner_na;
+    $parcel->tct_no = $request->tct_no;
+    $parcel->lot_no = $request->lot_no;
+    $parcel->pkind_desc = $request->pkind_desc;
+    $parcel->puse_desc = $request->puse_desc;
+    $parcel->actual_used = $request->actual_used;
+    $parcel->coordinates = json_encode($request->coordinates); // Save as JSON
 
-                $parcel->coordinates = json_encode($request->coordinates); // Save as JSON
-                $parcel->parcel_name = $request->polygonName;
-                $parcel->area = $request->area;
-                $parcel->altitude = $request->altitude;
-                $parcel->strokecolor = $request->strokecolor;
-                $parcel->save();
+    $parcel->area = $request->area;
+    $parcel->altitude = $request->altitude;
+    $parcel->strokecolor = $request->strokecolor;
+    $parcel->save();
 
-    // Return a response to the frontend
-    
-    return response()->json(['success' => true, 'parcel_id' => $parcel->id]);
+    // Flash a success message
+    session()->flash('success', 'Polygon Updated successfully !');
+
+    // Return a JSON response indicating success and redirection URL
+    return response()->json([
+        'success' => true, 
+    'redirect_url' => route('polygon.polygons_show') // Replace with the correct route name or URL
+    ]);
 }
-
-
 
 public function Parceldelete($id) {
     try {
