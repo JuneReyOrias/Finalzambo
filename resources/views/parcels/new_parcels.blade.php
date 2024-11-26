@@ -648,6 +648,8 @@
 <!-- Include the Google Maps API with Drawing and Geometry libraries -->
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMstylquYwo8gAuOrkrF5IsN6K8gbgV6I&libraries=drawing,geometry&callback=initMap"></script>
 
+
+   
 <script type="text/javascript">
     var map;
     var drawingManager;
@@ -998,23 +1000,37 @@ document.getElementById('save-polygon').addEventListener('click', function () {
 
     // Prepare AJAX request
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/admin-add-parcel', true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+xhr.open('POST', '/admin-add-parcel', true);
+xhr.setRequestHeader('Content-Type', 'application/json');
+xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-                alert("Polygon saved successfully.");
-                // location.reload();
-            } else {
-                // Add additional error information for better debugging
-                console.error("Error status:", xhr.status);
-                console.error("Error response:", xhr.responseText);
-                alert("Failed to save polygon. Please check the console for more details.");
+xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+            try {
+                // Parse the JSON response
+                var response = JSON.parse(xhr.responseText);
+
+                if (response.success && response.redirect_url) {
+                    alert("Polygon saved successfully.");
+                    // Redirect to the provided URL
+                    window.location.href = response.redirect_url;
+                } else {
+                    alert("Polygon saved, but no redirect URL provided.");
+                }
+            } catch (error) {
+                console.error("Error parsing response:", error);
+                console.error("Response text:", xhr.responseText);
+                alert("Failed to process the response. Check the console for more details.");
             }
+        } else {
+            // Log errors for debugging
+            console.error("Error status:", xhr.status);
+            console.error("Error response:", xhr.responseText);
+            alert("Failed to save polygon. Please check the console for more details.");
         }
-    };
+    }
+};
 
     // Send the JSON data to the server
     xhr.send(JSON.stringify({
