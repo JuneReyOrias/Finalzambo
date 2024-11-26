@@ -1035,7 +1035,7 @@ xhr.onreadystatechange = function () {
     // Send the JSON data to the server
     xhr.send(JSON.stringify({
         coordinates: coordinates,
-        polygon_name: polygonName,
+        parcel_name: polygonName,
         area: area,
         altitude: altitude,
         arpowner_na: arpowner_na,

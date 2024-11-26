@@ -1611,7 +1611,7 @@ document.getElementById('save-polygon').addEventListener('click', function (even
         coordinates: coordinates,
         area: area,
         altitude: altitude,
-        polygonName: polygonName,
+        parcel_name: polygonName,
         strokecolor: strokeColor
     });
 

@@ -1045,7 +1045,7 @@ public function Parcel(Request $request)
     $parcel->puse_desc = $request->puse_desc;
     $parcel->actual_used = $request->actual_used;
     $parcel->coordinates = json_encode($request->coordinates); // Save as JSON
-    $parcel->parcel_name = $request->polygonName;
+
     $parcel->area = $request->area;
     $parcel->altitude = $request->altitude;
     $parcel->strokecolor = $request->strokecolor;
