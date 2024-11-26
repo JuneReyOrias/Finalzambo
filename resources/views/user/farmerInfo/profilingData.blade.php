@@ -11,7 +11,7 @@
 <div id="profileContent" class="emp-profile mt-5">
     <div class="card border-0 shadow rounded">
         <div class="card-body">
-
+            @if(!empty($profile))
             <form method="post" enctype="multipart/form-data">
                 @foreach ($gpsData as $data) <!-- Loop through the gpsData array -->
                 <div class="row justify-content-center align-items-center">
@@ -789,6 +789,11 @@
                 @endforeach <!-- End loop -->
 
             </form>
+
+            @else
+            <p class="text-muted" style="text-align: center; font-size: 14px;">Nothing yet Farmer Profile .</p>
+
+        @endif
         </div>
     </div>
 </div>
