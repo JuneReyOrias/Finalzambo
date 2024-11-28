@@ -33,6 +33,7 @@ use App\Models\ParcellaryBoundaries;
 use App\Models\Polygon;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -801,8 +802,9 @@ foreach ($cropsData as $cropData) {
                         $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
                         $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
                         $personalinfos = PersonalInformations::find($id);
-
-
+                        // Fetch all agri districts
+                        $agriDistricts = AgriDistrict::all(); // Get all agri districts
+                        $polygons = Polygon::all();
     // Handle AJAX requests
     if ($request->ajax()) {
         $type = $request->input('type');
@@ -847,11 +849,120 @@ foreach ($cropsData as $cropData) {
         return response()->json(['error' => 'Invalid type parameter.'], 400);
     }
     
+  // Prepare agri district GPS coordinates
+  $districtsData = [];
+  foreach ($agriDistricts as $district) {
+      $districtsData[] = [
+          'gpsLatitude' => $district->latitude,
+          'gpsLongitude' => $district->longitude,
+          'districtName' => $district->district,
+          'description' => $district->description,
+    
+      ];
+  }
+  $polygonsData = [];
+  foreach ($polygons as $polygon) {
+      // Prepare coordinates array from vertex fields
+      $coordinates = [
+          ['lat' => $polygon->verone_latitude, 'lng' => $polygon->verone_longitude],
+          ['lat' => $polygon->vertwo_latitude, 'lng' => $polygon->vertwo_longitude],
+          ['lat' => $polygon->verthree_latitude, 'lng' => $polygon->verthree_longitude],
+          ['lat' => $polygon->vertfour_latitude, 'lng' => $polygon->vertfour_longitude],
+          ['lat' => $polygon->verfive_latitude, 'lng' => $polygon->verfive_longitude],
+          ['lat' => $polygon->versix_latitude, 'lng' => $polygon->versix_longitude],
+          ['lat' => $polygon->verseven_latitude, 'lng' => $polygon->verseven_longitude],
+          ['lat' => $polygon->vereight_latitude, 'lng' => $polygon->verteight_longitude]
+      ];
+      
+      // Push to polygonData
+      $polygonsData[] = [
+          'id' => $polygon->id,
+          'name' => $polygon->poly_name,
+          'coordinates' => $coordinates,
+          'strokeColor' => $polygon->strokecolor, // Stroke color of the polygon
+          'area' => $polygon->area, // Area of the polygon (if applicable)
+          'perimeter' => $polygon->perimeter // Perimeter of the polygon (if applicable)
+      ];
+  }
+  
 
+
+  // Fetch all CropParcel records and transform them
+  $mapdata = CropParcel::all()->map(function($parcel) {
+  
+      // Decode the JSON coordinates
+      $coordinates = json_decode($parcel->coordinates);
+      
+      // Check if the coordinates are valid and properly formatted
+      if (!is_array($coordinates)) {
+      //   echo "Invalid coordinates for parcel ID {$parcel->id}: " . $parcel->coordinates . "\n";
+          return null; // Return null for invalid data
+      }
+
+      return [
+          'polygon_name' => $parcel->polygon_name, // Include the ID for reference
+          'coordinates' => $coordinates, // Include the decoded coordinates
+          'area' => $parcel->area, // Assuming there's an area field
+          'altitude' => $parcel->altitude, // Assuming there's an altitude field
+          'strokecolor' => $parcel->strokecolor, // Include the stroke color
+          'fillColor' => $parcel->fillColor // Optionally include the fill color if available
+      ];
+  })->filter(); // Remove any null values from the collection
+
+  
+      $parceldata = ParcellaryBoundaries::all()->map(function($parcel) {
+          // Output the individual parcel data for debugging
+      //   echo "Parcel data fetched: " . json_encode($parcel) . "\n";
+
+          // Decode the JSON coordinates
+          $coordinates = json_decode($parcel->coordinates);
+          
+          // Check if the coordinates are valid and properly formatted
+          if (!is_array($coordinates)) {
+          //   echo "Invalid coordinates for parcel ID {$parcel->id}: " . $parcel->coordinates . "\n";
+              return null; // Return null for invalid data
+          }
+
+          return [
+              'parcel_name' => $parcel->parcel_name, // Include the ID for reference
+              'arpowner_na' => $parcel->arpowner_na, 
+              'agri_districts' => $parcel->agri_districts, 
+              'barangay_name' => $parcel->barangay_name, 
+              'tct_no' => $parcel->tct_no, 
+              'lot_no' => $parcel->lot_no, 
+              'pkind_desc' => $parcel->pkind_desc, 
+              'puse_desc' => $parcel->puse_desc, 
+              'actual_used' => $parcel->actual_used, 
+              'coordinates' => $coordinates, // Include the decoded coordinates
+              'area' => $parcel->area, // Assuming there's an area field
+              'altitude' => $parcel->altitude, // Assuming there's an altitude field
+              'strokecolor' => $parcel->strokecolor, // Include the stroke color
+          
+          ];
+      })->filter(); // Remove any null values from the collection
+
+
+
+  // Check if the request is an AJAX request
+  if ($request->ajax()) {
+      // Return the response as JSON for AJAX requests
+      return response()->json([
+          'admin' => $admin,
+          'profile' => $profile,
+         
+          'totalRiceProduction' => $totalRiceProduction,
+      
+          'polygons' => $polygonsData,
+          'districtsData' => $districtsData // Send all district GPS coordinates
+      ]);
+  } else {
 
                         // Return the view with the fetched data
                         return view('farm_profile.farm_index', compact('agri_district', 'agri_districts_id', 'admin', 'profile',
-                        'totalRiceProduction','userId','cropVarieties','personalinfos','userId'));
+                        'totalRiceProduction','userId','cropVarieties','personalinfos','userId', 'mapdata', // Pass to view
+                        'parceldata' ));
+
+  }
                     } else {
                         // Handle the case where the user is not found
                         // You can redirect the user or display an error message
@@ -1447,19 +1558,33 @@ if (request()->ajax()) {
 
 
           $farms = $request -> farm;
+
+          $validator = Validator::make($farms, [
+            'personal_info' => 'required|exists:personal_informations,id',
+            'user_id' => 'required|exists:users,id',
+            'tenurial_status' => 'nullable|string',
+            'farm_address' => 'nullable|string',
+            'gps_longitude' => 'nullable|numeric',
+            'gps_latitude' => 'nullable|numeric',
+            'total_physical_area' => 'nullable|numeric',
+            'total_area_cultivated' => 'nullable|numeric',
+            'land_title_no' => 'nullable|string',
+            'lot_no' => 'nullable|string',
+            'area_prone_to' => 'nullable|string',
+            'ecosystem' => 'nullable|string',
+            'rsba_register' => 'nullable|boolean',
+            'pcic_insured' => 'nullable|boolean',
+            'government_assisted' => 'nullable|boolean',
+            'source_of_capital' => 'nullable|string',
+            'remarks' => 'nullable|string',
+            'name_technicians' => 'nullable|string',
+            'date_interview' => 'nullable|date',
+        ]);
+    
         //   return $farms;
           $farmModel = new FarmProfile();
     
-        //   $farmModel -> users_id =1;
-    
-        //   // FROM USER
-        //   $farmModel -> agri_districts_id = 1;
-    
-    
-        //   $farmModel -> personal_informations_id = 4096;
-    
-        //   $farmModel -> polygons_id = $farms['polygons_id'];
-        //   $farmModel -> agri_districts = $farms['agri_districts'];
+      
         $farmModel -> personal_informations_id = $farms['personal_info'];
         $farmModel -> users_id = $farms['user_id'];
           $farmModel -> tenurial_status = $farms['tenurial_status'];
@@ -1485,15 +1610,12 @@ if (request()->ajax()) {
          
           $farmModel ->save();
         
-        // VARIABLES
-        // VARIABLES
+  
         $farm_id = $farmModel -> id;
 
         // return $farmModel;
         $users_id =  $farmModel -> users_id;
-        // VARIABLES
-        // VARIABLES
-    
+      
     
           // Crop info 
           foreach ($request -> crops as $crop) {
@@ -1735,6 +1857,9 @@ if (request()->ajax()) {
                 $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
                 $farmprofiles=FarmProfile::find($id);
                 $personalinfos = PersonalInformations::find($id);
+                 // Fetch all agri districts
+                   $agriDistricts = AgriDistrict::all(); // Get all agri districts
+                   $polygons = Polygon::all();
                 if ($request->ajax()) {
                     $type = $request->input('type');
                         // Handle the 'fixedData' request type for fetchingMachineriesUseds data
@@ -1808,13 +1933,117 @@ if (request()->ajax()) {
                     return response()->json(['error' => 'Invalid type parameter.'], 400);
                     }
 
-                
+                  // Prepare agri district GPS coordinates
+  $districtsData = [];
+  foreach ($agriDistricts as $district) {
+      $districtsData[] = [
+          'gpsLatitude' => $district->latitude,
+          'gpsLongitude' => $district->longitude,
+          'districtName' => $district->district,
+          'description' => $district->description,
+    
+      ];
+  }
+  $polygonsData = [];
+  foreach ($polygons as $polygon) {
+      // Prepare coordinates array from vertex fields
+      $coordinates = [
+          ['lat' => $polygon->verone_latitude, 'lng' => $polygon->verone_longitude],
+          ['lat' => $polygon->vertwo_latitude, 'lng' => $polygon->vertwo_longitude],
+          ['lat' => $polygon->verthree_latitude, 'lng' => $polygon->verthree_longitude],
+          ['lat' => $polygon->vertfour_latitude, 'lng' => $polygon->vertfour_longitude],
+          ['lat' => $polygon->verfive_latitude, 'lng' => $polygon->verfive_longitude],
+          ['lat' => $polygon->versix_latitude, 'lng' => $polygon->versix_longitude],
+          ['lat' => $polygon->verseven_latitude, 'lng' => $polygon->verseven_longitude],
+          ['lat' => $polygon->vereight_latitude, 'lng' => $polygon->verteight_longitude]
+      ];
+      
+      // Push to polygonData
+      $polygonsData[] = [
+          'id' => $polygon->id,
+          'name' => $polygon->poly_name,
+          'coordinates' => $coordinates,
+          'strokeColor' => $polygon->strokecolor, // Stroke color of the polygon
+          'area' => $polygon->area, // Area of the polygon (if applicable)
+          'perimeter' => $polygon->perimeter // Perimeter of the polygon (if applicable)
+      ];
+  }
+  
+
+
+  // Fetch all CropParcel records and transform them
+  $mapdata = CropParcel::all()->map(function($parcel) {
+  
+      // Decode the JSON coordinates
+      $coordinates = json_decode($parcel->coordinates);
+      
+      // Check if the coordinates are valid and properly formatted
+      if (!is_array($coordinates)) {
+      //   echo "Invalid coordinates for parcel ID {$parcel->id}: " . $parcel->coordinates . "\n";
+          return null; // Return null for invalid data
+      }
+
+      return [
+          'polygon_name' => $parcel->polygon_name, // Include the ID for reference
+          'coordinates' => $coordinates, // Include the decoded coordinates
+          'area' => $parcel->area, // Assuming there's an area field
+          'altitude' => $parcel->altitude, // Assuming there's an altitude field
+          'strokecolor' => $parcel->strokecolor, // Include the stroke color
+          'fillColor' => $parcel->fillColor // Optionally include the fill color if available
+      ];
+  })->filter(); // Remove any null values from the collection
+
+  
+      $parceldata = ParcellaryBoundaries::all()->map(function($parcel) {
+          // Output the individual parcel data for debugging
+      //   echo "Parcel data fetched: " . json_encode($parcel) . "\n";
+
+          // Decode the JSON coordinates
+          $coordinates = json_decode($parcel->coordinates);
+          
+          // Check if the coordinates are valid and properly formatted
+          if (!is_array($coordinates)) {
+          //   echo "Invalid coordinates for parcel ID {$parcel->id}: " . $parcel->coordinates . "\n";
+              return null; // Return null for invalid data
+          }
+
+          return [
+              'parcel_name' => $parcel->parcel_name, // Include the ID for reference
+              'arpowner_na' => $parcel->arpowner_na, 
+              'agri_districts' => $parcel->agri_districts, 
+              'barangay_name' => $parcel->barangay_name, 
+              'tct_no' => $parcel->tct_no, 
+              'lot_no' => $parcel->lot_no, 
+              'pkind_desc' => $parcel->pkind_desc, 
+              'puse_desc' => $parcel->puse_desc, 
+              'actual_used' => $parcel->actual_used, 
+              'coordinates' => $coordinates, // Include the decoded coordinates
+              'area' => $parcel->area, // Assuming there's an area field
+              'altitude' => $parcel->altitude, // Assuming there's an altitude field
+              'strokecolor' => $parcel->strokecolor, // Include the stroke color
+          
+          ];
+      })->filter(); // Remove any null values from the collection
+
+
+
+                // Check if the request is an AJAX request
+                if ($request->ajax()) {
+                    // Return the response as JSON for AJAX requests
+                    return response()->json([
+                        'admin' => $admin,
+                        'profile' => $profile,
+                        'polygons' => $polygonsData,
+                        'districtsData' => $districtsData // Send all district GPS coordinates
+                    ]);
+                } else {
                 $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
                 // Return the view with the fetched data
                 return view('farm_profile.farm_edit', compact('admin', 'profile', 'farmProfile','totalRiceProduction'
-                ,'farmprofiles','agri_districts','agri_districts_id','userId','personalinfos'
+                ,'farmprofiles','agri_districts','agri_districts_id','userId','personalinfos','mapdata','parceldata'
                 
                 ));
+            }
             } else {
                 // Handle the case where the user is not found
                 // You can redirect the user or display an error message

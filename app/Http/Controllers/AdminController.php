@@ -3107,192 +3107,7 @@ public function FarmersRiceVarietyDistrict()
         return redirect()->route('login');
     }
 }
-    // farmers report
-    // public function FarmersReport(){
-    //     $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-    //     return view
-    // }
-
-
-        // admin view corn map farmers
-    //     public function CornMap(){
-    //         // Check if the user is authenticated
-    // if (Auth::check()) {
-    //     // User is authenticated, proceed with retrieving the user's ID
-    //     $userId = Auth::id();
-
-    //     // Find the user based on the retrieved ID
-    //     $admin = User::find($userId);
-
-    //     if ($admin) {
-    //         // Assuming $user represents the currently logged-in user
-    //         $user = auth()->user();
-
-    //         // Check if user is authenticated before proceeding
-    //         if (!$user) {
-    //             // Handle unauthenticated user, for example, redirect them to login
-    //             return redirect()->route('login');
-    //         }
-
-    //         // Find the user's personal information by their ID
-    //         $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
-
-    //         // Fetch the farm ID associated with the user
-    //         $farmId = $user->farm_id;
-
-    //         // Find the farm profile using the fetched farm ID
-    //         $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
-
-      
-
-            
-    //         $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-    //         // Return the view with the fetched data
-    //         return view('map.cornmap', compact('admin', 'profile', 'farmProfile','totalRiceProduction'
-    //         ,'userId'));
-    //     } else {
-    //         // Handle the case where the user is not found
-    //         // You can redirect the user or display an error message
-    //         return redirect()->route('login')->with('error', 'User not found.');
-    //     }
-    // } else {
-    //     // Handle the case where the user is not authenticated
-    //     // Redirect the user to the login page
-    //     return redirect()->route('login');
-    // }
-    //     }
-    // public function CornMap(Request $request) {
-    //     // Check if the user is authenticated
-    //     if (Auth::check()) {
-    //         // User is authenticated
-    //         $userId = Auth::id();
-    //         $admin = User::find($userId);
-            
-    //         if ($admin) {
-    //             // Find the user's personal information by their ID
-    //             $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
-                
-    //             // Fetch all farm profiles
-    //             $farmProfiles = FarmProfile::all(); // Get all farm profiles
-    
-    //             // Check if there are any farm profiles
-    //             if ($farmProfiles->isEmpty()) {
-    //                 return response()->json(['error' => 'No farm profiles found.'], 404);
-    //             }
-    
-    //             // Fetch total rice production
-    //             $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-    
-    //             // Prepare an array for GPS coordinates
-    //             $gpsData = [];
-    //             foreach ($farmProfiles as $farmProfile) {
-    //                 $gpsData[] = [
-    //                     'gpsLatitude' => $farmProfile->gps_latitude,
-    //                     'gpsLongitude' => $farmProfile->gps_longitude,
-    //                 ];
-    //             }
-    
-    //             // Check if the request is an AJAX request
-    //             if ($request->ajax()) {
-    //                 // Return the response as JSON for AJAX requests
-    //                 return response()->json([
-    //                     'admin' => $admin,
-    //                     'profile' => $profile,
-    //                     'farmProfiles' => $farmProfiles,
-    //                     'totalRiceProduction' => $totalRiceProduction,
-    //                     'gpsData' => $gpsData, // Send all GPS coordinates
-    //                 ]);
-    //             } else {
-    //                 // Return the view with the fetched data for regular requests
-    //                 return view('map.cornmap', [
-    //                     'admin' => $admin,
-    //                     'profile' => $profile,
-    //                     'farmProfiles' => $farmProfiles,
-    //                     'totalRiceProduction' => $totalRiceProduction,
-    //                     'gpsData' => $gpsData, // Pass to view
-    //                 ]);
-    //             }
-    //         } else {
-    //             return response()->json(['error' => 'User not found.'], 404);
-    //         }
-    //     } else {
-    //         return response()->json(['error' => 'Unauthorized.'], 401);
-    //     }
-    // }
-    
-
-
-    // public function CornMap(Request $request) {
-    //     // Check if the user is authenticated
-    //     if (Auth::check()) {
-    //         // User is authenticated
-    //         $userId = Auth::id();
-    //         $admin = User::find($userId);
-            
-    //         if ($admin) {
-    //             // Find the user's personal information by their ID
-    //             $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
-                
-    //             // Fetch all farm profiles
-    //             $farmProfiles = FarmProfile::all(); // Get all farm profiles
-    
-    //             // Check if there are any farm profiles
-    //             if ($farmProfiles->isEmpty()) {
-    //                 return response()->json(['error' => 'No farm profiles found.'], 404);
-    //             }
-    
-    //             // Fetch total rice production
-    //             $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-    
-    //             // Prepare an array for GPS coordinates of farm profiles
-    //             $gpsData = [];
-    //             foreach ($farmProfiles as $farmProfile) {
-    //                 $gpsData[] = [
-    //                     'gpsLatitude' => $farmProfile->gps_latitude,
-    //                     'gpsLongitude' => $farmProfile->gps_longitude,
-    //                 ];
-    //             }
-    
-    //             // Fetch agricultural districts with their GPS coordinates
-    //             $agriDistricts = AgriDistrict::select('district', 'latitude', 'longitude')->get();
-    //             $districtsData = [];
-    //             foreach ($agriDistricts as $district) {
-    //                 $districtsData[] = [
-    //                     'districtName' => $district->name,
-    //                     'gpsLatitude' => $district->latitude,
-    //                     'gpsLongitude' => $district->longitude,
-    //                 ];
-    //             }
-    
-    //             // Check if the request is an AJAX request
-    //             if ($request->ajax()) {
-    //                 // Return the response as JSON for AJAX requests
-    //                 return response()->json([
-    //                     'admin' => $admin,
-    //                     'profile' => $profile,
-    //                     'farmProfiles' => $farmProfiles,
-    //                     'totalRiceProduction' => $totalRiceProduction,
-    //                     'gpsData' => $gpsData, // Send all GPS coordinates of farm profiles
-    //                     'districtsData' => $districtsData, // Send all GPS coordinates of agri districts
-    //                 ]);
-    //             } else {
-    //                 // Return the view with the fetched data for regular requests
-    //                 return view('map.cornmap', [
-    //                     'admin' => $admin,
-    //                     'profile' => $profile,
-    //                     'farmProfiles' => $farmProfiles,
-    //                     'totalRiceProduction' => $totalRiceProduction,
-    //                     'gpsData' => $gpsData, // Pass to view
-    //                     'districtsData' => $districtsData, // Pass to view
-    //                 ]);
-    //             }
-    //         } else {
-    //             return response()->json(['error' => 'User not found.'], 404);
-    //         }
-    //     } else {
-    //         return response()->json(['error' => 'Unauthorized.'], 401);
-    //     }
-    // }
+ 
     
 
     public function CornMap(Request $request) {
@@ -3375,6 +3190,8 @@ public function FarmersRiceVarietyDistrict()
                             'totalPhysicalArea' => $farmProfile->total_physical_area,
                             'TotalCultivated' => $farmProfile->total_area_cultivated,
                              'tenurial_status' => $farmProfile->tenurial_status,
+                           'district' => ucwords(strtolower($farmProfile->agri_districts)),
+
                             
                             'cropName' => $cropNames, // List of crops
                             'cropVariety' => $cropVariety,
@@ -4742,150 +4559,104 @@ public function CornSave(Request $request)
 
 
         // view the personalinfo by admin
+
         public function GenFarmers(Request $request)
         {
             // Check if the user is authenticated
-            if (Auth::check()) {
-                // User is authenticated, proceed with retrieving the user's ID
-                $userId = Auth::id();
-        
-                // Find the user based on the retrieved ID
-                $admin = User::find($userId);
-        
-                if ($admin) {
-                    // Assuming $user represents the currently logged-in user
-                    $user = auth()->user();
-        
-                    // Check if user is authenticated before proceeding
-                    if (!$user) {
-                        // Handle unauthenticated user, for example, redirect them to login
-                        return redirect()->route('login');
-                    }
-        
-                    // Find the user's personal information by their ID
-                    $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
-        
-                    // Fetch all personal information
-                    $personalinfos = PersonalInformations::orderBy('id', 'asc');
-        
-                    // Search functionality
-                    if ($request->has('search')) {
-                        $keyword = $request->input('search');
-                        $personalinfos->where(function ($query) use ($keyword) {
-                            $query->where('last_name', 'like', "%$keyword%")
-                                  ->orWhere('first_name', 'like', "%$keyword%");
-                            // Add more search filters as needed
-                        });
-                    }
-        
-                    // Paginate the results
-                    $personalinfos = $personalinfos->paginate(4);
-
-                     // Fetch all farm profiles with their associated personal information and agricultural districts
-                        $farmProfiles = FarmProfile::select('farm_profiles.*')
-                        ->leftJoin('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                        ->with('agriDistrict')
-                        ->orderBy('farm_profiles.id', 'asc');
-
-                    // Check if a search query is provided
-                    if ($request->has('search')) {
-                        $keyword = $request->input('search');
-                        // Apply search filters for last name and first name
-                        $farmProfiles->where(function ($query) use ($keyword) {
-                            $query->where('personal_informations.last_name', 'like', "%$keyword%")
-                                ->orWhere('personal_informations.first_name', 'like', "%$keyword%");
-                        });
-                    }
-
-                    // Paginate the results
-                    $farmProfiles = $farmProfiles->paginate(20);
-
-                      // Query for fixed costs with eager loading of related models
-                    $fixedcosts = FixedCost::with('personalinformation', 'farmprofile')
-                    ->orderBy('id', 'asc');
-
-                    // Apply search functionality
-                    if ($request->has('search')) {
-                        $keyword = $request->input('search');
-                        $fixedcosts->where(function ($query) use ($keyword) {
-                            $query->whereHas('personalinformation', function ($query) use ($keyword) {
-                                $query->where('last_name', 'like', "%$keyword%")
-                                    ->orWhere('first_name', 'like', "%$keyword%");
-                            });
-                        });
-                    }
-
-                    // Paginate the results
-                    $fixedcosts = $fixedcosts->paginate(20);
-
-                      // Query for fixed costs with eager loading of related models
-                            $machineries = MachineriesUseds::with('personalinformation', 'farmprofile')
-                            ->orderBy('id', 'asc');
-
-                        // Apply search functionality
-                        if ($request->has('search')) {
-                            $keyword = $request->input('search');
-                            $machineries->where(function ($query) use ($keyword) {
-                                $query->whereHas('personalinformation', function ($query) use ($keyword) {
-                                    $query->where('last_name', 'like', "%$keyword%")
-                                        ->orWhere('first_name', 'like', "%$keyword%");
-                                });
-                            });
-                        }
-
-                        // Paginate the results
-                        $machineries = $machineries->paginate(20);
-
-                            // Query for variable cost with search functionality
-                                $variable = VariableCost::with('personalinformation', 'farmprofile','seeds','labors','fertilizers','pesticides','transports')
-                                ->orderBy('id', 'asc');
-                
-                            // Apply search functionality
-                            if ($request->has('search')) {
-                                $keyword = $request->input('search');
-                                $variable->where(function ($query) use ($keyword) {
-                                    $query->whereHas('personalinformation', function ($query) use ($keyword) {
-                                        $query->where('last_name', 'like', "%$keyword%")
-                                            ->orWhere('first_name', 'like', "%$keyword%");
-                                    });
-                                });
-                            }
-                
-                            // Paginate the results
-                            $variable = $variable->paginate(20);
-
-                            // Query for fixed costs with eager loading of related models
-
-
-                            $productions = LastProductionDatas::with('personalinformation', 'farmprofile','agridistrict')
-                            ->orderBy('id', 'asc');
-
-                        // Apply search functionality
-                        if ($request->has('search')) {
-                            $keyword = $request->input('search');
-                            $productions->where(function ($query) use ($keyword) {
-                                $query->whereHas('personalinformation', function ($query) use ($keyword) {
-                                    $query->where('last_name', 'like', "%$keyword%")
-                                        ->orWhere('first_name', 'like', "%$keyword%");
-                                });
-                            });
-                        }
-
-                        // Paginate the results
-                        $productions = $productions->paginate(20);
-
-                    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-                    // Return the view with the fetched data
-                    return view('admin.farmersdata.genfarmers', compact('admin', 'profile', 'personalinfos','farmProfiles','fixedcosts','machineries','variable','productions','totalRiceProduction'));
-                } else {
-                    // Handle the case where the user is not found
-                    // You can redirect the user or display an error message
-                    return redirect()->route('login')->with('error', 'User not found.');
-                }
-            } else {
-                // Handle the case where the user is not authenticated
-                // Redirect the user to the login page
+            if (!Auth::check()) {
                 return redirect()->route('login');
             }
+        
+            $userId = Auth::id();
+            $admin = User::find($userId);
+        
+            if (!$admin) {
+                return redirect()->route('login')->with('error', 'User not found.');
+            }
+        
+            // Base query for personal information
+            $personalinfos = PersonalInformations::orderBy('id', 'asc');
+        
+            // Filter by district if specified
+            if ($request->has('district') && $request->input('district') !== null) {
+                $districtFilter = $request->input('district');
+        
+                if ($districtFilter !== 'All') {
+                    // Case-insensitive comparison for the district filter
+                    $personalinfos->whereRaw('UPPER(agri_district) = ?', [strtoupper($districtFilter)]);
+                }
+            } else {
+                // If 'district' is null or not provided, include all records
+                $personalinfos->whereNotNull('id');
+            }
+        
+            // Filter by interview date
+            if ($request->has('date_interview') && $request->input('date_interview') !== null) {
+                $dateFilter = $request->input('date_interview');
+                if ($dateFilter == 'new') {
+                    $personalinfos->whereDate('date_interview', '>=', now()->subMonths(6)); // New records
+                } elseif ($dateFilter == 'old') {
+                    $personalinfos->whereDate('date_interview', '<', now()->subMonths(6)); // Old records
+                }
+            }
+        
+            // Search functionality for personal information
+            if ($request->has('search') && $request->input('search') !== null) {
+                $keyword = $request->input('search');
+                $personalinfos->where(function ($query) use ($keyword) {
+                    $query->where('last_name', 'like', "%$keyword%")
+                          ->orWhere('first_name', 'like', "%$keyword%");
+                });
+            }
+        
+            // Apply sorting if specified
+            if ($request->has('sortColumn') && $request->has('sortOrder')) {
+                $personalinfos->orderBy($request->sortColumn, $request->sortOrder);
+            }
+        
+            // Paginate the personal information results
+            $personalinfos = $personalinfos->paginate(4);
+        
+            // Fetch distinct districts for the dropdown
+            $districts = PersonalInformations::select('agri_district')
+                                             ->distinct()
+                                             ->orderBy('agri_district')
+                                             ->get();
+        
+            // Base query for farm profiles
+            $farmProfiles = FarmProfile::select('farm_profiles.*')
+                                       ->leftJoin('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                                       ->with('agriDistrict')
+                                       ->orderBy('farm_profiles.id', 'asc');
+        
+            // Search functionality for farm profiles
+            if ($request->has('search') && $request->input('search') !== null) {
+                $keyword = $request->input('search');
+                $farmProfiles->where(function ($query) use ($keyword) {
+                    $query->where('personal_informations.last_name', 'like', "%$keyword%")
+                          ->orWhere('personal_informations.first_name', 'like', "%$keyword%");
+                });
+            }
+        
+            // Paginate the farm profiles results
+            $farmProfiles = $farmProfiles->paginate(20);
+        
+            // Calculate total rice production
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        
+            // Return JSON response for AJAX requests
+            if ($request->ajax()) {
+                return response()->json([
+                    'personalinfos' => $personalinfos,
+                    'farmProfiles' => $farmProfiles,
+                    'districts' => $districts,
+                    'totalRiceProduction' => $totalRiceProduction,
+                ]);
+            }
+        
+            // For regular requests, return the view
+            return view('admin.farmersdata.genfarmers', compact('admin', 'personalinfos', 'farmProfiles', 'districts'));
         }
-}
+        
+
+                    }

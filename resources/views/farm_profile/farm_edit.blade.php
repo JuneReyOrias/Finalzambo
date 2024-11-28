@@ -501,7 +501,7 @@
             <div class="card-header d-flex justify-content-between align-items-center" id="headingFarmProfile" style="background-color: #f8f9fa; border: none; padding: 10px 20px;">
                 <h5 class="mb-0" style="margin: 0;">
                     <button class="btn btn-modern" type="button" data-toggle="collapse" data-target="#collapseFarmProfile" aria-expanded="true" aria-controls="collapseFarmProfile">
-                        Add Farm Profile
+                       Update Farm Profile
                     </button>
                 </h5>
                 
@@ -573,36 +573,43 @@
                                 <input type="text" class="form-control light-gray-placeholder gps_latitude" value="{{$farmprofiles->gps_latitude}}" name="gps_latitude" id="gps_latitude_0"placeholder="GPS_latitude" readonly>
                               </div>
                             
-                                    <!-- Map Modal -->
-                        <div id="mapModal" class="modal fade" tabindex="-1" role="dialog">
-                            <div class="modal-dialog modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title">Select Location on Map</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                                </div>
-                                <div class="modal-body">
-                                <div id="map" style="height: 400px; width: 100%;"></div>
-                                <div class="form-row mt-3">
-                                    <div class="col">
-                                    <label for="modal_latitude">Latitude:</label>
-                                    <input type="text" class="form-control light-gray-placeholder"placeholder="Enter latitude" id="modal_latitude">
-                                    </div>
-                                    <div class="col">
-                                    <label for="modal_longitude">Longitude:</label>
-                                    <input type="text" class="form-control light-gray-placeholder"placeholder="Enter longitude" id="modal_longitude">
-                                    </div>
-                                </div>
-                                </div>
-                                <div class="modal-footer">
-                               
-                                <button type="button" class="btn btn-primary" id="saveLocation">Close</button>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
+                   <!-- Map Modal -->
+<div id="mapModal" class="modal fade" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-sm">
+            <div class="modal-header bg-white text-white">
+                <h5 class="modal-title" id="mapModalLabel">
+                    <i class="fas fa-map-marker-alt me-2"></i>Select Location on Map
+                </h5>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">x</button>
+            </div>
+            <div class="modal-body">
+                <!-- Map Container -->
+                <div id="map" style="height: 400px; width: 100%; border-radius: 8px; overflow: hidden;"></div>
+                <!-- Latitude and Longitude Inputs -->
+                <div class="row mt-4 g-3">
+                    <div class="col-12 col-md-6">
+                        <label for="modal_latitude" class="form-label">Latitude:</label>
+                        <input type="text" class="form-control border-secondary" placeholder="Enter latitude" id="modal_latitude">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="modal_longitude" class="form-label">Longitude:</label>
+                        <input type="text" class="form-control border-secondary" placeholder="Enter longitude" id="modal_longitude">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-end">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Cancel
+                </button>
+                <button type="button" class="btn btn-primary" id="saveLocation">
+                    <i class="fas fa-save me-1"></i>Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
   
                        
                             <div class="input-box col-md-4">
@@ -734,7 +741,7 @@
                                 <input type="text" class="form-control light-gray-placeholder oca_district_office" {{$farmprofiles->oca_district_office}} name="oca_district_office" id="oca_district_office_0" placeholder=" Enter oca district" readonly>
                             </div> --}}
                             <div class="input-box col-md-4">
-                                <span class="details">Name of Technicians:</span>
+                                <span class="details">Name of Field Officer:</span>
                                 <input type="text" class="form-control light-gray-placeholder name_technicians"value="{{$farmprofiles->name_of_field_officer_technician}}" name="name_of_field_officer_technician" id="name_technicians_0" placeholder="Enter name of technicians" onkeypress="return blockSymbolsAndNumbers(event)">
                             </div>
                             
@@ -1172,50 +1179,6 @@
   </div>
   
   
-
-  
-  {{-- <!-- Success Modal -->
-<!-- Success Modal -->
-<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content shadow-lg">
-            <div class="modal-header border-0">
-                <h5 class="modal-title" id="successModalLabel">Success</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- Success message will be displayed here -->
-            </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="proceedToNextStep()">Proceed</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Error Modal -->
-<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content shadow-lg">
-            <div class="modal-header border-0">
-                <h5 class="modal-title" id="errorModalLabel">Error</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="errorModalBody">
-                <!-- Error message will be displayed here -->
-            </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-  
-  
-   --}}
 
 
  <!-- Modal for Adding New Barangay -->
@@ -3035,92 +2998,173 @@ let currentStep = 0;
 
 <script type="text/javascript">
     var map;
-    var markers = [];
-    var selectedLatLng;
-  
-    function initMap() {
-      var initialLocation = { lat: 6.9214, lng: 122.0790 };
-  
-      map = new google.maps.Map(document.getElementById('map'), {
+var markers = [];
+var selectedLatLng;
+var polygons = []; // Array to hold the saved polygons
+
+// Load polygons from mapdata and parceldata and plot them on the map
+function loadPolygons() {
+    var mapdata = @json($mapdata); // Existing data from the view
+    var parceldata = @json($parceldata); // Data from ParcellaryBoundaries
+
+    function plotPolygon(parcel, isParcelData = false) {
+        var polygon = new google.maps.Polygon({
+            paths: parcel.coordinates.map(coord => new google.maps.LatLng(coord.lat, coord.lng)),
+            strokeColor: parcel.strokecolor || '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: parcel.fillcolor || '#FF0000',
+            fillOpacity: 0.02
+        });
+        polygon.setMap(map);
+        polygons.push(polygon);
+
+        google.maps.event.addListener(polygon, 'click', function () {
+            var contentString;
+            if (isParcelData) {
+                contentString = 'Parcel Name: ' + parcel.parcel_name + '<br>' +
+                                'ARPOwner Name: ' + parcel.arpowner_na + '<br>' +
+                                'Agri-District: ' + parcel.agri_districts + '<br>' +
+                                'Brgy. Name: ' + parcel.barangay_name + '<br>' +
+                                'Title name: ' + parcel.tct_no + '<br>' +
+                                'Property kind description: ' + parcel.pkind_desc + '<br>' +
+                                'Property Used description: ' + parcel.puse_desc + '<br>' +
+                                'Actual Used: ' + parcel.actual_used + '<br>' +
+                                'Area: ' + parcel.area + ' sq. meters<br>' +
+                                'Altitude: ' + parcel.altitude + ' meters<br>';
+            } else {
+                contentString = 'Polygon Name: ' + parcel.polygon_name + '<br>' +
+                                'Area: ' + parcel.area + ' sq. meters<br>' +
+                                'Altitude: ' + parcel.altitude + ' meters';
+            }
+
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+            infowindow.setPosition(parcel.coordinates[0]);
+            infowindow.open(map);
+        });
+    }
+
+    mapdata.forEach(function (parcel) {
+        plotPolygon(parcel);
+    });
+
+    parceldata.forEach(function (parcel) {
+        plotPolygon(parcel, true);
+    });
+
+    var bounds = new google.maps.LatLngBounds();
+    mapdata.concat(parceldata).forEach(function (parcel) {
+        parcel.coordinates.forEach(function (coord) {
+            bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
+        });
+    });
+    map.fitBounds(bounds);
+}
+
+function initMap() {
+    var initialLocation = { lat: 6.9214, lng: 122.0790 }; // Default location
+    var existingLatitude = parseFloat("{{$farmprofiles->gps_latitude}}");
+    var existingLongitude = parseFloat("{{$farmprofiles->gps_longitude}}");
+
+    // Use existing GPS values if they are valid
+    if (!isNaN(existingLatitude) && !isNaN(existingLongitude)) {
+        initialLocation = { lat: existingLatitude, lng: existingLongitude };
+    }
+
+    map = new google.maps.Map(document.getElementById('map'), {
         zoom: 13,
         center: initialLocation,
-        mapTypeId: 'terrain'
-      });
-  
-      // When the map is clicked, set latitude and longitude in modal and main inputs
-      map.addListener('click', function(event) {
+        mapTypeId: 'satellite'
+    });
+
+    // Add marker if existing GPS coordinates are available
+    if (!isNaN(existingLatitude) && !isNaN(existingLongitude)) {
+        var existingLocation = new google.maps.LatLng(existingLatitude, existingLongitude);
+        addMarker(existingLocation);
+        $('#modal_latitude').val(existingLatitude);
+        $('#modal_longitude').val(existingLongitude);
+    }
+
+    map.addListener('click', function (event) {
         if (markers.length >= 1) {
-          deleteMarkers();
+            deleteMarkers();
         }
-  
+
         selectedLatLng = event.latLng;
         addMarker(selectedLatLng);
         $('#modal_latitude').val(selectedLatLng.lat());
         $('#modal_longitude').val(selectedLatLng.lng());
-      });
-  
-      // Add marker on the map
-      function addMarker(location) {
+    });
+
+    function addMarker(location) {
         var marker = new google.maps.Marker({
-          position: location,
-          map: map
+            position: location,
+            map: map,
+            draggable: true // Make the marker draggable
         });
         markers.push(marker);
-      }
-  
-      // Clear markers from the map
-      function deleteMarkers() {
+
+        // Update latitude and longitude on marker drag end
+        google.maps.event.addListener(marker, 'dragend', function (event) {
+            $('#modal_latitude').val(event.latLng.lat());
+            $('#modal_longitude').val(event.latLng.lng());
+        });
+    }
+
+    function deleteMarkers() {
         markers.forEach(marker => {
-          marker.setMap(null);
+            marker.setMap(null);
         });
         markers = [];
-      }
-  
-      // Listen for manual input in modal latitude/longitude fields
-      $('#modal_latitude, #modal_longitude').on('change', function() {
+    }
+
+    $('#modal_latitude, #modal_longitude').on('change', function () {
         var lat = parseFloat($('#modal_latitude').val());
         var lng = parseFloat($('#modal_longitude').val());
-  
+
         if (!isNaN(lat) && !isNaN(lng)) {
-          var location = { lat: lat, lng: lng };
-          map.setCenter(location);
-          deleteMarkers();
-          addMarker(location);
+            var location = { lat: lat, lng: lng };
+            map.setCenter(location);
+            deleteMarkers();
+            addMarker(location);
         }
-      });
-    }
-  
-    $(document).ready(function() {
-      // Show the modal when latitude or longitude input is focused
-      $('#gps_latitude_0, #gps_longitude_0').on('focus', function() {
+    });
+
+    loadPolygons(); // Load polygons when the map is initialized
+}
+
+$(document).ready(function () {
+    $('#gps_latitude_0, #gps_longitude_0').on('focus', function () {
         $('#mapModal').modal('show');
-      });
-  
-      // Reinitialize the map each time the modal is opened
-      $('#mapModal').on('shown.bs.modal', function() {
+    });
+
+    $('#mapModal').on('shown.bs.modal', function () {
         if (selectedLatLng) {
-          map.setCenter(selectedLatLng); // Center map on previously selected location
+            map.setCenter(selectedLatLng);
+        } else if (!isNaN(parseFloat("{{$farmprofiles->gps_latitude}}")) && !isNaN(parseFloat("{{$farmprofiles->gps_longitude}}"))) {
+            var lat = parseFloat("{{$farmprofiles->gps_latitude}}");
+            var lng = parseFloat("{{$farmprofiles->gps_longitude}}");
+            map.setCenter({ lat: lat, lng: lng });
         }
         google.maps.event.trigger(map, 'resize');
-      });
-  
-      // Clear previous markers when modal is closed
-      $('#mapModal').on('hidden.bs.modal', function() {
-        deleteMarkers(); // Clear markers when modal is closed
-      });
-  
-      // Handle the Save Location button click
-      $('#saveLocation').on('click', function() {
-        // Save the latitude and longitude to the main input fields
+    });
+
+    $('#mapModal').on('hidden.bs.modal', function () {
+        deleteMarkers();
+    });
+
+    $('#saveLocation').on('click', function () {
         var lat = $('#modal_latitude').val();
         var lng = $('#modal_longitude').val();
         $('#gps_latitude_0').val(lat);
         $('#gps_longitude_0').val(lng);
-        
-        // Close the modal
+
         $('#mapModal').modal('hide');
-      });
     });
+});
+
 
 // Function to check membership and display organization input accordingly
 function checkMmbership() {

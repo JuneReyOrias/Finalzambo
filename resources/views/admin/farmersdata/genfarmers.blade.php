@@ -48,15 +48,26 @@
                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                     </button>
                                 </a>
-                                <form id="farmProfileSearchForm" action="{{ route('admin.farmersdata.genfarmers') }}" method="GET">
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
-                                        <button class="btn btn-outline-success" type="submit">Search</button>
-                                    </div>
-                                </form>
-                                <form id="showAllForm" action="{{ route('admin.farmersdata.genfarmers') }}" method="GET">
-                                    <button class="btn btn-outline-success" type="submit">All</button>
-                                </form>
+                                    <form action="">
+                                       
+                                        
+                                        <div class="input-group mb-3">
+                                            <select id="date-interview-dropdown" class="form-select">
+                                                <option value="">All Farmers</option>
+                                                <option value="new">New (Last 6 months)</option>
+                                                <option value="old">Old (More than 6 months)</option>
+                                            </select>
+                                            <select class="form-select" id="district-dropdown">
+                                                <option value="">All Districts</option>
+                                            </select>
+                                            <input type="text"  class="form-control" id="search-input" placeholder="Search">
+                                        </div>
+                                    </form>
+                               
+                                   
+                                 
+                                
+                               
                             </div>
                                <div class="table-responsive">
                                 {{-- <form id="multipleDeleteForm" method="POST">
@@ -80,122 +91,8 @@
                                            <th class="custom-cell">Action </th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                      @if($personalinfos->count() > 0)
-                                    @foreach($personalinfos as $personalinformation)      
-                                <tr class="table-light">
-                                    {{-- <td><input type="checkbox" name="ids[]" class="recordCheckbox" value="{{ $personalinformation->id }}"></td> --}}
-                                    {{-- <td>{{ $loop->iteration }}</td> --}}
-                                    <td class="custom-cell">{{  $personalinformation->id }}</td>
-                                    <td class="custom-cell">
-                                    <?php
-                                    // Define variables
-                                    $first_name = $personalinformation->first_name;
-                                    $middle_name = $personalinformation->middle_name;
-                                    $last_name = $personalinformation->last_name;
-                                    $extension_name = $personalinformation->extension_name;
-                                
-                                    // Construct the full name
-                                    $full_name = $first_name;
-                                
-                                    // Check and append the middle name
-                                    if (!empty($middle_name) && $middle_name !== 'N/A') {
-                                        $full_name .= ' ' . $middle_name;
-                                    }
-                                
-                                    $full_name .= ' ' . $last_name;
-                                
-                                    // Check if extension_name is not empty and not equal to "N/A"
-                                    if (!empty($extension_name) && $extension_name !== 'N/A') {
-                                        $full_name .= ' ' . $extension_name;
-                                    }
-                                
-                                    // Output the full name
-                                    echo htmlspecialchars($full_name);
-                                    ?>
-
-                                </td>
-                                
-
-                            
-                                <td class="custom-cell">
-                                    @if ($personalinformation->barangay || $personalinformation->district || $personalinformation->city)
-                                        {{ $personalinformation->barangay ?? 'N/A' }}, {{ $personalinformation->district ?? 'N/A' }}, {{ $personalinformation->city ?? 'N/A' }}
-                                    @elseif ($personalinformation->home_address)
-                                        {{ $personalinformation->home_address }}
-                                    @else
-                                        N/A
-                                    @endif
-                                </td>
-                                
-                         
-                            {{-- <td class="custom-cell">
-                                @if ($personalinformation->religion && $personalinformation->religion != 'N/A')
-                                    {{ $personalinformation->religion }}
-                                @else
-                                
-                                @endif
-                            </td> --}}
-                            <td class="custom-cell">
-                            @if ($personalinformation->date_of_birth && $personalinformation->date_of_birth != 'N/A')
-                                {{ $personalinformation->date_of_birth }}
-                            @else
-                      
-                                    @endif
-                                </td>
-                                <td class="custom-cell">
-                                    @if ($personalinformation->place_of_birth && $personalinformation->place_of_birth != 'N/A')
-                                        {{ $personalinformation->place_of_birth }}
-                                    @else
-                                    
-                                    @endif
-                                </td>
-                             
-                             
-
-                
-
-               
-
-                        <td class="custom-cell">
-                            <a href="{{ route('admin.farmersdata.farm', $personalinformation->id) }}" title="View farm">
-                                <button class="btn btn-success btn-sm">
-                                  <i class="fa fa-eye" aria-hidden="true"></i>
-                                </button>
-                            </a>
-                      <a href="javascript:void(0);" class="viewfarmerBtn" data-bs-toggle="modal" title="View farmer" data-bs-target="#farmerModal" data-id="{{ $personalinformation->id }}">
-                        <button class="btn btn-warning btn-sm" style="border-color: #54d572;">
-                            <img src="../assets/logo/farmer.png" alt="Crop Icon" style="width: 20px; height: 20px;" class="me-1">
-                            <i class="fas fa-rice" aria-hidden="true"></i>
-                        </button>
-                    </a>
-
-                    <a href="javascript:void(0);" class="viewArchive" data-bs-toggle="modal" title="View Farmer Archive Data" data-bs-target="#farmerArchiveModal" data-id="{{ $personalinformation->id }}">
-                        <button class="btn btn-warning btn-sm" style="border-color: #54d572;">
-                            <img src="../assets/logo/history.png" alt="Crop Icon" style="width: 20px; height: 20px;" class="me-1">
-                            <i class="fas fa-rice" aria-hidden="true"></i>
-                        </button>
-                    </a>
-                    <a href="{{ route('personalinfo.edit_info', $personalinformation->id) }}" title="View farmer">
-                        <button class="btn btn-primary btn-sm">
-                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                        </button>
-                    </a>
-                    <form action="{{ route('personalinfo.delete', $personalinformation->id) }}" method="post" accept-charset="UTF-8" style="display:inline">
-                        {{ csrf_field() }}
-                        <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm('Confirm delete?')">
-                            <i class="fa fa-trash-o" aria-hidden="true"></i>
-                        </button>
-                    </form>
-                  </td>
-                  
-                   </tr>
-                                        @endforeach
-                                        @else
-                                        <tr>
-                                            <td class="text-center" colspan="5">Farmer info is empty</td>
-                                        </tr>
-                                        @endif
+                                    <tbody id="personal-info-list">
+                                        <!-- AJAX data will be inserted here -->
                                     </tbody>
                                 </table>
                               
@@ -203,19 +100,11 @@
                             {{-- </form> --}}
                                 <!-- Pagination links -->
                                 <div class="d-flex justify-content-between align-items-center mt-3">
-                                    <ul class="pagination mb-0">
-                                        <li><a href="{{ $personalinfos->previousPageUrl() }}">Previous</a></li>
-                                        @foreach ($personalinfos->getUrlRange(max(1, $personalinfos->currentPage() - 1), min($personalinfos->lastPage(), $personalinfos->currentPage() + 1)) as $page => $url)
-                                            <li class="{{ $page == $personalinfos->currentPage() ? 'active' : '' }}">
-                                                <a href="{{ $url }}">{{ $page }}</a>
-                                            </li>
-                                        @endforeach
-                                        <li><a href="{{ $personalinfos->nextPageUrl() }}">Next</a></li>
+                                    <ul id="pagination-links" class="pagination mb-0">
+                                        <!-- AJAX pagination links will be inserted here -->
                                     </ul>
-                                    {{-- <button type="button" id="deleteSelected" title="Delete all" class="btn btn-danger btn-sm">
-                                        <i class="fa fa-trash-o" aria-hidden="true"></i> All
-                                    </button> --}}
                                 </div>
+                                
                                 
                             </div>
                         </div>
@@ -300,66 +189,81 @@
              
            
               <!-- Full Name Display -->
-              <div class="container mt-3">
-                <h6 class="fw-bold">Full Name: <span id="full_name" class="text-primary"></span></h6>
-                <h6 class="text-secondary mb-3">Age: <span id="age"></span></h6> <!-- Age display here -->
-            </div>
+          
 
                 <!-- Production Data -->
                 <div class="container mt-4">
                     <h6 class="fw-bold mb-3">Farmer info Details</h6>
-                    
+                    <h6 class="fw-bold">Full Name: <span id="full_name" class="text-primary"></span></h6>
+                    <h6 class="text-secondary mb-3">Age: <span id="age"></span></h6> <!-- Age display here -->
                     </ul><div class="accordion" id="machineryAccordion">
                         <!-- Plowing Accordion -->
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="plowingHeading">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#plowingCollapse" aria-expanded="true" aria-controls="plowingCollapse">
-                                    a.  Contact and Demographic  Info
+                                    a. Farmer Info and Contact
                                 </button>
                             </h2>
-                            <div id="plowingCollapse" class="accordion-collapse collapse show" aria-labelledby="plowingHeading" data-bs-parent="#machineryAccordion">
+                            <div id="plowingCollapse" class="accordion-collapse collapse " aria-labelledby="plowingHeading" data-bs-parent="#machineryAccordion">
                                 <div class="accordion-body">
-                                    <ul class="list-unstyled farmer-details">
-
-                                      
-                                        {{-- <li><strong>Date of Birth:</strong> <span id="date_of_birth"></span></li> --}}
-                                        <li><strong>Mother's Maiden Name:</strong> <span id="mothers_maiden_name"></span></li>
-                                        <li><strong>Agri-District:</strong> <span id="district"></span></li>
-                                        <li><strong>Barangay:</strong> <span id="barangay"></span></li>
-                                        <li><strong>Country:</strong> <span id="country"></span></li>
-                                        <li><strong>Province:</strong> <span id="province"></span></li>
-                                        <li><strong>City:</strong> <span id="city"></span></li>
-                                        <li><strong>Home Address:</strong> <span id="home_address"></span></li>
-                                        <li><strong>Street:</strong> <span id="street"></span></li>
-                                        <li><strong>Zip Code:</strong> <span id="zip_code"></span></li>
+                                    <div class="farmer-details-container">
+                                        <ul class="list-unstyled farmer-details">
+                                            <li><strong>Mother's Maiden Name:</strong> <span id="mothers_maiden_name"></span></li>
+                                            <li><strong>Agri-District:</strong> <span id="district"></span></li>
+                                            <li><strong>Barangay:</strong> <span id="barangay"></span></li>
                                         
-                                        <li><strong>Contact:</strong> <span id="contact_no"></span></li>
-                                        <li><strong>Sex/Gender:</strong> <span id="sex"></span></li>
 
-                                        <li><strong>Religion:</strong> <span id="religion"></span></li>
-                                        <li><strong>Place Of Birth:</strong> <span id="place_of_birth"></span></li>
-                                        <li><strong>Civil Status:</strong> <span id="civil_status"></span></li>
-                                        <li><strong>Name of Spouse</strong> <span id="name_legal_spouse"></span></li>
-                                      
-                                        <li><strong>No. of Children:</strong> <span id="no_of_children"></span></li>
-                                        <li><strong>Highest Formal Education:</strong> <span id="highest_formal_education"></span></li>
-                                        <li><strong>Person with Disability:</strong> <span id="person_with_disability"></span></li>
-                                        <li><strong>PWD ID No.:</strong> <span id="pwd_id_no"></span></li>
-                                        <li><strong>Government Issued Id:</strong> <span id="government_issued_id"></span></li>
-                                        <li><strong>Gov ID Type.:</strong> <span id="id_type"></span></li>
-                                        <li><strong>Gov ID no.:</strong> <span id="gov_id_no"></span></li>
-                                    </ul>
+                                            <li><strong>Home Address:</strong> <span id="home_address"></span></li>
+                                            <li><strong>Street:</strong> <span id="street"></span></li>
+                                           
+                                            <li><strong>Contact:</strong> <span id="contact_no"></span></li>
+                                            <li><strong>Sex/Gender:</strong> <span id="sex"></span></li>
+                                           
+                                        </ul>
+                                    </div>
+                                    
+                                
+                                    
                                 </div>
                             </div>
                         </div>
                     
-                      
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="demoHeading">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#demoCollapse" aria-expanded="false" aria-controls="demoCollapse">
+                                    b. Demographic  Info 
+                                </button>
+                            </h2>
+                            <div id="demoCollapse" class="accordion-collapse collapse " aria-labelledby="demoHeading" data-bs-parent="#demoAccordion">
+                                <div class="accordion-body">
+                                    <div class="farmer-details">
+                                        <ul class="list-unstyled farmer-details">
+                                        
+                                            <li><strong>Religion:</strong> <span id="religion"></span></li>
+                                            <li><strong>Place Of Birth:</strong> <span id="place_of_birth"></span></li>
+                                            <li><strong>Civil Status:</strong> <span id="civil_status"></span></li>
+                                            <li><strong>Name of Spouse:</strong> <span id="name_legal_spouse"></span></li>
+                                            <li><strong>No. of Children:</strong> <span id="no_of_children"></span></li>
+                                            <li><strong>Highest Formal Education:</strong> <span id="highest_formal_education"></span></li>
+                                            <li><strong>Person with Disability:</strong> <span id="person_with_disability"></span></li>
+                                            <li><strong>PWD ID No.:</strong> <span id="pwd_id_no"></span></li>
+                                            <li><strong>Government Issued Id:</strong> <span id="government_issued_id"></span></li>
+                                            <li><strong>Gov ID Type:</strong> <span id="id_type"></span></li>
+                                            <li><strong>Gov ID No.:</strong> <span id="gov_id_no"></span></li>
+                                        </ul>
+                                    </div>
+                                    
+                                
+                                    
+                                </div>
+                            </div>
+                        </div>
                     
                         <!-- Harvesting Accordion -->
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="harvestingHeading">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#harvestingCollapse" aria-expanded="false" aria-controls="harvestingCollapse">
-                                    b.  Association  Info
+                                    c.  Association  Info
                                 </button>
                             </h2>
                             <div id="harvestingCollapse" class="accordion-collapse collapse" aria-labelledby="harvestingHeading" data-bs-parent="#machineryAccordion">
@@ -388,6 +292,8 @@
     </div>
 </div>
 <style>
+
+
     /* Modal Content Styling */
    .modal-content {
        border-radius: .5rem;
@@ -890,5 +796,242 @@ function capitalizeFirstLetter(string) {
      });</script>
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>
 
-     
+
+     <script>
+
+$(document).ready(function () {
+    let sortOrder = 'asc';
+    let sortColumn = 'id';
+
+    function getPageRange(currentPage) {
+        const startPage = Math.floor((currentPage - 1) / 3) * 3 + 1;
+        const endPage = startPage + 2;
+        return { startPage, endPage };
+    }
+
+    function fetchFarmersData(filters = {}, page = 1) {
+        filters.page = page;
+        filters.sort_order = sortOrder;
+        filters.sort_column = sortColumn;
+
+        $.ajax({
+            url: '/admin-view-General-Farmers',
+            type: 'GET',
+            data: filters,
+            success: function (response) {
+                $('#personal-info-list').html('');
+                $('#farm-profile-list').html('');
+                $('#pagination-links').html('');
+
+                // Populate personal information
+                response.personalinfos.data.forEach(info => {
+                    $('#personal-info-list').append(`
+                        <tr class="new-row">
+                            <td class="custom-cell">${info.id}</td>
+                            <td class="custom-cell">${info.first_name} ${info.middle_name || ''} ${info.last_name} ${info.extension_name || ''}</td>
+                            <td class="custom-cell">${info.barangay || info.district || info.city ? `${info.barangay || 'N/A'}, ${info.district || 'N/A'}, ${info.city || 'N/A'}` : info.home_address || 'N/A'}</td>
+                            <td class="custom-cell">${info.date_of_birth || 'N/A'}</td>
+                            <td class="custom-cell">${info.place_of_birth || 'N/A'}</td>
+                            <td class="custom-cell">
+                                <a href="/admin-view-Farmers-farm/${info.id}" title="View farm">
+                                    <button class="btn btn-success btn-sm"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                                </a>
+                                <a href="javascript:void(0);" class="viewfarmerBtn" data-bs-toggle="modal" title="View farmer" data-bs-target="#farmerModal" data-id="${info.id}">
+                                    <button class="btn btn-warning btn-sm" style="border-color: #54d572;">
+                                        <img src="../assets/logo/farmer.png" alt="Crop Icon" style="width: 20px; height: 20px;" class="me-1">
+                                        <i class="fas fa-rice" aria-hidden="true"></i>
+                                    </button>
+                                </a>
+                                <a href="javascript:void(0);" class="viewArchive" data-bs-toggle="modal" title="View Farmer Archive Data" data-bs-target="#farmerArchiveModal" data-id="${info.id}">
+                                    <button class="btn btn-warning btn-sm" style="border-color: #54d572;">
+                                        <img src="../assets/logo/history.png" alt="Crop Icon" style="width: 20px; height: 20px;" class="me-1">
+                                        <i class="fas fa-rice" aria-hidden="true"></i>
+                                    </button>
+                                </a>
+                                <a href="/admin-update-personalinfo/${info.id}" title="Edit farmer">
+                                    <button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                </a>
+                                <form action="/admin-delete-personalinfo/${info.id}" method="post" style="display:inline">
+                                    {{ csrf_field() }}
+                                    <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm('Confirm delete?')">
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    `);
+                });
+
+                // Populate farm profiles
+                response.farmProfiles.data.forEach(profile => {
+                    $('#farm-profile-list').append(`
+                        <tr>
+                            <td>${profile.id}</td>
+                            <td>${profile.name}</td>
+                            <td>${profile.agri_district ? profile.agri_district.name : 'N/A'}</td>
+                        </tr>
+                    `);
+                });
+
+                // Populate districts dropdown
+                function toProperCase(text) {
+                    return text.replace(/\b\w/g, char => char.toUpperCase());
+                }
+
+                response.districts.forEach(district => {
+    if (district.agri_district) {
+        // Check if the dropdown already has the district option
+        if (!$(`#district-dropdown option[value="${district.agri_district}"]`).length) {
+            // Append new option only if it doesn't exist
+            $('#district-dropdown').append(`
+                <option value="${district.agri_district}">${toProperCase(district.agri_district)}</option>
+            `);
+        } else {
+            // Option already exists, ensure data remains the same (if needed)
+            let option = $(`#district-dropdown option[value="${district.agri_district}"]`);
+            if (option.text() !== toProperCase(district.agri_district)) {
+                option.text(toProperCase(district.agri_district));
+            }
+        }
+    }
+});
+
+
+                // Update total rice production
+                $('#total-rice-production').text(response.totalRiceProduction);
+
+                // Generate pagination links
+                if (response.personalinfos.links) {
+                    const totalPages = response.personalinfos.last_page;
+                    const { startPage, endPage } = getPageRange(page);
+
+                    for (let i = startPage; i <= endPage && i <= totalPages; i++) {
+                        const isActive = (i === page) ? 'active' : '';
+                        $('#pagination-links').append(`
+                            <li class="page-item ${isActive}">
+                                <a href="#" class="page-link" data-page="${i}">${i}</a>
+                            </li>
+                        `);
+                    }
+
+                    $('#pagination-links').prepend(`
+                        <li class="page-item ${page === 1 ? 'disabled' : ''}">
+                            <a href="#" class="page-link" data-page="${page - 1}"><i class="fas fa-chevron-left"></i></a>
+                        </li>
+                    `);
+
+                    $('#pagination-links').append(`
+                        <li class="page-item ${page === totalPages ? 'disabled' : ''}">
+                            <a href="#" class="page-link" data-page="${page + 1}"><i class="fas fa-chevron-right"></i></a>
+                        </li>
+                    `);
+                }
+            },
+            error: function (error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    }
+
+    // Fetch data initially
+    fetchFarmersData();
+
+    // Handle filters change
+    $('#district-dropdown, #search-input, #date-interview-dropdown').on('change keyup', function () {
+        const filters = {
+            district: $('#district-dropdown').val(),
+            search: $('#search-input').val(),
+            date_interview: $('#date-interview-dropdown').val()
+        };
+        fetchFarmersData(filters);
+    });
+
+    // Handle pagination link clicks
+    $(document).on('click', '.page-link', function (e) {
+        e.preventDefault();
+        const page = $(this).data('page');
+        if (page) {
+            const filters = {
+                district: $('#district-dropdown').val(),
+                search: $('#search-input').val()
+            };
+            fetchFarmersData(filters, page);
+        }
+    });
+
+    // Handle column sorting
+    $('#sortable-table th').on('click', function () {
+        const column = $(this).data('column');
+        if (column) {
+            sortColumn = column;
+            sortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
+            const filters = {
+                district: $('#district-dropdown').val(),
+                search: $('#search-input').val()
+            };
+            fetchFarmersData(filters);
+        }
+    });
+});
+
+
+
+     </script>
+    <style>
+
+
+
+
+        #pagination-links {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.page-item {
+    margin: 0 5px;
+}
+
+.page-link {
+    padding: 10px 15px;
+    background-color: #fff;
+    color: #007bff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.page-link:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.page-link:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(38, 143, 255, 0.5);
+}
+
+.page-item:first-child .page-link {
+    border-radius: 5px 0 0 5px;
+}
+
+.page-item:last-child .page-link {
+    border-radius: 0 5px 5px 0;
+}
+
+.page-item.disabled .page-link {
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.page-item a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+        
+        
+        </style> 
 @endsection

@@ -594,16 +594,16 @@
                          <div class="user-details">
                              <div class="input-box col-md-4">
                              <label for="area_planted">Area Planted:</label>
-                             <input type="number" class="form-control light-gray-placeholder area-planted" value="{{$production->area_planted}}" name="area_planted" paceholder="Area Planted" >
+                             <input type="number" class="form-control light-gray-placeholder area-planted" value="{{$production->area_planted}}" name="area_planted" placeholder="Area Planted" >
                          </div>
 
                           <div class="input-box col-md-4">
                              <label for="date_planted">Date Planted:</label>
-                             <input type="text" class="form-control light-gray-placeholder date-planted" value="{{$production->date_planted}}" name="date_planted" paceholder="Date Planted"  id="datepicker">
+                             <input type="text" class="form-control light-gray-placeholder date-planted" value="{{$production->date_planted}}" name="date_planted" placeholder="Date Planted"  id="datepicker">
                          </div>
                      <div class="input-box col-md-4">
                              <label for="date_planted">Date Harvested:</label>
-                             <input type="text" class="form-control light-gray-placeholder date-harvested" value="{{$production->date_harvested}}" name="date_harvested" paceholder="Date harvested"  id="datepicker">
+                             <input type="text" class="form-control light-gray-placeholder date-harvested" value="{{$production->date_harvested}}" name="date_harvested" placeholder="Date harvested"  id="datepicker">
                          </div>
                           <div class="input-box col-md-4">
                              <label for="yield_tons_per_kg">Yield Kg/Tons:</label>

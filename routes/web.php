@@ -76,6 +76,7 @@ Route::get('/agent-import-multipleFile', [FileController::class, 'downloadTempla
 
     // fetching the users
     Route::get('/get-users', [AgentController::class, 'getUsers']);
+
     Route::post('/admin-asign-farm-profile', [AdminController::class, 'AdminupdateFarmProfile']);
     Route::post('/update-farm-profile', [AgentController::class, 'updateFarmProfile']);
     Route::post('/admin-update-farm-profile', [AdminController::class, 'updateCropLocation']);
@@ -178,7 +179,7 @@ Route::get('/admin-add-crop-farms/{farmData}',[FarmProfileController ::class,'cr
 Route::post('/admin-add-crop-farms/{farmData}',[FarmProfileController ::class,'saveCropfarm']);
 Route::get('/admin-edit-crop-farms/{farmData}',[FarmProfileController ::class,'CropEdit'])->name('admin.farmersdata.cropsdata.edit_crops');
 Route::post('/admin-edit-crop-farms/{farmData}',[FarmProfileController ::class,'Updatecrop']);
-Route::get('/admin-delete-crop-farms/{farmData}',[FarmProfileController ::class,'Deletecropfarm'])->name('admin.farmersdata.cropsdata.delete');
+Route::delete('/admin-delete-crop-farms/{farmData}',[FarmProfileController ::class,'Deletecropfarm'])->name('admin.farmersdata.cropsdata.delete');
 
 // view admin survey
 Route::get('/admin-view-Farmers-survey-form',[PersonalInformationsController ::class,'samplefolder'])->name('admin.farmersdata.samplefolder.farm_edit');
@@ -322,7 +323,7 @@ Route::post('/admin-edit-features/{Page}',[LandingPageController::class,'updateF
 
 
              // agent corn map 
-        Route::get('/agent-view-all-crops-map',[AgentController::class,'CornMap'])->name('agent.agri.cornmap');
+        Route::get('agent-view-crops-map',[AgentController::class,'CornMap'])->name('agent.agri.cornmap');
 
         // agent coconut map 
         Route::get('agent-view-coconut-map',[AgentController::class,'CoconutMaps'])->name('agent.agri.coconutmap');

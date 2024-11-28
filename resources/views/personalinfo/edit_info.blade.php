@@ -485,7 +485,7 @@
                                             <input type="hidden" class="form-control light-gray-placeholder users_id" name="users_id" value="{{$userId}}">
                                             <input type="hidden" class="form-control province light-gray-placeholder @error('last_name') is-invalid @enderror" name="Country" id="validationCustom01" value="Philippines" readonly >
                                             <input type="hidden" class="form-control province light-gray-placeholder @error('last_name') is-invalid @enderror" name="province" id="validationCustom01" value="Zamboanga del sur" readonly >
-                                            <input type="hidden"name="email" class="form-control city light-gray-placeholder @error('email') is-invalid @enderror" name="city" id="validationCustom01" value="Zamboanga City" readonly >
+                                            <input type="hidden" class="form-control city light-gray-placeholder @error('email') is-invalid @enderror" name="city" id="validationCustom01" value="Zamboanga City" readonly >
                                         </div>
                                         <div class="user-details">
                                             <!-- Existing fields here -->

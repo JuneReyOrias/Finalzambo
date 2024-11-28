@@ -29,6 +29,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Nette\Utils\Strings;
 use App\Models\KmlFile;
 use App\Models\User;
@@ -633,73 +634,96 @@ if ($request->hasFile('image') && $request->file('image')->isValid()) {
         public function PersonalInfoUpdate(Request $request, $id)
         {
             try {
-                // Step 1: Find the existing personal information record
-                $data = PersonalInformations::find($id);
-        
-                // Check if data is found
-                if (!$data) {
-                    return redirect()->route('admin.update.personalinfo', $id)
-                        ->with('message', 'Personal information not found');
-                }
-        
-                // Step 2: Archive the current data before updating it
-                PersonalInformationArchive::create([
-                    'personal_informations_id' => $data->id,  // Foreign key reference to the original record
-                    'users_id' => $data->users_id,
-                    'first_name' => $data->first_name,
-                    'middle_name' => $data->middle_name,
-                    'last_name' => $data->last_name,
-                    'extension_name' => $data->extension_name,
-                    'country' => $data->country,
-                    'province' => $data->province,
-                    'city' => $data->city,
-                    'district' => $data->district,
-                    'barangay' => $data->barangay,
-                    'home_address' => $data->home_address,
-                    'sex' => $data->sex,
-                    'religion' => $data->religion,
-                    'date_of_birth' => $data->date_of_birth,
-                    'place_of_birth' => $data->place_of_birth,
-                    'contact_no' => $data->contact_no,
-                    'civil_status' => $data->civil_status,
-                    'name_legal_spouse' => $data->name_legal_spouse,
-                    'no_of_children' => $data->no_of_children,
-                    'mothers_maiden_name' => $data->mothers_maiden_name,
-                    'highest_formal_education' => $data->highest_formal_education,
-                    'person_with_disability' => $data->person_with_disability,
-                    'pwd_id_no' => $data->pwd_id_no,
-                    'government_issued_id' => $data->government_issued_id,
-                    'id_type' => $data->id_type,
-                    'gov_id_no' => $data->gov_id_no,
-                    'member_ofany_farmers_ass_org_coop' => $data->member_ofany_farmers_ass_org_coop,
-                    'nameof_farmers_ass_org_coop' => $data->nameof_farmers_ass_org_coop,
-                    'name_contact_person' => $data->name_contact_person,
-                    'cp_tel_no' => $data->cp_tel_no,
-                    'date_interview' => $data->date_interview,
+                // Validate the request data
+                $request->validate([
+                    'users_id' => 'nullable|integer',
+                    'first_name' => 'required|string|max:255',
+                    'middle_name' => 'nullable|string|max:255',
+                    'last_name' => 'required|string|max:255',
+                    'extension_name' => 'nullable|string|max:255',
+                   
+                    'city' => 'nullable|string|max:255',
+                    'district' => 'nullable|string|max:255',
+                    'barangay' => 'nullable|string|max:255',
+                    'home_address' => 'nullable|string|max:255',
+                    'sex' => 'nullable|string|max:10',
+                    'religion' => 'nullable|string|max:255',
+                    'date_of_birth' => 'nullable|date',
+                    'place_of_birth' => 'nullable|string|max:255',
+                    'contact_no' => 'nullable|string|max:20',
+                    'civil_status' => 'nullable|string|max:20',
+                    'name_legal_spouse' => 'nullable|string|max:255',
+                    'no_of_children' => 'nullable|integer|min:0',
+                    'mothers_maiden_name' => 'nullable|string|max:255',
+                    'highest_formal_education' => 'nullable|string|max:255',
+                    'person_with_disability' => 'nullable|string|max:10',
+                    'pwd_id_no' => 'nullable|string|max:50',
+                    'government_issued_id' => 'nullable|string|max:255',
+                    'id_type' => 'nullable|string|max:50',
+                    'gov_id_no' => 'nullable|string|max:255',
+                    'member_ofany_farmers_ass_org_coop' => 'nullable|string|max:255',
+                    'nameof_farmers_ass_org_coop' => 'nullable|string|max:255',
+                    'name_contact_person' => 'nullable|string|max:255',
+                    'cp_tel_no' => 'nullable|string|max:20',
+                    'date_interview' => 'nullable|date',
+                    'image' => 'nullable|image|max:2048',
                 ]);
         
-                // Step 3: Handle the image upload if provided
+                // Step 1: Find or fail
+                $data = PersonalInformations::findOrFail($id);
+        
+                // Step 2: Archive existing data
+               // Step 2: Archive the current data before updating it
+               PersonalInformationArchive::create([
+                'personal_informations_id' => $data->id,  // Foreign key reference to the original record
+                'users_id' => $data->users_id,
+                'first_name' => $data->first_name,
+                'middle_name' => $data->middle_name,
+                'last_name' => $data->last_name,
+                'extension_name' => $data->extension_name,
+                'country' => $data->country,
+                'province' => $data->province,
+                'city' => $data->city,
+                'district' => $data->district,
+                'barangay' => $data->barangay,
+                'home_address' => $data->home_address,
+                'sex' => $data->sex,
+                'religion' => $data->religion,
+                'date_of_birth' => $data->date_of_birth,
+                'place_of_birth' => $data->place_of_birth,
+                'contact_no' => $data->contact_no,
+                'civil_status' => $data->civil_status,
+                'name_legal_spouse' => $data->name_legal_spouse,
+                'no_of_children' => $data->no_of_children,
+                'mothers_maiden_name' => $data->mothers_maiden_name,
+                'highest_formal_education' => $data->highest_formal_education,
+                'person_with_disability' => $data->person_with_disability,
+                'pwd_id_no' => $data->pwd_id_no,
+                'government_issued_id' => $data->government_issued_id,
+                'id_type' => $data->id_type,
+                'gov_id_no' => $data->gov_id_no,
+                'member_ofany_farmers_ass_org_coop' => $data->member_ofany_farmers_ass_org_coop,
+                'nameof_farmers_ass_org_coop' => $data->nameof_farmers_ass_org_coop,
+                'name_contact_person' => $data->name_contact_person,
+                'cp_tel_no' => $data->cp_tel_no,
+                'agri_district' => $data->agri_district,
+                'date_interview' => $data->date_interview,
+            ]);
+        
+                // Step 3: Handle image upload
                 if ($request->hasFile('image') && $request->file('image')->isValid()) {
-                    // Retrieve the image file from the request
-                    $image = $request->file('image');
-                    
-                    // Generate a unique image name using current timestamp and file extension
-                    $imagename = time() . '.' . $image->getClientOriginalExtension();
-                    
-                    // Move the uploaded image to the 'personalInfoimages' directory with the generated name
-                    $image->move(public_path('personalInfoimages'), $imagename);
-                    
-                    // Update the image name in the PersonalInformation model
+                    $imagename = time() . '.' . $request->image->getClientOriginalExtension();
+                    $request->image->storeAs('personalInfoimages', $imagename, 'public');
                     $data->image = $imagename;
                 }
         
-                // Step 4: Update the personal information with the new request data
+                // Step 4: Update personal information
                 $data->update([
                     'users_id' => $request->users_id,
                     'first_name' => $request->first_name,
                     'middle_name' => $request->middle_name,
                     'last_name' => $request->last_name,
-                    'extension_name' => ($request->extension_name === 'others') ? $request->add_extName : $request->extension_name,
+                    'extension_name' => $request->extension_name === 'others' ? $request->add_extName : $request->extension_name,
                     'country' => $request->country,
                     'province' => $request->province,
                     'city' => $request->city,
@@ -707,41 +731,41 @@ if ($request->hasFile('image') && $request->file('image')->isValid()) {
                     'barangay' => $request->barangay,
                     'home_address' => $request->home_address,
                     'sex' => $request->sex,
-                    'religion' => ($request->religion === 'other') ? $request->add_Religion : $request->religion,
+                    'religion' => $request->religion === 'other' ? $request->add_Religion : $request->religion,
                     'date_of_birth' => $request->date_of_birth,
-                    'place_of_birth' => ($request->place_of_birth === 'Add Place of Birth') ? $request->add_PlaceBirth : $request->place_of_birth,
+                    'place_of_birth' => $request->place_of_birth === 'Add Place of Birth' ? $request->add_PlaceBirth : $request->place_of_birth,
                     'contact_no' => $request->contact_no,
                     'civil_status' => $request->civil_status,
                     'name_legal_spouse' => $request->name_legal_spouse,
-                    'no_of_children' => ($request->no_of_children === 'Add') ? $request->add_noChildren : $request->no_of_children,
+                    'no_of_children' => $request->no_of_children === 'Add' ? $request->add_noChildren : $request->no_of_children,
                     'mothers_maiden_name' => $request->mothers_maiden_name,
-                    'highest_formal_education' => ($request->highest_formal_education === 'Other') ? $request->add_formEduc : $request->highest_formal_education,
+                    'highest_formal_education' => $request->highest_formal_education === 'Other' ? $request->add_formEduc : $request->highest_formal_education,
                     'person_with_disability' => $request->person_with_disability,
                     'pwd_id_no' => $request->pwd_id_no,
                     'government_issued_id' => $request->government_issued_id,
                     'id_type' => $request->id_type,
                     'gov_id_no' => $request->gov_id_no,
                     'member_ofany_farmers_ass_org_coop' => $request->member_ofany_farmers_ass_org_coop,
-                    'nameof_farmers_ass_org_coop' => ($request->nameof_farmers_ass_org_coop === 'add') ? $request->add_FarmersGroup : $request->nameof_farmers_ass_org_coop,
+                    'nameof_farmers_ass_org_coop' => $request->nameof_farmers_ass_org_coop === 'add' ? $request->add_FarmersGroup : $request->nameof_farmers_ass_org_coop,
                     'name_contact_person' => $request->name_contact_person,
                     'cp_tel_no' => $request->cp_tel_no,
                     'date_interview' => $request->date_interview,
                 ]);
         
-                // Step 5: Return a success message and redirect
-                return redirect('/admin-view-General-Farmers')->with('message','Personal informations Updated successsfully');
-                
+                // Step 5: Success response
+                return redirect()->route('admin.farmersdata.genfarmers')
+                    ->with('message', 'Personal information updated successfully');
         
             } catch (\Exception $ex) {
-                // Log the error message for debugging
-                // \Log::error("Error updating personal information: " . $ex->getMessage());
-                // dd($ex);
-                // Step 6: Handle the error gracefully and redirect
-                return redirect('/admin-update-personalinfo/{personalinfos}')->with('message','Someting went wrong');
+                // Log error for debugging
+            dd($ex);
+        
+                // Error response
+                return redirect()->route('personalinfo.edit_info', ['personalinfos' => $id])
+                    ->with('message', 'Something went wrong: ' . $ex->getMessage());
             }
         }
         
-
             // deleting personal info by admin
             public function DeletePersonalInfo($id) {
                 try {

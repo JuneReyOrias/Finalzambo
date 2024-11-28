@@ -550,35 +550,41 @@
                               </div>
                             
                                     <!-- Map Modal -->
-                        <div id="mapModal" class="modal fade" tabindex="-1" role="dialog">
-                            <div class="modal-dialog modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title">Select Location on Map</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                                </div>
-                                <div class="modal-body">
-                                <div id="map" style="height: 400px; width: 100%;"></div>
-                                <div class="form-row mt-3">
-                                    <div class="col">
-                                    <label for="modal_latitude">Latitude:</label>
-                                    <input type="text" class="form-control light-gray-placeholder"placeholder="Enter latitude" id="modal_latitude">
+                                    <div id="mapModal" class="modal fade" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                                            <div class="modal-content border-0 shadow-sm">
+                                                <div class="modal-header bg-white text-white">
+                                                    <h5 class="modal-title" id="mapModalLabel">
+                                                        <i class="fas fa-map-marker-alt me-2"></i>Select Location on Map
+                                                    </h5>
+                                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">x</button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <!-- Map Container -->
+                                                    <div id="map" style="height: 400px; width: 100%; border-radius: 8px; overflow: hidden;"></div>
+                                                    <!-- Latitude and Longitude Inputs -->
+                                                    <div class="row mt-4 g-3">
+                                                        <div class="col-12 col-md-6">
+                                                            <label for="modal_latitude" class="form-label">Latitude:</label>
+                                                            <input type="text" class="form-control border-secondary" placeholder="Enter latitude" id="modal_latitude">
+                                                        </div>
+                                                        <div class="col-12 col-md-6">
+                                                            <label for="modal_longitude" class="form-label">Longitude:</label>
+                                                            <input type="text" class="form-control border-secondary" placeholder="Enter longitude" id="modal_longitude">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer justify-content-end">
+                                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                                        <i class="fas fa-times me-1"></i>Cancel
+                                                    </button>
+                                                    <button type="button" class="btn btn-primary" id="saveLocation">
+                                                        <i class="fas fa-save me-1"></i>Save
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col">
-                                    <label for="modal_longitude">Longitude:</label>
-                                    <input type="text" class="form-control light-gray-placeholder"placeholder="Enter longitude" id="modal_longitude">
-                                    </div>
-                                </div>
-                                </div>
-                                <div class="modal-footer">
-                               
-                                <button type="button" class="btn btn-primary" id="saveLocation">Close</button>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
   
                        
                             <div class="input-box col-md-4">
@@ -652,8 +658,8 @@
                         <span class="details">RSBA Register:</span>
                                
                                 <select class="form-control custom-select light-gray-placeholder rsba_register placeholder-text @error('rsba_register') is-invalid @enderror" id="rsba_register" name="rsba_register" aria-label="Floating label select e">
-                                    <option  disabled>Select</option>
-                                    <option selected value="Yes" {{ old('rsba_register') == 'Yes' ? 'selected' : '' }}>Yes</option>
+                                    <option value="">Select</option>
+                                    <option value="Yes" {{ old('rsba_register') == 'Yes' ? 'selected' : '' }}>Yes</option>
                                     <option value="No" {{ old('rsba_register') == 'No' ? 'selected' : '' }}>No</option>
                               
                                   </select>
@@ -1078,22 +1084,35 @@
   
 <!-- Success Modal -->
 <div class="modal fade" id="successCropModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="successModalLabel">Success</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg">
+            <!-- Modal Header -->
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold" id="successModalLabel">
+                    <i class="fas fa-check-circle me-2"></i>Success!
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="modal-body text-center py-5">
+                <i class="fas fa-smile-beam fa-3x text-success mb-4"></i>
+                <p class="fs-5 text-muted">
+                    Your data has been successfully added.
+                </p>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div class="modal-footer justify-content-center border-0">
+                <a href="{{ route('admin.farmersdata.farm', $personalinfos->id) }}" class="btn btn-lg btn-success px-5">
+                    Proceed to Farm Data
+                    <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
         </div>
-        <div class="modal-body">
-          <p>Your data has been successfully added.</p>
-        </div>
-        <div class="modal-footer">
-            <a href="{{ route('admin.farmersdata.farm', $personalinfos->id) }}" class="btn btn-success">Proceed to Farm Data</a>
-        </div>
-      </div>
     </div>
-  </div>
-  
+</div>
+
   
 
  
@@ -3022,6 +3041,7 @@ function openConfirmModal(data) {
         $('#confirmModal').modal('show');
     } else {
         alert("Please add at least one crop before proceeding.");
+        location.reload();
         // Optionally, scroll to or focus on the crop addition section
         const cropAddSection = document.querySelector('#cropAddSection'); // Adjust the selector
         if (cropAddSection) {
@@ -3029,161 +3049,10 @@ function openConfirmModal(data) {
             // You could also add focus or highlight the section
         }
     }
+   
 }
 
-// // // Function to open confirmation modal with data preview
-// function openConfirmModal(data) {
-//      // Check if there are any crops added
-//                 const cropSections = document.querySelectorAll('.crop-section'); // Adjust this selector
 
-//             if (cropSections.length > 0) {
-//                 // Open the modal with the provided data
-//                 $('#confirmModal').modal('show');
-//                 // Pass the data to the modal as needed
-//             } else {
-//                 alert("Please add at least one crop before proceeding.");
-//                 // Optionally, scroll to or focus on the crop addition section
-//                 const cropAddSection = document.querySelector('#cropAddSection'); // Adjust the selector
-//                 if (cropAddSection) {
-//                     cropAddSection.scrollIntoView({ behavior: 'smooth' });
-//                     // You could also add focus or highlight the section
-//                 }
-//             }
-//     // Check and populate the modal with the farmer's details
- 
-
-//     // Check and populate the modal with the farm's details
-//     $('#farmTenurialStatus').text(data.farm?.tenurial_status || 'N/A');
-//     $('#farmAddress').text(data.farm?.farm_address || 'N/A');
-//     $('#farmYearsAsFarmer').text(data.farm?.no_of_years_as_farmers || 'N/A');
-//     $('#farmGpsLongitude').text(data.farm?.gps_longitude || 'N/A');
-//     $('#farmGpsLatitude').text(data.farm?.gps_latitude || 'N/A');
-//     $('#farmTotalPhysicalArea').text(data.farm?.total_physical_area_has || 'N/A');
-//     $('#farmTotalAreaCultivated').text(data.farm?.total_area_cultivated_has || 'N/A');
-//     $('#farmLandTitleNo').text(data.farm?.land_title_no || 'N/A');
-//     $('#farmLotNo').text(data.farm?.lot_no || 'N/A');
-//     $('#farmAreaProneTo').text(data.farm?.area_prone_to || 'N/A');
-//     $('#farmEcosystem').text(data.farm?.ecosystem || 'N/A');
-//     $('#farmRsbaRegister').text(data.farm?.rsba_register || 'N/A');
-//     $('#farmPcicInsured').text(data.farm?.pcic_insured || 'N/A');
-//     $('#farmGovernmentAssisted').text(data.farm?.government_assisted || 'N/A');
-//     $('#farmSourceOfCapital').text(data.farm?.source_of_capital || 'N/A');
-//     $('#farmRemarks').text(data.farm?.remarks || 'N/A');
-//     $('#farmOcaDistrictOffice').text(data.farm?.oca_district_office || 'N/A');
-//     $('#farmNameTechnicians').text(data.farm?.name_technicians || 'N/A');
-//     $('#farmDateInterview').text(data.farm?.date_interview || 'N/A');
-
-//     // Clear previous crop info from the modal
-//     $('#cropAccordionBody').empty();
-
-// // Loop through the crops and populate individual crop details in list format
-// data.crops.forEach(function(crop, index) {
-//     let cropHtml = `
-//       <div class="crop-info">
-//     <h3>Crop ${index + 1}</h3><br>
-//     <div class="detail-grid">
-//         <div class="detail-row">
-//             <h4>Crop Information:</h4><br>
-//             <ul class="list-unstyled">
-//                 <li><strong>Crop Name:</strong> <span>${crop.crop_name || 'N/A'}</span></li>
-//                 <li><strong>Crop Variety:</strong> <span>${crop.variety.type_variety || 'N/A'}</span></li>
-//                 <li><strong>Preferred Variety:</strong> <span>${crop.variety.preferred || 'N/A'}</span></li>
-//                 <li><strong>Wet Season:</strong> <span>${crop.variety.wet_season || 'N/A'}</span></li>
-//                 <li><strong>Dry Season:</strong> <span>${crop.variety.dry_season || 'N/A'}</span></li>
-//                 <li><strong>Number of Cropping Years:</strong> <span>${crop.variety.no_cropping_year || 'N/A'}</span></li>
-//                 <li><strong>Yield (kg/ha):</strong> <span>${crop.variety.yield_kg_ha || 'N/A'}</span></li>
-//             </ul>
-//         </div>
-
-//         <div class="detail-row">
-//             <h4>Production Details:</h4>
-//             <ul class="list-unstyled">
-//                 <li><strong>Seed Type:</strong> <span>${crop.production.seedtype || 'N/A'}</span></li>
-//                 <li><strong>Seed Used:</strong> <span>${crop.production.seedUsed || 'N/A'}</span></li>
-//                 <li><strong>Seed Source:</strong> <span>${crop.production.seedSource || 'N/A'}</span></li>
-//                 <li><strong>Unit:</strong> <span>${crop.production.unit || 'N/A'}</span></li>
-//                 <li><strong>Fertilizer Used:</strong> <span>${crop.production.fertilizedUsed || 'N/A'}</span></li>
-//                 <li><strong>Pesticides Used:</strong> <span>${crop.production.pesticidesUsed || 'N/A'}</span></li>
-//                 <li><strong>Insecticides Used:</strong> <span>${crop.production.insecticide || 'N/A'}</span></li>
-//                 <li><strong>Area Planted:</strong> <span>${crop.production.areaPlanted || 'N/A'}</span></li>
-//                 <li><strong>Date Planted:</strong> <span>${crop.production.datePlanted || 'N/A'}</span></li>
-//                 <li><strong>Date Harvested:</strong> <span>${crop.production.Dateharvested || 'N/A'}</span></li>
-//                 <li><strong>Yield (kg):</strong> <span>${crop.production.yieldkg || 'N/A'}</span></li>
-//             </ul>
-//         </div>
-
-//         <div class="detail-row">
-//             <h4>Fixed Costs:</h4>
-//             <ul class="list-unstyled">
-//                 <li><strong>Particular:</strong> <span>${crop.fixedCost.particular || 'N/A'}</span></li>
-//                 <li><strong>Number of Hectares:</strong> <span>${crop.fixedCost.no_of_has || 'N/A'}</span></li>
-//                 <li><strong>Cost per Hectare:</strong> <span>${crop.fixedCost.costperHas || 'N/A'}</span></li>
-//                 <li><strong>Total Fixed Cost:</strong> <span>${crop.fixedCost.TotalFixed || 'N/A'}</span></li>
-//             </ul>
-//         </div>
-
-//         <div class="detail-row">
-//             <h4>Machineries:</h4>
-//             <ul class="list-unstyled">
-//                 <li><strong>Plowing Machine:</strong> <span>${crop.machineries.PlowingMachine || 'N/A'}</span></li>
-//                 <li><strong>Plow Status:</strong> <span>${crop.machineries.plow_status || 'N/A'}</span></li>
-//                 <li><strong>Number of Plowing:</strong> <span>${crop.machineries.no_of_plowing || 'N/A'}</span></li>
-//                 <li><strong>Cost per Plowing:</strong> <span>${crop.machineries.cost_per_plowing || 'N/A'}</span></li>
-//                 <li><strong>Plowing Cost:</strong> <span>${crop.machineries.plowing_cost || 'N/A'}</span></li>
-//                 <li><strong>Harrow Machine:</strong> <span>${crop.machineries.harro_machine || 'N/A'}</span></li>
-//                 <li><strong>Harrow Ownership Status:</strong> <span>${crop.machineries.harro_ownership_status || 'N/A'}</span></li>
-//                 <li><strong>Number of Harrowing:</strong> <span>${crop.machineries.no_of_harrowing || 'N/A'}</span></li>
-//                 <li><strong>Cost per Harrowing:</strong> <span>${crop.machineries.cost_per_harrowing || 'N/A'}</span></li>
-//                 <li><strong>Harrowing Cost Total:</strong> <span>${crop.machineries.harrowing_cost_total || 'N/A'}</span></li>
-//                 <li><strong>Harvest Machine:</strong> <span>${crop.machineries.harvest_machine || 'N/A'}</span></li>
-//                 <li><strong>Harvest Ownership Status:</strong> <span>${crop.machineries.harvest_ownership_status || 'N/A'}</span></li>
-//                 <li><strong>Number of Harvesting:</strong> <span>${crop.machineries.no_of_Harvesting || 'N/A'}</span></li>
-//                 <li><strong>Cost per Harvesting:</strong> <span>${crop.machineries.cost_per_Harvesting || 'N/A'}</span></li>
-//                 <li><strong>Harvesting Cost Total:</strong> <span>${crop.machineries.Harvesting_cost_total || 'N/A'}</span></li>
-//                 <li><strong>Postharvest Machine:</strong> <span>${crop.machineries.postharves_machine || 'N/A'}</span></li>
-//                 <li><strong>Postharvest Ownership Status:</strong> <span>${crop.machineries.postharvestCost || 'N/A'}</span></li>
-//                 <li><strong>Postharvest Cost:</strong> <span>${crop.machineries.total_cost_for_machineries || 'N/A'}</span></li>
-//             </ul>
-//         </div>
-
-//         <div class="detail-row">
-//             <h4>Variable Costs:</h4>
-//             <ul class="list-unstyled">
-//                 <li><strong>Seed Name:</strong> <span>${crop.variables.seed_name || 'N/A'}</span></li>
-//                 <li><strong>Unit:</strong> <span>${crop.variables.unit || 'N/A'}</span></li>
-//                 <li><strong>Quantity:</strong> <span>${crop.variables.quantity || 'N/A'}</span></li>
-//                 <li><strong>Unit Price Seed:</strong> <span>${crop.variables.unit_price_seed || 'N/A'}</span></li>
-//                 <li><strong>Total Seed Cost:</strong> <span>${crop.variables.total_seed_cost || 'N/A'}</span></li>
-//                 <li><strong>Number of Persons:</strong> <span>${crop.variables.no_of_person || 'N/A'}</span></li>
-//                 <li><strong>Rate per Person:</strong> <span>${crop.variables.rate_per_person || 'N/A'}</span></li>
-//                 <li><strong>Total Labor Cost:</strong> <span>${crop.variables.total_labor_cost || 'N/A'}</span></li>
-//                 <li><strong>Name of Fertilizer:</strong> <span>${crop.variables.name_of_fertilizer || 'N/A'}</span></li>
-//                 <li><strong>Number of Sacks:</strong> <span>${crop.variables.no_ofsacks || 'N/A'}</span></li>
-//                 <li><strong>Unit Price per Sack:</strong> <span>${crop.variables.unitprice_per_sacks || 'N/A'}</span></li>
-//                 <li><strong>Total Cost of Fertilizers:</strong> <span>${crop.variables.total_cost_fertilizers || 'N/A'}</span></li>
-//                 <li><strong>Pesticides Name:</strong> <span>${crop.variables.pesticides_name || 'N/A'}</span></li>
-//                 <li><strong>Number of Liters/Kgs:</strong> <span>${crop.variables.no_of_l_kg || 'N/A'}</span></li>
-//                 <li><strong>Unit Price of Pesticides:</strong> <span>${crop.variables.unitprice_ofpesticides || 'N/A'}</span></li>
-//                 <li><strong>Total Cost of Pesticides:</strong> <span>${crop.variables.total_cost_pesticides || 'N/A'}</span></li>
-              
-//                 <li><strong>Type of Vehicle:</strong> <span>${crop.variables.type_of_vehicle || 'N/A'}</span></li>
-//                 <li><strong>Total DeliveryCost:</strong> <span>${crop.variables.Total_DeliveryCost || 'N/A'}</span></li>
-//                 <li><strong>Total machinery fuel cost:</strong> <span>${crop.variables.total_machinery_fuel_cost || 'N/A'}</span></li>
-//                 <li><strong>Total Variable Costs:</strong> <span>${crop.variables.total_variable_costs || 'N/A'}</span></li>
-//             </ul>
-//         </div>
-//     </div>
-//  <br>
-// </div>
-
-//     `;
-
-//     // Append the crop info HTML to the modal
-//     $('#cropAccordionBody').append(cropHtml);
-// });
-
-//     $('#confirmModal').modal('show');
-// }
 
 
 
@@ -3191,7 +3060,8 @@ function openConfirmModal(data) {
 openConfirmModal(dataobject);
 
 /// Confirm and Save event
-$('#confirmSave').on('click', function() {
+/// Confirm and Save event
+$('#confirmSave').on('click', function () {
     const csrfToken = $('input[name="_token"]').attr('value');
 
     // Send the AJAX request
@@ -3201,38 +3071,49 @@ $('#confirmSave').on('click', function() {
         contentType: 'application/json',
         data: JSON.stringify(dataobject), // Attach the prepared data
         headers: {
-            'X-CSRF-TOKEN': csrfToken // Include the CSRF token in the headers
+            'X-CSRF-TOKEN': csrfToken, // Include the CSRF token in the headers
         },
-        success: function(response) {
+        success: function (response) {
             console.log(response);
             if (response.success) {
-                var successModal = new bootstrap.Modal(document.getElementById('successCropModal'), {
-                        keyboard: false
+                // Show success modal
+                const successModal = new bootstrap.Modal(document.getElementById('successCropModal'), {
+                    keyboard: false,
+                });
+                successModal.show();
 
-                    });
-                    successModal.show(); // Show success modal
-                    
-                    // Close the confirmation modal after successful save
-                    var confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
-                    if (confirmModal) {
-                        confirmModal.hide();
-                    }
+                // Close the confirmation modal
+                const confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+                if (confirmModal) {
+                    confirmModal.hide();
                 }
+
+                // Add event listener to reload the page when success modal is closed
+                $('#successCropModal').on('hidden.bs.modal', function () {
+                    location.reload(); // Reload the page
+                });
+            }
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.error('Error:', xhr.responseJSON.error);
 
-            // Display the error message in the modal body
+            // Display the error message in the error modal body
             $('#errorModalBody').text(xhr.responseJSON.error);
 
+            // Show the error modal
+            const errorModal = new bootstrap.Modal(document.getElementById('errorModal'), {
+                keyboard: false,
+            });
+            errorModal.show();
 
-    // Show the modal
-    $('#errorModal').modal('show');
-}
-
-
+            // Add event listener to reload the page when error modal is closed
+            $('#errorModal').on('hidden.bs.modal', function () {
+                location.reload(); // Reload the page
+            });
+        },
     });
 });
+
 });
 
 
@@ -3284,92 +3165,153 @@ let currentStep = 0;
 
 <script type="text/javascript">
     var map;
-    var markers = [];
-    var selectedLatLng;
-  
-    function initMap() {
-      var initialLocation = { lat: 6.9214, lng: 122.0790 };
-  
-      map = new google.maps.Map(document.getElementById('map'), {
+var markers = [];
+var selectedLatLng;
+var polygons = []; // Array to hold the saved polygons
+
+// Load polygons from mapdata and parceldata and plot them on the map
+function loadPolygons() {
+    var mapdata = @json($mapdata); // Existing data from the view
+    var parceldata = @json($parceldata); // Data from ParcellaryBoundaries
+
+    function plotPolygon(parcel, isParcelData = false) {
+        var polygon = new google.maps.Polygon({
+            paths: parcel.coordinates.map(coord => new google.maps.LatLng(coord.lat, coord.lng)),
+            strokeColor: parcel.strokecolor || '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: parcel.fillcolor || '#FF0000',
+            fillOpacity: 0.02
+        });
+        polygon.setMap(map);
+        polygons.push(polygon);
+
+        google.maps.event.addListener(polygon, 'click', function () {
+            var contentString;
+            if (isParcelData) {
+                contentString = 'Parcel Name: ' + parcel.parcel_name + '<br>' +
+                                'ARPOwner Name: ' + parcel.arpowner_na + '<br>' +
+                                'Agri-District: ' + parcel.agri_districts + '<br>' +
+                                'Brgy. Name: ' + parcel.barangay_name + '<br>' +
+                                'Title name: ' + parcel.tct_no + '<br>' +
+                                'Property kind description: ' + parcel.pkind_desc + '<br>' +
+                                'Property Used description: ' + parcel.puse_desc + '<br>' +
+                                'Actual Used: ' + parcel.actual_used + '<br>' +
+                                'Area: ' + parcel.area + ' sq. meters<br>' +
+                                'Altitude: ' + parcel.altitude + ' meters<br>';
+            } else {
+                contentString = 'Polygon Name: ' + parcel.polygon_name + '<br>' +
+                                'Area: ' + parcel.area + ' sq. meters<br>' +
+                                'Altitude: ' + parcel.altitude + ' meters';
+            }
+
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+            infowindow.setPosition(parcel.coordinates[0]);
+            infowindow.open(map);
+        });
+    }
+
+    mapdata.forEach(function (parcel) {
+        plotPolygon(parcel);
+    });
+
+    parceldata.forEach(function (parcel) {
+        plotPolygon(parcel, true);
+    });
+
+    var bounds = new google.maps.LatLngBounds();
+    mapdata.concat(parceldata).forEach(function (parcel) {
+        parcel.coordinates.forEach(function (coord) {
+            bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
+        });
+    });
+    map.fitBounds(bounds);
+}
+
+function initMap() {
+    var initialLocation = { lat: 6.9214, lng: 122.0790 };
+
+    map = new google.maps.Map(document.getElementById('map'), {
         zoom: 13,
         center: initialLocation,
-        mapTypeId: 'terrain'
-      });
-  
-      // When the map is clicked, set latitude and longitude in modal and main inputs
-      map.addListener('click', function(event) {
+        mapTypeId: 'satellite'
+    });
+
+    map.addListener('click', function (event) {
         if (markers.length >= 1) {
-          deleteMarkers();
+            deleteMarkers();
         }
-  
+
         selectedLatLng = event.latLng;
         addMarker(selectedLatLng);
         $('#modal_latitude').val(selectedLatLng.lat());
         $('#modal_longitude').val(selectedLatLng.lng());
-      });
-  
-      // Add marker on the map
-      function addMarker(location) {
+    });
+
+    function addMarker(location) {
         var marker = new google.maps.Marker({
-          position: location,
-          map: map
+            position: location,
+            map: map,
+            draggable: true // Make the marker draggable
         });
         markers.push(marker);
-      }
-  
-      // Clear markers from the map
-      function deleteMarkers() {
+
+        // Update latitude and longitude on marker drag end
+        google.maps.event.addListener(marker, 'dragend', function (event) {
+            $('#modal_latitude').val(event.latLng.lat());
+            $('#modal_longitude').val(event.latLng.lng());
+        });
+    }
+
+    function deleteMarkers() {
         markers.forEach(marker => {
-          marker.setMap(null);
+            marker.setMap(null);
         });
         markers = [];
-      }
-  
-      // Listen for manual input in modal latitude/longitude fields
-      $('#modal_latitude, #modal_longitude').on('change', function() {
+    }
+
+    $('#modal_latitude, #modal_longitude').on('change', function () {
         var lat = parseFloat($('#modal_latitude').val());
         var lng = parseFloat($('#modal_longitude').val());
-  
+
         if (!isNaN(lat) && !isNaN(lng)) {
-          var location = { lat: lat, lng: lng };
-          map.setCenter(location);
-          deleteMarkers();
-          addMarker(location);
+            var location = { lat: lat, lng: lng };
+            map.setCenter(location);
+            deleteMarkers();
+            addMarker(location);
         }
-      });
-    }
-  
-    $(document).ready(function() {
-      // Show the modal when latitude or longitude input is focused
-      $('#gps_latitude_0, #gps_longitude_0').on('focus', function() {
+    });
+}
+
+$(document).ready(function () {
+    $('#gps_latitude_0, #gps_longitude_0').on('focus', function () {
         $('#mapModal').modal('show');
-      });
-  
-      // Reinitialize the map each time the modal is opened
-      $('#mapModal').on('shown.bs.modal', function() {
+    });
+
+    $('#mapModal').on('shown.bs.modal', function () {
         if (selectedLatLng) {
-          map.setCenter(selectedLatLng); // Center map on previously selected location
+            map.setCenter(selectedLatLng);
         }
         google.maps.event.trigger(map, 'resize');
-      });
-  
-      // Clear previous markers when modal is closed
-      $('#mapModal').on('hidden.bs.modal', function() {
-        deleteMarkers(); // Clear markers when modal is closed
-      });
-  
-      // Handle the Save Location button click
-      $('#saveLocation').on('click', function() {
-        // Save the latitude and longitude to the main input fields
+    });
+
+    $('#mapModal').on('hidden.bs.modal', function () {
+        deleteMarkers();
+    });
+
+    $('#saveLocation').on('click', function () {
         var lat = $('#modal_latitude').val();
         var lng = $('#modal_longitude').val();
         $('#gps_latitude_0').val(lat);
         $('#gps_longitude_0').val(lng);
         
-        // Close the modal
         $('#mapModal').modal('hide');
-      });
     });
+    
+    loadPolygons(); // Load polygons when the map is initialized
+});
 
 // Function to check membership and display organization input accordingly
 function checkMmbership() {

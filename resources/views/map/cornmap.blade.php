@@ -75,22 +75,121 @@
           </div>
       </div>
     </div>
+
+
+    <div class="legend" style="position: absolute; top: 175px; left: 20px; z-index: 1000; background: rgba(255, 255, 255, 0.8); padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+        <h2 style="font-size: 10px; margin-bottom: 10px;">Legend</h2>
+    
+        <!-- Color Circles Section -->
+        <div class="legend-item" style="display: flex; align-items: center; margin-bottom: 5px;">
+            <div class="color-circle" style="width: 10px; height: 10px; background-color: #00aa00; border-radius: 50%; margin-right: 10px;" onclick="showName(this)"></div>
+            <span class="legend-name" style="font-size: 10px; display: none;">Ayala Boarder</span>
+        </div>
+    
+        <div class="legend-item" style="display: flex; align-items: center; margin-bottom: 5px;">
+            <div class="color-circle" style="width: 10px; height: 10px; background-color: #55007f; border-radius: 50%; margin-right: 10px;" onclick="showName(this)"></div>
+            <span class="legend-name" style="font-size: 10px; display: none;">Tumaga Boarder</span>
+        </div>
+    
+        <div class="legend-item" style="display: flex; align-items: center; margin-bottom: 5px;">
+            <div class="color-circle" style="width: 10px; height: 10px; background-color: #ffff00; border-radius: 50%; margin-right: 10px;" onclick="showName(this)"></div>
+            <span class="legend-name" style="font-size: 10px; display: none;"> Culianan Boarder</span>
+        </div>
+    
+        <div class="legend-item" style="display: flex; align-items: center; margin-bottom: 5px;">
+            <div class="color-circle" style="width: 10px; height: 10px; background-color: #ff5500; border-radius: 50%; margin-right: 10px;" onclick="showName(this)"></div>
+            <span class="legend-name" style="font-size: 10px; display: none;">Manicahan Boarder</span>
+        </div>
+    
+        <div class="legend-item" style="display: flex; align-items: center; margin-bottom: 5px;">
+            <div class="color-circle" style="width: 10px; height: 10px; background-color: #ff00ff; border-radius: 50%; margin-right: 10px;" onclick="showName(this)"></div>
+            <span class="legend-name" style="font-size: 10px; display: none;">Curuan Boarder</span>
+        </div>
+        <div class="legend-item" style="display: flex; align-items: center; margin-bottom: 5px;">
+            <div class="color-circle" style="width: 10px; height: 10px; background-color: #ff0000; border-radius: 50%; margin-right: 10px;" onclick="showName(this)"></div>
+            <span class="legend-name" style="font-size: 10px; display: none;">Vitali Boarder</span>
+        </div>
+        <div class="legend-item" style="display: flex; align-items: center; margin-bottom: 5px;">
+            <div class="color-circle" style="width: 10px; height: 10px; background-color:#FFBF00; border-radius: 50%; margin-right: 10px;" onclick="showName(this)"></div>
+            <span class="legend-name" style="font-size: 10px; display: none;">Rice Boarder</span>
+        </div>
+    
+        <div class="legend-item" style="display: flex; align-items: center; margin-bottom: 5px;">
+            <div class="color-circle" style="width: 10px; height: 10px; background-color: #ffff33; border-radius: 50%; margin-right: 10px;" onclick="showName(this)"></div>
+            <span class="legend-name" style="font-size: 10px; display: none;">Corn Boarder</span>
+        </div>
+        <div class="legend-item" style="display: flex; align-items: center; margin-bottom: 5px;">
+            <div class="color-circle" style="width: 10px; height: 10px; background-color: #663300; border-radius: 50%; margin-right: 10px;" onclick="showName(this)"></div>
+            <span class="legend-name" style="font-size: 10px; display: none;">Coconut Boarder</span>
+        </div>
+        <!-- Icon Section -->
+        <h3 style="font-size: 12px; margin-top: 15px;">Icons</h3>
+        <div class="icon-section">
+            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                <img src="../assets/logo/rice.png" alt="History Icon" style="width: 16px; height: 16px; margin-right: 10px;" onclick="showName(this)">
+                <span class="legend-name" style="font-size: 10px; display: none;">Rice</span>
+            </div>
+            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                <img src="../assets/logo/corn.png" alt="History Icon" style="width: 16px; height: 16px; margin-right: 10px;" onclick="showName(this)">
+                <span class="legend-name" style="font-size: 10px; display: none;">Corn</span>
+            </div>
+            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                <img src="../assets/logo/coconut.png" alt="History Icon" style="width: 16px; height: 16px; margin-right: 10px;" onclick="showName(this)">
+                <span class="legend-name" style="font-size: 10px; display: none;">Coconut</span>
+            </div>
+            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                <img src="../assets/logo/crops.png" alt="History Icon" style="width: 16px; height: 16px; margin-right: 10px;" onclick="showName(this)">
+                <span class="legend-name" style="font-size: 10px; display: none;">Other Crops</span>
+            </div>
+           
+        </div>
+    </div>
+    
+    <script>
+        function showName(element) {
+            // Check if the clicked element is a color circle or icon
+            var nameSpan;
+            if (element.classList.contains('color-circle')) {
+                nameSpan = element.nextElementSibling;
+            } else {
+                nameSpan = element.nextElementSibling;
+            }
+    
+            // Toggle the display of the name span
+            if (nameSpan.style.display === 'none' || nameSpan.style.display === '') {
+                nameSpan.style.display = 'inline';
+            } else {
+                nameSpan.style.display = 'none';
+            }
+        }
+    </script>
+    
+    
+    
+    
     <!-- Floating Search Inputs -->
     <div class="controls" style="position: absolute; bottom: 20px; left: 20px; z-index: 1000; background: rgba(255, 255, 255, 0.8); padding: 10px; border-radius: 5px;">
         <h2 style="font-size: 16px;">Search for a Farmer</h2>
+        
+        <select id="districtDropdown" class="form-control mb-2">
+            <option value="" disabled selected>Select District</option>
+            <!-- Districts will be populated here -->
+        </select>
+        
         <select id="farmerNameDropdown" class="form-control mb-2">
             <option value="" disabled selected>Select Farmer Name</option>
             <!-- Farmer names will be populated here -->
         </select>
+        
         <button id="searchFarmerButton" class="btn btn-primary mb-2" title="Search Farmer">
-            <i class="fas fa-search"></i> 
+            <i class="fas fa-search"></i>
         </button>
         
-       
         <button id="panButton" class="btn btn-primary mb-2" title="Hide Farmer">
-          <i class="fas fa-eye-slash"></i>
+            <i class="fas fa-eye-slash"></i>
         </button>
     </div>
+    
 </div>
 
   <!-- District Info Modal -->
@@ -179,7 +278,7 @@ let gpsData = [];
       'Rice': "{{ asset('assets/logo/rice.png') }}", // Custom logo for rice
       'Corn': "{{ asset('assets/logo/corn.png') }}", // Custom logo for corn
       'Coconut': "{{ asset('assets/logo/coconut.png') }}", // Custom logo for corn
-      'default': "{{ asset('assets/logo/rice.png') }}" // Default logo for other crops
+      'default': "{{ asset('assets/logo/crops.png') }}" // Default logo for other crops
   };
 
   function toTitleCase(str) {
@@ -229,12 +328,78 @@ let gpsData = [];
               // Populate the farmer name dropdown with GPS coordinates
              // Populate the farmer name dropdown with GPS coordinates
            
-function populateFarmerDropdown() {
+// function populateFarmerDropdown() {
+//     var farmerNameDropdown = document.getElementById('farmerNameDropdown');
+//     farmerNameDropdown.innerHTML = ''; // Clear existing options
+
+//     gpsData.forEach(function(farm) {
+//         if (farm.gpsLatitude && farm.gpsLongitude) { // Only add if gps data is available
+//             var option = document.createElement('option');
+//             option.value = farm.farmerName;
+//             option.textContent = farm.farmerName; // Display farmer's name
+//             option.setAttribute('data-lat', farm.gpsLatitude);
+//             option.setAttribute('data-lng', farm.gpsLongitude);
+//             farmerNameDropdown.appendChild(option);
+//         }
+//     });
+// }
+
+
+
+function populateDistrictDropdown() {
+    var districtDropdown = document.getElementById('districtDropdown');
+    districtDropdown.innerHTML = ''; // Clear existing options
+
+    // Add default option
+    var defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = 'Select District';
+    defaultOption.disabled = true;
+    defaultOption.selected = true;
+    districtDropdown.appendChild(defaultOption);
+
+    // Check if gpsData is defined and not empty
+    if (!gpsData || gpsData.length === 0) {
+        console.log('gpsData is empty or not defined');
+        return;
+    }
+
+    // Extract unique districts from gpsData
+    var districts = [...new Set(gpsData.map(farm => farm.district).filter(district => district != null && district.trim() !== ''))];
+
+    // Log the districts array to debug
+    console.log(districts);
+
+    if (districts.length === 0) {
+        console.log('No districts found');
+        return;
+    }
+
+    // Populate the dropdown
+    districts.forEach(function(district) {
+        var option = document.createElement('option');
+        option.value = district;
+        option.textContent = district;
+        districtDropdown.appendChild(option);
+    });
+}
+
+
+function populateFarmerDropdown(district) {
     var farmerNameDropdown = document.getElementById('farmerNameDropdown');
     farmerNameDropdown.innerHTML = ''; // Clear existing options
 
+    // Add default option
+    var defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = 'Select Farmer Name';
+    defaultOption.disabled = true;
+    defaultOption.selected = true;
+    farmerNameDropdown.appendChild(defaultOption);
+
     gpsData.forEach(function(farm) {
-        if (farm.gpsLatitude && farm.gpsLongitude) { // Only add if gps data is available
+        // Filter by selected district and ensure GPS data is available
+        if (farm.district === district && farm.gpsLatitude && farm.gpsLongitude) {
             var option = document.createElement('option');
             option.value = farm.farmerName;
             option.textContent = farm.farmerName; // Display farmer's name
@@ -244,6 +409,21 @@ function populateFarmerDropdown() {
         }
     });
 }
+
+// Initialize district dropdown on page load
+document.addEventListener('DOMContentLoaded', function() {
+    populateDistrictDropdown();
+});
+
+// Add event listener for district selection
+document.getElementById('districtDropdown').addEventListener('change', function() {
+    var selectedDistrict = this.value;
+    if (selectedDistrict) {
+        populateFarmerDropdown(selectedDistrict);
+    } else {
+        document.getElementById('farmerNameDropdown').innerHTML = ''; // Clear farmers if no district is selected
+    }
+});
 
 
 
@@ -261,6 +441,7 @@ function populateFarmerDropdown() {
 }
 
 // Call the functions to populate the dropdown and add all markers
+populateDistrictDropdown();
 populateFarmerDropdown();
 addAllFarmerMarkers();
               // console.log('Total GPS markers added:', gpsData.length); // Log total number of markers added
@@ -291,7 +472,7 @@ addAllFarmerMarkers();
 
   // Function to add marker to the map with customized icon and farmer's name on hover
 function addMarker(location, cropName, farmerName, districtName, cropVariety, FarmAddress, NoYears, age,
- orgName, landtitleNo, totalPhysicalArea, TotalCultivated, tenurial_status, croppingperYear, Yield,   ) {
+ orgName, landtitleNo, totalPhysicalArea, TotalCultivated,tenurial_status, croppingperYear, Yield,   ) {
     var icon = {
         url: markerIcons[cropName] || markerIcons['default'],
         scaledSize: new google.maps.Size(20, 30)
