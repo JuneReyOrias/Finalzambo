@@ -11,6 +11,13 @@
                     <h2> Rice Boarders</h2>
                 </div>
                 <br>
+                @if (session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
                 @if (session()->has('message'))
                 <div class="alert alert-success" id="success-alert">
                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -75,8 +82,8 @@
                                                     <option value="Vitali">Vitali Boarder</option>
                                                     <option value="Rice">Rice Boarder</option>
                                                     <option value="Corn">Corn Boarder</option>
-                                                    <option value="#663300">Coconut Boarder</option>
-                                                   
+                                                    <option value="Coconut">Coconut Boarder</option>
+                                                 
                                                     <option value="Add prefer">Add prefer</option>
                                                 </select>
                                                 
@@ -124,7 +131,6 @@
                                                 <option value="#ffff33">Corn</option>
                                                 <option value="#663300">Coconut</option>
                                                 <option value="#0040ff">Residential</option>
-                                                
                                                 <option value="custom-stroke">Custom Color</option>
                                             </select>
                                         
