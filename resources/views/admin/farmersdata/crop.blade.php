@@ -481,9 +481,9 @@
                           CropName: <span id="cropname"></span>
                         </h5>
                         <div class="form-group mt-3">
-                            <label for="user_id">Select Agent:</label>
+                            <label for="user_id">Select Agent/Field Officer:</label>
                             <select class="form-control" id="users_id">
-                                <option value="">Select a Agent</option>
+                                <option value="">Select a Agent/Field Officer</option>
                                 @foreach ($users as $item)
                                 <option value="{{ $item->id }}">{{ $item->first_name }} {{ $item->last_name }} - {{ ucfirst($item->district) }} District</option>
 
@@ -498,7 +498,7 @@
             
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveUserProfile" data-id="{{ $cropdata->id }}">Save</button>
+                <button type="button" class="btn btn-primary" id="saveUserProfile"  data-id="{{ $cropdata->id ?? '' }}">Save</button>
             </div>
         </div>
     </div>
