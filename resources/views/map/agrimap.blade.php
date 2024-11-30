@@ -77,6 +77,96 @@
           </div>
       </div>
     </div>
+    
+    <div class="legend" style="position: absolute; top: 175px; left: 20px; z-index: 1000; background: rgba(255, 255, 255, 0.8); padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+        <h2 style="font-size: 10px; margin-bottom: 10px;">Legend</h2>
+    
+        <!-- Color Circles Section -->
+        <div class="legend-item" style="display: flex; align-items: center; margin-bottom: 5px;">
+            <div class="color-circle" style="width: 10px; height: 10px; background-color: #00aa00; border-radius: 50%; margin-right: 10px;" onclick="showName(this)"></div>
+            <span class="legend-name" style="font-size: 10px; display: none;">Ayala Boarder</span>
+        </div>
+    
+        <div class="legend-item" style="display: flex; align-items: center; margin-bottom: 5px;">
+            <div class="color-circle" style="width: 10px; height: 10px; background-color: #55007f; border-radius: 50%; margin-right: 10px;" onclick="showName(this)"></div>
+            <span class="legend-name" style="font-size: 10px; display: none;">Tumaga Boarder</span>
+        </div>
+    
+        <div class="legend-item" style="display: flex; align-items: center; margin-bottom: 5px;">
+            <div class="color-circle" style="width: 10px; height: 10px; background-color: #ffff00; border-radius: 50%; margin-right: 10px;" onclick="showName(this)"></div>
+            <span class="legend-name" style="font-size: 10px; display: none;"> Culianan Boarder</span>
+        </div>
+    
+        <div class="legend-item" style="display: flex; align-items: center; margin-bottom: 5px;">
+            <div class="color-circle" style="width: 10px; height: 10px; background-color: #ff5500; border-radius: 50%; margin-right: 10px;" onclick="showName(this)"></div>
+            <span class="legend-name" style="font-size: 10px; display: none;">Manicahan Boarder</span>
+        </div>
+    
+        <div class="legend-item" style="display: flex; align-items: center; margin-bottom: 5px;">
+            <div class="color-circle" style="width: 10px; height: 10px; background-color: #ff00ff; border-radius: 50%; margin-right: 10px;" onclick="showName(this)"></div>
+            <span class="legend-name" style="font-size: 10px; display: none;">Curuan Boarder</span>
+        </div>
+        <div class="legend-item" style="display: flex; align-items: center; margin-bottom: 5px;">
+            <div class="color-circle" style="width: 10px; height: 10px; background-color: #ff0000; border-radius: 50%; margin-right: 10px;" onclick="showName(this)"></div>
+            <span class="legend-name" style="font-size: 10px; display: none;">Vitali Boarder</span>
+        </div>
+        <div class="legend-item" style="display: flex; align-items: center; margin-bottom: 5px;">
+            <div class="color-circle" style="width: 10px; height: 10px; background-color:#FFBF00; border-radius: 50%; margin-right: 10px;" onclick="showName(this)"></div>
+            <span class="legend-name" style="font-size: 10px; display: none;">Rice Boarder</span>
+        </div>
+    
+        <div class="legend-item" style="display: flex; align-items: center; margin-bottom: 5px;">
+            <div class="color-circle" style="width: 10px; height: 10px; background-color: #ffff33; border-radius: 50%; margin-right: 10px;" onclick="showName(this)"></div>
+            <span class="legend-name" style="font-size: 10px; display: none;">Corn Boarder</span>
+        </div>
+        <div class="legend-item" style="display: flex; align-items: center; margin-bottom: 5px;">
+            <div class="color-circle" style="width: 10px; height: 10px; background-color: #663300; border-radius: 50%; margin-right: 10px;" onclick="showName(this)"></div>
+            <span class="legend-name" style="font-size: 10px; display: none;">Coconut Boarder</span>
+        </div>
+        <!-- Icon Section -->
+        <h3 style="font-size: 12px; margin-top: 15px;">Icons</h3>
+        <div class="icon-section">
+            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                <img src="../assets/logo/rice.png" alt="History Icon" style="width: 16px; height: 16px; margin-right: 10px;" onclick="showName(this)">
+                <span class="legend-name" style="font-size: 10px; display: none;">Rice</span>
+            </div>
+            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                <img src="../assets/logo/corn.png" alt="History Icon" style="width: 16px; height: 16px; margin-right: 10px;" onclick="showName(this)">
+                <span class="legend-name" style="font-size: 10px; display: none;">Corn</span>
+            </div>
+            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                <img src="../assets/logo/coconut.png" alt="History Icon" style="width: 16px; height: 16px; margin-right: 10px;" onclick="showName(this)">
+                <span class="legend-name" style="font-size: 10px; display: none;">Coconut</span>
+            </div>
+            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                <img src="../assets/logo/crops.png" alt="History Icon" style="width: 16px; height: 16px; margin-right: 10px;" onclick="showName(this)">
+                <span class="legend-name" style="font-size: 10px; display: none;">Other Crops</span>
+            </div>
+            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                <img src="../assets/images/district.png" alt="History Icon" style="width: 16px; height: 16px; margin-right: 10px;" onclick="showName(this)">
+                <span class="legend-name" style="font-size: 10px; display: none;">Agri-Districts</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showName(element) {
+            // Check if the clicked element is a color circle or icon
+            var nameSpan;
+            if (element.classList.contains('color-circle')) {
+                nameSpan = element.nextElementSibling;
+            } else {
+                nameSpan = element.nextElementSibling;
+            }
+    
+            // Toggle the display of the name span
+            if (nameSpan.style.display === 'none' || nameSpan.style.display === '') {
+                nameSpan.style.display = 'inline';
+            } else {
+                nameSpan.style.display = 'none';
+            }
+        }
+    </script>
     <!-- Floating Search Inputs -->
     <div class="controls" style="position: absolute; bottom: 20px; left: 20px; z-index: 1000; background: rgba(255, 255, 255, 0.8); padding: 10px; border-radius: 5px;">
         <h2 style="font-size: 16px;">Search for a Farmer</h2>
