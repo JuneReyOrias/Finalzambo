@@ -877,24 +877,42 @@ $(document).ready(function () {
                 function toProperCase(text) {
                     return text.replace(/\b\w/g, char => char.toUpperCase());
                 }
-
                 response.districts.forEach(district => {
     if (district.agri_district) {
-        // Check if the dropdown already has the district option
-        if (!$(`#district-dropdown option[value="${district.agri_district}"]`).length) {
-            // Append new option only if it doesn't exist
+        // Ensure value is escaped to prevent issues with special characters
+        let districtValue = escapeHtml(district.agri_district);
+        let districtText = toProperCase(district.agri_district);
+
+        // Check if the option already exists in the dropdown
+        if (!$(`#district-dropdown option[value="${districtValue}"]`).length) {
+            // Append the new option only if it doesn't exist
             $('#district-dropdown').append(`
-                <option value="${district.agri_district}">${toProperCase(district.agri_district)}</option>
+                <option value="${districtValue}">${districtText}</option>
             `);
         } else {
-            // Option already exists, ensure data remains the same (if needed)
-            let option = $(`#district-dropdown option[value="${district.agri_district}"]`);
-            if (option.text() !== toProperCase(district.agri_district)) {
-                option.text(toProperCase(district.agri_district));
+            // Option already exists; update its text if necessary
+            let option = $(`#district-dropdown option[value="${districtValue}"]`);
+            if (option.text() !== districtText) {
+                option.text(districtText);
             }
         }
     }
 });
+
+// Utility function to escape HTML special characters
+function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, function (match) {
+        const escape = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return escape[match];
+    });
+}
+
 
 
                 // Update total rice production

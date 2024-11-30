@@ -231,7 +231,12 @@
                                 <i class="fa fa-eye" aria-hidden="true"></i>
                             </button>
                         </a>
-                                                                                
+                        <a href="javascript:void(0);" class="viewProductionArchive" data-bs-toggle="modal" title="View Production Archive Data" data-bs-target="#ArchiveProduction" data-id="{{$lastproductdata->id }}">
+                            <button class="btn btn-warning btn-sm" style="border-color: #54d572;">
+                                <img src="../assets/logo/history.png" alt="Crop Icon" style="width: 20px; height: 20px;" class="me-1">
+                                <i class="fas fa-rice" aria-hidden="true"></i>
+                            </button>
+                        </a>                                        
                         <a href="{{route('agent.FarmerInfo.product.edit', $lastproductdata->id)}}" title="view farm"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a> 
                 
                         <form  action="{{ route('agent.FarmerInfo.product.delete', $lastproductdata->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
@@ -1162,6 +1167,53 @@
     </div>
 </div>
 
+{{-- modal of Production archive --}}
+<div class="modal fade" id="ArchiveProduction" tabindex="-1" aria-labelledby="ArchiveProduction" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title text-white" id="ArchiveProduction">Production Archive Data History</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="archives-modal-body">
+                <br>
+                <div id="table-scroll" class="table-scroll">
+                    <div class="table-wrap">
+                        <table class="main-table table table-bordered table-striped table-hover">
+                            <thead class="bg-light text-dark text-center sticky-top">
+                                <tr>
+                                    <th class="fixed-side" scope="col"><i class="fas fa-calendar-alt me-1"></i>Date Updated</th>
+                                   <th>Production Id</th>
+                                   <th scope="col">Seed typed used(kg)</th>
+                                 
+                                   <th scope="col">Seed used(kg)</th>
+                                   <th scope="col">Seed Source</th>
+                                   <th scope="col">Unit</th>
+                                   <th scope="col">No. of Fertilizer used(bags)</th>
+                                   <th scope="col">No. of Pesticides used(L/Kg)</th>
+                                   <th scope="col">No. of Insecticides used(L)</th>
+        
+
+                                   <th scope="col">Area Planted(ha)</th>
+                                   <th scope="col">Date Planted</th>
+                                   <th scope="col">Date Harvested</th>
+                                   <th scope="col">Yield(tons/kg)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="archiveHistory">
+                                <!-- Rows will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="SoldsModal" tabindex="-1" aria-labelledby="SoldsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -1173,45 +1225,7 @@
                 <!-- Farmer Details -->
         
                  
-                        <!-- Farmer Picture and Info -->
-                        {{-- <div class="col-md-3 text-center">
-                            <img src="{{ $personalInfos->isNotEmpty() ? $personalInfos->first()->profile_picture : 'default-profile.png' }}" 
-                                 alt="Farmer Picture" 
-                                 class="img-fluid rounded-circle" 
-                                 style="width: 150px; height: 150px; object-fit: cover;">
-                        </div> --}}
-                        {{-- <div class="col-md-9">
-                            <!-- Farmer Information -->
-                            <h5>Farmer: {{ $personalInfos->isNotEmpty() ? $personalInfos->first()->first_name . ' ' . $personalInfos->first()->last_name : 'N/A' }}</h5>
-                            
-                            <!-- Farm Profile Information -->
-                            <h6>Farm: {{ $farmProfile ? $farmProfile->tenurial_status ?? 'N/A' : 'No farm information available.' }}</h6>
-                            <div class="input-group mb-3">
-                                @if($productionData->isNotEmpty())
-                                    <h5>Crop Name: </h5>
-                            
-                                    @php
-                                        // Array to store displayed crop names
-                                        $displayedCrops = [];
-                                    @endphp
-                            
-                                    @foreach($productionData as $production)
-                                        @if($production->crop && !in_array($production->crop->crop_name, $displayedCrops)) <!-- Check if crop data exists and is not already displayed -->
-                                            <h5>  {{ $production->crop->crop_name }}</h5>
-                                            <!-- Add more crop-related data here if necessary -->
-                            
-                                            @php
-                                                // Add the crop name to the displayedCrops array to avoid duplication
-                                                $displayedCrops[] = $production->crop->crop_name;
-                                            @endphp
-                                        @endif
-                                    @endforeach
-                                @else
-                                    <h5>No crop data available.</h5>
-                                @endif
-                            </div>
-                        </div>
-                   --}}
+                
             
 
                 <!-- Production Data -->
@@ -2056,8 +2070,226 @@ function SoldsCostData(id) {
         }
     });
 }
-// </script>
+
+// Handle click event for viewing farm archive
+$(document).on('click', '.viewProductionArchive', function () {
+    var id = $(this).data('id'); // Get the ID from the data attribute
+    ArchiveDataProduction(id); // Fetch data and show the modal
+});
+// Function to fetch archive data
+function ArchiveDataProduction(id) {
+    $.ajax({
+        url: `/agent-edit-farmer-production/${id}`, // URL to fetch data
+        type: 'GET',
+        dataType: 'json',
+        data: { type: 'archives' }, // Requesting specifically for archives
+        success: function (response) {
+            console.log("Response:", response); // Debugging the response
+
+            // Handle case when no archives are available
+            if (response.message) {
+                alert(response.message); // Display message to the user
+                $('#archiveHistory').empty(); // Clear the table content
+                return; // Stop further processing
+            }
+
+            // Assuming `response` contains the array of archive data
+            const archives = response;
+
+            // Clear the table body
+            $('#archiveHistory').empty();
+
+            // Loop through each archive and create table rows
+            archives.forEach(function (archive) {
+                console.log("Processing Archive:", archive); // Debugging each archive entry
+
+                // Format the updated date
+                const dateUpdated = archive.created_at
+                    ? new Date(archive.created_at).toLocaleDateString() 
+                    : 'N/A';
+
+                // Create a table row with archive data
+                const archiveRow = `
+                    <tr>
+                        <th class="fixed-side">${dateUpdated}</th>
+                        <td>${archive.last_production_datas_id || 'N/A'}</td>
+                       
+                        <td>${archive.seeds_typed_used || 'N/A'}</td>
+                        <td>${archive.seeds_used_in_kg || 'N/A'}</td>
+                        <td>${archive.seed_source || 'N/A'}</td>
+                        <td>${archive.unit || 'N/A'}</td>
+                         <td>${archive.no_of_fertilizer_used_in_bags || 'N/A'}</td>
+                        <td>${archive.no_of_pesticides_used_in_l_per_kg || 'N/A'}</td>
+                        <td>${archive.no_of_insecticides_used_in_l || 'N/A'}</td>
+                        <td>${archive.area_planted || 'N/A'}</td>
+
+                               <td>${archive.date_planted || 'N/A'}</td>
+                        <td>${archive.date_harvested || 'N/A'}</td>
+                        <td>${archive.yield_tons_per_kg || 'N/A'}</td>
+                       
+                       
+                    </tr>
+                `;
+
+                // Append the row to the table body
+                $('#archiveHistory').append(archiveRow);
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching data:', xhr.responseText); // Log detailed error
+            if (xhr.status === 404) {
+                alert('Production not found or no archives available.');
+            } else {
+                alert(`An error occurred: ${xhr.statusText}`); // Display error message
+            }
+            $('#archiveHistory').empty(); // Clear the table in case of error
+        }
+    });
+}
+
 
 </script>
 
+</script>
+{{--  --}}
+<style>
+
+    .custom-cell {
+        font-size: 14px;
+        width: 150px; /* Adjust the width as needed */
+        padding: 8px; /* Adjust the padding as needed */
+    
+    }
+    
+    
+    
+    /* Style the modal content to make sure the table fits inside */
+    #archives-modal-body {
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-height: 200vh; /* Adjust the height based on your requirements */
+      
+    }
+    
+    /* Table Scroll Container */
+    .table-scroll {
+        position: relative;
+        max-width: 100%;
+        margin: 0 auto;
+        overflow-x: auto;  /* Horizontal scrolling */
+        overflow-y: auto;  /* Vertical scrolling */
+    }
+    
+    /* Table Wrapper */
+    .table-wrap {
+        width: 100%;
+        overflow: auto;
+    }
+    
+    /* Table styling */
+    .main-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    
+    /* Sticky column */
+    .fixed-side {
+        position: sticky;
+        left: 0;
+        background-color: #f8f9fa;
+        z-index: 1;
+        border-right: 1px solid #ddd; /* Optional: adds border between sticky column and content */
+        box-shadow: 1px 0 0 0 #ddd; /* Optional: adds shadow to improve visibility */
+    }
+    
+    /* Styling table headers */
+    .main-table th {
+        padding: 10px 15px;
+        text-align: left;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+    }
+    
+    /* Styling table data cells */
+    .main-table td {
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+    }
+    
+    /* Add styles for table body */
+    .main-table tbody {
+        background-color: #fff;
+    }
+    
+    
+    
+    
+        .fixed-side {
+        position: sticky;
+        left: 0;
+        background-color: #f8f9fa;
+        z-index: 2;
+        border-right: 1px solid #ddd; /* Optional: Adds a border between sticky column and content */
+    }
+     .table-scroll {
+        position:relative;
+        max-width:600px;
+        margin:auto;
+        overflow:hidden;
+        border:1px solid #000;
+      }
+    .table-wrap {
+        width:100%;
+        overflow:auto;
+    }
+    .table-scroll table {
+        width:100%;
+        margin:auto;
+        border-collapse:separate;
+        border-spacing:0;
+    }
+    .table-scroll th, .table-scroll td {
+        padding:5px 10px;
+        border:1px solid #000;
+        background:#fff;
+        white-space:nowrap;
+        vertical-align:top;
+    }
+    .table-scroll thead, .table-scroll tfoot {
+        background:#f9f9f9;
+    }
+    .clone {
+        position:absolute;
+        top:0;
+        left:0;
+        pointer-events:none;
+    }
+    .clone th, .clone td {
+        visibility:hidden
+    }
+    .clone td, .clone th {
+        border-color:transparent
+    }
+    .clone tbody th {
+        visibility:visible;
+        color:red;
+    }
+    .clone .fixed-side {
+        border:1px solid #000;
+        background:#eee;
+        visibility:visible;
+    }
+    .clone thead, .clone tfoot{background:transparent;}
+    
+      </style>
+      <script>// requires jquery library
+      new DataTable('#example');
+        jQuery(document).ready(function() {
+          jQuery(".main-table").clone(true).appendTo('#table-scroll').addClass('clone');   
+         });</script>
+         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>
+    
 @endsection

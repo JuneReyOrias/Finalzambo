@@ -1061,7 +1061,7 @@
 </div>
 <!-- Confirmation Modal -->
 <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-md" role="document">
       <div class="modal-content">
         <div class="modal-header bg-primary text-white">
           <h5 class="modal-title" id="confirmModalLabel"><i class="fas fa-check-circle"></i> Confirm Your Data</h5>
@@ -1435,28 +1435,38 @@
 
   </style>
   
-<!-- Success Modal -->
+
+  
+  <!-- Success Modal -->
 <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="successModalLabel">Success</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content border-0 shadow-lg">
+            <!-- Modal Header -->
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold" id="successModalLabel">
+                    <i class="fas fa-check-circle me-2"></i>Success!
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="modal-body text-center py-5">
+                <i class="fas fa-smile-beam fa-3x text-success mb-4"></i>
+                <p class="fs-5 text-muted">
+                    Your data has been successfully added.
+                </p>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div class="modal-footer justify-content-center border-0">
+                <a href="{{route('agent.FarmerInfo.crops_view',$farmData->id)}}" class="btn btn-lg btn-success px-5">
+                    Proceed to Crop Data
+                    <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
         </div>
-        <div class="modal-body">
-          <p>Your data has been successfully added.</p>
-        </div>
-        <div class="modal-footer">
-          {{-- <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button> --}}
-          <a href="{{route('agent.FarmerInfo.crops_view',$farmData->id)}}" class="btn btn-success">Crop View</a>
-            <!-- Link to proceed to another page -->
-         
-        </div>
-      </div>
     </div>
-  </div>
-  
-  
+</div>
 
   
   {{-- <!-- Success Modal -->
@@ -1900,7 +1910,7 @@ $(document).ready(function() {
 
                         <!-- Other fields here -->
                          </div>
-                        <div class="accordion" id="accordionCropDetails_${cropCounter}">
+                            <div class="accordion" id="accordionCropDetails_${cropCounter}">
                             <!-- Add Production Section -->
                             <div class="card">
                                 <div class="card-header" id="headingProduction_${cropCounter}" style="background-color: #e9ecef; border: none; padding: 10px 20px;">
@@ -1916,19 +1926,19 @@ $(document).ready(function() {
                                            <div class="user-details">
                                         <!-- Production Fields -->
                                         <div class="input-box col-md-4"">
-                                            <label for="seeds_typed_used_${cropCounter}">Seed type Used:</label>
+                                              <span class="details">Seed type Used:</span>
                                             <input type="text" class="form-control seed-type" name="crop_profiles[${cropCounter}][seeds_typed_used]" placeholder=" Enter Seed type used" id="seeds_typed_used_${cropCounter}" onkeypress="return blockSymbolsAndNumbers(event)">
                                         </div>
                                           <div class="input-box col-md-4"">
-                                            <label for="seeds_used_in_kg_${cropCounter}">Seeds used in kg:</label>
+                                           <span class="details">Seeds used in kg:</span>
                                             <input type="number" class="form-control seed-used" name="crop_profiles[${cropCounter}][seeds_used_in_kg]"placeholder=" Enter Seed used in kg" id="seeds_used_in_kg_${cropCounter}">
                                             
                                             </div>
                                   <div class="input-box col-md-4">
-                                        <label for="seed_source_${cropCounter}">Seed Source:</label>
+                                       <span class="details">Seed Source:</span>
                                         <div class="d-flex align-items-center">
                                             <select class="form-control custom-select light-gray-placeholder seed-source placeholder-text @error('seed_source') is-invalid @enderror" id="seed_source_${cropCounter}" onchange="checkSeedSource(${cropCounter})" name="seed_source" aria-label="Floating label select e">
-                                                <option selected disabled>Select</option>
+                                                <option value="">Select</option>
                                                 <option value="Government Subsidy" {{ old('seed_source') == 'Government Subsidy' ? 'selected' : '' }}>Government Subsidy</option>
                                                 <option value="Traders" {{ old('seed_source') == 'Traders' ? 'selected' : '' }}>Traders</option>
                                                 <option value="Own" {{ old('seed_source') == 'Own' ? 'selected' : '' }}>Own</option>
@@ -1943,21 +1953,35 @@ $(document).ready(function() {
                                         @enderror
                                     </div>
 
-                                         <div class="input-box col-md-4"">
-                                            <label for="unit_${cropCounter}">Unit:</label>
-                                            <input type="text" class="form-control unit" name="crop_profiles[${cropCounter}][unit]"placeholder=" Enter unit" id="unit_${cropCounter}" onkeypress="return blockSymbolsAndNumbers(event)">
-                                        </div>
+                                       
+                                        <div class="input-box col-md-4">
+                                    <span class="details">Unit:</span>
+                                    <div class="d-flex align-items-center">
+                                        <select class="form-control custom-select light-gray-placeholder unit placeholder-text @error('unit') is-invalid @enderror" id="unit" name="unit" onchange="Unit()">
+                                            <option value="">Select</option>
+                                            <option value="tons" {{ old('unit') == 'tons' ? 'selected' : '' }}>tons</option>
+                                            <option value="kg" {{ old('unit') == 'kg' ? 'selected' : '' }}>kg</option>
+                                          
+                                        </select>
+                                        <button type="button" id="removeUnitButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeUnit()">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                    @error('unit')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                                           <div class="input-box col-md-4"">
-                                            <label for="no_of_fertilizer_used_in_bags_${cropCounter}">no of fertilizer used in bags:</label>
-                                            <input type="number" class="form-control fertilized-used" name="crop_profiles[${cropCounter}][no_of_fertilizer_used_in_bags]" id="no_of_fertilizer_used_in_bags_${cropCounter}">
+                                           <span class="details">no of fertilizer used in bags:</span>
+                                            <input type="number" class="form-control fertilized-used" name="crop_profiles[${cropCounter}][no_of_fertilizer_used_in_bags]"placeholder="Enter no of fertilizer used in bags" id="no_of_fertilizer_used_in_bags_${cropCounter}">
                                         </div>
                                          <div class="input-box col-md-4"">
-                                            <label for="no_of_pesticides_used_in_l_per_kg_${cropCounter}">no of pesticides used in L/KG:</label>
-                                            <input type="number" class="form-control pesticides-used" name="crop_profiles[${cropCounter}][no_of_pesticides_used_in_l_per_kg]" placeholder="no of cropping/year" id="no_of_pesticides_used_in_l_per_kg_${cropCounter}">
+                                          <span class="details">no of pesticides used in L/KG:</span>
+                                            <input type="number" class="form-control pesticides-used" name="crop_profiles[${cropCounter}][no_of_pesticides_used_in_l_per_kg]" placeholder=" Enter no of cropping/year" id="no_of_pesticides_used_in_l_per_kg_${cropCounter}">
                                         </div>
                                         <div class="input-box col-md-4"">
-                                            <label for="no_of_insecticides_used_in_l_${cropCounter}">no of insecticides used in L/KG:</label>
-                                            <input type="number" class="form-control insecticides-used" name="crop_profiles[${cropCounter}][no_of_insecticides_used_in_l_]" placeholder="no of cropping/year" id="no_of_insecticides_used_in_l_${cropCounter}">
+                                            <span class="details">no of insecticides used in L/KG:</span>
+                                            <input type="number" class="form-control insecticides-used" name="crop_profiles[${cropCounter}][no_of_insecticides_used_in_l_]" placeholder="Enter no of cropping/year" id="no_of_insecticides_used_in_l_${cropCounter}">
                                         </div>
                                         
                                            
@@ -1966,21 +1990,21 @@ $(document).ready(function() {
                                     <h3>b. Crop Planting Details</h3>
                                         <div class="user-details">
                                             <div class="input-box col-md-4">
-                                            <label for="area_planted_${cropCounter}">Area Planted:</label>
-                                            <input type="number" class="form-control area-planted" name="crop_profiles[${cropCounter}][area_planted]" placeholder="Area Planted" >
+                                            <span class="details">Area Planted:</span>
+                                            <input type="number" class="form-control area-planted" name="crop_profiles[${cropCounter}][area_planted]" placeholder="Enter Area Planted" >
                                         </div>
 
                                          <div class="input-box col-md-4">
-                                            <label for="date_planted_${cropCounter}">Date Planted:</label>
+                                          <span class="details">Date Planted:</span>
                                             <input type="text" class="form-control date-planted" name="crop_profiles[${cropCounter}][date_planted]" placeholder="Date Planted"  id="datepicker_${cropCounter}">
                                         </div>
                                     <div class="input-box col-md-4">
-                                            <label for="date_planted_${cropCounter}">Date Harvested:</label>
+                                            <span class="details">Date Harvested:</span>
                                             <input type="text" class="form-control date-harvested" name="crop_profiles[${cropCounter}][date_planted]" placeholder="Date harvested"  id="datepicker_${cropCounter}">
                                         </div>
                                          <div class="input-box col-md-4">
-                                            <label for="yield_tons_per_kg_${cropCounter}">Yield Kg/Tons:</label>
-                                            <input type="number" class="form-control yield-kg" name="crop_profiles[${cropCounter}][yield_tons_per_kg]"value="23.56" placeholder="Yield Kg/Tons" id="yield_tons_per_kg_${cropCounter}">
+                                            <span class="details">Yield Kg/Tons:</span>
+                                            <input type="number" class="form-control yield-kg" name="crop_profiles[${cropCounter}][yield_tons_per_kg]" placeholder="Yield Kg/Tons" id="yield_tons_per_kg_${cropCounter}">
                                         </div>
                                          
  </div>
@@ -2016,13 +2040,14 @@ $(document).ready(function() {
                                              <div class="user-details">
                                         <!-- Fixed Cost Fields -->
                                        <div class="input-box col-md-4">
-                                        <label for="particular_${cropCounter}">Particular:</label>
+                                        <span class="details">Particular:</span>
                                         <div class="d-flex align-items-center">
                                             <select class="form-control custom-select light-gray-placeholder particular @error('particular') is-invalid @enderror" 
                                                     name="crop_profiles[${cropCounter}][particular]" 
                                                     id="particular_${cropCounter}" 
                                                     onchange="checkParticular(${cropCounter})" 
                                                     aria-label="label select e">
+                                                    <option value="">Select</option>
                                                 <option selected value="Land Rental Cost" {{ old('particular') == 'Land Rental Cost' ? 'selected' : '' }}>Land Rental Cost</option>
                                                 <option value="Land Ownership Cost" {{ old('particular') == 'Land Ownership Cost' ? 'selected' : '' }}>Land Ownership Cost</option>
                                                 <option value="Equipment Costs" {{ old('particular') == 'Equipment Costs' ? 'selected' : '' }}>Equipment Costs</option>
@@ -2044,32 +2069,35 @@ $(document).ready(function() {
                                          
                                           
                                       
-                                    <div class="input-box col-md-4">
-                                        <label for="no_of_ha_${cropCounter}">No. of Has</label>
-                                        <input type="number" class="form-control light-gray-placeholder no-has @error('gross_income_palay') is-invalid @enderror"
-                                            name="no_of_ha_${cropCounter}" id="no_of_ha_${cropCounter}" placeholder="Enter No. of Has" value="{{ old('no_of_ha') }}">
-                                        @error('gross_income_palay')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                               <div class="input-box col-md-4">
+                                   <span class="details">No. of Has</span>
+                                    <input type="number" class="form-control light-gray-placeholder no-has @error('gross_income_palay') is-invalid @enderror"
+                                        name="no_of_ha_${cropCounter}" id="no_of_ha_${cropCounter}" placeholder="Enter No. of Has" 
+                                        value="{{ old('no_of_ha') }}" oninput="calculateTotalAmount(${cropCounter})">
+                                    @error('gross_income_palay')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-                                    <div class="input-box col-md-4">
-                                        <label for="cost_per_ha_${cropCounter}">Cost/Has (PHP)</label>
-                                        <input type="number" class="form-control light-gray-placeholder cost-has @error('gross_income_rice') is-invalid @enderror"
-                                            name="cost_per_ha_${cropCounter}" id="cost_per_ha_${cropCounter}"placeholder="Enter Cost/Has" value="{{ old('cost_per_ha') }}">
-                                        @error('gross_income_rice')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                                <div class="input-box col-md-4">
+                                   <span class="details">Cost/Has (PHP)</span>
+                                    <input type="number" class="form-control light-gray-placeholder cost-has @error('gross_income_rice') is-invalid @enderror"
+                                        name="cost_per_ha_${cropCounter}" id="cost_per_ha_${cropCounter}" placeholder="Enter Cost/Has" 
+                                        value="{{ old('cost_per_ha') }}" oninput="calculateTotalAmount(${cropCounter})">
+                                    @error('gross_income_rice')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-                                    <div class="input-box col-md-4">
-                                        <label for="total_amount_${cropCounter}">Total Amount PHP</label>
-                                        <input type="number" class="form-control light-gray-placeholder total-amount @error('gross_income_rice') is-invalid @enderror"
-                                            name="total_amount_${cropCounter}" id="total_amount_${cropCounter}" placeholder="Enter total amount"  value="{{ old('total_amount') }}">
-                                        @error('gross_income_rice')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                                <div class="input-box col-md-4">
+                                   <span class="details">Total Amount (PHP)</span>
+                                    <input type="number" class="form-control light-gray-placeholder total-amount @error('gross_income_rice') is-invalid @enderror"
+                                        name="total_amount_${cropCounter}" id="total_amount_${cropCounter}" placeholder="Enter total amount"  
+                                        value="{{ old('total_amount') }}" readonly>
+                                    @error('gross_income_rice')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
 ;
                                    
@@ -2101,7 +2129,7 @@ $(document).ready(function() {
                                                             id="selectPlowing_${cropCounter}" 
                                                             onchange="checkPlowing(${cropCounter})" 
                                                             aria-label="label select e">
-                                                        <option selected disabled>Select</option>
+                                                        <option value="">Select</option>
                                                         <option value="Hand Tractor" {{ old('plowing-machine_${cropCounter}') == 'Hand Tractor' ? 'selected' : '' }}>Hand Tractor</option>
                                                         <option value="Four-Wheel Tractors" {{ old('plowing-machine_${cropCounter}') == 'Four-Wheel Tractors' ? 'selected' : '' }}>Four-Wheel Tractors</option>
                                                         <option value="Compact Tractors" {{ old('plowing-machine_${cropCounter}') == 'Compact Tractors' ? 'selected' : '' }}>Compact Tractors</option>
@@ -2128,7 +2156,7 @@ $(document).ready(function() {
                                                         id="selectPlowingStatus_${cropCounter}" 
                                                         onchange="checkPlowingStatus(${cropCounter})" 
                                                         aria-label="label select e">
-                                                    <option selected disabled>Select</option>
+                                                    <option value="">Select</option>
                                                     <option  value="Own" {{ old('plo_ownership_status_${cropCounter}') == 'Own' ? 'selected' : '' }}>Own</option>
                                                     <option value="Rent" {{ old('plo_ownership_status_${cropCounter}') == 'Rent' ? 'selected' : '' }}>Rent</option>
                                                     <option value="Other" {{ old('plo_ownership_status_${cropCounter}') == 'Other' ? 'selected' : '' }}>Other(Optional)</option>
@@ -2142,29 +2170,35 @@ $(document).ready(function() {
                                             @enderror
                                         </div>
 
-                       
-                                    <div class="input-box col-md-4">
+                                     <div class="input-box col-md-4">
                                         <span class="details">No. of Plowing</span>
-                                        <input type="number" class="form-control light-gray-placeholder no_of_plowing @error('last_name') is-invalid @enderror"name="no_of_plowing_${cropCounter}" id="noPlowing" placeholder="Enter no. of plowing" value="{{ old('no_of_plowing') }}" >
+                                        <input type="number" class="form-control light-gray-placeholder no_of_plowing @error('last_name') is-invalid @enderror"
+                                            name="no_of_plowing_${cropCounter}" id="noPlowing_${cropCounter}" placeholder="Enter no. of plowing" 
+                                            value="{{ old('no_of_plowing') }}" oninput="calculateTotalPlowingCost(${cropCounter})">
                                         @error('last_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                        </div>
+                                        @enderror
+                                    </div>
+
                                     <div class="input-box col-md-4">
                                         <span class="details">Cost per Plowing</span>
-                                        <input type="number" class="form-control light-gray-placeholder cost_per_plowing @error('plowing_cost') is-invalid @enderror"name="plowing_cost_${cropCounter}" id="plowingperCostInput" placeholder="Enter plowing per cost" value="{{ old('plowing_cost') }}">
+                                        <input type="number" class="form-control light-gray-placeholder cost_per_plowing @error('plowing_cost') is-invalid @enderror"
+                                            name="plowing_cost_${cropCounter}" id="plowingperCostInput_${cropCounter}" placeholder="Enter plowing per cost" 
+                                            value="{{ old('plowing_cost') }}" oninput="calculateTotalPlowingCost(${cropCounter})">
                                         @error('last_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    </div>
-                                
-                                        <div class="input-box col-md-4">
-                                            <span class="details">Total Plowing Cost</span>
-                                            <input type="number" class="form-control light-gray-placeholder plowing_cost @error('last_name') is-invalid @enderror"name="plowing_cost_${cropCounter}" id="plowingCostInput" placeholder="Enter plowing cost" value="{{ old('plowing_cost') }}">
-                                            @error('last_name')
-                                            <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
-                                        </div>
+                                    </div>
+
+                                    <div class="input-box col-md-4">
+                                        <span class="details">Total Plowing Cost</span>
+                                        <input type="number" class="form-control light-gray-placeholder plowing_cost @error('last_name') is-invalid @enderror"
+                                            name="total_plowing_cost_${cropCounter}" id="plowingCostInput_${cropCounter}" placeholder="Total plowing cost" 
+                                            value="{{ old('plowing_cost') }}" readonly>
+                                        @error('last_name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                         
                                 </div>
 
@@ -2180,7 +2214,7 @@ $(document).ready(function() {
                                         id="selectHarrowing_${cropCounter}" 
                                         onchange="checkHarrowing(${cropCounter})" 
                                         aria-label="label select e">
-                                    <option selected disabled>Select</option>
+                                    <option value="">Select</option>
                                     <option value="Hand Tractor" {{ old('harrowing_machineries_used_${cropCounter}') == 'Hand Tractor' ? 'selected' : '' }}>Hand Tractor</option>
                                     <option value="Four-Wheel Tractors" {{ old('harrowing_machineries_used_${cropCounter}') == 'Four-Wheel Tractors' ? 'selected' : '' }}>Four-Wheel Tractors</option>
                                     <option value="Compact Tractors" {{ old('harrowing_machineries_used_${cropCounter}') == 'Compact Tractors' ? 'selected' : '' }}>Compact Tractors</option>
@@ -2206,7 +2240,7 @@ $(document).ready(function() {
                                             id="selectOwnershipStatus_${cropCounter}" 
                                             onchange="checkOwnershipStatus(${cropCounter})" 
                                             aria-label="label select e">
-                                        <option selected disabled>Select</option>
+                                        <option value="">Select</option>
                                         <option value="Own" {{ old('harro_ownership_status_${cropCounter}') == 'Own' ? 'selected' : '' }}>Own</option>
                                         <option value="Rent" {{ old('harro_ownership_status_${cropCounter}') == 'Rent' ? 'selected' : '' }}>Rent</option>
                                         <option value="Other" {{ old('harro_ownership_status_${cropCounter}') == 'Other' ? 'selected' : '' }}>Other</option>
@@ -2221,28 +2255,35 @@ $(document).ready(function() {
                             </div>
 
        
-                            <div class="input-box col-md-4">
-                                <span class="details">No. of Harrowing </span>
-                                <input type="number" class="form-control light-gray-placeholder no_of_harrowing @error('last_name') is-invalid @enderror"name="no_of_harrowing_${cropCounter}" id="noHarrowing" placeholder="Enter no. of harrowing" value="{{ old('no_of_harrowing') }}" >
-                                @error('last_name')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                         <div class="input-box col-md-4">
+                            <span class="details">No. of Harrowing</span>
+                            <input type="number" class="form-control light-gray-placeholder no_of_harrowing @error('last_name') is-invalid @enderror"
+                                name="no_of_harrowing_${cropCounter}" id="noHarrowing_${cropCounter}" placeholder="Enter no. of harrowing" 
+                                value="{{ old('no_of_harrowing') }}" oninput="calculateTotalHarrowingCost(${cropCounter})">
+                            @error('last_name')
+                            <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">Cost per Harrowing </span>
-                                <input type="number" class="form-control light-gray-placeholder cost_per_harrowing @error('plowing_cost') is-invalid @enderror"name="harrowing_cost_${cropCounter}" id="costPerHarrowingInput" placeholder="Enter no. of harrowing">
-                                @error('last_name')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                        </div>
+
+                        <div class="input-box col-md-4">
+                            <span class="details">Cost per Harrowing</span>
+                            <input type="number" class="form-control light-gray-placeholder cost_per_harrowing @error('plowing_cost') is-invalid @enderror"
+                                name="harrowing_cost_${cropCounter}" id="costPerHarrowingInput_${cropCounter}" placeholder="Enter cost per harrowing" 
+                                value="{{ old('harrowing_cost') }}" oninput="calculateTotalHarrowingCost(${cropCounter})">
+                            @error('last_name')
+                            <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                                </div>
-                    
-                                <div class="input-box col-md-4">
-                                <span class="details">Total Harrowing</span>
-                                <input type="number" class="form-control light-gray-placeholder harrowing_cost_total @error('harrowing_cost_total') is-invalid @enderror"name="harrowing_cost_${cropCounter}" id="harrowingCostInput" placeholder="Enter harrowing cost">
-                                @error('last_name')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                        </div>
+
+                        <div class="input-box col-md-4">
+                            <span class="details">Total Harrowing Cost</span>
+                            <input type="number" class="form-control light-gray-placeholder harrowing_cost_total @error('harrowing_cost_total') is-invalid @enderror"
+                                name="total_harrowing_cost_${cropCounter}" id="harrowingCostInput_${cropCounter}" placeholder="Total harrowing cost" 
+                                value="{{ old('harrowing_cost_total') }}" readonly>
+                            @error('last_name')
+                            <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                                </div>
+                        </div>
                         
                         </div>
 
@@ -2257,7 +2298,7 @@ $(document).ready(function() {
                                             id="selectHarvestingMachine_${cropCounter}" 
                                             onchange="checkHarvestingMachine(${cropCounter})" 
                                             aria-label="label select e">
-                                        <option selected disabled>Select</option>
+                                        <option value="">Select</option>
                                         <option value="Hand Tractor" {{ old('Harvesting_machineries_used_${cropCounter}') == 'Hand Tractor' ? 'selected' : '' }}>Hand Tractor</option>
                                         <option value="Four-Wheel Tractors" {{ old('Harvesting_machineries_used_${cropCounter}') == 'Four-Wheel Tractors' ? 'selected' : '' }}>Four-Wheel Tractors</option>
                                         <option value="Compact Tractors" {{ old('Harvesting_machineries_used_${cropCounter}') == 'Compact Tractors' ? 'selected' : '' }}>Compact Tractors</option>
@@ -2282,7 +2323,7 @@ $(document).ready(function() {
                                             id="selectHarvestOwnership_${cropCounter}" 
                                             onchange="checkHarvestOwnership(${cropCounter})" 
                                             aria-label="label select e">
-                                        <option selected disabled>Select</option>
+                                        <option value="">Select</option>
                                         <option value="Own" {{ old('harro_ownership_status_${cropCounter}') == 'Own' ? 'selected' : '' }}>Own</option>
                                         <option value="Rent" {{ old('harro_ownership_status_${cropCounter}') == 'Rent' ? 'selected' : '' }}>Rent</option>
                                         <option value="Other" {{ old('harro_ownership_status_${cropCounter}') == 'Other' ? 'selected' : '' }}>Other</option>
@@ -2296,28 +2337,36 @@ $(document).ready(function() {
                                 @enderror
                             </div>
 
-                            <div class="input-box col-md-4">
-                                <span class="details">No. of Harvesting </span>
-                                <input type="number" class="form-control light-gray-placeholder no_of_Harvesting @error('last_name') is-invalid @enderror"name="no_of_Harvesting_${cropCounter}" id="noHarvesting" placeholder="Enter no. of Harvesting" value="{{ old('no_of_Harvesting') }}" >
-                                @error('last_name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                            </div>
-                            <div class="input-box col-md-4">
-                                <span class="details">Cost per Harvesting </span>
-                                <input type="number" class="form-control light-gray-placeholder cost_per_Harvesting @error('plowing_cost') is-invalid @enderror"name="Harvesting_cost_${cropCounter}" id="costPerHarvestingInput" placeholder="Enter no. of Harvesting">
-                                @error('last_name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                         <div class="input-box col-md-4">
+                                    <span class="details">No. of Harvesting</span>
+                                    <input type="number" class="form-control light-gray-placeholder no_of_Harvesting @error('last_name') is-invalid @enderror"
+                                        name="no_of_Harvesting_${cropCounter}" id="noHarvesting_${cropCounter}" placeholder="Enter no. of Harvesting" 
+                                        value="{{ old('no_of_Harvesting') }}" oninput="calculateTotalHarvestingCost(${cropCounter})">
+                                    @error('last_name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                    
+
                                 <div class="input-box col-md-4">
-                                <span class="details">Total Harvesting</span>
-                                <input type="number" class="form-control light-gray-placeholder Harvesting_cost_total @error('Harvesting_cost_total') is-invalid @enderror"name="harrowing_cost_${cropCounter}" id="harrowingCostInput" placeholder="Enter Harvesting cost">
-                                @error('last_name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                                    <span class="details">Cost per Harvesting</span>
+                                    <input type="number" class="form-control light-gray-placeholder cost_per_Harvesting @error('plowing_cost') is-invalid @enderror"
+                                        name="Harvesting_cost_${cropCounter}" id="costPerHarvestingInput_${cropCounter}" placeholder="Enter cost per harvesting" 
+                                        value="{{ old('Harvesting_cost') }}" oninput="calculateTotalHarvestingCost(${cropCounter})">
+                                    @error('last_name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
+
+                                <div class="input-box col-md-4">
+                                    <span class="details">Total Harvesting Cost</span>
+                                    <input type="number" class="form-control light-gray-placeholder Harvesting_cost_total @error('Harvesting_cost_total') is-invalid @enderror"
+                                        name="total_harvesting_cost_${cropCounter}" id="harvestingCostInput_${cropCounter}" placeholder="Total harvesting cost" 
+                                        value="{{ old('Harvesting_cost_total') }}" readonly>
+                                    @error('last_name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
                         
                         </div>
 
@@ -2332,7 +2381,7 @@ $(document).ready(function() {
                                             id="selectPostHarvestMachine_${cropCounter}" 
                                             onchange="checkPostHarvestMachine(${cropCounter})" 
                                             aria-label="label select e">
-                                        <option selected disabled>Select</option>
+                                        <option value="">Select</option>
                                         <option value="Hand Tractor" {{ old('postharvest_machineries_used_${cropCounter}') == 'Hand Tractor' ? 'selected' : '' }}>Hand Tractor</option>
                                         <option value="Four-Wheel Tractors" {{ old('postharvest_machineries_used_${cropCounter}') == 'Four-Wheel Tractors' ? 'selected' : '' }}>Four-Wheel Tractors</option>
                                         <option value="Compact Tractors" {{ old('postharvest_machineries_used_${cropCounter}') == 'Compact Tractors' ? 'selected' : '' }}>Compact Tractors</option>
@@ -2358,7 +2407,7 @@ $(document).ready(function() {
                                             id="selectPostHarvestMachineries_${cropCounter}" 
                                             onchange="checkPostHarvestMachineries(${cropCounter})" 
                                             aria-label="label select e">
-                                            <option selected disabled>Select</option>
+                                            <option value="">Select</option>
                                         <option value="Own" {{ old('postharvest_machineries_used_${cropCounter}') == 'Own' ? 'selected' : '' }}>Own</option>
                                         <option value="Rent" {{ old('postharvest_machineries_used_${cropCounter}') == 'Rent' ? 'selected' : '' }}>Rent</option>
                                         <option value="Other" {{ old('postharvest_machineries_used_${cropCounter}') == 'Other' ? 'selected' : '' }}>Other</option>
@@ -2371,22 +2420,25 @@ $(document).ready(function() {
 
        
                             
-                        <div class="input-box col-md-4">
-                            <span class="details">PostHarvest Cost: </span>
-                            <input type="number" class="form-control light-gray-placeholder postharvestCost @error('last_name') is-invalid @enderror"name="'post_harvest_cost_${cropCounter}" id="postHarvestCostInput" placeholder="Enter no. of postharvest cost" value="{{ old('no_of_harrowing') }}" >
+                       <div class="input-box col-md-4">
+                            <span class="details">Post-Harvest Cost</span>
+                            <input type="number" class="form-control light-gray-placeholder postharvestCost @error('last_name') is-invalid @enderror"
+                                name="post_harvest_cost_${cropCounter}" id="postHarvestCostInput_${cropCounter}" placeholder="Enter post-harvest cost" 
+                                value="{{ old('post_harvest_cost') }}" oninput="calculateTotalMachineryCost(${cropCounter})">
                             @error('last_name')
                             <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                            @enderror
                         </div>
-                     
-   
-             <div class="input-box col-md-4">
-               <span class="details">Total Cost for Machineries</span>
-               <input type="number" class="form-control light-gray-placeholder total_cost_for_machineries @error('total_cost_for_machineries') is-invalid @enderror"name="total_cost_for_machineriest_${cropCounter}" id="totalCostInput"  placeholder="Enter total expenses" value="{{ old('total_cost_for_machineries') }}">
-               @error('last_name')
-               <div class="invalid-feedback">{{ $message }}</div>
-           @enderror
-             </div>
+
+                        <div class="input-box col-md-4">
+                            <span class="details">Total Cost for Machineries</span>
+                            <input type="number" class="form-control light-gray-placeholder total_cost_for_machineries @error('total_cost_for_machineries') is-invalid @enderror"
+                                name="total_cost_for_machineries_${cropCounter}" id="totalCostInput_${cropCounter}" placeholder="Enter total expenses" 
+                                value="{{ old('total_cost_for_machineries') }}" readonly>
+                            @error('last_name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
        
        </div>
                                     </div>
@@ -2421,49 +2473,77 @@ $(document).ready(function() {
                                             </div>
                                         </div>
                                                     
-                                          <div class="input-box col-md-4" >
-                                              <span class="details">Unit</span>
-                                              <input type="text" class="form-control light-gray-placeholder unit"  name="unit_${cropCounter}" id="validationCustom01" placeholder="Enter unit" value="{{ old('unit') }}" onkeypress="return blockSymbolsAndNumbers(event)">
-                                            
-                                            </div>
+                                         <div class="input-box col-md-4">
+                                    <span class="details">Unit:</span>
+                                    <div class="d-flex align-items-center">
+                                        <select class="form-control custom-select light-gray-placeholder unit placeholder-text @error('unit') is-invalid @enderror" id="unit" name="unit" onchange="Unit()">
+                                            <option value="">Select</option>
+                                            <option value="tons" {{ old('unit') == 'tons' ? 'selected' : '' }}>tons</option>
+                                            <option value="kg" {{ old('unit') == 'kg' ? 'selected' : '' }}>kg</option>
+                                            <option value="Add" {{ old('unit') == 'Add' ? 'selected' : '' }}>Add</option>
+                                        </select>
+                                        <button type="button" id="removeUnitButton" class="btn btn-outline-danger ms-2" style="display: none;" onclick="removeUnit()">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                    @error('unit')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+
                                   
-                                            <div class="input-box col-md-4" >
-                                              <span class="details">Quantity </span>
-                                              <input type="number"class="form-control light-gray-placeholder quantity"  name="quantity_${cropCounter}" id="quantityInput" placeholder="Enter quantity" value="{{ old('quantity') }}"  >
-                                            
+                                        <div class="input-box col-md-4">
+                                                <span class="details">Quantity</span>
+                                                <input type="number" class="form-control light-gray-placeholder quantity" 
+                                                    name="quantity_${cropCounter}" id="quantityInput_${cropCounter}" 
+                                                    placeholder="Enter quantity" value="{{ old('quantity') }}" 
+                                                    oninput="calculateTotalSeedCost(${cropCounter})">
                                             </div>
-                                  
-                                            <div class="input-box col-md-4" >
-                                              <span class="details">Unit Price(PHP)</span>
-                                              <input type="number"class="form-control light-gray-placeholder unit_price_seed"  name="unit_price_${cropCounter}" id="unitPriceInput" placeholder="Enter unit price" value="{{ old('unit_price') }}" >
-                                            
+
+                                            <div class="input-box col-md-4">
+                                                <span class="details">Unit Price (PHP)</span>
+                                                <input type="number" class="form-control light-gray-placeholder unit_price_seed" 
+                                                    name="unit_price_${cropCounter}" id="unitPriceInput_${cropCounter}" 
+                                                    placeholder="Enter unit price" value="{{ old('unit_price') }}" 
+                                                    oninput="calculateTotalSeedCost(${cropCounter})">
                                             </div>
-                                            <div class="input-box col-md-4" >
-                                              <span class="details">Total Seed Cost(PHP)</span>
-                                              <input type="number"class="form-control light-gray-placeholder total_seed_cost"  name="total_seed_cost_${cropCounter}" id="totalSeedCostInput" placeholder="Enter total seed cost" value="{{ old('total_seed_cost') }}">
-                                            
+
+                                            <div class="input-box col-md-4">
+                                                <span class="details">Total Seed Cost (PHP)</span>
+                                                <input type="number" class="form-control light-gray-placeholder total_seed_cost" 
+                                                    name="total_seed_cost_${cropCounter}" id="totalSeedCostInput_${cropCounter}" 
+                                                    placeholder="Enter total seed cost" value="{{ old('total_seed_cost') }}" readonly>
                                             </div>
+
                                           </div>
                                           <br>
                                             <h3>b. Labor</h3><br>
                                   
                                             <div class="user-details">
-                                            <div class="input-box col-md-4" >
-                                              <span class="details">No of Person</span>
-                                              <input type="number"class="form-control light-gray-placeholder no_of_person"name="no_of_person" id="quantityInput" placeholder="Enter no_of_person" value="{{ old('no_of_person') }}">
-                                            
+                                        <div class="input-box col-md-4">
+                                                <span class="details">No of Person</span>
+                                                <input type="number" class="form-control light-gray-placeholder no_of_person" 
+                                                    name="no_of_person_${cropCounter}" id="noOfPersonInput_${cropCounter}" 
+                                                    placeholder="Enter number of persons" value="{{ old('no_of_person') }}" 
+                                                    oninput="calculateTotalLaborCost(${cropCounter})">
                                             </div>
-                                  
-                                            <div class="input-box col-md-4" >
-                                              <span class="details">Rate per Person</span>
-                                              <input type="number"class="form-control light-gray-placeholder rate_per_person" name="rate_per_person_${cropCounter}" id="unitPriceInput" placeholder="Enter rate/person" value="{{ old('rate_per_person') }}" >
-                                            
+
+                                            <div class="input-box col-md-4">
+                                                <span class="details">Rate per Person</span>
+                                                <input type="number" class="form-control light-gray-placeholder rate_per_person" 
+                                                    name="rate_per_person_${cropCounter}" id="ratePerPersonInput_${cropCounter}" 
+                                                    placeholder="Enter rate per person" value="{{ old('rate_per_person') }}" 
+                                                    oninput="calculateTotalLaborCost(${cropCounter})">
                                             </div>
-                                            <div class="input-box col-md-4" >
-                                              <span class="details">Total Labor Cost</span>
-                                              <input type="number"class="form-control light-gray-placeholder total_labor_cost" name="total_labor_cost_${cropCounter}" id="totalLaborCostInput" placeholder="Enter total labor cost" value="{{ old('total_labor_cost') }}" >
-                                            
+
+                                            <div class="input-box col-md-4">
+                                                <span class="details">Total Labor Cost</span>
+                                                <input type="number" class="form-control light-gray-placeholder total_labor_cost" 
+                                                    name="total_labor_cost_${cropCounter}" id="totalLaborCostInput_${cropCounter}" 
+                                                    placeholder="Enter total labor cost" value="{{ old('total_labor_cost') }}" readonly>
                                             </div>
+
                                       </div>
 
                               <h3>c. Fertilizers </h3>
@@ -2476,7 +2556,7 @@ $(document).ready(function() {
                                             id="selectNameOfFertilizer_${cropCounter}" 
                                             onchange="checkNameOfFertilizer(${cropCounter})" 
                                             aria-label="label select e">
-                                        <option selected disabled>Select</option>
+                                        <option value="">Select</option>
                                         <option value="Nitrogen Fertilizers" {{ old('name_of_fertilizer_${cropCounter}') == 'Nitrogen Fertilizers' ? 'selected' : '' }}>Nitrogen Fertilizers</option>
                                         <option value="Phosphorus Fertilizers" {{ old('name_of_fertilizer_${cropCounter}') == 'Phosphorus Fertilizers' ? 'selected' : '' }}>Phosphorus Fertilizers</option>
                                         <option value="Potassium Fertilizers" {{ old('name_of_fertilizer_${cropCounter}') == 'Potassium Fertilizers' ? 'selected' : '' }}>Potassium Fertilizers</option>
@@ -2494,26 +2574,31 @@ $(document).ready(function() {
                             </div>
                                         
              
-              
-                      <div class="input-box col-md-4" >
-                          <span class="details">No. of Sacks</span>
-                          <input type="text" id="HybridNameInputField" class="form-control light-gray-placeholder no_ofsacks" name="no_ofsacks_${cropCounter}" id="no_ofsacks" placeholder="Enter no of sacks" value="{{ old('no_ofsacks') }}" >
-                        
-                        </div>
-              
-                        <div class="input-box col-md-4" >
-                          <span class="details">Unit Price per sacks(PHP) </span>
-                          <input type="text"class="form-control light-gray-placeholder unitprice_per_sacks
-                          "value="45"   name="unit_${cropCounter}" id="unitprice_per_sacks" placeholder="Enter unit price/sacks" value="{{ old('unitprice_per_sacks') }}"  >
-                        
-                        </div>
-              
-                        
-                        <div class="input-box col-md-4" >
-                          <span class="details">Total Cost Fertilizers(PHP)</span>
-                          <input type="text"class="form-control light-gray-placeholder total_cost_fertilizers" name="total_cost_fertilizers_${cropCounter}" id="total_cost_fertilizers" placeholder="Enter total cost" value="{{ old('total_cost_fertilizers') }}" >
-                        
-                        </div>
+                               <div class="input-box col-md-4">
+                                    <span class="details">No. of Sacks</span>
+                                    <input type="number" class="form-control light-gray-placeholder no_ofsacks" 
+                                        name="no_ofsacks_${cropCounter}" id="noOfSacksInput_${cropCounter}" 
+                                        placeholder="Enter no of sacks" value="{{ old('no_ofsacks') }}" 
+                                        oninput="calculateTotalFertilizerCost(${cropCounter})">
+                                </div>
+
+                                <div class="input-box col-md-4">
+                                    <span class="details">Unit Price per Sack (PHP)</span>
+                                    <input type="number" class="form-control light-gray-placeholder unitprice_per_sacks" 
+                                        name="unit_${cropCounter}" id="unitPricePerSackInput_${cropCounter}" 
+                                        placeholder="Enter unit price per sack" value="{{ old('unitprice_per_sacks') }}" 
+                                        oninput="calculateTotalFertilizerCost(${cropCounter})">
+                                </div>
+
+                                <div class="input-box col-md-4">
+                                    <span class="details">Total Cost of Fertilizers (PHP)</span>
+                                    <input type="number" class="form-control light-gray-placeholder total_cost_fertilizers" 
+                                        name="total_cost_fertilizers_${cropCounter}" id="totalFertilizerCostInput_${cropCounter}" 
+                                        placeholder="Enter total cost" value="{{ old('total_cost_fertilizers') }}" readonly>
+                                </div>
+
+
+
                       </div>
                       <br>
                         <h3>d. Pesticides</h3><br>
@@ -2528,7 +2613,7 @@ $(document).ready(function() {
                                         id="selectPesticideName_${cropCounter}" 
                                         onchange="checkPesticideName(${cropCounter})" 
                                         aria-label="Floating label select e">
-                                    <option selected disabled>Select</option>
+                                    <option value="">Select</option>
                                     <option value="Glyphosate" {{ old('pesticides_name_${cropCounter}') == 'Glyphosate' ? 'selected' : '' }}>Glyphosate</option>
                                     <option value="Malathion" {{ old('pesticides_name_${cropCounter}') == 'Malathion' ? 'selected' : '' }}>Malathion</option>
                                     <option value="Diazinon" {{ old('pesticides_name_${cropCounter}') == 'Diazinon' ? 'selected' : '' }}>Diazinon</option>
@@ -2546,22 +2631,29 @@ $(document).ready(function() {
                         </div>
 
               
-                        <div class="input-box col-md-4" >
-                          <span class="details">Number of L or kg</span>
-                          <input type="number"class="form-control light-gray-placeholder no_of_l_kg"name="no_of_l_kg_${cropCounter}" id="no_of_l_kg" placeholder="Enter no of L or Kg" value="{{ old('no_of_l_kg') }}" >
-                        
-                        </div>
-              
-                        <div class="input-box col-md-4" >
-                          <span class="details">Unit Price of Pesticides(PHP)</span>
-                          <input type="number"class="form-control light-gray-placeholder unitprice_ofpesticides"value="456"  name="unitprice_ofpesticides_${cropCounter}" id="unitprice_ofpesticides" placeholder="Enter unit price pesticides" value="{{ old('unitprice_ofpesticides') }}" >
-                        
-                        </div>
-                        <div class="input-box col-md-4" >
-                          <span class="details">Total Cost Pesticides(PHP)</span>
-                          <input type="number"class="form-control light-gray-placeholder total_cost_pesticides" value="3456" name="total_cost_pesticides_${cropCounter}" id="total_cost_pesticides" placeholder="Enter total cost" value="{{ old('total_cost_pesticides') }}">
-                        
-                        </div>
+                       <div class="input-box col-md-4">
+                                <span class="details">Number of L or kg</span>
+                                <input type="number" class="form-control light-gray-placeholder no_of_l_kg" 
+                                    name="no_of_l_kg_${cropCounter}" id="noOfLKgInput_${cropCounter}" 
+                                    placeholder="Enter no of L or Kg" value="{{ old('no_of_l_kg') }}" 
+                                    oninput="calculateTotalPesticideCost(${cropCounter})">
+                            </div>
+
+                            <div class="input-box col-md-4">
+                                <span class="details">Unit Price of Pesticides (PHP)</span>
+                                <input type="number" class="form-control light-gray-placeholder unitprice_ofpesticides" 
+                                    name="unitprice_ofpesticides_${cropCounter}" id="unitPriceOfPesticidesInput_${cropCounter}" 
+                                    placeholder="Enter unit price of pesticides" value="{{ old('unitprice_ofpesticides') }}" 
+                                    oninput="calculateTotalPesticideCost(${cropCounter})">
+                            </div>
+
+                            <div class="input-box col-md-4">
+                                <span class="details">Total Cost of Pesticides (PHP)</span>
+                                <input type="number" class="form-control light-gray-placeholder total_cost_pesticides" 
+                                    name="total_cost_pesticides_${cropCounter}" id="totalCostPesticidesInput_${cropCounter}" 
+                                    placeholder="Enter total cost" value="{{ old('total_cost_pesticides') }}" readonly>
+                            </div>
+
                   </div>
               
                   <h3>e. Transport & Variable Cost Total</h3><br>
@@ -2573,21 +2665,27 @@ $(document).ready(function() {
                   
                   </div>
               
-                  <div class="input-box col-md-4" >
-                    <span class="details">Total DeliveryCost(PHP)</span>
-                    <input type="number"class="form-control light-gray-placeholder Total_DeliveryCost" value="3435" name="total_transport_per_deliverycost_${cropCounter}" id="totalLaborCostInput" placeholder="Enter total transport cost" value="{{ old('total_transport_per_deliverycost') }}" >
-                  
-                  </div>
-                  <div class="input-box col-md-4" >
-                    <span class="details">Total Machineries Fuel Cost</span>
-                    <input type="number"class="form-control light-gray-placeholder total_machinery_fuel_cost"value="4564" name="total_machinery_fuel_cost_${cropCounter}" id="total_machinery_fuel_cost" placeholder="Enter total fuel cost" value="{{ old('total_machinery_fuel_cost') }}" >
-                  
-                  </div>
-              
-                  <div class="input-box col-md-4" >
-                      <span class="details">Total Variable Cost</span>
-                      <input type="number"class="form-control light-gray-placeholder total_variable_costs"value="8943" name="total_variable_cost_${cropCounter}" id="total_variable_cost" placeholder="Enter total variable cost" value="{{ old('total_variable_cost') }}"  >
-                    
+                <div class="input-box col-md-4">
+                        <span class="details">Total Delivery Cost (PHP)</span>
+                        <input type="number" class="form-control light-gray-placeholder Total_DeliveryCost" 
+                            name="total_transport_per_deliverycost_${cropCounter}" id="totalDeliveryCostInput_${cropCounter}" 
+                            placeholder="Enter total transport cost" value="{{ old('total_transport_per_deliverycost') }}" 
+                            oninput="calculateTotalVariableCost(${cropCounter})">
+                    </div>
+
+                    <div class="input-box col-md-4">
+                        <span class="details">Total Machineries Fuel Cost</span>
+                        <input type="number" class="form-control light-gray-placeholder total_machinery_fuel_cost" 
+                            name="total_machinery_fuel_cost_${cropCounter}" id="totalMachineryFuelCostInput_${cropCounter}" 
+                            placeholder="Enter total fuel cost" value="{{ old('total_machinery_fuel_cost') }}" 
+                            oninput="calculateTotalVariableCost(${cropCounter})">
+                    </div>
+
+                    <div class="input-box col-md-4">
+                        <span class="details">Total Variable Cost</span>
+                        <input type="number" class="form-control light-gray-placeholder total_variable_costs" 
+                            name="total_variable_cost_${cropCounter}" id="totalVariableCostInput_${cropCounter}" 
+                            placeholder="Enter total variable cost" value="{{ old('total_variable_cost') }}" readonly>
                     </div>
               </div>
 
@@ -2600,10 +2698,14 @@ $(document).ready(function() {
             </div>
         `;
 
+       
 
                 // Append the new crop section
                 $('#cropsContainer').append(cropHtml);
 
+
+
+            
 // Initialize crop names for the new crop section
 fetchCropNames();
 // Initial call to add listeners for the first section
@@ -2637,18 +2739,145 @@ $('#cropsContainer').on('change', '.crop_name', function() {
 
 
 });
+submitButton.addEventListener('click', function() {
+        // Scroll to the Add Crop button
+        addCropButton.scrollIntoView({ behavior: 'smooth' });
+        openModal();
+    });
+function calculateTotalAmount(cropCounter) {
+    const noOfHa = parseFloat(document.getElementById(`no_of_ha_${cropCounter}`).value) || 0;
+    const costPerHa = parseFloat(document.getElementById(`cost_per_ha_${cropCounter}`).value) || 0;
+    const totalAmountField = document.getElementById(`total_amount_${cropCounter}`);
+
+    // Calculate total amount
+    const totalAmount = noOfHa * costPerHa;
+
+    // Update the total amount field
+    totalAmountField.value = totalAmount.toFixed(2); // Format to 2 decimal places}
+}
+
+function calculateTotalPlowingCost(cropCounter) {
+    const noOfPlowing = parseFloat(document.getElementById(`noPlowing_${cropCounter}`).value) || 0;
+    const costPerPlowing = parseFloat(document.getElementById(`plowingperCostInput_${cropCounter}`).value) || 0;
+    const totalPlowingCostField = document.getElementById(`plowingCostInput_${cropCounter}`);
+
+    // Calculate total plowing cost
+    const totalPlowingCost = noOfPlowing * costPerPlowing;
+
+    // Update the total plowing cost field
+    totalPlowingCostField.value = totalPlowingCost.toFixed(2); // Format to 2 decimal places
+}
+
+function calculateTotalHarrowingCost(cropCounter) {
+    const noOfHarrowing = parseFloat(document.getElementById(`noHarrowing_${cropCounter}`).value) || 0;
+    const costPerHarrowing = parseFloat(document.getElementById(`costPerHarrowingInput_${cropCounter}`).value) || 0;
+    const totalHarrowingCostField = document.getElementById(`harrowingCostInput_${cropCounter}`);
+
+    // Calculate total harrowing cost
+    const totalHarrowingCost = noOfHarrowing * costPerHarrowing;
+
+    // Update the total harrowing cost field
+    totalHarrowingCostField.value = totalHarrowingCost.toFixed(2); // Format to 2 decimal places
+}
 
 
-    
+function calculateTotalHarvestingCost(cropCounter) {
+    const noOfHarvesting = parseFloat(document.getElementById(`noHarvesting_${cropCounter}`).value) || 0;
+    const costPerHarvesting = parseFloat(document.getElementById(`costPerHarvestingInput_${cropCounter}`).value) || 0;
+    const totalHarvestingCostField = document.getElementById(`harvestingCostInput_${cropCounter}`);
+
+    // Calculate total harvesting cost
+    const totalHarvestingCost = noOfHarvesting * costPerHarvesting;
+
+    // Update the total harvesting cost field
+    totalHarvestingCostField.value = totalHarvestingCost.toFixed(2); // Format to 2 decimal places
+}
+
+
+function calculateTotalMachineryCost(cropCounter) {
+    const plowingCost = parseFloat(document.getElementById(`plowingCostInput_${cropCounter}`).value) || 0;
+    const harrowingCost = parseFloat(document.getElementById(`harrowingCostInput_${cropCounter}`).value) || 0;
+    const harvestingCost = parseFloat(document.getElementById(`harvestingCostInput_${cropCounter}`).value) || 0;
+    const postHarvestCost = parseFloat(document.getElementById(`postHarvestCostInput_${cropCounter}`).value) || 0;
+
+    // Calculate total machinery cost
+    const totalMachineryCost = plowingCost + harrowingCost + harvestingCost + postHarvestCost;
+
+    // Update the total cost field
+    document.getElementById(`totalCostInput_${cropCounter}`).value = totalMachineryCost.toFixed(2); // Format to 2 decimal places
+}
+
+
+function calculateTotalSeedCost(cropCounter) {
+    const quantity = parseFloat(document.getElementById(`quantityInput_${cropCounter}`).value) || 0;
+    const unitPrice = parseFloat(document.getElementById(`unitPriceInput_${cropCounter}`).value) || 0;
+
+    // Calculate total seed cost
+    const totalSeedCost = quantity * unitPrice;
+
+    // Update the total seed cost field
+    document.getElementById(`totalSeedCostInput_${cropCounter}`).value = totalSeedCost.toFixed(2); // Format to 2 decimal places
+}
+
+function calculateTotalLaborCost(cropCounter) {
+    const noOfPerson = parseFloat(document.getElementById(`noOfPersonInput_${cropCounter}`).value) || 0;
+    const ratePerPerson = parseFloat(document.getElementById(`ratePerPersonInput_${cropCounter}`).value) || 0;
+
+    // Calculate total labor cost
+    const totalLaborCost = noOfPerson * ratePerPerson;
+
+    // Update the total labor cost field
+    document.getElementById(`totalLaborCostInput_${cropCounter}`).value = totalLaborCost.toFixed(2); // Format to 2 decimal places
+}
+
+function calculateTotalFertilizerCost(cropCounter) {
+    const noOfSacks = parseFloat(document.getElementById(`noOfSacksInput_${cropCounter}`).value) || 0;
+    const unitPricePerSack = parseFloat(document.getElementById(`unitPricePerSackInput_${cropCounter}`).value) || 0;
+
+    // console.log(`No. of Sacks: ${noOfSacks}, Unit Price per Sack: ${unitPricePerSack}`); // Debugging
+
+    const totalCostFertilizers = noOfSacks * unitPricePerSack;
+
+    document.getElementById(`totalFertilizerCostInput_${cropCounter}`).value = totalCostFertilizers.toFixed(2);
+}
+
+
+
+function calculateTotalPesticideCost(cropCounter) {
+    const noOfLKg = parseFloat(document.getElementById(`noOfLKgInput_${cropCounter}`).value) || 0;
+    const unitPriceOfPesticides = parseFloat(document.getElementById(`unitPriceOfPesticidesInput_${cropCounter}`).value) || 0;
+
+    // Calculate the total cost
+    const totalPesticideCost = noOfLKg * unitPriceOfPesticides;
+
+    // Update the total cost field
+    document.getElementById(`totalCostPesticidesInput_${cropCounter}`).value = totalPesticideCost.toFixed(2); // Format to 2 decimal places
+}
+
+function calculateTotalVariableCost(cropCounter) {
+    // Get the values from each input field
+    const totalSeedCost = parseFloat(document.getElementById(`totalSeedCostInput_${cropCounter}`).value) || 0;
+    const totalLaborCost = parseFloat(document.getElementById(`totalLaborCostInput_${cropCounter}`).value) || 0;
+    const totalFertilizerCost = parseFloat(document.getElementById(`totalFertilizerCostInput_${cropCounter}`).value) || 0;
+    const totalPesticideCost = parseFloat(document.getElementById(`totalCostPesticidesInput_${cropCounter}`).value) || 0;
+    const totalDeliveryCost = parseFloat(document.getElementById(`totalDeliveryCostInput_${cropCounter}`).value) || 0;
+    const totalMachineryFuelCost = parseFloat(document.getElementById(`totalMachineryFuelCostInput_${cropCounter}`).value) || 0;
+
+    // Calculate total variable cost
+    const totalVariableCost = totalSeedCost + totalLaborCost + totalFertilizerCost + totalPesticideCost + totalDeliveryCost + totalMachineryFuelCost;
+
+    // Update the total variable cost input field
+    document.getElementById(`totalVariableCostInput_${cropCounter}`).value = totalVariableCost.toFixed(2); // Format to 2 decimal places
+}
+
 // Track available sale numbers for each crop
-
-let saleCounter= 0;
+let saleCounter = 0;
 let saleAvailableNumbersMap = [];
 let saleCounterMap = [{}];
 
 // Function to add a sale
 function addSale(cropCounter) {
-    //Initialize available numbers and sale counter if not present for this crop
+    // Initialize available numbers and sale counter if not present for this crop
     if (!saleAvailableNumbersMap[cropCounter]) {
         saleAvailableNumbersMap[cropCounter] = [];
         saleCounterMap[cropCounter] = 0;
@@ -2658,10 +2887,8 @@ function addSale(cropCounter) {
 
     // Check if there are available numbers to reuse
     if (saleAvailableNumbersMap[cropCounter].length > 0) {
-        // Use the lowest available sale number
         saleCounter = saleAvailableNumbersMap[cropCounter].shift();
     } else {
-        // Increment sale counter if no available numbers
         saleCounter = saleCounterMap[cropCounter]++;
     }
 
@@ -2675,19 +2902,22 @@ function addSale(cropCounter) {
             </div>
             <div class="input-box col-md-3">
                 <label for="measurement_${cropCounter}_${saleCounter}">Measurement/unit:</label>
-                <input type="text" class="form-control light-gray-placeholder measurement"  name="crop_profiles[${cropCounter}][sales][${saleCounter}][measurement]" id="measurement_${cropCounter}_${saleCounter}" placeholder="Enter measurement">
+                <select class="form-control measurement" name="crop_profiles[${cropCounter}][sales][${saleCounter}][measurement]" id="measurement_${cropCounter}_${saleCounter}" onchange="convertMeasurement(${cropCounter}, ${saleCounter})">
+                    <option value="kg">kg</option>
+                    <option value="tons">tons</option>
+                </select>
             </div>
             <div class="input-box col-md-3">
                 <label for="unit_price_per_kg_${cropCounter}_${saleCounter}">Unit Price/kg:</label>
-                <input type="text" class="form-control light-gray-placeholder unit_price_sold"  name="crop_profiles[${cropCounter}][sales][${saleCounter}][unit_price]" id="unit_price_per_kg_${cropCounter}_${saleCounter}" placeholder="Enter unit price">
+                <input type="number" class="form-control light-gray-placeholder unit_price_sold" name="crop_profiles[${cropCounter}][sales][${saleCounter}][unit_price]" id="unit_price_per_kg_${cropCounter}_${saleCounter}" placeholder="Enter unit price" oninput="calculateGrossIncome(${cropCounter}, ${saleCounter})" onkeypress="return isNumberKey(event)">
             </div>
             <div class="input-box col-md-3">
                 <label for="quantity_${cropCounter}_${saleCounter}">Quantity:</label>
-                <input type="text" class="form-control light-gray-placeholder quantity"  name="crop_profiles[${cropCounter}][sales][${saleCounter}][quantity]" id="quantity_${cropCounter}_${saleCounter}" placeholder="Enter quantity">
+                <input type="number" class="form-control light-gray-placeholder quantity" name="crop_profiles[${cropCounter}][sales][${saleCounter}][quantity]" id="quantity_${cropCounter}_${saleCounter}" placeholder="Enter quantity" oninput="calculateGrossIncome(${cropCounter}, ${saleCounter})" onkeypress="return isNumberKey(event)">
             </div>
             <div class="input-box col-md-3">
                 <label for="gross_income_${cropCounter}_${saleCounter}">Gross Income:</label>
-                <input type="text" class="form-control light-gray-placeholder gross_income" name="crop_profiles[${cropCounter}][sales][${saleCounter}][gross_income]" id="gross_income_${cropCounter}_${saleCounter}" placeholder="Enter gross income">
+                <input type="number" class="form-control light-gray-placeholder gross_income" name="crop_profiles[${cropCounter}][sales][${saleCounter}][gross_income]" id="gross_income_${cropCounter}_${saleCounter}" placeholder="Gross income" readonly>
             </div>
             <div class="remove-button-container">
                 <button type="button" class="btn btn-danger remove-sale-btn" onclick="removeSale(${cropCounter}, ${saleCounter})">Remove Sale</button>
@@ -2695,9 +2925,25 @@ function addSale(cropCounter) {
         </div>
     `;
 
-   
     salesSection.insertAdjacentHTML('beforeend', newSaleEntry);
     updateRemoveButtonVisibility(cropCounter);
+}
+
+// Function to convert measurement and update quantity
+function convertMeasurement(cropCounter, saleCounter) {
+    const measurement = document.getElementById(`measurement_${cropCounter}_${saleCounter}`).value;
+    const quantityField = document.getElementById(`quantity_${cropCounter}_${saleCounter}`);
+    let quantity = parseFloat(quantityField.value) || 0;
+
+    // Convert tons to kilograms if the selected unit is tons
+    if (measurement === 'tons') {
+        quantityField.value = (quantity * 1000).toFixed(2); // Convert tons to kg
+    } else if (measurement === 'kg') {
+        quantityField.value = quantity.toFixed(2); // Keep the value as is
+    }
+
+    // Recalculate gross income after conversion
+    calculateGrossIncome(cropCounter, saleCounter);
 }
 
 // Function to remove a sale
@@ -2728,10 +2974,31 @@ function updateRemoveButtonVisibility(cropCounter) {
     });
 }
 
+// Function to calculate gross income based on unit price and quantity
+function calculateGrossIncome(cropCounter, saleCounter) {
+    const unitPrice = parseFloat(document.getElementById(`unit_price_per_kg_${cropCounter}_${saleCounter}`).value) || 0;
+    const quantity = parseFloat(document.getElementById(`quantity_${cropCounter}_${saleCounter}`).value) || 0;
+    
+    const grossIncomeField = document.getElementById(`gross_income_${cropCounter}_${saleCounter}`);
+    const grossIncome = unitPrice * quantity;
+
+    grossIncomeField.value = isNaN(grossIncome) ? '' : grossIncome.toFixed(2);
+}
+
+// Function to allow only numbers and a decimal point
+function isNumberKey(evt) {
+    const charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode !== 46) {
+        return false; // Allow only numbers and decimal point
+    }
+    return true;
+}
+
 // Initial setup: Hide remove button if only one sale entry exists
 document.querySelectorAll('[id^="salesSection_"]').forEach(section => {
     updateRemoveButtonVisibility(section.id.split('_')[1]);
 });
+
 
 </script>
 
@@ -3214,6 +3481,13 @@ $('#confirmSave').on('click', function() {
                     if (confirmModal) {
                         confirmModal.hide();
                     }
+
+
+                    
+                 // Add event listener to reload the page when success modal is closed
+                 $('#successModal').on('hidden.bs.modal', function () {
+                    location.reload(); // Reload the page
+                });
                 }
         },
         error: function(xhr) {
@@ -3225,6 +3499,11 @@ $('#confirmSave').on('click', function() {
 
     // Show the modal
     $('#errorModal').modal('show');
+
+     // Add event listener to reload the page when error modal is closed
+ $('#errorModal').on('hidden.bs.modal', function () {
+                location.reload(); // Reload the page
+            });
 }
 
 

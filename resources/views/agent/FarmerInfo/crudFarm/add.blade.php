@@ -678,11 +678,11 @@
                             <div class="user-details">
                           
                     <div class="input-box col-md-4">
-                        <span class="details">RSBA Register:</span>
+                        <span class="details">RSBA Registered:</span>
                                
                                 <select class="form-control custom-select light-gray-placeholder rsba_register placeholder-text @error('rsba_register') is-invalid @enderror" id="rsba_register" name="rsba_register" aria-label="Floating label select e">
-                                    <option  disabled>Select</option>
-                                    <option selected value="Yes" {{ old('rsba_register') == 'Yes' ? 'selected' : '' }}>Yes</option>
+                                    <option value="">Select</option>
+                                    <option  value="Yes" {{ old('rsba_register') == 'Yes' ? 'selected' : '' }}>Yes</option>
                                     <option value="No" {{ old('rsba_register') == 'No' ? 'selected' : '' }}>No</option>
                               
                                   </select>
@@ -1105,29 +1105,38 @@
 
   </style>
   
+
+
 <!-- Success Modal -->
-<div class="modal fade" id="successCropModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="successModalLabel">Success</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg">
+            <!-- Modal Header -->
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold" id="successModalLabel">
+                    <i class="fas fa-check-circle me-2"></i>Success!
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="modal-body text-center py-5">
+                <i class="fas fa-smile-beam fa-3x text-success mb-4"></i>
+                <p class="fs-5 text-muted">
+                    Your data has been successfully added.
+                </p>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div class="modal-footer justify-content-center border-0">
+                <a href="{{ route('agent.FarmerInfo.farm_view', $personalinfos->id) }}" class="btn btn-lg btn-success px-5">
+                    Proceed to Farm Data
+                    <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
         </div>
-        <div class="modal-body">
-          <p>Your data has been successfully added.</p>
-        </div>
-        <div class="modal-footer">
-            <a href="{{ route('agent.FarmerInfo.farm_view', $personalinfos->id) }}" class="btn btn-success">Proceed to Farm Data</a>
-        </div>
-      </div>
     </div>
-  </div>
-  
-  
-
- 
-
-
+</div>
   
   
 
@@ -3059,6 +3068,7 @@ function openConfirmModal(data) {
         $('#confirmModal').modal('show');
     } else {
         alert("Please add at least one crop before proceeding.");
+        location.reload();
         // Optionally, scroll to or focus on the crop addition section
         const cropAddSection = document.querySelector('#cropAddSection'); // Adjust the selector
         if (cropAddSection) {
@@ -3228,7 +3238,8 @@ function openConfirmModal(data) {
 openConfirmModal(dataobject);
 
 /// Confirm and Save event
-$('#confirmSave').on('click', function() {
+
+$('#confirmSave').on('click', function () {
     const csrfToken = $('input[name="_token"]').attr('value');
 
     // Send the AJAX request
@@ -3238,50 +3249,48 @@ $('#confirmSave').on('click', function() {
         contentType: 'application/json',
         data: JSON.stringify(dataobject), // Attach the prepared data
         headers: {
-            'X-CSRF-TOKEN': csrfToken // Include the CSRF token in the headers
+            'X-CSRF-TOKEN': csrfToken, // Include the CSRF token in the headers
         },
-        success: function(response) {
+        success: function (response) {
             console.log(response);
             if (response.success) {
-                // Show the success modal
-                var successModal = new bootstrap.Modal(document.getElementById('successCropModal'), {
-                    keyboard: false
+                // Show success modal
+                const successModal = new bootstrap.Modal(document.getElementById('successCropModal'), {
+                    keyboard: false,
                 });
                 successModal.show();
 
-                // Hide the confirmation modal if open
-                var confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+                // Close the confirmation modal
+                const confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
                 if (confirmModal) {
                     confirmModal.hide();
                 }
 
-                // Reload the page when the success modal is closed or a confirmation button inside is clicked
-                $('#successCropModal').on('hidden.bs.modal', function() {
-                    location.reload();
-                });
-
-                $('#successConfirmButton').on('click', function() {
-                    $('#successCropModal').modal('hide'); // Hide the modal
+                // Add event listener to reload the page when success modal is closed
+                $('#successCropModal').on('hidden.bs.modal', function () {
                     location.reload(); // Reload the page
                 });
             }
         },
-        error: function(xhr) {
-            console.error('Error:', xhr); // Log error details to the console
+        error: function (xhr) {
+            console.error('Error:', xhr.responseJSON.error);
 
-            // Display error in the error modal
-            if (xhr.responseJSON && xhr.responseJSON.error) {
-                $('#errorModalBody').text(xhr.responseJSON.error);
-            } else {
-                $('#errorModalBody').text('An unexpected error occurred. Please try again.');
-            }
+            // Display the error message in the error modal body
+            $('#errorModalBody').text(xhr.responseJSON.error);
 
             // Show the error modal
-            $('#errorModal').modal('show');
-        }
+            const errorModal = new bootstrap.Modal(document.getElementById('errorModal'), {
+                keyboard: false,
+            });
+            errorModal.show();
+
+            // Add event listener to reload the page when error modal is closed
+            $('#errorModal').on('hidden.bs.modal', function () {
+                location.reload(); // Reload the page
+            });
+        },
     });
 });
-
 
 });
 

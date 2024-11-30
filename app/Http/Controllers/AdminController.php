@@ -47,6 +47,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\UserDataUpdated;
+use App\Notifications\AgentAddedNewData;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Exception;
@@ -192,14 +193,20 @@ public function multipleDelete(Request $request)
  
  
      // Update the farm profile with the new user_id
-     $farmProfile = Crop::findOrFail($request->crops_farms_id);
-     $farmProfile->users_id = $request->user_id;
-     $farmProfile->save();
+     $CropFarmLocation = Crop::findOrFail($request->crops_farms_id);
+     $CropFarmLocation->users_id = $request->user_id;
+     $CropFarmLocation->save();
  
      // // Send a notification to the user about the update
-    //  $user = $farmProfile->user; // Assuming you have a relation to the User model
-    //  $user->notify(new UserDataUpdated($farmProfile));
- 
+     $user = $CropFarmLocation->user; // Access the user through the relationship
+     if ($user) {
+         $user->notify(new AgentAddedNewData($CropFarmLocation));
+     } else {
+         return response()->json([
+             'success' => false,
+             'message' => 'User not found for the specified crop location.',
+         ], 404);
+     }
      // Return a success response
      return response()->json([
          'success' => true,
@@ -234,7 +241,7 @@ public function AdminupdateFarmProfile(Request $request)
     $farmProfile->users_id = $request->user_id;
     $farmProfile->save();
 
-    // // Send a notification to the user about the update
+    // Send a notification to the user about the update
     $user = $farmProfile->user; // Assuming you have a relation to the User model
     $user->notify(new UserDataUpdated($farmProfile));
 
@@ -297,6 +304,7 @@ public function AdminupdateFarmProfile(Request $request)
                 $crops = Crop::distinct()->pluck('crop_name');
                 $districts = AgriDistrict::distinct()->pluck('district');
                 $personalInformationId = $request->input('personal_informations_id');
+             
                 // Initialize variables for dashboard totals
                 $totalFarms = 0;
                 $totalAreaPlanted = 0;
@@ -747,6 +755,7 @@ return response()->json([
                     'crops',
                     'admin',
                     'districts',
+              
                    
                 
                  

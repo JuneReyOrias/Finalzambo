@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Notifications\Notifiable;
 class Crop extends Model
 {
     use HasFactory;
@@ -12,6 +12,7 @@ class Crop extends Model
     protected $fillable=[
         'users_id',
         'farm_profiles_id',
+        'personal_informations_id',
         'crop_name',
         'type_of_variety_planted',
         'preferred_variety' ,
@@ -21,6 +22,10 @@ class Crop extends Model
         'yield_kg_ha',
     ];
     
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'users_id', 'users_id');
+    } 
      // Relationship with CropFarm
      public function cropFarm()
      {
@@ -31,10 +36,11 @@ class Crop extends Model
      {
          return $this->hasMany(FarmProfile::class, 'personal_informations_id');
      }
-    public function user()
-    {
-        return $this->belongsTo(User::class,'user_id', )->withDefault();
-    }
+     public function user()
+     {
+         return $this->belongsTo(User::class, 'users_id');
+     }
+     
     public function categorize()
     {
         return $this->belongsTo(Categorize::class,'categorizes_id','id');

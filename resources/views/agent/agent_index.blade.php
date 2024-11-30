@@ -476,9 +476,9 @@ canvas {
                     <h5 class="modal-title" id="farmersModalLabel">Farmers Per District </h5>
                     <div class="ms-auto d-flex align-items-center">
                         <!-- Eye Icon Button with Tooltip -->
-                        <button type="button" class="btn btn-light me-2" data-bs-toggle="modal" data-bs-target="#farmerInfoModal" title="View Farmers Information">
+                        {{-- <button type="button" class="btn btn-light me-2" data-bs-toggle="modal" data-bs-target="#farmerInfoModal" title="View Farmers Information">
                             <i class="fa fa-eye"> Farmers</i>
-                        </button>
+                        </button> --}}
                         <!-- Close Button -->
                         <button type="button" class="btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>

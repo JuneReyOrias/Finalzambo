@@ -531,11 +531,12 @@
                                            <div class="user-details">
                                         <!-- Production Fields -->
 
+                                        <meta name="csrf-token" content="{{ csrf_token() }}">
                                         <div class="input-box col-md-4">
                                             <label for="cropping_no">Cropping No.:</label>
-                                            <input type="number" class="form-control light-gray-placeholder cropping_no" name="crop_profiles[${cropCounter}][cropping_no]"placeholder=" Enter Cropping No" id="cropping_no">
-                                            
-                                            </div>
+                                            <input type="number" class="form-control light-gray-placeholder cropping_no" name="crop_profiles[${cropCounter}][cropping_no]" placeholder="Enter Cropping No" id="cropping_no">
+                                            <span id="cropping_no_error" class="text-danger" style="display: none;">The cropping number already exists. Please choose a different one.</span>
+                                        </div>
                                         <div class="input-box col-md-4">
                                             <label for="seeds_typed_used">Seed type Used:</label>
                                             <input type="text" class="form-control light-gray-placeholder seed-type" name="crop_profiles[${cropCounter}][seeds_typed_used]" placeholder=" Enter Seed type used" id="seeds_typed_used" onkeypress="return blockSymbolsAndNumbers(event)">
@@ -1246,94 +1247,8 @@
         </div>
         <div class="modal-body">
           <div class="accordion" id="confirmationAccordion">
-            <!-- Farmer Information Accordion -->
-            {{-- <div class="accordion-item">
-              <h2 class="accordion-header" id="headingFarmerInfo">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFarmerInfo" aria-expanded="true" aria-controls="collapseFarmerInfo">
-                  <i class="fas fa-user"></i> Farmer Information
-                </button>
-              </h2>
-              <div id="collapseFarmerInfo" class="accordion-collapse collapse show" aria-labelledby="headingFarmerInfo" data-bs-parent="#confirmationAccordion">
-                <div class="accordion-body">
-                    <ul class="farmer-details">
-                        <li><strong>First Name:</strong> <span id="farmerFirstname"></span></li>
-                        <li><strong>Last Name:</strong> <span id="farmerLastname"></span></li>
-                        <li><strong>Middle Name:</strong> <span id="farmerMiddleName"></span></li>
-                        <li><strong>Extension Name:</strong> <span id="farmerExtensionName"></span></li>
-                        <li><strong>Country:</strong> <span id="farmerCountry"></span></li>
-                        <li><strong>Province:</strong> <span id="farmerProvince"></span></li>
-                        <li><strong>City:</strong> <span id="farmerCity"></span></li>
-                        <li><strong>Agri District:</strong> <span id="farmerAgriDistrict"></span></li>
-                        <li><strong>Barangay:</strong> <span id="farmerBarangay"></span></li>
-                        <li><strong>Street:</strong> <span id="farmerStreet"></span></li>
-                        <li><strong>Zip Code:</strong> <span id="farmerZipCode"></span></li>
-                        <li><strong>Contact Number:</strong> <span id="farmerContactNo"></span></li>
-                        <li><strong>Sex:</strong> <span id="farmerSex"></span></li>
-                        <li><strong>Religion:</strong> <span id="farmerReligion"></span></li>
-                        <li><strong>Date of Birth:</strong> <span id="farmerDateOfBirth"></span></li>
-                        <li><strong>Place of Birth:</strong> <span id="farmerPlaceOfBirth"></span></li>
-                        <li><strong>Civil Status:</strong> <span id="farmerCivilStatus"></span></li>
-                        <li><strong>Name of Legal Spouse:</strong> <span id="farmerNameLegalSpouse"></span></li>
-                        <li><strong>Number of Children:</strong> <span id="farmerNoOfChildren"></span></li>
-                        <li><strong>Mother's Maiden Name:</strong> <span id="farmerMothersMaidenName"></span></li>
-                        <li><strong>Highest Formal Education:</strong> <span id="farmerHighestFormalEducation"></span></li>
-                        <li><strong>Person with Disability:</strong> <span id="farmerPersonWithDisability"></span></li>
-                        <li><strong>YESPWD ID Number:</strong> <span id="farmerYespwdIdNo"></span></li>
-                        <li><strong>NOPWD ID Number:</strong> <span id="farmerNopwdIdNo"></span></li>
-                        <li><strong>Government Issued ID:</strong> <span id="farmerGovernmentIssuedId"></span></li>
-                        <li><strong>ID Type:</strong> <span id="farmerIdType"></span></li>
-                        <li><strong>Additional ID Type:</strong> <span id="farmerAddIdType"></span></li>
-                        <li><strong>Non-Government ID Types:</strong> <span id="farmerNonGovIdTypes"></span></li>
-                        <li><strong>Member of Any Farmers' Group:</strong> <span id="farmerMemberOfAnyFarmers"></span></li>
-                        <li><strong>Name of Farmers' Group:</strong> <span id="farmerNameOfFarmers"></span></li>
-                        <li><strong>Number of Farmers' Groups:</strong> <span id="farmerNoFarmersGroup"></span></li>
-                        <li><strong>Additional Farmers' Group:</strong> <span id="farmerAddFarmersGroup"></span></li>
-                        <li><strong>Contact Person's Name:</strong> <span id="farmerNameContactPerson"></span></li>
-                        <li><strong>Contact Person's Number:</strong> <span id="farmerCpTelNo"></span></li>
-                        <li><strong>Date of Interview:</strong> <span id="farmerDateOfInterview"></span></li>
-                    </ul>
-                    
-                    
-                
-                </div>
-              </div>
-            </div>
-   --}}
-            <!-- Farm Information Accordion -->
-            {{-- <div class="accordion-item">
-              <h2 class="accordion-header" id="headingFarmInfo">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFarmInfo" aria-expanded="false" aria-controls="collapseFarmInfo">
-                  <i class="fas fa-tractor"></i> Farm Information
-                </button>
-              </h2>
-              <div id="collapseFarmInfo" class="accordion-collapse collapse" aria-labelledby="headingFarmInfo" data-bs-parent="#confirmationAccordion">
-                <div class="accordion-body">
-                    <ul class="farm-details">
-                        <li><strong>Tenurial Status:</strong> <span id="farmTenurialStatus"></span></li>
-                        <li><strong>Farm Address:</strong> <span id="farmAddress"></span></li>
-                        <li><strong>Number of Years as Farmer:</strong> <span id="farmYearsAsFarmer"></span></li>
-                        <li><strong>GPS Longitude:</strong> <span id="farmGpsLongitude"></span></li>
-                        <li><strong>GPS Latitude:</strong> <span id="farmGpsLatitude"></span></li>
-                        <li><strong>Total Physical Area (ha):</strong> <span id="farmTotalPhysicalArea"></span></li>
-                        <li><strong>Total Area Cultivated (ha):</strong> <span id="farmTotalAreaCultivated"></span></li>
-                        <li><strong>Land Title Number:</strong> <span id="farmLandTitleNo"></span></li>
-                        <li><strong>Lot Number:</strong> <span id="farmLotNo"></span></li>
-                        <li><strong>Area Prone To:</strong> <span id="farmAreaProneTo"></span></li>
-                        <li><strong>Ecosystem:</strong> <span id="farmEcosystem"></span></li>
-                        <li><strong>RSBA Register:</strong> <span id="farmRsbaRegister"></span></li>
-                        <li><strong>PCIC Insured:</strong> <span id="farmPcicInsured"></span></li>
-                        <li><strong>Government Assisted:</strong> <span id="farmGovernmentAssisted"></span></li>
-                        <li><strong>Source of Capital:</strong> <span id="farmSourceOfCapital"></span></li>
-                        <li><strong>Remarks:</strong> <span id="farmRemarks"></span></li>
-                        <li><strong>OCA District Office:</strong> <span id="farmOcaDistrictOffice"></span></li>
-                        <li><strong>Name of Technicians:</strong> <span id="farmNameTechnicians"></span></li>
-                        <li><strong>Date of Interview:</strong> <span id="farmDateInterview"></span></li>
-                    </ul>
-                    
-                </div>
-              </div>
-            </div>
-   --}}
+            
+
             <!-- Crops Information Accordion -->
             <div class="accordion-item">
               <h2 class="accordion-header" id="headingCropsInfo">
@@ -1611,96 +1526,40 @@
   </style>
   
 <!-- Success Modal -->
-<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="successModalLabel">Success</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p>Your data has been successfully added.</p>
-        </div>
-        <div class="modal-footer">
-          {{-- <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button> --}}
-          {{-- <a href="{{ route('admin.farmersdata.production', $cropData->id) }}" class="btn btn-success">add Form</a> --}}
-            <!-- Link to proceed to another page -->
-            <a href="{{ route('agent.FarmerInfo.production_view', $cropData->id) }}"class="btn btn-success">Proceed to Production Info</a>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  
 
-  
-  {{-- <!-- Success Modal -->
-<!-- Success Modal -->
-<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content shadow-lg">
-            <div class="modal-header border-0">
-                <h5 class="modal-title" id="successModalLabel">Success</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content border-0 shadow-lg">
+            <!-- Modal Header -->
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold" id="successModalLabel">
+                    <i class="fas fa-check-circle me-2"></i>Success!
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="modalBody">
-                <!-- Success message will be displayed here -->
+            
+            <!-- Modal Body -->
+            <div class="modal-body text-center py-5">
+                <i class="fas fa-smile-beam fa-3x text-success mb-4"></i>
+                <p class="fs-5 text-muted">
+                    Your data has been successfully added.
+                </p>
             </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="proceedToNextStep()">Proceed</button>
+            
+            <!-- Modal Footer -->
+            <div class="modal-footer justify-content-center border-0">
+                <a href="{{ route('agent.FarmerInfo.production_view', $cropData->id) }}" class="btn btn-lg btn-success px-5">
+                    Proceed to Production Data
+                    <i class="fas fa-arrow-right ms-2"></i>
+                </a>
             </div>
         </div>
     </div>
 </div>
-
-<!-- Error Modal -->
-<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content shadow-lg">
-            <div class="modal-header border-0">
-                <h5 class="modal-title" id="errorModalLabel">Error</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="errorModalBody">
-                <!-- Error message will be displayed here -->
-            </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
   
-  
-   --}}
 
 
- <!-- Modal for Adding New Barangay -->
- <div class="modal fade" id="newBarangayModal" tabindex="-1" aria-labelledby="newBarangayModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-        <h5 class="modal-title" id="newBarangayModalLabel">Add New Barangay</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-        <form id="addBarangayForm">
-            <div class="mb-3">
-            <label for="newBarangayName" class="form-label">Barangay Name</label>
-            <input type="text" class="form-control" id="newBarangayName" placeholder="Enter new barangay name">
-            </div>
-        </form>
-        </div>
-        <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="saveNewBarangay">Save</button>
-        </div>
-    </div>
-    </div>
-</div>
+
 
 <!-- Error Modal -->
 <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
@@ -1721,30 +1580,7 @@
   </div>
   
 
-              <!-- Modal Structure -->
-                <div class="modal fade" id="newOrganizationModal" tabindex="-1" aria-labelledby="newOrganizationModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                        <h5 class="modal-title" id="newOrganizationModalLabel">New Organization</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                        <form id="newOrganizationForm">
-                            <div class="mb-3">
-                            <label for="organizationName" class="form-label">Organization Name</label>
-                            <input type="text" class="form-control" id="organizationName" placeholder="Enter organization name" required>
-                            <div class="form-text text-danger d-none" id="error-message">Organization name is required.</div>
-                            </div>
-                        </form>
-                        </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary" id="addNewOrganization">Save</button>
-                        </div>
-                    </div>
-                    </div>
-                </div> 
+     
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -2501,8 +2337,7 @@ let dataobject = {
 };
 
 // // Log the entire data object to the console for debugging
-console.log("Data Object:", dataobject);
-
+// console.log("Data Object:", dataobject);
 const csrfToken = $('input[name="_token"]').attr('value');
 
 // Send the AJAX request
@@ -2520,19 +2355,26 @@ $.ajax({
         if (response.success) {
             // Set the success message in the modal
             $('#successMessage').text(response.success);
-            // Show the modal
+            // Show the success modal with default backdrop (clicking outside closes it)
             $('#successModal').modal('show');
-
-            // Reload the page after a brief delay (e.g., 2 seconds)
-            setTimeout(function() {
-                location.reload();
-            }, 2000);
         }
     },
     error: function(error) {
         console.error('Error:', error.responseJSON.message);
+
+        // Set the error message in the error modal
+        $('#errorMessage').text(error.responseJSON.message);
+        // Show the error modal with default backdrop (clicking outside closes it)
+        $('#errorModal').modal('show');
     }
 });
+
+// Event listener to reload the page when the modal is closed
+$('#successModal, #errorModal').on('hidden.bs.modal', function () {
+    console.log("Modal closed, reloading...");
+    window.location.reload(); // This will reload the page when the modal closes
+});
+
 });
 // // Function to open confirmation modal with data preview
 // function openConfirmModal(data) {
@@ -3593,5 +3435,53 @@ document.addEventListener("DOMContentLoaded", function () {
     calculateTotalVariableCost();
 });
 
+
+
+$(document).ready(function() {
+    // Event listener for the cropping number input
+    $('.cropping_no').on('input', function(e) {
+        // Prevent form submission or page reload if the event is triggered by a submit action
+        e.preventDefault();  // This prevents the default behavior of the event
+
+        // Get the cropping number value
+        var croppingNo = $(this).val().trim(); // Use `this` to refer to the specific input
+
+        // Check if the cropping number is empty, and if so, exit
+        if (croppingNo === '') {
+            // Optional: Clear any previous alert or validation message if input is empty
+            return;
+        }
+
+        // Perform AJAX request to check if cropping number exists
+        $.ajax({
+            url: '/check-cropping-no',  // Route for the validation
+            type: 'POST',
+            data: {
+                cropping_no: croppingNo,
+                _token: $('meta[name="csrf-token"]').attr('content')  // CSRF Token for security
+            },
+            success: function(response) {
+                if (response.success === false) {
+                    // Show an alert if cropping number exists
+                    alert('The cropping number already exists. Please choose a different cropping number.');
+
+                    // Reload the page after showing the alert
+                    window.location.reload(); // This will reload the current page
+                } else {
+                    // Optionally clear any alert if the number is valid
+                }
+            },
+            error: function(xhr, status, error) {
+                // Handle AJAX error (optional)
+                alert('An error occurred while checking the cropping number.');
+                
+                // Reload the page if an error occurs
+                window.location.reload(); // This will reload the current page
+            }
+        });
+    });
+});
 </script>
+
+
   @endsection

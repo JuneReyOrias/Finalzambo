@@ -14,6 +14,69 @@ use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
+   
+    // Method to get unread notifications for the authenticated user
+    public function getNotifications()
+    {
+        $notifications = Auth::user()->notifications()->latest()->limit(5)->get();
+    
+        // Map the notifications to a custom format if needed
+        $notifications = $notifications->map(function ($notification) {
+            return [
+                'message' => $notification->data['message'] ?? 'Notification message not found',
+                'timeAgo' => $notification->created_at->diffForHumans(),
+            ];
+        });
+        return response()->json($notifications);
+    }
+
+    // Method to mark a specific notification as read
+    public function markAsReads($id)
+    {
+        $notification = Auth::user()->notifications()->find($id);
+
+        if ($notification) {
+            $notification->markAsRead();
+            return response()->json(['message' => 'Notification marked as read']);
+        }
+
+        return response()->json(['message' => 'Notification not found'], 404);
+    }
+
+public function markNotificationAsRead($id)
+{
+    $notification = Notification::where('id', $id)->where('users_id', Auth::id())->first();
+    if ($notification) {
+        $notification->is_read = true;
+        $notification->save();
+        return response()->json(['message' => 'Notification marked as read']);
+    }
+    return response()->json(['message' => 'Notification not found'], 404);
+}
+
+    public function clearNotification(Request $request)
+    {
+        // Clear notifications for the logged-in user
+        Notification::where('users_id', Auth::id())->delete();
+        
+        return response()->json(['message' => 'Notifications cleared']);
+    }
+    public function markAsRead(Request $request)
+    {
+        $userId = auth()->id();
+        $notifications = Notification::where('users_id', $userId)
+                                      ->where('is_read', false)
+                                      ->get();
+    
+        foreach ($notifications as $notification) {
+            $notification->is_read = true;
+            $notification->save();
+        }
+    
+        return response()->json(['message' => 'Notifications marked as read.']);
+    }
+    
+
     // View notifications for the authenticated user
     public function index()
     {
@@ -24,6 +87,8 @@ class NotificationController extends Controller
         $notifications = $notifications->map(function ($notification) {
             return [
                 'message' => $notification->data['message'] ?? 'Notification message not found',
+                'extend' => $notification->data['extend'] ?? 'Notification message not found',
+                'Agri_District' => $notification->data['Agri-District'] ?? 'Notification Agri-District not found',
                 'timeAgo' => $notification->created_at->diffForHumans(),
             ];
         });

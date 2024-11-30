@@ -53,8 +53,13 @@ use Illuminate\Support\Facades\Auth;
 
 // Route::get('dashboard', function () {
 //     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard'); 
 
+
+// Route to get notifications
+Route::get('/get-notifications', [NotificationController::class, 'getNotifications'])->name('get.notifications');
+
+// Route to mark a notification as read
+Route::post('/mark-notification-read/{id}', [NotificationController::class, 'markAsRead'])->name('mark.notification.read');
 Route::get('dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified',])->name('dashboard');
@@ -160,6 +165,9 @@ Route::delete('/agent-delete-farmer-Production-sold/{cropData}',[AgentController
 //agent access farmer Survey form
 Route::get('/agent-crops-survey-form',[AgentController ::class,'ViewSurveyForm'])->name('agent.SurveyForm.new_farmer');
 Route::post('/agent-crops-survey-form',[AgentController ::class,'AgentSurveyForm']);
+
+// notification 
+Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
 
 //agent access all  cropsreport
 Route::get('/agent-all-crops-report',[AgentController ::class,'AgentAllCrops'])->name('agent.CropReport.all_crops');

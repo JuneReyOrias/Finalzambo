@@ -4,146 +4,6 @@
 @extends('layouts._footer-script')
 @extends('layouts._head')
 
-<style>
-
-.custom-cell {
-    font-size: 14px;
-    width: 150px; /* Adjust the width as needed */
-    padding: 8px; /* Adjust the padding as needed */
-
-}
-
-
-
-/* Style the modal content to make sure the table fits inside */
-#archives-modal-body {
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    max-height: 200vh; /* Adjust the height based on your requirements */
-  
-}
-
-/* Table Scroll Container */
-.table-scroll {
-    position: relative;
-    max-width: 100%;
-    margin: 0 auto;
-    overflow-x: auto;  /* Horizontal scrolling */
-    overflow-y: auto;  /* Vertical scrolling */
-}
-
-/* Table Wrapper */
-.table-wrap {
-    width: 100%;
-    overflow: auto;
-}
-
-/* Table styling */
-.main-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-/* Sticky column */
-.fixed-side {
-    position: sticky;
-    left: 0;
-    background-color: #f8f9fa;
-    z-index: 1;
-    border-right: 1px solid #ddd; /* Optional: adds border between sticky column and content */
-    box-shadow: 1px 0 0 0 #ddd; /* Optional: adds shadow to improve visibility */
-}
-
-/* Styling table headers */
-.main-table th {
-    padding: 10px 15px;
-    text-align: left;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-}
-
-/* Styling table data cells */
-.main-table td {
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-}
-
-/* Add styles for table body */
-.main-table tbody {
-    background-color: #fff;
-}
-
-
-
-
-    .fixed-side {
-    position: sticky;
-    left: 0;
-    background-color: #f8f9fa;
-    z-index: 2;
-    border-right: 1px solid #ddd; /* Optional: Adds a border between sticky column and content */
-}
- .table-scroll {
-    position:relative;
-    max-width:600px;
-    margin:auto;
-    overflow:hidden;
-    border:1px solid #000;
-  }
-.table-wrap {
-	width:100%;
-	overflow:auto;
-}
-.table-scroll table {
-	width:100%;
-	margin:auto;
-	border-collapse:separate;
-	border-spacing:0;
-}
-.table-scroll th, .table-scroll td {
-	padding:5px 10px;
-	border:1px solid #000;
-	background:#fff;
-	white-space:nowrap;
-	vertical-align:top;
-}
-.table-scroll thead, .table-scroll tfoot {
-	background:#f9f9f9;
-}
-.clone {
-	position:absolute;
-	top:0;
-	left:0;
-	pointer-events:none;
-}
-.clone th, .clone td {
-	visibility:hidden
-}
-.clone td, .clone th {
-	border-color:transparent
-}
-.clone tbody th {
-	visibility:visible;
-	color:red;
-}
-.clone .fixed-side {
-	border:1px solid #000;
-	background:#eee;
-	visibility:visible;
-}
-.clone thead, .clone tfoot{background:transparent;}
-
-  </style>
-  <script>// requires jquery library
-  new DataTable('#example');
-    jQuery(document).ready(function() {
-      jQuery(".main-table").clone(true).appendTo('#table-scroll').addClass('clone');   
-     });</script>
-     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>
-
 
 <div class="page-content">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-center">
@@ -912,4 +772,146 @@ function fetchArchiveData(id) {
 
 
   </script>
+
+<style>
+
+    .custom-cell {
+        font-size: 14px;
+        width: 150px; /* Adjust the width as needed */
+        padding: 8px; /* Adjust the padding as needed */
+    
+    }
+    
+    
+    
+    /* Style the modal content to make sure the table fits inside */
+    #archives-modal-body {
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-height: 200vh; /* Adjust the height based on your requirements */
+      
+    }
+    
+    /* Table Scroll Container */
+    .table-scroll {
+        position: relative;
+        max-width: 100%;
+        margin: 0 auto;
+        overflow-x: auto;  /* Horizontal scrolling */
+        overflow-y: auto;  /* Vertical scrolling */
+    }
+    
+    /* Table Wrapper */
+    .table-wrap {
+        width: 100%;
+        overflow: auto;
+    }
+    
+    /* Table styling */
+    .main-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    
+    /* Sticky column */
+    .fixed-side {
+        position: sticky;
+        left: 0;
+        background-color: #f8f9fa;
+        z-index: 1;
+        border-right: 1px solid #ddd; /* Optional: adds border between sticky column and content */
+        box-shadow: 1px 0 0 0 #ddd; /* Optional: adds shadow to improve visibility */
+    }
+    
+    /* Styling table headers */
+    .main-table th {
+        padding: 10px 15px;
+        text-align: left;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+    }
+    
+    /* Styling table data cells */
+    .main-table td {
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+    }
+    
+    /* Add styles for table body */
+    .main-table tbody {
+        background-color: #fff;
+    }
+    
+    
+    
+    
+        .fixed-side {
+        position: sticky;
+        left: 0;
+        background-color: #f8f9fa;
+        z-index: 2;
+        border-right: 1px solid #ddd; /* Optional: Adds a border between sticky column and content */
+    }
+     .table-scroll {
+        position:relative;
+        max-width:600px;
+        margin:auto;
+        overflow:hidden;
+        border:1px solid #000;
+      }
+    .table-wrap {
+        width:100%;
+        overflow:auto;
+    }
+    .table-scroll table {
+        width:100%;
+        margin:auto;
+        border-collapse:separate;
+        border-spacing:0;
+    }
+    .table-scroll th, .table-scroll td {
+        padding:5px 10px;
+        border:1px solid #000;
+        background:#fff;
+        white-space:nowrap;
+        vertical-align:top;
+    }
+    .table-scroll thead, .table-scroll tfoot {
+        background:#f9f9f9;
+    }
+    .clone {
+        position:absolute;
+        top:0;
+        left:0;
+        pointer-events:none;
+    }
+    .clone th, .clone td {
+        visibility:hidden
+    }
+    .clone td, .clone th {
+        border-color:transparent
+    }
+    .clone tbody th {
+        visibility:visible;
+        color:red;
+    }
+    .clone .fixed-side {
+        border:1px solid #000;
+        background:#eee;
+        visibility:visible;
+    }
+    .clone thead, .clone tfoot{background:transparent;}
+    
+      </style>
+      <script>// requires jquery library
+      new DataTable('#example');
+        jQuery(document).ready(function() {
+          jQuery(".main-table").clone(true).appendTo('#table-scroll').addClass('clone');   
+         });</script>
+         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>
+    
+    
 @endsection

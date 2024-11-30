@@ -1,12 +1,19 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\PersonalInformationArchive;
 use App\Notifications\UserDataUpdated;
 use App\Models\FarmProfile;
+use App\Models\FixedCostArchive;
+use App\Models\VariableCostArchive;
+use App\Models\MachineriesCostArchive;
 use App\Models\Fertilizer;
 use App\Models\FixedCost;
+use App\Models\ProductionArchive;
 use App\Models\Labor;
+use App\Models\CropFarmsArchive;
 use App\Models\LastProductionDatas;
+use App\Models\FarmProfileArchive;
 use App\Models\MachineriesUseds;
 use App\Models\Pesticide;
 use App\Models\Seed;
@@ -26,6 +33,7 @@ use App\Http\Requests\VariableCostRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\AgriDistrict;
 use Illuminate\Support\Facades\Storage;
@@ -45,6 +53,9 @@ use App\Models\FarmerOrg;
 use App\Models\CropParcel;
 use App\Models\ParcellaryBoundaries;
 use App\Models\Polygon;
+use App\Models\Notification;
+use App\Notifications\SurveyFormSubmitted;
+use App\Notifications\AdminNotification;
 class AgentController extends Controller
 {
 
@@ -81,7 +92,7 @@ public function updateFarmProfile(Request $request)
     $farmProfile->users_id = $request->user_id;
     $farmProfile->save();
 
-    // // Send a notification to the user about the update
+    // Send a notification to the user about the update
     $user = $farmProfile->user; // Assuming you have a relation to the User model
     $user->notify(new UserDataUpdated($farmProfile));
 
@@ -3123,6 +3134,41 @@ public function UpdateMachines(MachineriesUsedtRequest $request,$id)
         $data= $request->all();
         
         $data= MachineriesUseds::find($id);
+        MachineriesCostArchive::create([
+            'machineries_useds_id' =>$data->id,
+            'crops_farms_id' => $data->crops_farms_id,
+            'last_production_machineuseds_id' => $data->last_production_machineuseds_id,
+            'farm_profiles_id' => $data->farm_profiles_id,
+            'users_id' => $data->users_id,
+            'personal_informations_id' => $data->personal_informations_id,
+           
+        
+            // New fields
+            
+            'plowing_machineries_used' => $data->plowing_machineries_used,
+            'plo_ownership_status' => $data->plo_ownership_status,
+            'no_of_plowing' => $data->no_of_plowing,
+            'plowing_cost' => $data->plowing_cost,
+            'plowing_cost_total' => $data->plowing_cost_total,
+        
+            'harrowing_machineries_used' => $data->harrowing_machineries_used,
+            'harro_ownership_status' => $data->harro_ownership_status,
+            'no_of_harrowing' => $data->no_of_harrowing,
+            'harrowing_cost' => $data->harrowing_cost,
+            'harrowing_cost_total' => $data->harrowing_cost_total,
+        
+            'harvesting_machineries_used' => $data->harvesting_machineries_used,
+            'harvest_ownership_status' => $data->harvest_ownership_status,
+            'harvesting_cost_total' => $data->harvesting_cost_total,
+        
+            'postharvest_machineries_used' => $data->postharvest_machineries_used,
+            'postharv_ownership_status' => $data->postharv_ownership_status,
+            'post_harvest_cost' => $data->post_harvest_cost,
+        
+            'total_cost_for_machineries' => $data->total_cost_for_machineries,
+        ]);
+        
+
 
         $data->personal_informations_id = $request->personal_informations_id;  
         $data->farm_profiles_id = $request->farm_profiles_id;
@@ -7282,25 +7328,26 @@ if ($type === 'organizations') {
 
             // agent access farmer crops survey form
             public function AgentSurveyForm(Request $request)
-        {
-
-
-      // Farmer info
-      $farmerdata = $request -> farmer;
-
-      $existingFarmer = PersonalInformations::where('last_name', $farmerdata['last_name'])
-      ->where('first_name', $farmerdata['first_name'])
-      ->where('mothers_maiden_name', $farmerdata['mothers_maiden_name'])
-      ->where('date_of_birth', $farmerdata['date_of_birth'])
-      ->first();
-
-      if ($existingFarmer) {
-          return response()->json([
-              'error' => 'A record with this last name, first name, mother\'s maiden name, and date of birth already exists.'
-          ], 400); // Send a 400 Bad Request status code
-      }
-      $farmerModel = new PersonalInformations();
-      $farmerModel -> users_id = $farmerdata['users_id'];
+            {
+                // Farmer Information
+                $farmerdata = $request->farmer;
+            
+                // Check for existing farmer
+                $existingFarmer = PersonalInformations::where('last_name', $farmerdata['last_name'])
+                    ->where('first_name', $farmerdata['first_name'])
+                    ->where('mothers_maiden_name', $farmerdata['mothers_maiden_name'])
+                    ->where('date_of_birth', $farmerdata['date_of_birth'])
+                    ->first();
+            
+                if ($existingFarmer) {
+                    return response()->json([
+                        'error' => 'A record with this last name, first name, mother\'s maiden name, and date of birth already exists.'
+                    ], 400);
+                }
+            
+                // Save farmer info
+                $farmerModel = new PersonalInformations();
+                $farmerModel -> users_id = $farmerdata['users_id'];
       $farmerModel -> first_name = $farmerdata['first_name'];
       $farmerModel -> middle_name= $farmerdata['middle_name'];
       $farmerModel -> last_name= $farmerdata['last_name'];
@@ -7308,9 +7355,10 @@ if ($type === 'organizations') {
       $farmerModel -> country= $farmerdata['country'];
       $farmerModel -> province= $farmerdata['province'];
       $farmerModel -> city = $farmerdata['city'];
+      $farmerModel -> agri_district = $farmerdata['districts'];
       $farmerModel -> district= $farmerdata['agri_district'];
       $farmerModel -> barangay= $farmerdata['barangay'];
-      $farmerModel -> home_address= $farmerdata['home_address'];
+    //   $farmerModel -> home_address= $farmerdata['home_address'];
       $farmerModel -> sex= $farmerdata['sex'];
       $farmerModel -> religion = $farmerdata['religion'];
       $farmerModel -> date_of_birth= $farmerdata['date_of_birth'];
@@ -7332,209 +7380,138 @@ if ($type === 'organizations') {
       $farmerModel -> cp_tel_no= $farmerdata['cp_tel_no'];
       $farmerModel -> date_interview= $farmerdata['date_of_interviewed'];
       $farmerModel ->save();
-
-
-    // VARIABLES
-    // VARIABLES
-    $farmer_id = $farmerModel -> id;
-    // VARIABLES
-    // VARIABLES
-
-       // Farm info
-      $farms = $request -> farm;
-      $farmModel = new FarmProfile();
-
-      $farmModel -> users_id = $farmerModel -> users_id;
-
-      // FROM USER
-      $farmModel -> agri_districts_id = 1;
-
-
-      $farmModel -> personal_informations_id = $farmer_id;
-
-    //   $farmModel -> polygons_id = $farms['polygons_id'];
-    //   $farmModel -> agri_districts = $farms['agri_districts'];
-
-      $farmModel -> tenurial_status = $farms['tenurial_status'];
-      $farmModel -> farm_address = $farms['farm_address'];
-
-      $farmModel -> no_of_years_as_farmers = $farms['no_of_years_as_farmers'];
-      $farmModel -> gps_longitude = $farms['gps_longitude'];
-      $farmModel -> gps_latitude = $farms['gps_latitude'];
-      $farmModel -> total_physical_area = $farms['Total_area_cultivated_has'];
-      $farmModel -> total_area_cultivated = $farms['Total_area_cultivated_has'];
-      $farmModel -> land_title_no = $farms['land_title_no'];
-      $farmModel -> lot_no = $farms['lot_no'];
-      $farmModel -> area_prone_to = $farms['area_prone_to'];
-      $farmModel -> ecosystem = $farms['ecosystem'];
-      $farmModel -> rsba_registered = $farms['rsba_register'];
-      $farmModel -> pcic_insured = $farms['pcic_insured'];
-      $farmModel -> government_assisted = $farms['government_assisted'];
-      $farmModel -> source_of_capital = $farms['source_of_capital'];
-      $farmModel -> remarks_recommendation = $farms['remarks'];
-      $farmModel -> oca_district_office =$farmerModel -> district;
-      $farmModel -> name_of_field_officer_technician = $farms['name_technicians'];
-      $farmModel -> date_interviewed = $farms['date_interview'];
-
-      $farmModel ->save();
-     
-    // VARIABLES
-    // VARIABLES
-    $farm_id = $farmModel -> id;
-    $users_id =  $farmerModel -> users_id;
-    // VARIABLES
-    // VARIABLES
-
-
-      // Crop info 
-      foreach ($request -> crops as $crop) {
-          $cropModel = new Crop();
-          $cropModel -> farm_profiles_id = $farm_id;
-          $cropModel -> crop_name = $crop['crop_name'];
-          $cropModel -> users_id = $users_id;
-          $cropModel -> planting_schedule_dryseason = $crop['variety']['dry_season'];
-          $cropModel -> no_of_cropping_per_year = $crop['variety']['no_cropping_year'];
-          $cropModel -> preferred_variety = $crop['variety']['preferred'];
-          $cropModel -> type_of_variety_planted = $crop['variety']['type_variety'];
-          $cropModel -> planting_schedule_wetseason	 = $crop['variety']['wet_season'];
-          $cropModel -> yield_kg_ha = $crop['variety']['yield_kg_ha'];
-          $cropModel -> save();
-
-          $crop_id = $cropModel -> id;
-
-          $productionModel = new LastProductionDatas();
-          $productionModel -> users_id = $users_id;
-          $productionModel -> farm_profiles_id = $farm_id;
-          $productionModel -> crops_farms_id = $crop_id;
-          $productionModel -> seed_source = $crop['production']['seedSource'];
-          $productionModel -> seeds_used_in_kg = $crop['production']['seedUsed'];
-          $productionModel -> seeds_typed_used = $crop['production']['seedtype'];
-          $productionModel -> no_of_fertilizer_used_in_bags = $crop['production']['fertilizedUsed'];
-          $productionModel -> no_of_insecticides_used_in_l = $crop['production']['insecticide'];
-          $productionModel -> no_of_pesticides_used_in_l_per_kg = $crop['production']['pesticidesUsed'];
-          $productionModel -> area_planted = $crop['production']['areaPlanted'];
-          $productionModel -> date_planted = $crop['production']['datePlanted'];
-          $productionModel -> date_planted = $crop['production']['Dateharvested'];
-          $productionModel -> unit = $crop['production']['unit'];
-          $productionModel -> yield_tons_per_kg = $crop['production']['yieldkg'];
-      
-         
-          $productionModel -> save();
-
-        // productionid
-        $productionId=$productionModel ->id;
-
-        foreach ($crop['sales'] as $sale) {
-            // Create a new sale associated with the production ID
-            $salesModel = new ProductionSold();
-            $salesModel -> last_production_datas_id = $productionId;
-            $salesModel -> sold_to = $sale['soldTo'];
-            $salesModel -> measurement = $sale['measurement'];
-            $salesModel -> 	unit_price_rice_per_kg = $sale['unit_price'];
-            $salesModel -> 	quantity = $sale['quantity'];
-            $salesModel -> 	gross_income = $sale['grossIncome'];
-            $salesModel ->save();
-        }
-
-
-        // FIXED COST
-        $fixedcostModel = new FixedCost();
-        $fixedcostModel -> users_id = $users_id;
-        $fixedcostModel -> farm_profiles_id = $farm_id;
-        $fixedcostModel -> crops_farms_id = $crop_id;
-        $fixedcostModel -> last_production_datas_id = $productionId;
-        $fixedcostModel -> 	particular = $crop['fixedCost']['particular'];
-        $fixedcostModel -> no_of_ha = $crop['fixedCost']['no_of_has'];
-        $fixedcostModel -> cost_per_ha = $crop['fixedCost']['costperHas'];
-        $fixedcostModel -> total_amount = $crop['fixedCost']['TotalFixed'];
-        $fixedcostModel -> save();
-
-        // machineries
-          $machineriesModel = new MachineriesUseds();
-          $machineriesModel -> users_id = $users_id;
-          $machineriesModel -> farm_profiles_id = $farm_id;
-          $machineriesModel -> crops_farms_id = $crop_id;
-          $machineriesModel -> last_production_datas_id = $productionId;
-          $machineriesModel-> plowing_machineries_used = $crop['machineries']['PlowingMachine'];
-          $machineriesModel -> plo_ownership_status = $crop['machineries']['plow_status'];
-        
-          $machineriesModel -> no_of_plowing = $crop['machineries']['no_of_plowing'];
-          $machineriesModel -> plowing_cost = $crop['machineries']['cost_per_plowing'];
-          $machineriesModel -> plowing_cost_total = $crop['machineries']['plowing_cost'];
-          $machineriesModel -> harrowing_machineries_used = $crop['machineries']['harro_machine'];
-          $machineriesModel -> harro_ownership_status = $crop['machineries']['harro_ownership_status'];
-          $machineriesModel -> no_of_harrowing = $crop['machineries']['no_of_harrowing'];
-          $machineriesModel -> harrowing_cost = $crop['machineries']['cost_per_harrowing'];
-          $machineriesModel -> harrowing_cost_total = $crop['machineries']['harrowing_cost_total'];
-          $machineriesModel -> harvesting_machineries_used = $crop['machineries']['harvest_machine'];
-          $machineriesModel -> harvest_ownership_status	 = $crop['machineries']['harvest_ownership_status'];
-       
-        //   $machineriesModel -> harvesting_cost = $crop['machineries']['harvesting_cost'];
-          $machineriesModel -> harvesting_cost_total = $crop['machineries']['Harvesting_cost_total'];
-          $machineriesModel -> postharvest_machineries_used = $crop['machineries']['postharves_machine'];
-          $machineriesModel -> postharv_ownership_status = $crop['machineries']['postharv_ownership_status'];
-          $machineriesModel -> post_harvest_cost = $crop['machineries']['postharvestCost'];
-          $machineriesModel -> 	total_cost_for_machineries = $crop['machineries']['total_cost_for_machineries'];
-          $machineriesModel -> save();
-
-        //   variable cost
-          $variablesModel = new VariableCost();
-          $variablesModel -> users_id = $users_id;
-          $variablesModel -> farm_profiles_id = $farm_id;
-          $variablesModel -> crops_farms_id = $crop_id;
-          $variablesModel -> last_production_datas_id = $productionId;
-        //   seeds
-      
-          $variablesModel -> seed_name = $crop['variables']['seed_name'];
-          $variablesModel -> unit = $crop['variables']['unit'];
-          $variablesModel -> quantity = $crop['variables']['quantity'];
-          $variablesModel -> unit_price = $crop['variables']['unit_price_seed'];
-          $variablesModel -> total_seed_cost = $crop['variables']['total_seed_cost'];
-
-           //   seeds
-           $variablesModel -> labor_no_of_person = $crop['variables']['no_of_person'];
-           $variablesModel -> rate_per_person = $crop['variables']['rate_per_person'];
-           $variablesModel -> total_labor_cost = $crop['variables']['total_labor_cost'];
-
-            // fertilizer
-           $variablesModel -> name_of_fertilizer = $crop['variables']['name_of_fertilizer'];
-           $variablesModel -> type_of_fertilizer = $crop['variables']['total_seed_cost'];
-           $variablesModel -> no_of_sacks = $crop['variables']['no_ofsacks'];
-           $variablesModel -> unit_price_per_sacks = $crop['variables']['unitprice_per_sacks'];
-           $variablesModel -> total_cost_fertilizers = $crop['variables']['total_cost_fertilizers'];
-
-             //pesticides
-             $variablesModel -> pesticide_name = $crop['variables']['pesticides_name'];
-            //  $variablesModel ->	type_of_pesticides = $crop['variables']['no_of_l_kg'];2
-             $variablesModel -> no_of_l_kg = $crop['variables']['no_of_l_kg'];
-             $variablesModel -> unit_price_of_pesticides = $crop['variables']['unitprice_ofpesticides'];
-             $variablesModel -> total_cost_pesticides = $crop['variables']['total_cost_pesticides'];
-         
-              //transportation
-              $variablesModel -> name_of_vehicle = $crop['variables']['type_of_vehicle'];
-             
-              $variablesModel -> total_transport_delivery_cost = $crop['variables']['total_seed_cost'];
-           
-              $variablesModel -> total_machinery_fuel_cost= $crop['variables']['total_machinery_fuel_cost'];
-              $variablesModel -> total_variable_cost= $crop['variables']['total_variable_costs'];
-              $variablesModel -> save();
-     
-              return $request;
+                $farmer_id = $farmerModel->id;
+            
+                // Farm Information
+                $farms = $request->farm;
+                $farmProfile = new FarmProfile();
+                $farmProfile->fill([
+                    'users_id' =>1,
+                    'agri_districts_id' => 1,
+                    'agri_districts' => $farmerModel->agri_district,
+                    'personal_informations_id' => $farmer_id,
+                    'tenurial_status' => $farms['tenurial_status'] ?? null,
+                    'farm_address' => $farms['farm_address'] ?? null,
+                    'no_of_years_as_farmers' => $farms['no_of_years_as_farmers'] ?? null,
+                    'gps_longitude' => $farms['gps_longitude'] ?? null,
+                    'gps_latitude' => $farms['gps_latitude'] ?? null,
+                    'total_physical_area' => $farms['total_physical_area'] ?? null,
+                    'total_area_cultivated' => $farms['total_area_cultivated'] ?? null,
+                    'land_title_no' => $farms['land_title_no'] ?? null,
+                    'lot_no' => $farms['lot_no'] ?? null,
+                    'area_prone_to' => $farms['area_prone_to'] ?? null,
+                    'ecosystem' => $farms['ecosystem'] ?? null,
+                    'rsba_registered' => $farms['rsba_register'] ?? null,
+                    'pcic_insured' => $farms['pcic_insured'] ?? null,
+                    'government_assisted' => $farms['government_assisted'] ?? null,
+                    'source_of_capital' => $farms['source_of_capital'] ?? null,
+                    'remarks_recommendation' => $farms['remarks'] ?? null,
+                    'oca_district_office' => $farmerModel->district,
+                    'name_of_field_officer_technician' => $farms['name_technicians'] ?? null,
+                    'date_interviewed' => $farms['date_interview'] ?? null
+                ]);
+                $farmProfile->save();
+                $farm_id = $farmProfile->id;
+                $users_id = $farmProfile->users_id;
+            
+                // Save crops and related data
+                foreach ($request->crops as $crop) {
+                    $cropModel = new Crop();
+                    $cropModel->fill([
+                        'farm_profiles_id' => $farm_id,
+                        'crop_name' => $crop['crop_name'],
+                        'users_id' => $users_id,
+                        'planting_schedule_dryseason' => $crop['variety']['dry_season'] ?? null,
+                        'no_of_cropping_per_year' => $crop['variety']['no_cropping_year'] ?? null,
+                        'preferred_variety' => $crop['variety']['preferred'] ?? null,
+                        'type_of_variety_planted' => $crop['variety']['type_variety'] ?? null,
+                        'planting_schedule_wetseason' => $crop['variety']['wet_season'] ?? null,
+                        'yield_kg_ha' => $crop['variety']['yield_kg_ha'] ?? null
+                    ]);
+                    $cropModel->save();
+            
+                    $crop_id = $cropModel->id;
+            
+                    // Save production data
+                    $productionModel = new LastProductionDatas();
+                    $productionModel->fill([
+                        'users_id' => $users_id,
+                        'farm_profiles_id' => $farm_id,
+                        'crops_farms_id' => $crop_id,
+                        'seed_source' => $crop['production']['seedSource'] ?? null,
+                        'seeds_used_in_kg' => $crop['production']['seedUsed'] ?? null,
+                        'seeds_typed_used' => $crop['production']['seedtype'] ?? null,
+                        'no_of_fertilizer_used_in_bags' => $crop['production']['fertilizedUsed'] ?? null,
+                        'no_of_insecticides_used_in_l' => $crop['production']['insecticide'] ?? null,
+                        'no_of_pesticides_used_in_l_per_kg' => $crop['production']['pesticidesUsed'] ?? null,
+                        'area_planted' => $crop['production']['areaPlanted'] ?? null,
+                        'date_planted' => $crop['production']['datePlanted'] ?? null,
+                        'date_harvested' => $crop['production']['Dateharvested'] ?? null,
+                        'unit' => $crop['production']['unit'] ?? null,
+                        'yield_tons_per_kg' => $crop['production']['yieldkg'] ?? null
+                    ]);
+                    $productionModel->save();
+                    $productionId = $productionModel->id;
+            
+                    // Save sales data
+                    foreach ($crop['sales'] as $sale) {
+                        $salesModel = new ProductionSold();
+                        $salesModel->last_production_datas_id = $productionId;
+                        $salesModel->sold_to = $sale['soldTo'];
+                        $salesModel->measurement = $sale['measurement'];
+                        $salesModel->unit_price_rice_per_kg = $sale['unit_price'];
+                        $salesModel->quantity = $sale['quantity'];
+                        $salesModel->gross_income = $sale['grossIncome'];
+                        $salesModel->save();
+                    }
+            
+                    // Save fixed cost
+                    $fixedcostModel = new FixedCost();
+                    $fixedcostModel->users_id = $users_id;
+                    $fixedcostModel->farm_profiles_id = $farm_id;
+                    $fixedcostModel->crops_farms_id = $crop_id;
+                    $fixedcostModel->last_production_datas_id = $productionId;
+                    $fixedcostModel->particular = $crop['fixedCost']['particular'];
+                    $fixedcostModel->no_of_ha = $crop['fixedCost']['no_of_has'];
+                    $fixedcostModel->cost_per_ha = $crop['fixedCost']['costperHas'];
+                    $fixedcostModel->total_amount = $crop['fixedCost']['TotalFixed'];
+                    $fixedcostModel->save();
+            
+                    // Save machineries data
+                    $machineriesModel = new MachineriesUseds();
+                    $machineriesModel->users_id = $users_id;
+                    $machineriesModel->farm_profiles_id = $farm_id;
+                    $machineriesModel->crops_farms_id = $crop_id;
+                    $machineriesModel->last_production_datas_id = $productionId;
+                    $machineriesModel->plowing_machineries_used = $crop['machineries']['PlowingMachine'];
+                    $machineriesModel->plo_ownership_status = $crop['machineries']['plow_status'];
+                    $machineriesModel->no_of_plowing = $crop['machineries']['no_of_plowing'];
+                    $machineriesModel->plowing_cost = $crop['machineries']['cost_per_plowing'];
+                    $machineriesModel->plowing_cost_total = $crop['machineries']['plowing_cost'];
+                    $machineriesModel->harrowing_machineries_used = $crop['machineries']['harro_machine'];
+                    $machineriesModel->harro_ownership_status = $crop['machineries']['harro_ownership_status'];
+                    $machineriesModel->no_of_harrowing = $crop['machineries']['no_of_harrowing'];
+                    $machineriesModel->harrowing_cost = $crop['machineries']['cost_per_harrowing'];
+                    $machineriesModel->harrowing_cost_total = $crop['machineries']['harrowing_cost_total'];
+                    $machineriesModel->harvesting_machineries_used = $crop['machineries']['harvest_machine'];
+                    $machineriesModel->harvest_ownership_status = $crop['machineries']['harvest_ownership_status'];
+                    $machineriesModel->harvesting_cost_total = $crop['machineries']['Harvesting_cost_total'];
+                    $machineriesModel->postharvest_machineries_used = $crop['machineries']['postharves_machine'];
+                    $machineriesModel->postharv_ownership_status = $crop['machineries']['postharv_ownership_status'];
+                    $machineriesModel->post_harvest_cost = $crop['machineries']['post_harvest_cost'];
+                    $machineriesModel->post_harvest_cost_total = $crop['machineries']['post_harvest_cost_total'];
+                    $machineriesModel->save();
+                }
+            
+                $user = $farmProfile->user; // Assuming you have a relation to the User model
+                $user->notify(new AdminNotification($farmProfile));
+            
+                return response()->json([
+                    'success' => 'Data saved and notifications sent successfully!'
+                ]);
             }
-
-   
-
-
-
-
-
-
-      // Return success message
-      return [
-          'success' => "Saved to database" // Corrected the syntax here
-      ];
-  }
-
+            
+            
 
 
     // view the personalinfo by admin
@@ -7565,116 +7542,87 @@ public function ViewFarmers(Request $request)
             $personalinfos = PersonalInformations::where('users_id', auth()->id())  // Filter based on the authenticated user's id
             ->orderBy('id', 'asc');
         
-        // Search functionality
-        if ($request->has('search')) {
-            $keyword = $request->input('search');
-            $personalinfos->where(function ($query) use ($keyword) {
-                $query->where('last_name', 'like', "%$keyword%")
-                      ->orWhere('first_name', 'like', "%$keyword%");
-                // Add more search filters as needed
-            });
-        }
         
-        // Paginate the results
-        $personalinfos = $personalinfos->paginate(4);
         
-
-             // Fetch all farm profiles with their associated personal information and agricultural districts
-                $farmProfiles = FarmProfile::select('farm_profiles.*')
-                ->leftJoin('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
-                ->with('agriDistrict')
-                ->orderBy('farm_profiles.id', 'asc');
-
-            // Check if a search query is provided
-            if ($request->has('search')) {
+            // Filter by district if specified
+            if ($request->has('district') && $request->input('district') !== null) {
+                $districtFilter = $request->input('district');
+        
+                if ($districtFilter !== 'All') {
+                    // Case-insensitive comparison for the district filter
+                    $personalinfos->whereRaw('UPPER(agri_district) = ?', [strtoupper($districtFilter)]);
+                }
+            } else {
+                // If 'district' is null or not provided, include all records
+                $personalinfos->whereNotNull('id');
+            }
+        
+            // Filter by interview date
+            if ($request->has('date_interview') && $request->input('date_interview') !== null) {
+                $dateFilter = $request->input('date_interview');
+                if ($dateFilter == 'new') {
+                    $personalinfos->whereDate('date_interview', '>=', now()->subMonths(6)); // New records
+                } elseif ($dateFilter == 'old') {
+                    $personalinfos->whereDate('date_interview', '<', now()->subMonths(6)); // Old records
+                }
+            }
+        
+            // Search functionality for personal information
+            if ($request->has('search') && $request->input('search') !== null) {
                 $keyword = $request->input('search');
-                // Apply search filters for last name and first name
+                $personalinfos->where(function ($query) use ($keyword) {
+                    $query->where('last_name', 'like', "%$keyword%")
+                          ->orWhere('first_name', 'like', "%$keyword%");
+                });
+            }
+        
+            // Apply sorting if specified
+            if ($request->has('sortColumn') && $request->has('sortOrder')) {
+                $personalinfos->orderBy($request->sortColumn, $request->sortOrder);
+            }
+        
+            // Paginate the personal information results
+            $personalinfos = $personalinfos->paginate(4);
+        
+            // Fetch distinct districts for the dropdown
+            $districts = PersonalInformations::select('agri_district')
+                                             ->distinct()
+                                             ->orderBy('agri_district')
+                                             ->get();
+        
+            // Base query for farm profiles
+            $farmProfiles = FarmProfile::select('farm_profiles.*')
+                                       ->leftJoin('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                                       ->with('agriDistrict')
+                                       ->orderBy('farm_profiles.id', 'asc');
+        
+            // Search functionality for farm profiles
+            if ($request->has('search') && $request->input('search') !== null) {
+                $keyword = $request->input('search');
                 $farmProfiles->where(function ($query) use ($keyword) {
                     $query->where('personal_informations.last_name', 'like', "%$keyword%")
-                        ->orWhere('personal_informations.first_name', 'like', "%$keyword%");
+                          ->orWhere('personal_informations.first_name', 'like', "%$keyword%");
                 });
             }
-
-            // Paginate the results
+        
+            // Paginate the farm profiles results
             $farmProfiles = $farmProfiles->paginate(20);
-
-              // Query for fixed costs with eager loading of related models
-            $fixedcosts = FixedCost::with('personalinformation', 'farmprofile')
-            ->orderBy('id', 'asc');
-
-            // Apply search functionality
-            if ($request->has('search')) {
-                $keyword = $request->input('search');
-                $fixedcosts->where(function ($query) use ($keyword) {
-                    $query->whereHas('personalinformation', function ($query) use ($keyword) {
-                        $query->where('last_name', 'like', "%$keyword%")
-                            ->orWhere('first_name', 'like', "%$keyword%");
-                    });
-                });
+        
+            // Calculate total rice production
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        
+            // Return JSON response for AJAX requests
+            if ($request->ajax()) {
+                return response()->json([
+                    'personalinfos' => $personalinfos,
+                    'farmProfiles' => $farmProfiles,
+                    'districts' => $districts,
+                    'totalRiceProduction' => $totalRiceProduction,
+                ]);
             }
-
-            // Paginate the results
-            $fixedcosts = $fixedcosts->paginate(20);
-
-              // Query for fixed costs with eager loading of related models
-                    $machineries = MachineriesUseds::with('personalinformation', 'farmprofile')
-                    ->orderBy('id', 'asc');
-
-                // Apply search functionality
-                if ($request->has('search')) {
-                    $keyword = $request->input('search');
-                    $machineries->where(function ($query) use ($keyword) {
-                        $query->whereHas('personalinformation', function ($query) use ($keyword) {
-                            $query->where('last_name', 'like', "%$keyword%")
-                                ->orWhere('first_name', 'like', "%$keyword%");
-                        });
-                    });
-                }
-
-                // Paginate the results
-                $machineries = $machineries->paginate(20);
-
-                    // Query for variable cost with search functionality
-                        $variable = VariableCost::with('personalinformation', 'farmprofile','seeds','labors','fertilizers','pesticides','transports')
-                        ->orderBy('id', 'asc');
-        
-                    // Apply search functionality
-                    if ($request->has('search')) {
-                        $keyword = $request->input('search');
-                        $variable->where(function ($query) use ($keyword) {
-                            $query->whereHas('personalinformation', function ($query) use ($keyword) {
-                                $query->where('last_name', 'like', "%$keyword%")
-                                    ->orWhere('first_name', 'like', "%$keyword%");
-                            });
-                        });
-                    }
-        
-                    // Paginate the results
-                    $variable = $variable->paginate(20);
-
-                    // Query for fixed costs with eager loading of related models
-
-
-                    $productions = LastProductionDatas::with('personalinformation', 'farmprofile','agridistrict')
-                    ->orderBy('id', 'asc');
-
-                // Apply search functionality
-                if ($request->has('search')) {
-                    $keyword = $request->input('search');
-                    $productions->where(function ($query) use ($keyword) {
-                        $query->whereHas('personalinformation', function ($query) use ($keyword) {
-                            $query->where('last_name', 'like', "%$keyword%")
-                                ->orWhere('first_name', 'like', "%$keyword%");
-                        });
-                    });
-                }
-
-                // Paginate the results
-                $productions = $productions->paginate(20);
-
             $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
             // Return the view with the fetched data
-            return view('agent.FarmerInfo.farmers_view', compact('agent', 'profile', 'personalinfos','farmProfiles','fixedcosts','machineries','variable','productions','totalRiceProduction'));
+            return view('agent.FarmerInfo.farmers_view', compact('agent', 'profile', 'personalinfos','farmProfiles','districts'));
         } else {
             // Handle the case where the user is not found
             // You can redirect the user or display an error message
@@ -7731,6 +7679,30 @@ public function ViewFarmers(Request $request)
                                     return response()->json(['error' => 'farm data not found.'], 404);
                                 }
                             }
+
+
+                             // Handle the 'archives' request type for fetching archives by PersonalInformations ID
+                    if ($type === 'archives') {
+                        // First, check if the PersonalInformation record exists
+                        $personalinfos = PersonalInformations::find($id);
+
+                        // If the PersonalInformation record is not found, return a 404 with the message
+                        if (!$personalinfos) {
+                            return response()->json(['message' => 'Personal Information not found.'], 404);
+                        }
+
+                        // Fetch the archives associated with the PersonalInformation ID
+                        $archives = PersonalInformationArchive::where('personal_informations_id', $id)->get();
+
+                        // If no archives are found, return a message
+                        if ($archives->isEmpty()) {
+                            return response()->json(['message' => 'No archive record yet.'], 404);
+                        }
+
+                        // Return the archives data as JSON
+                        return response()->json($archives);
+                    }
+
                             // Handle requests for agri-districts
                             if ($type === 'districts') {
                                 $districts = AgriDistrict::pluck('district', 'district'); // Fetch agri-district names
@@ -7816,7 +7788,42 @@ public function ViewFarmers(Request $request)
                                 // $data= $request->validated();
                                 // $data= $request->all();
                                 $data= PersonalInformations::find($id);
-                                
+                                // Step 2: Archive the current data before updating it
+               PersonalInformationArchive::create([
+                'personal_informations_id' => $data->id,  // Foreign key reference to the original record
+                'users_id' => $data->users_id,
+                'first_name' => $data->first_name,
+                'middle_name' => $data->middle_name,
+                'last_name' => $data->last_name,
+                'extension_name' => $data->extension_name,
+                'country' => $data->country,
+                'province' => $data->province,
+                'city' => $data->city,
+                'district' => $data->district,
+                'barangay' => $data->barangay,
+                'home_address' => $data->home_address,
+                'sex' => $data->sex,
+                'religion' => $data->religion,
+                'date_of_birth' => $data->date_of_birth,
+                'place_of_birth' => $data->place_of_birth,
+                'contact_no' => $data->contact_no,
+                'civil_status' => $data->civil_status,
+                'name_legal_spouse' => $data->name_legal_spouse,
+                'no_of_children' => $data->no_of_children,
+                'mothers_maiden_name' => $data->mothers_maiden_name,
+                'highest_formal_education' => $data->highest_formal_education,
+                'person_with_disability' => $data->person_with_disability,
+                'pwd_id_no' => $data->pwd_id_no,
+                'government_issued_id' => $data->government_issued_id,
+                'id_type' => $data->id_type,
+                'gov_id_no' => $data->gov_id_no,
+                'member_ofany_farmers_ass_org_coop' => $data->member_ofany_farmers_ass_org_coop,
+                'nameof_farmers_ass_org_coop' => $data->nameof_farmers_ass_org_coop,
+                'name_contact_person' => $data->name_contact_person,
+                'cp_tel_no' => $data->cp_tel_no,
+                'agri_district' => $data->agri_district,
+                'date_interview' => $data->date_interview,
+            ]);
                                
               // Check if a file is present in the request and if it's valid
             if ($request->hasFile('image') && $request->file('image')->isValid()) {
@@ -8469,6 +8476,28 @@ public function ViewFarmers(Request $request)
                                                 return response()->json(['error' => 'farm data not found.'], 404);
                                             }
                                         }
+
+                                        
+                      // Handle the 'archives' request type for fetching archives by PersonalInformations ID
+                    if ($type === 'archives') {
+                        // First, check if the PersonalInformation record exists
+                        $farmprofiles = FarmProfile::find($id);
+
+                        // If the PersonalInformation record is not found, return a 404 with the message
+                        if (!$farmprofiles) {
+                            return response()->json(['message' => 'Farm Profile not found.'], 404);
+                        }
+                       // Fetch the archives associated with the PersonalInformation ID
+                        $archives = FarmProfileArchive::where('farm_profiles_id', $id)->get();
+
+                        // If no archives are found, return a message
+                        if ($archives->isEmpty()) {
+                            return response()->json(['message' => 'No archive record yet.'], 404);
+                        }
+
+                        // Return the archives data as JSON
+                        return response()->json($archives);
+                    }
                                     // Handle requests for barangays and organizations
                                     if ($type === 'barangays' || $type === 'organizations') {
                                     $district = $request->input('district');
@@ -8542,6 +8571,40 @@ public function ViewFarmers(Request $request)
                                  
                                  $ersonalinfos= FarmProfile::find($id);
                  
+                                 FarmProfileArchive::create([
+                                    'farm_profiles_id' => $ersonalinfos->id,
+                                    'users_id' => $ersonalinfos->users_id,
+                                    'personal_informations_id' => $ersonalinfos->personal_informations_id,
+                                    'agri_districts_id' => $ersonalinfos->agri_districts_id,
+                                    'agri_districts' => $ersonalinfos->agri_districts,
+                                    'polygons_id' => $ersonalinfos->polygons_id,
+                                    'tenurial_status' => $ersonalinfos->tenurial_status,
+                                    'farm_address' => $ersonalinfos->farm_address,
+                                    'no_of_years_as_farmers' => $ersonalinfos->no_of_years_as_farmers,
+                                    'gps_longitude' => $ersonalinfos->gps_longitude,
+                                    'gps_latitude' => $ersonalinfos->gps_latitude,
+                                    'total_physical_area' => $ersonalinfos->total_physical_area,
+                                    'total_area_cultivated' => $ersonalinfos->total_area_cultivated,
+                                    'land_title_no' => $ersonalinfos->land_title_no,
+                                    'lot_no' => $ersonalinfos->lot_no,
+                                    'area_prone_to' => $ersonalinfos->area_prone_to,
+                                    'ecosystem' => $ersonalinfos->ecosystem,
+                                    // 'type_rice_variety' => $ersonalinfos->type_rice_variety,
+                                    // 'prefered_variety' => $ersonalinfos->prefered_variety,
+                                    // 'plant_schedule_wetseason' => $ersonalinfos->plant_schedule_wetseason,
+                                    // 'plant_schedule_dryseason' => $ersonalinfos->plant_schedule_dryseason,
+                                    // 'no_of_cropping_yr' => $ersonalinfos->no_of_cropping_yr,
+                                    // 'yield_kg_ha' => $ersonalinfos->yield_kg_ha,
+                                    'rsba_registered' => $ersonalinfos->rsba_registered,
+                                    'pcic_insured' => $ersonalinfos->pcic_insured,
+                                    'government_assisted' => $ersonalinfos->government_assisted,
+                                    'source_of_capital' => $ersonalinfos->source_of_capital,
+                                    'remarks_recommendation' => $ersonalinfos->remarks_recommendation,
+                                    'oca_district_office' => $ersonalinfos->oca_district_office,
+                                    'name_of_field_officer_technician' => $ersonalinfos->name_of_field_officer_technician,
+                                    'date_interviewed' => $ersonalinfos->date_interviewed,
+                                    
+                                ]);
                                 
                                  $ersonalinfos->users_id = $request->users_id;
                                  $ersonalinfos->personal_informations_id = $request->personal_informations_id;
@@ -8969,6 +9032,28 @@ public function ViewFarmers(Request $request)
                                     return response()->json(['error' => 'crop farm cost data not found.'], 404);
                                 }
                             }
+
+
+                               // Handle the 'archives' request type for fetching archives by PersonalInformations ID
+                               if ($type === 'archives') {
+                                // First, check if the PersonalInformation record exists
+                                $cropfarm = Crop::find($id);
+
+                                // If the PersonalInformation record is not found, return a 404 with the message
+                                if (!$cropfarm) {
+                                    return response()->json(['message' => 'Crop Farm not found.'], 404);
+                                }
+                            // Fetch the archives associated with the PersonalInformation ID
+                                $archives = CropFarmsArchive::where('crops_farms_id', $id)->get();
+
+                                // If no archives are found, return a message
+                                if ($archives->isEmpty()) {
+                                    return response()->json(['message' => 'No archive record yet.'], 404);
+                                }
+
+                                // Return the archives data as JSON
+                                return response()->json($archives);
+                            }
                         // Handle requests for barangays and organizations
                         if ($type === 'barangays' || $type === 'organizations') {
                         $district = $request->input('district');
@@ -9041,7 +9126,22 @@ public function ViewFarmers(Request $request)
                
                $data= Crop::find($id);
 
-              
+               CropFarmsArchive::create([
+                'crops_farms_id' => $data->id,
+                'users_id' => $data->users_id,
+                'personal_informations_id' => $data->personal_informations_id,
+                'crop_name' => $data->crop_name,
+                'type_of_variety_planted' => $data->type_of_variety_planted,
+                'preferred_variety' => $data->preferred_variety,
+                'planting_schedule_wetseason' => $data->planting_schedule_wetseason,
+                'planting_schedule_dryseason' => $data->planting_schedule_dryseason,
+                'no_of_cropping_per_year' => $data->no_of_cropping_per_year,
+                'quantity' => $data->quantity,
+               
+                'yield_kg_ha' => $data->yield_kg_ha,
+                'created_at' => $data->created_at,
+
+            ]);
                $data->users_id = $request->users_id;
              
             
@@ -9518,6 +9618,30 @@ public function ViewFarmers(Request $request)
                                 }
                             }
             
+                            
+                             // Handle the 'archives' request type for fetching archives by PersonalInformations ID
+                             if ($type === 'archives') {
+                                // First, check if the PersonalInformation record exists
+                                $production = LastProductionDatas::with('cropFarm')->find($id);
+
+                                // If the PersonalInformation record is not found, return a 404 with the message
+                                if (!$production) {
+                                    return response()->json(['message' => 'Production not found.'], 404);
+                                }
+                            // Fetch the archives associated with the PersonalInformation ID
+                                $archives = ProductionArchive::where('last_production_datas_id', $id)->get();
+
+                                // If no archives are found, return a message
+                                if ($archives->isEmpty()) {
+                                    return response()->json(['message' => 'No archive record yet.'], 404);
+                                }
+
+                                // Return the archives data as JSON
+                                return response()->json($archives);
+                            }
+
+
+
                               // Handle requests for barangays and organizations
                               if ($type === 'barangays' || $type === 'organizations') {
                               $district = $request->input('district');
@@ -9588,7 +9712,35 @@ public function ViewFarmers(Request $request)
                
                $data= LastProductionDatas::find($id);
 
-              
+                ProductionArchive::create([
+                    'last_production_datas_id' => $data->id,
+                    'users_id' => $data->users_id,
+                    'personal_informations_id' => $data->personal_informations_id,
+                    'farm_profiles_id ' => $data->farm_profiles_id ,
+                    'crops_farms_id' => $data->crops_farms_id,
+                    'seeds_typed_used' => $data->seeds_typed_used,
+                    'seeds_used_in_kg' => $data->seeds_used_in_kg,
+                    'seed_source' => $data->seed_source,
+                    'unit' => $data->unit,
+                    'no_of_fertilizer_used_in_bags' => $data->no_of_fertilizer_used_in_bags,
+                    'no_of_pesticides_used_in_l_per_kg' => $data->no_of_pesticides_used_in_l_per_kg,
+                    'no_of_insecticides_used_in_l' => $data->no_of_insecticides_used_in_l,
+                    'area_planted' => $data->area_planted,
+                    
+                    'date_planted' => $data->date_planted,
+                    'date_harvested' => $data->date_harvested,
+                    'yield_tons_per_kg' => $data->yield_tons_per_kg,
+                    'unit_price_palay_per_kg' => $data->unit_price_palay_per_kg,
+                    'unit_price_rice_per_kg' => $data->unit_price_rice_per_kg,
+                    'type_of_product' => $data->type_of_product,
+
+                    'sold_to' => $data->sold_to,
+                    'if_palay_milled_where' => $data->if_palay_milled_where,
+                    'gross_income_palay' => $data->gross_income_palay,
+                    'gross_income_rice' => $data->gross_income_rice,
+                    'create_at' => $data->created_at,
+    
+                ]);
                $data->users_id = $request->users_id;
              
             
@@ -9902,9 +10054,9 @@ public function ViewFarmers(Request $request)
                                 if (Auth::check()) {
                                     // Retrieve the authenticated user's ID
                                     $userId = Auth::id();
-                                    $admin = User::find($userId);
+                                    $agent = User::find($userId);
                             
-                                    if ($admin) {
+                                    if ($agent) {
                                         $user = auth()->user();
                                         
                                         // Ensure user is authenticated
@@ -9976,8 +10128,8 @@ public function ViewFarmers(Request $request)
                                         }
                             
                                         // Return the view with the fetched data
-                                        return view('admin.FarmerInfo.fixed.edit_view', compact(
-                                            'agri_district', 'agri_districts_id', 'admin', 'profile', 'totalRiceProduction', 'userId', 'cropVarieties', 
+                                        return view('agent.FarmerInfo.fixed.edit_view', compact(
+                                            'agri_district', 'agri_districts_id', 'agent', 'profile', 'totalRiceProduction', 'userId', 'cropVarieties', 
                                             'farmData', 'cropData', 'production', 'fixedData'
                                         ));
                                     } else {
@@ -9999,7 +10151,23 @@ public function ViewFarmers(Request $request)
                // $data= $request->all();
                
                $data= FixedCost::find($id);
+               FixedCostArchive::create([
+                'fixed_costs_id' => $data->id,
+                'crops_farms_id' => $data->crops_farms_id,
+                'last_production_datas_id' => $data->last_production_datas_id,
+                'farm_profiles_id' => $data->farm_profiles_id,
 
+                'users_id' => $data->users_id,
+                'personal_informations_id' => $data->personal_informations_id,
+                'crop_name' => $data->crop_name,
+                'particular' => $data->particular,
+                'no_of_ha' => $data->no_of_ha,
+                'cost_per_ha' => $data->cost_per_ha,
+                'total_amount' => $data->	total_amount,
+               
+                'created_at' => $data->created_at,
+
+            ]);
               
                $data->users_id = $request->users_id;
              
@@ -10326,7 +10494,49 @@ public function ViewFarmers(Request $request)
                             // $data= $request->all();
 
                             $variable= VariableCost::find($id);
+                            // Pass the previous data into the new record
+                            VariableCostArchive::create([
+                                'variable_costs_id' => $variable->id,
+                                'personal_informations_id' => $variable->personal_informations_id,
+                                'farm_profiles_id' => $variable->farm_profiles_id,
+                                'last_production_datas_id' => $variable->last_production_datas_id,
+                                'crops_farms_id' => $variable->crops_farms_id,
+                                'users_id' => $variable->users_id,
 
+                                // Seed Information
+                                'unit' => $variable->unit,
+                                'quantity' => $variable->quantity,
+                                'unit_price' => $variable->unit_price,
+                                'total_seed_cost' => $variable->total_seed_cost,
+
+                                // Labor Information
+                                'labor_no_of_person' => $variable->labor_no_of_person,
+                                'rate_per_person' => $variable->rate_per_person,
+                                'total_labor_cost' => $variable->total_labor_cost,
+
+                                // Fertilizer Information
+                                'no_of_sacks' => $variable->no_of_sacks,
+                                'unit_price_per_sacks' => $variable->unit_price_per_sacks,
+                                'total_cost_fertilizers' => $variable->total_cost_fertilizers,
+
+                                // Pesticides Information
+                                'no_of_l_kg' => $variable->no_of_l_kg,
+                                'unit_price_of_pesticides' => $variable->unit_price_of_pesticides,
+                                'total_cost_pesticides' => $variable->total_cost_pesticides,
+
+                                // Transport Information
+                                'total_transport_delivery_cost' => $variable->total_transport_delivery_cost,
+
+                                // Total Costs
+                                'total_machinery_fuel_cost' => $variable->total_machinery_fuel_cost,
+                                'total_variable_cost' => $variable->total_variable_cost,
+
+                                // Pass the previous created_at timestamp
+                                'old_created_at' => $variable->created_at,
+
+                                // Optional: Use the same updated_at timestamp, or set a new one
+                                'updated_at' => now(),
+                            ]);
 
                             $variable->users_id = $request->users_id;
 
