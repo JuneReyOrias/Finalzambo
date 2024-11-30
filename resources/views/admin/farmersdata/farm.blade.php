@@ -506,9 +506,9 @@
                            Tenurial Status: <span id="tenurial_status"></span>
                         </h5>
                         <div class="form-group mt-3">
-                            <label for="user_id">Select User:</label>
+                            <label for="user_id">Select  User/Farmer:</label>
                             <select class="form-control" id="users_id">
-                                <option value="">Select a user</option>
+                                <option value="">Select a  User/Farmer</option>
                                 @foreach ($users as $item)
                                 <option value="{{$item->id}}">{{$item->first_name.' '.$item->last_name}}</option>
                                     
