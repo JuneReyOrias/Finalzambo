@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AllDataExport;
 use App\Imports\CropImport;
 use App\Imports\FixedsImport;
 use App\Imports\ImportFertilizer;
