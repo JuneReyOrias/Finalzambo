@@ -110,7 +110,7 @@
                           Login
                         </button>
                       </div>
-                      <a href="{{route('register')}}" class="d-block mt-3 text-muteds">Create Account? Sign up</a>
+                      <a href="{{route('admin.create_account.farmer.new_farmer')}}" class="d-block mt-3 text-muteds">Create Account? Sign up</a>
                     </form>
                   </div>
                 </div>
