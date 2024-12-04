@@ -49,7 +49,7 @@ class FarmProfilessSheet implements WithHeadings, WithTitle, FromCollection
     public function headings(): array
     {
         return [
-              'Personal Information ID',
+              'Farmer No.',
               'Agri-District',
             'Tenurial Status',
             'Farm Address',

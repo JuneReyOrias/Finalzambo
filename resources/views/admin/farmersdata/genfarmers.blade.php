@@ -50,11 +50,13 @@
                                 </a>
                                     <form action="">
                                        
+
                                         
                                         <div class="input-group mb-3">
                                             <button id="exportExcel" class="btn btn-success" title="Download Farmers Data">
                                                 <i class="fas fa-file-excel"></i>
                                             </button>
+                                            
                                             <select id="date-interview-dropdown" class="form-select">
                                                 <option value="">All Farmers</option>
                                                 <option value="new">New (Last 6 months)</option>
@@ -101,15 +103,16 @@
                               
                                 
                             {{-- </form> --}}
-                                <!-- Pagination links -->
-                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                   <!-- Pagination links -->
+                                   <div class="d-flex justify-content-between align-items-center mt-3">
                                     <ul id="pagination-links" class="pagination mb-0">
                                         <!-- AJAX pagination links will be inserted here -->
                                     </ul>
                                 </div>
                                 
-                                
                             </div>
+                         
+                            
                         </div>
 
 
@@ -1084,4 +1087,5 @@ function escapeHtml(str) {
         });
     });
 </script>
+
 @endsection
