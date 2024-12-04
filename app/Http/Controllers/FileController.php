@@ -24,6 +24,7 @@ use App\Models\FarmProfile;
 use App\Models\User;
 use App\Models\LastProductionDatas;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Imports\CombineImport; // Import the CombinedImport class if needed
 use App\Imports\ImportFixedCost;
@@ -459,9 +460,14 @@ public function AgentsaveUploadForm(Request $request)
     }
 }
 
+
 public function exportDataToExcel()
 {
-    return Excel::download(new AllDataExport, 'all_farmers.xlsx');
+    try {
+        return Excel::download(new AllDataExport, 'all_farmers.xlsx');
+    } catch (\Exception $e) {
+        Log::error('Export failed: ' . $e->getMessage());
+        return response()->json(['error' => 'Export failed, please try again later.']);
+    }
 }
-
 }
