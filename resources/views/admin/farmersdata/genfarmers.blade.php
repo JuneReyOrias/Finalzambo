@@ -52,6 +52,9 @@
                                        
                                         
                                         <div class="input-group mb-3">
+                                            <button id="exportExcel" class="btn btn-success" title="Download Farmers Data">
+                                                <i class="fas fa-file-excel"></i>
+                                            </button>
                                             <select id="date-interview-dropdown" class="form-select">
                                                 <option value="">All Farmers</option>
                                                 <option value="new">New (Last 6 months)</option>
@@ -1052,4 +1055,33 @@ function escapeHtml(str) {
         
         
         </style> 
+
+<script>
+    document.getElementById('exportExcel').addEventListener('click', function () {
+        fetch('/export-excel', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to download Excel file.');
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'all_data.xlsx'; // Set the file name
+            a.click();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error downloading file.');
+        });
+    });
+</script>
 @endsection

@@ -36,6 +36,13 @@ use App\Imports\SoldsImport;
 class FileController extends Controller
 {
 
+
+    public function exportDataToExcel()
+    {
+        return Excel::download(new AllDataExport, 'all_data.xlsx');
+    }
+    
+
     public function downloadTemplate()
     {
         return Excel::download(new MultipleSheetsExport, 'data_import_template.xlsx');
