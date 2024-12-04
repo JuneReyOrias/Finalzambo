@@ -156,7 +156,7 @@
         </div>
       </li>
 
-      <li class="nav-item">
+      {{-- <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#Notification" role="button" aria-expanded="false" aria-controls="Notification">
           <img src="../assets/logo/notifsetting.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
           <span class="link-title"style="margin-left:12px;">Notification</span>
@@ -171,7 +171,7 @@
            
           </ul>
         </div>
-      </li>
+      </li> --}}
       <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" role="button" aria-expanded="false" aria-controls="general-pages">
           <i class="link-icon" data-feather="users"></i>
