@@ -48,9 +48,7 @@
         </a>
         <div class="collapse" id="farmersData">
           <ul class="nav sub-menu" style="padding-left: 70px;">
-            {{-- <li class="nav-item">
-              <a href="{{route('personalinfo.create')}}" class="nav-link">Farmers</a>
-            </li> --}}
+      
             <li class="nav-item">
               <a href="{{route('admin.farmersdata.genfarmers')}}" class="nav-link">Farmers</a>
             </li>
@@ -69,9 +67,7 @@
         <div class="collapse" id="Forms">
           <ul class="nav sub-menu"  style="padding-left: 70px;">
 
-            {{-- <li class="nav-item">
-              <a href="{{route('admin.corn.forms.corn_form')}}" class="nav-link">Survey Form</a>
-            </li> --}}
+       
             <li class="nav-item">
               <a href="{{route('admin.farmersdata.samplefolder.farm_edit')}}" class="nav-link">Survey Form</a>
             </li>
@@ -84,30 +80,7 @@
         </div>
       </li>
       
-      {{-- <li class="nav-item nav-category">Components</li>
-      <li class="nav-item nav-category">Crops</li>
-   
-     
-      <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#Farmer" role="button" aria-expanded="false" aria-controls="uiComponents">
-          <img src="../assets/logo/rice.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
-          <span class="link-title"style="margin-left:12px;"> Farmer Crops </span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="Farmer">
-          <ul class="nav sub-menu"  style="padding-left: 70px;">
-
-          
-            <li class="nav-item">
-              <a href="{{route('admin.cropsreport.all_crops')}}" class="nav-link">Crops</a>
-            </li>
-
-
-           
-          </ul>
-        </div>
-      </li>
-       --}}
+    
       <li class="nav-item nav-category">Setting</li>
 
       <li class="nav-item">
@@ -159,10 +132,7 @@
               <a href="{{route('admin.farmerOrg.view_orgs')}}" class="nav-link">Add org</a>
             </li>
 
-            {{-- <li class="nav-item">
-              <a href="{{route('categorize.index')}}" class="nav-link">Category</a>
-            </li>
-            --}}
+         
            
           </ul>
         </div>
@@ -223,65 +193,7 @@
             <li class="nav-item">
               <a href="{{route('admin.create_account.display_users')}}" class="nav-link" title="View Admin, Agent, User Account">All Account</a>
             </li>
-            {{-- <li class="nav-item">
-              <a href="pages/general/faq.html" class="nav-link">Faq</a>
-            </li>
-            <li class="nav-item">
-              <a href="pages/general/invoice.html" class="nav-link">Invoice</a>
-            </li>
-            <li class="nav-item">
-              <a href="pages/general/profile.html" class="nav-link">Profile</a>
-            </li>
-            <li class="nav-item">
-              <a href="pages/general/pricing.html" class="nav-link">Pricing</a>
-            </li>
-            <li class="nav-item">
-              <a href="pages/general/timeline.html" class="nav-link">Timeline</a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      {{-- <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#authPages" role="button" aria-expanded="false" aria-controls="authPages">
-          <i class="link-icon" data-feather="unlock"></i>
-          <span class="link-title">Authentication</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="authPages">
-          <ul class="nav sub-menu">
-            <li class="nav-item">
-              <a href="admin_login" class="nav-link">Login</a>
-            </li>
-            <li class="nav-item">
-              <a href="pages/auth/register.html" class="nav-link">Register</a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#errorPages" role="button" aria-expanded="false" aria-controls="errorPages">
-          <i class="link-icon" data-feather="cloud-off"></i>
-          <span class="link-title">Error</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="errorPages">
-          <ul class="nav sub-menu">
-            <li class="nav-item">
-              <a href="pages/error/404.html" class="nav-link">404</a>
-            </li>
-            <li class="nav-item">
-              <a href="pages/error/500.html" class="nav-link">500</a>
-            </li>
-          </ul>
-        </div>
-      </li> --}}
-      <!--<li class="nav-item nav-category">Docs</li>
-      <li class="nav-item">
-        <a href="https://www.nobleui.com/html/documentation/docs.html" target="_blank" class="nav-link">
-          <i class="link-icon" data-feather="hash"></i>
-          <span class="link-title">Documentation</span>
-        </a>
-      </li>-->
+            
     </ul>
   </div>
 </nav>

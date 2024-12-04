@@ -436,6 +436,7 @@ $(document).on('click', '.edit-user-btn', function() {
                     .then(data => {
                         if (data.success) {
                             Swal.fire('Confirmed!', 'The farmer has been moved to the users table.', 'success');
+                            location.reload(); // Reload the page after confirmation
                         } else {
                             Swal.fire('Error!', data.message || 'Something went wrong.', 'error');
                         }
@@ -451,61 +452,4 @@ $(document).on('click', '.edit-user-btn', function() {
 
          </script>
 
-<style>
-
-
-
-
-    #pagination-links {
-display: flex;
-justify-content: center;
-margin-top: 20px;
-}
-
-.page-item {
-margin: 0 5px;
-}
-
-.page-link {
-padding: 10px 15px;
-background-color: #fff;
-color: #007bff;
-border: 1px solid #ccc;
-border-radius: 5px;
-text-decoration: none;
-transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.page-link:hover {
-background-color: #007bff;
-color: #fff;
-}
-
-.page-link:focus {
-outline: none;
-box-shadow: 0 0 0 3px rgba(38, 143, 255, 0.5);
-}
-
-.page-item:first-child .page-link {
-border-radius: 5px 0 0 5px;
-}
-
-.page-item:last-child .page-link {
-border-radius: 0 5px 5px 0;
-}
-
-.page-item.disabled .page-link {
-color: #ccc;
-cursor: not-allowed;
-}
-
-.page-item a {
-display: flex;
-align-items: center;
-justify-content: center;
-}
-
-    
-    
-    </style> 
 @endsection
