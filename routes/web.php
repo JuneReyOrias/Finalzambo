@@ -54,7 +54,7 @@ use Illuminate\Support\Facades\Auth;
 
 // Route::get('dashboard', function () {
 //     return view('dashboard');
-Route::get('/export-excel', [FileController::class, 'exportDataToExcel'])->name('export.excel');
+Route::get('/export-excel', [FileController::class, 'exportDataToExcel']);
 Route::get('/Create-Account', [RegisterController::class, 'CreateFarmer'])->name('admin.create_account.farmer.new_farmer');
 Route::post('/Create-Account', [RegisterController::class, 'Farmer']);
 Route::get('/View-Registerd-Farmer', [AdminController::class, 'AdminViewNewFarmer'])->name('admin.create_account.farmer.view_farmerAcc');
