@@ -25,28 +25,20 @@
 <!-- core:css -->
 <link rel="stylesheet" href="../assets/vendors/core/core.css">
 <!-- endinject -->
-<!-- Include Bootstrap CSS -->
-{{-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet"> --}}
 
 <!-- Plugin css for this page -->
 <link rel="stylesheet" href="../assets/vendors/flatpickr/flatpickr.min.css">
 <!-- End plugin css for this page -->
-{{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> --}}
-
 
 <!-- inject:css -->
 <link rel="stylesheet" href="../assets/fonts/feather-font/css/iconfont.css">
 <link rel="stylesheet" href="../assets/vendors/flag-icon-css/css/flag-icon.min.css">
-{{-- <link rel="stylesheet" href="../assets/vendors/font-awesome/css/flag-icon.min.css"> --}}
-<!-- endinject -->
 
-{{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> --}}
+
+
 <!-- Layout styles -->  
 <link rel="stylesheet" href="../assets/css/demo2/style.css">
-{{-- <link rel="stylesheet" href="../assets/fonts/feather-font/css/iconfont.css"> --}}
-{{-- <link rel="stylesheet" href="../assets/vendors/flag-icon-css/css/flag-icon.min.css"> --}}
-<!-- End layout styles -->
-{{-- <link rel="stylesheet" href="../assets/css/style.css"> --}}
+
 <link rel="shortcut icon" href="../assets/logo/logo.png" />
 {{-- <link rel="shortcut icon" href="https://www.flaticon.com/free-icons/agriculture" /> --}}
 
@@ -58,17 +50,7 @@
 		<!-- partial:partials/_sidebar.html -->
 	   @include('admin.body.sidebar')
    
-		<!-- partial -->
-        {{-- <nav class="settings-sidebar">
-            <div class="sidebar-body">
-             
-              </a>
-              <div class="theme-wrapper">
-                
-                </a>
-              </div>
-            </div>
-          </nav> --}}
+		
 	
 		<div class="page-wrapper">
 					
@@ -102,9 +84,6 @@
 	<!-- endinject -->
 <!-- Include jQuery (optional but recommended for Bootstrap 5 collapse) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Include Bootstrap JS -->
-{{-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script> --}}
 
 
 </body>
