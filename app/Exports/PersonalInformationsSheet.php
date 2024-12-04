@@ -40,7 +40,7 @@ class PersonalInformationsSheet implements FromCollection, WithHeadings, WithTit
             'id_type',
             'gov_id_no',
             'member_ofany_farmers_ass_org_coop',
-            
+            'nameof_farmers_ass_org_coop',
             'name_contact_person',
             'cp_tel_no',
             'date_interview',
