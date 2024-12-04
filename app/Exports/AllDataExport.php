@@ -12,7 +12,7 @@ class AllDataExport implements WithMultipleSheets
     {
         return [
             new PersonalInformationsSheet(),
-            new FarmProfilessSheet(),
+            // new FarmProfilessSheet(),
             // new CropFrsSheet(),
             // new ProductionsSheet(),
         ];
