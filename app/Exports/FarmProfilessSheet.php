@@ -15,7 +15,7 @@ class FarmProfilessSheet implements WithHeadings, WithTitle, FromCollection
         return DB::table('farm_profiles')
             ->join('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
             ->select(
-                'personal_informations.id as personal_information_id', // Include for reference
+                'personal_informations.id as personal_informations_id', // Include for reference
                 'personal_informations.agri_district',
                 'farm_profiles.tenurial_status',
                 'farm_profiles.farm_address',
