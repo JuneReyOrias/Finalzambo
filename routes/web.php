@@ -32,6 +32,7 @@ use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\UserAccountController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Models\AgriDistrict;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Auth;
@@ -53,6 +54,14 @@ use Illuminate\Support\Facades\Auth;
 
 // Route::get('dashboard', function () {
 //     return view('dashboard');
+Route::get('/Create-Account', [RegisterController::class, 'CreateFarmer'])->name('admin.create_account.farmer.new_farmer');
+Route::post('/Create-Account', [RegisterController::class, 'Farmer']);
+Route::get('/View-Registerd-Farmer', [AdminController::class, 'AdminViewNewFarmer'])->name('admin.create_account.farmer.view_farmerAcc');
+
+
+Route::post('/confirm-farmer/{id}', [AdminController::class, 'confirmFarmer'])->name('confirm.farmer');
+Route::post('/admin-delete-farmer/{id}', [AdminController::class, 'deleteFarmerForm'])->name('admin.delete.personalinfo');
+
 
 
 // Route to get notifications
@@ -699,6 +708,9 @@ Route::get('/admin/login', [AdminController::class, 'AdminLogin'])->name('admin.
 Route::get('/new-accounts', [AdminController::class, 'newAccounts'])->name('admin.create_account.new_accounts');
 Route::post('/new-accounts', [AdminController::class, 'NewUsers']);
 Route::get('/view-accounts', [AdminController::class, 'Accountview'])->name('admin.create_account.display_users');
+Route::get('/view-admin-accounts', [AdminController::class, 'AdminAccount'])->name('admin.create_account.admin_account');
+Route::get('/view-agent-accounts', [AdminController::class, 'AgentAccount'])->name('admin.create_account.agent_account');
+
 Route::get('/edit-accounts/{users}', [AdminController::class, 'editAccount'])->name('admin.create_account.edit_accounts');
 Route::post('/edit-accounts/{users}', [AdminController::class, 'updateAccounts']);
 Route::delete('/delete-accounts/{users}', [AdminController::class, 'deleteusers'])->name('admin.create_account.delete');

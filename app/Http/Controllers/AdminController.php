@@ -12,6 +12,7 @@ use App\Models\Fertilizer;
 use App\Models\FixedCost;
 use App\Models\Labor;
 use App\Models\FarmerOrg;
+use App\Models\Farmer;
 use App\Models\Crop;
 use App\Models\Barangay;
 use App\Models\LastProductionDatas;
@@ -1448,7 +1449,388 @@ public function newAccounts()
 
                 
              }
+
+             public function AdminViewNewFarmer(Request $request)
+             {
+                 // Check if the user is authenticated
+                 if (Auth::check()) {
+                     // User is authenticated, proceed with retrieving the user's ID
+                     $userId = Auth::id();
+             
+                     // Find the user based on the retrieved ID
+                     $admin = User::find($userId);
+                // Find the user based on the retrieved ID
+                                 $admin = User::find($userId);
+                     if ($admin) {
+                         // Assuming $user represents the currently logged-in user
+                         $user = auth()->user();
+             
+                         // Check if user is authenticated before proceeding
+                         if (!$user) {
+                             // Handle unauthenticated user, for example, redirect them to login
+                             return redirect()->route('login');
+                         }
+             
+                         // Fetch user's information
+                         $user_id = $user->id;
+                         $agri_districts = $user->agri_district;
+                         $agri_districts_id = $user->agri_districts_id;
+             
+                         // Find the user by their ID and eager load the personalInformation relationship
+                         $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+                        
+            $users = Farmer::orderBy('id', 'asc');
+        
+            // Filter by district if specified
+            if ($request->has('district') && $request->input('district') !== null) {
+                $districtFilter = $request->input('district');
+        
+                if ($districtFilter !== 'All') {
+                    // Case-insensitive comparison for the district filter
+                    $users->whereRaw('UPPER(district) = ?', [strtoupper($districtFilter)]);
+                }
+            } else {
+                // If 'district' is null or not provided, include all records
+                $users->whereNotNull('id');
+            }
+        
+            // Filter by interview date
+            if ($request->has('created_at') && $request->input('created_at') !== null) {
+                $dateFilter = $request->input('created_at');
+                if ($dateFilter == 'new') {
+                    $users->whereDate('created_at', '>=', now()->subMonths(6)); // New records
+                } elseif ($dateFilter == 'old') {
+                    $users->whereDate('created_at', '<', now()->subMonths(6)); // Old records
+                }
+            }
+        
+            // Search functionality for personal information
+            if ($request->has('search') && $request->input('search') !== null) {
+                $keyword = $request->input('search');
+                $users->where(function ($query) use ($keyword) {
+                    $query->where('last_name', 'like', "%$keyword%")
+                          ->orWhere('first_name', 'like', "%$keyword%");
+                });
+            }
+        
+            // Apply sorting if specified
+            if ($request->has('sortColumn') && $request->has('sortOrder')) {
+                $users->orderBy($request->sortColumn, $request->sortOrder);
+            }
+        
+            // Paginate the personal information results
+            $users = $users->paginate(4);
+        
+            // Fetch distinct districts for the dropdown
+            $districts = Farmer::select('district')
+                                             ->distinct()
+                                             ->orderBy('district')
+                                             ->get();
+        
+            // Calculate total rice production
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        
+            // Return JSON response for AJAX requests
+            if ($request->ajax()) {
+                return response()->json([
+                    'users' => $users,
+                 
+                    'districts' => $districts,
+                    'totalRiceProduction' => $totalRiceProduction,
+                ]);
+            }
+                         $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                         // Return the view with the fetched data
+                         return view('admin.create_account.farmer.view_farmerAcc', compact('agri_districts', 'agri_districts_id', 'admin', 'profile',
+                        'totalRiceProduction',));
+                     } else {
+                         // Handle the case where the user is not found
+                         // You can redirect the user or display an error message
+                         return redirect()->route('login')->with('error', 'User not found.');
+                     }
+                 } else {
+                     // Handle the case where the user is not authenticated
+                     // Redirect the user to the login page
+                     return redirect()->route('login');
+                 }
+             }
+
+             public function confirmFarmer($id)
+             {
+                 try {
+                     // Fetch the farmer
+                     $farmer = Farmer::findOrFail($id);
+             
+                     // Move data to the users table
+                     $user = new User();
+                     $user->first_name = $farmer->first_name ;
+                      $user->last_name = $farmer->last_name;
+                     $user->email = $farmer->email;
+                     $user->password = $farmer->password; // Ensure password is hashed
+                     $user->district = $farmer->district;
+                     $user->role = 'user'; // Assign role if applicable
+                     $user->save();
+             
+                     // Delete from farmers table
+                     $farmer->delete();
+             
+                     return response()->json(['success' => true]);
+                 } catch (\Exception $e) {
+                     return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+                 }
+             }
+
+             public function deleteFarmerForm($id)
+             {
+                 try {
+                     $personalInfo = Farmer::findOrFail($id);
+                     $personalInfo->delete();
+             
+                     return redirect()->back()->with('message', 'User/Farmer account decline.');
+                 } catch (\Exception $e) {
+                     return redirect()->back()->with('error', 'An error occurred while deleting the record.');
+                 }
+             }
+             
+
+
+
             //  users view by admin 
+
+            public function AdminAccount(Request $request)
+            {
+                // Check if the user is authenticated
+                if (Auth::check()) {
+                    // User is authenticated, proceed with retrieving the user's ID
+                    $userId = Auth::id();
+            
+                    // Find the user based on the retrieved ID
+                    $admin = User::find($userId);
+               // Find the user based on the retrieved ID
+                                $admin = User::find($userId);
+                    if ($admin) {
+                        // Assuming $user represents the currently logged-in user
+                        $user = auth()->user();
+            
+                        // Check if user is authenticated before proceeding
+                        if (!$user) {
+                            // Handle unauthenticated user, for example, redirect them to login
+                            return redirect()->route('login');
+                        }
+            
+                        // Fetch user's information
+                        $user_id = $user->id;
+                        $agri_districts = $user->agri_district;
+                        $agri_districts_id = $user->agri_districts_id;
+            
+                        // Find the user by their ID and eager load the personalInformation relationship
+                        $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+                        $users=User::orderBy('id','desc')->paginate(20);
+                           // Query for transports with search functionality
+                           $usersQuery = User::query();
+                           if ($request->has('search')) {
+                               $searchTerm = $request->input('search');
+                               $usersQuery->where(function($query) use ($searchTerm) {
+                                   $query->where('email', 'like', "%$searchTerm%")
+                                       ->orWhere('first_name', 'like', "%$searchTerm%")
+                                       ->orWhere('district', 'like', "%$searchTerm%");
+                               });
+                           }
+                           $users = $usersQuery->orderBy('id','asc')->paginate(10);
+
+                        $users = User::orderBy('id', 'asc');
+        
+                        // Filter by district if specified
+                        if ($request->has('district') && $request->input('district') !== null) {
+                            $districtFilter = $request->input('district');
+                    
+                            if ($districtFilter !== 'All') {
+                                // Case-insensitive comparison for the district filter
+                                $users->whereRaw('UPPER(district) = ?', [strtoupper($districtFilter)]);
+                            }
+                        } else {
+                            // If 'district' is null or not provided, include all records
+                            $users->whereNotNull('id');
+                        }
+                    
+                        // Filter by interview date
+                        if ($request->has('created_at') && $request->input('created_at') !== null) {
+                            $dateFilter = $request->input('created_at');
+                            if ($dateFilter == 'new') {
+                                $users->whereDate('created_at', '>=', now()->subMonths(6)); // New records
+                            } elseif ($dateFilter == 'old') {
+                                $users->whereDate('created_at', '<', now()->subMonths(6)); // Old records
+                            }
+                        }
+                    
+                        // Search functionality for personal information
+                        if ($request->has('search') && $request->input('search') !== null) {
+                            $keyword = $request->input('search');
+                            $users->where(function ($query) use ($keyword) {
+                                $query->where('last_name', 'like', "%$keyword%")
+                                      ->orWhere('first_name', 'like', "%$keyword%");
+                            });
+                        }
+                    
+                        // Apply sorting if specified
+                        if ($request->has('sortColumn') && $request->has('sortOrder')) {
+                            $users->orderBy($request->sortColumn, $request->sortOrder);
+                        }
+                    
+                        // Paginate the personal information results
+                        $users = $users->paginate(4);
+                    
+                        // Fetch distinct districts for the dropdown
+                        $districts = User::select('district')
+                                                         ->distinct()
+                                                         ->orderBy('district')
+                                                         ->get();
+                    
+                        // Calculate total rice production
+                        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                    
+                        // Return JSON response for AJAX requests
+                        if ($request->ajax()) {
+                            return response()->json([
+                                'users' => $users,
+                             
+                                'districts' => $districts,
+                                'totalRiceProduction' => $totalRiceProduction,
+                            ]);
+                        }
+                        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                        // Return the view with the fetched data
+                        return view('admin.create_account.admin_account', compact('agri_districts', 'agri_districts_id', 'admin', 'profile',
+                       'totalRiceProduction','users'));
+                    } else {
+                        // Handle the case where the user is not found
+                        // You can redirect the user or display an error message
+                        return redirect()->route('login')->with('error', 'User not found.');
+                    }
+                } else {
+                    // Handle the case where the user is not authenticated
+                    // Redirect the user to the login page
+                    return redirect()->route('login');
+                }
+            }
+
+
+            public function AgentAccount(Request $request)
+            {
+                // Check if the user is authenticated
+                if (Auth::check()) {
+                    // User is authenticated, proceed with retrieving the user's ID
+                    $userId = Auth::id();
+            
+                    // Find the user based on the retrieved ID
+                    $admin = User::find($userId);
+               // Find the user based on the retrieved ID
+                                $admin = User::find($userId);
+                    if ($admin) {
+                        // Assuming $user represents the currently logged-in user
+                        $user = auth()->user();
+            
+                        // Check if user is authenticated before proceeding
+                        if (!$user) {
+                            // Handle unauthenticated user, for example, redirect them to login
+                            return redirect()->route('login');
+                        }
+            
+                        // Fetch user's information
+                        $user_id = $user->id;
+                        $agri_districts = $user->agri_district;
+                        $agri_districts_id = $user->agri_districts_id;
+            
+                        // Find the user by their ID and eager load the personalInformation relationship
+                        $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+                        $users=User::orderBy('id','desc')->paginate(20);
+                           // Query for transports with search functionality
+                           $usersQuery = User::query();
+                           if ($request->has('search')) {
+                               $searchTerm = $request->input('search');
+                               $usersQuery->where(function($query) use ($searchTerm) {
+                                   $query->where('email', 'like', "%$searchTerm%")
+                                       ->orWhere('first_name', 'like', "%$searchTerm%")
+                                       ->orWhere('district', 'like', "%$searchTerm%");
+                               });
+                           }
+                           $users = $usersQuery->orderBy('id','asc')->paginate(10);
+
+                        $users = User::orderBy('id', 'asc');
+        
+                        // Filter by district if specified
+                        if ($request->has('district') && $request->input('district') !== null) {
+                            $districtFilter = $request->input('district');
+                    
+                            if ($districtFilter !== 'All') {
+                                // Case-insensitive comparison for the district filter
+                                $users->whereRaw('UPPER(district) = ?', [strtoupper($districtFilter)]);
+                            }
+                        } else {
+                            // If 'district' is null or not provided, include all records
+                            $users->whereNotNull('id');
+                        }
+                    
+                        // Filter by interview date
+                        if ($request->has('created_at') && $request->input('created_at') !== null) {
+                            $dateFilter = $request->input('created_at');
+                            if ($dateFilter == 'new') {
+                                $users->whereDate('created_at', '>=', now()->subMonths(6)); // New records
+                            } elseif ($dateFilter == 'old') {
+                                $users->whereDate('created_at', '<', now()->subMonths(6)); // Old records
+                            }
+                        }
+                    
+                        // Search functionality for personal information
+                        if ($request->has('search') && $request->input('search') !== null) {
+                            $keyword = $request->input('search');
+                            $users->where(function ($query) use ($keyword) {
+                                $query->where('last_name', 'like', "%$keyword%")
+                                      ->orWhere('first_name', 'like', "%$keyword%");
+                            });
+                        }
+                    
+                        // Apply sorting if specified
+                        if ($request->has('sortColumn') && $request->has('sortOrder')) {
+                            $users->orderBy($request->sortColumn, $request->sortOrder);
+                        }
+                    
+                        // Paginate the personal information results
+                        $users = $users->paginate(4);
+                    
+                        // Fetch distinct districts for the dropdown
+                        $districts = User::select('district')
+                                                         ->distinct()
+                                                         ->orderBy('district')
+                                                         ->get();
+                    
+                        // Calculate total rice production
+                        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                    
+                        // Return JSON response for AJAX requests
+                        if ($request->ajax()) {
+                            return response()->json([
+                                'users' => $users,
+                             
+                                'districts' => $districts,
+                                'totalRiceProduction' => $totalRiceProduction,
+                            ]);
+                        }
+                        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                        // Return the view with the fetched data
+                        return view('admin.create_account.agent_account', compact('agri_districts', 'agri_districts_id', 'admin', 'profile',
+                       'totalRiceProduction','users'));
+                    } else {
+                        // Handle the case where the user is not found
+                        // You can redirect the user or display an error message
+                        return redirect()->route('login')->with('error', 'User not found.');
+                    }
+                } else {
+                    // Handle the case where the user is not authenticated
+                    // Redirect the user to the login page
+                    return redirect()->route('login');
+                }
+            }
             public function Accountview(Request $request)
             {
                 // Check if the user is authenticated
@@ -1489,6 +1871,67 @@ public function newAccounts()
                                });
                            }
                            $users = $usersQuery->orderBy('id','asc')->paginate(10);
+
+                        $users = User::orderBy('id', 'asc');
+        
+                        // Filter by district if specified
+                        if ($request->has('district') && $request->input('district') !== null) {
+                            $districtFilter = $request->input('district');
+                    
+                            if ($districtFilter !== 'All') {
+                                // Case-insensitive comparison for the district filter
+                                $users->whereRaw('UPPER(district) = ?', [strtoupper($districtFilter)]);
+                            }
+                        } else {
+                            // If 'district' is null or not provided, include all records
+                            $users->whereNotNull('id');
+                        }
+                    
+                        // Filter by interview date
+                        if ($request->has('created_at') && $request->input('created_at') !== null) {
+                            $dateFilter = $request->input('created_at');
+                            if ($dateFilter == 'new') {
+                                $users->whereDate('created_at', '>=', now()->subMonths(6)); // New records
+                            } elseif ($dateFilter == 'old') {
+                                $users->whereDate('created_at', '<', now()->subMonths(6)); // Old records
+                            }
+                        }
+                    
+                        // Search functionality for personal information
+                        if ($request->has('search') && $request->input('search') !== null) {
+                            $keyword = $request->input('search');
+                            $users->where(function ($query) use ($keyword) {
+                                $query->where('last_name', 'like', "%$keyword%")
+                                      ->orWhere('first_name', 'like', "%$keyword%");
+                            });
+                        }
+                    
+                        // Apply sorting if specified
+                        if ($request->has('sortColumn') && $request->has('sortOrder')) {
+                            $users->orderBy($request->sortColumn, $request->sortOrder);
+                        }
+                    
+                        // Paginate the personal information results
+                        $users = $users->paginate(4);
+                    
+                        // Fetch distinct districts for the dropdown
+                        $districts = User::select('district')
+                                                         ->distinct()
+                                                         ->orderBy('district')
+                                                         ->get();
+                    
+                        // Calculate total rice production
+                        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                    
+                        // Return JSON response for AJAX requests
+                        if ($request->ajax()) {
+                            return response()->json([
+                                'users' => $users,
+                             
+                                'districts' => $districts,
+                                'totalRiceProduction' => $totalRiceProduction,
+                            ]);
+                        }
                         $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
                         // Return the view with the fetched data
                         return view('admin.create_account.display_users', compact('agri_districts', 'agri_districts_id', 'admin', 'profile',

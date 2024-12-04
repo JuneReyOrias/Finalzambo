@@ -33,9 +33,9 @@
             <li class="nav-item">
               <a href="{{route('map.cornmap')}}" class="nav-link">All Crop</a>
             </li>
-            {{-- <li class="nav-item">
+            <li class="nav-item">
               <a href="{{route('map.coconutmap')}}" class="nav-link">Coconut</a>
-            </li> --}}
+            </li>
           </ul>
         </div>
       </li>
@@ -186,7 +186,7 @@
         </div>
       </li>
 
-      {{-- <li class="nav-item">
+      <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#Notification" role="button" aria-expanded="false" aria-controls="Notification">
           <img src="../assets/logo/notifsetting.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
           <span class="link-title"style="margin-left:12px;">Notification</span>
@@ -201,7 +201,7 @@
            
           </ul>
         </div>
-      </li> --}}
+      </li>
       <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" role="button" aria-expanded="false" aria-controls="general-pages">
           <i class="link-icon" data-feather="users"></i>
@@ -210,8 +210,18 @@
         </a>
         <div class="collapse" id="general-pages">
           <ul class="nav sub-menu"style="padding-left:70px;">
+          
             <li class="nav-item">
-              <a href="{{route('admin.create_account.display_users')}}" class="nav-link">Users</a>
+              <a href="{{route('admin.create_account.farmer.view_farmerAcc')}}" class="nav-link" title="Confirm New User/Farmer register">Confirm Account</a>
+            </li>
+            {{-- <li class="nav-item">
+              <a href="{{route('admin.create_account.admin_account')}}" class="nav-link" title="View All Admin Account">Admin</a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('admin.create_account.agent_account')}}" class="nav-link" title="View All Agent/Field Officer per Agri-District">Agent</a>
+            </li> --}}
+            <li class="nav-item">
+              <a href="{{route('admin.create_account.display_users')}}" class="nav-link" title="View Admin, Agent, User Account">All Account</a>
             </li>
             {{-- <li class="nav-item">
               <a href="pages/general/faq.html" class="nav-link">Faq</a>

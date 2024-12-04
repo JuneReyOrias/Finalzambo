@@ -30,115 +30,88 @@
                         <input type="radio" name="tabs" id="admin" checked="checked">
                         <label for="admin">Admin</label>
                         <div class="tab">
-                            
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <div class="input-group mb-3 me-md-1">
-                                    <h5 for="Seed" class="me-3">a. Admin</h5>
+                                <div class="input-group mb-3">
+                                    <h5> View Admin Account</h5>
                                 </div>
-                                                        
                                 <div class="me-md-1">
                                     <a href="{{ route('admin.create_account.new_accounts') }}" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></a>
                                 </div>
-{{--                             
-                                <form id="farmProfileSearchForm" action="{{ route('admin.create_account.display_users') }}" method="GET" class="me-2">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
-                                        <button class="btn btn-outline-success" type="submit">Search</button>
+                                <form action="">
+                                       
+                                        
+                                    <div class="input-group mb-3">
+                                        {{-- <select id="date-interview-dropdown" class="form-select">
+                                            <option value="">All Farmers</option>
+                                            <option value="new">New (Last 6 months)</option>
+                                            <option value="old">Old (More than 6 months)</option>
+                                        </select> --}}
+                                        <select class="form-select" id="admin-district-dropdown">
+                                            <option value="">All Districts</option>
+                                        </select>
+                                        <input type="text"  class="form-control" id="admin-search-input" placeholder="Search">
                                     </div>
                                 </form>
-                            
-                                <form id="showAllForm" action="{{ route('admin.create_account.display_users') }}" method="GET">
-                                    <button class="btn btn-outline-success" type="submit">All</button>
-                                </form> --}}
                             </div>
-                            
-                            
-                               <div class="table-responsive">
+                            <div class="table-responsive">
                                 <table class="table table-bordered datatable">
                                     <!-- Table content here -->
-                                    <thead class="thead-light" >
+                                    <thead class="thead-light">
                                         <tr>
                                             <th>#</th>
                                             <th>FullName</th>
                                             <th>Email</th>
                                             <th>Agri-district</th>
-                                     
+                                            
                                             <th>role</th>
                                             <th>Created</th>
-                                          
+                                            
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                      @if($users->count() > 0)
-                                    @foreach($users->where('role','admin') as $user)
-                                        <tr class="table-light">
-                                           
-                                             <td>{{ $user->id }}</td>
-                                             <td>{{ $user->first_name.' '.$user->last_name }}</td>
-                                             <td>{{ $user->email }}</td>
-                                             <td>{{ ucwords($user->district) }}</td>
-                                       
+                                    <tbody id="admin-info-list">
+                                        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-                                            <td>{{ $user->role }}</td>
-                                            
-                                            <td>{{ $user->created_at}}</td>
-                                            
-                                            <td>
-                                               
-                                                 <a href="{{route('admin.create_account.edit_accounts', $user->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> </button></a> 
-                                               
-                                                
-                                                 <form  action="{{ route('admin.create_account.delete', $user->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
-                                                    {{-- {{ csrf_field()}} --}}@csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                                </form>
-                                                
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                        @else
-                                        <tr>
-                                            <td class="text-center" colspan="5">Admin Account is empty</td>
-                                        </tr>
-                                        @endif
+                                        <!-- AJAX data will be inserted here -->
                                     </tbody>
                                 </table>
+
+
+                                <!-- Pagination links -->
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <ul id="admin-pagination-links" class="pagination mb-0">
+                                        <!-- AJAX pagination links will be inserted here -->
+                                    </ul>
+                                </div>
                             </div>
-                             <!-- Pagination links -->
-                             <ul class="pagination">
-                                <li><a href="{{ $users->previousPageUrl() }}">Previous</a></li>
-                                @foreach ($users->getUrlRange(1,$users->lastPage()) as $page => $url)
-                                    <li class="{{ $page == $users->currentPage() ? 'active' : '' }}">
-                                        <a href="{{ $url }}">{{ $page }}</a>
-                                    </li>
-                                @endforeach
-                                <li><a href="{{ $users->nextPageUrl() }}">Next</a></li>
-                            </ul>
+                            
                         </div>
 
-
-                        {{-- labor --}}
-                        <input type="radio" name="tabs" id="Agent" checked="checked">
-                        <label for="Agent">Agent</label>
+                        <input type="radio" name="tabs" id="agent" checked="checked">
+                        <label for="agent">Agent</label>
                         <div class="tab">
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <div class="input-group mb-3">
-                                    <h5>b. Agent</h5>
+                                    <h5>View Agent/Field Officer </h5>
                                 </div>
                                 <div class="me-md-1">
                                     <a href="{{ route('admin.create_account.new_accounts') }}" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></a>
                                 </div>
-                                {{-- <form id="farmProfileSearchForm" action="{{ route('admin.create_account.display_users') }}" method="GET">
+                                <form action="">
+                                       
+                                        
                                     <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
-                                        <button class="btn btn-outline-success" type="submit">Search</button>
+                                        {{-- <select id="date-interview-dropdown" class="form-select">
+                                            <option value="">All Farmers</option>
+                                            <option value="new">New (Last 6 months)</option>
+                                            <option value="old">Old (More than 6 months)</option>
+                                        </select> --}}
+                                        <select class="form-select" id="agent-district-dropdown">
+                                            <option value="">All Districts</option>
+                                        </select>
+                                        <input type="text"  class="form-control" id="agent-search-input" placeholder="Search">
                                     </div>
                                 </form>
-                                <form id="showAllForm" action="{{ route('admin.create_account.display_users') }}" method="GET">
-                                    <button class="btn btn-outline-success" type="submit">All</button>
-                                </form> --}}
                             </div>
                             <div class="table-responsive">
                                 <table class="table table-bordered datatable">
@@ -156,75 +129,49 @@
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                      @if($users->count() > 0)
-                                    @foreach($users->where('role','agent') as $user)
-                                        <tr class="table-light">
-                                           
-                                             <td>{{ $user->id }}</td>
-                                             <td>{{ $user->first_name.' '.$user->last_name }}</td>
-                                             <td>{{ $user->email }}</td>
-                                             <td>{{ ucwords($user->district) }}</td>
-                                           
-                                            <td>{{ $user->role }}</td>
-                                            
-                                            <td>{{ $user->created_at}}</td>
-                                            <td>{{ $user->updated_at}}</td>
-                                            <td>
-                                               
-                                                 <a href="{{route('admin.create_account.edit_accounts', $user->id)}}" title="Edit"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a> 
-                                    
-                                                 <form  action="{{ route('admin.create_account.delete', $user->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
-                                                    {{-- {{ csrf_field()}} --}}@csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                                </form>
-                                                
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                        @else
-                                        <tr>
-                                            <td class="text-center" colspan="5">Agent Account is empty</td>
-                                        </tr>
-                                        @endif
+                                    <tbody id="agent-info-list">
+                                        <meta name="csrf-token" content="{{ csrf_token() }}">
+
+                                        <!-- AJAX data will be inserted here -->
                                     </tbody>
                                 </table>
+
+
+                                <!-- Pagination links -->
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <ul id="agent-pagination-links" class="pagination mb-0">
+                                        <!-- AJAX pagination links will be inserted here -->
+                                    </ul>
+                                </div>
                             </div>
-                             <!-- Pagination links -->
-                             <ul class="pagination">
-                                <li><a href="{{ $users->previousPageUrl() }}">Previous</a></li>
-                                @foreach ($users->getUrlRange(1,$users->lastPage()) as $page => $url)
-                                    <li class="{{ $page == $users->currentPage() ? 'active' : '' }}">
-                                        <a href="{{ $url }}">{{ $page }}</a>
-                                    </li>
-                                @endforeach
-                                <li><a href="{{ $users->nextPageUrl() }}">Next</a></li>
-                            </ul>
+                            
                         </div>
 
-                     
-
-                        {{-- labor --}}
-                        <input type="radio" name="tabs" id="labors" checked="checked">
+                       <input type="radio" name="tabs" id="labors" checked="checked">
                         <label for="labors">User</label>
                         <div class="tab">
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <div class="input-group mb-3">
-                                    <h5>c. Users</h5>
+                                    <h5>Users/Farmer</h5>
                                 </div>
                                 <div class="me-md-1">
                                     <a href="{{ route('admin.create_account.new_accounts') }}" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></a>
                                 </div>
-                                {{-- <form id="farmProfileSearchForm" action="{{ route('admin.create_account.display_users') }}" method="GET">
+                                <form action="">
+                                       
+                                        
                                     <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
-                                        <button class="btn btn-outline-success" type="submit">Search</button>
+                                        {{-- <select id="date-interview-dropdown" class="form-select">
+                                            <option value="">All Farmers</option>
+                                            <option value="new">New (Last 6 months)</option>
+                                            <option value="old">Old (More than 6 months)</option>
+                                        </select> --}}
+                                        <select class="form-select" id="district-dropdown">
+                                            <option value="">All Districts</option>
+                                        </select>
+                                        <input type="text"  class="form-control" id="search-input" placeholder="Search">
                                     </div>
                                 </form>
-                                <form id="showAllForm" action="{{ route('admin.create_account.display_users') }}" method="GET">
-                                    <button class="btn btn-outline-success" type="submit">All</button>
-                                </form> --}}
                             </div>
                             <div class="table-responsive">
                                 <table class="table table-bordered datatable">
@@ -242,51 +189,22 @@
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                      @if($users->count() > 0)
-                                    @foreach($users->where('role','user') as $user)
-                                        <tr class="table-light">
-                                           
-                                             <td>{{ $user->id }}</td>
-                                             <td>{{ $user->first_name.' '.$user->last_name }}</td>
-                                             <td>{{ $user->email }}</td>
-                                             <td>{{ ucwords($user->district) }}</td>
-                                           
-                                            <td>{{ $user->role }}</td>
-                                            
-                                            <td>{{ $user->created_at}}</td>
-                                            <td>{{ $user->updated_at}}</td>
-                                            <td>
-                                               
-                                                 <a href="{{route('admin.create_account.edit_accounts', $user->id)}}" title="Edit "><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> </button></a> 
-                                    
-                                                 <form  action="{{ route('admin.create_account.delete', $user->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
-                                                    {{-- {{ csrf_field()}} --}}@csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                                </form>
-                                                
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                        @else
-                                        <tr>
-                                            <td class="text-center" colspan="5">Polygon Cost is empty</td>
-                                        </tr>
-                                        @endif
+                                    <tbody id="personal-info-list">
+                                        <meta name="csrf-token" content="{{ csrf_token() }}">
+
+                                        <!-- AJAX data will be inserted here -->
                                     </tbody>
                                 </table>
+
+
+                                <!-- Pagination links -->
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <ul id="pagination-links" class="pagination mb-0">
+                                        <!-- AJAX pagination links will be inserted here -->
+                                    </ul>
+                                </div>
                             </div>
-                             <!-- Pagination links -->
-                             <ul class="pagination">
-                                <li><a href="{{ $users->previousPageUrl() }}">Previous</a></li>
-                                @foreach ($users->getUrlRange(1,$users->lastPage()) as $page => $url)
-                                    <li class="{{ $page == $users->currentPage() ? 'active' : '' }}">
-                                        <a href="{{ $url }}">{{ $page }}</a>
-                                    </li>
-                                @endforeach
-                                <li><a href="{{ $users->nextPageUrl() }}">Next</a></li>
-                            </ul>
+                            
                         </div>
                         <!-- Repeat the same structure for other tabs -->
                     </div>
@@ -297,68 +215,207 @@
     </div>
 </div>
 
-<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Content will be dynamically loaded here -->
-                <div id="editUserFormContainer">
-                    Loading...
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="modal fade" id="farmerArchiveModal" tabindex="-1" aria-labelledby="farmerArchiveModal" aria-hidden="true">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title text-white" id="farmerArchiveModal">Change Password</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <meta name="csrf-token" content="{{ csrf_token() }}">
-            <div class="modal-body" id="archives-modal-body">
-                <form id="changePasswordForm" method="POST">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="new_password" class="form-label">{{ $user->id }}</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control" id="new_password" name="new_password" required>
-                            <button class="btn btn-outline-secondary" type="button" id="togglePasswordNew">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="confirm_password" class="form-label">Confirm Password</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
-                            <button class="btn btn-outline-secondary" type="button" id="togglePasswordConfirm">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="text-danger" id="password_error" style="display: none;">Passwords do not match!</div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="savePasswordBtn" data-id="{{ $user->id }}">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
+
+
 
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
+<script>
+
+$(document).ready(function () {
+    let sortOrder = 'asc';
+    let sortColumn = 'id';
+
+    function getPageRange(currentPage) {
+        const startPage = Math.floor((currentPage - 1) / 3) * 3 + 1;
+        const endPage = startPage + 2;
+        return { startPage, endPage };
+    }
+
+    function fetchFarmersData(filters = {}, page = 1) {
+        filters.page = page;
+        filters.sort_order = sortOrder;
+        filters.sort_column = sortColumn;
+
+
+      
+            const formatDate = (dateString) => {
+        if (!dateString) return 'N/A';
+    
+        const date = new Date(dateString);
+        return date.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true,
+        });
+    };
+        $.ajax({
+            url: '/view-accounts',
+            type: 'GET',
+            data: filters,
+            success: function (response) {
+                $('#personal-info-list').html('');
+                $('#agent-list').html('');
+                $('#pagination-links').html('');
+
+                // Populate personal information
+                response.users.data
+    .filter(info => info.role === 'user') // Filter by role
+    .forEach(info => {
+                    $('#personal-info-list').append(`
+                        <tr class="new-row">
+                            <td class="custom-cell">${info.id}</td>
+                            <td class="custom-cell">${info.first_name} ${info.middle_name || ''} ${info.last_name} ${info.extension_name || ''}</td>
+                         
+                            <td class="custom-cell">${info.email || 'N/A'}</td>
+                            <td class="custom-cell">${info.district || 'N/A'}</td>
+                            <td class="custom-cell">${info.role || 'N/A'}</td>
+                             <td class="custom-cell">${formatDate(info.created_at)}</td>
+                            <td class="custom-cell">
+                               
+                                 <a href="/edit-accounts/${info.id}" title="Edit farmer">
+                                        <button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                    </a>
+                                    <form action="/delete-accounts/${info.id}" method="post" style="display:inline">
+                                        {{ csrf_field() }}
+                                        <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm('Confirm delete?')">
+                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                        </button>
+                                    </form>
+                            </td>
+                        </tr>
+                    `);
+                });
+
+
+
+                // Populate districts dropdown
+                function toProperCase(text) {
+                    return text.replace(/\b\w/g, char => char.toUpperCase());
+                }
+                response.districts.forEach(district => {
+    if (district.district) {
+        // Ensure value is escaped to prevent issues with special characters
+        let districtValue = escapeHtml(district.district);
+        let districtText = toProperCase(district.district);
+
+        // Check if the option already exists in the dropdown
+        if (!$(`#district-dropdown option[value="${districtValue}"]`).length) {
+            // Append the new option only if it doesn't exist
+            $('#district-dropdown').append(`
+                <option value="${districtValue}">${districtText}</option>
+            `);
+        } else {
+            // Option already exists; update its text if necessary
+            let option = $(`#district-dropdown option[value="${districtValue}"]`);
+            if (option.text() !== districtText) {
+                option.text(districtText);
+            }
+        }
+    }
+});
+
+// Utility function to escape HTML special characters
+function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, function (match) {
+        const escape = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return escape[match];
+    });
+}
+
+
+
+                // Update total rice production
+                $('#total-rice-production').text(response.totalRiceProduction);
+
+                // Generate pagination links
+                if (response.users.links) {
+                    const totalPages = response.users.last_page;
+                    const { startPage, endPage } = getPageRange(page);
+
+                    for (let i = startPage; i <= endPage && i <= totalPages; i++) {
+                        const isActive = (i === page) ? 'active' : '';
+                        $('#pagination-links').append(`
+                            <li class="page-item ${isActive}">
+                                <a href="#" class="page-link" data-page="${i}">${i}</a>
+                            </li>
+                        `);
+                    }
+
+                    $('#pagination-links').prepend(`
+                        <li class="page-item ${page === 1 ? 'disabled' : ''}">
+                            <a href="#" class="page-link" data-page="${page - 1}"><i class="fas fa-chevron-left"></i></a>
+                        </li>
+                    `);
+
+                    $('#pagination-links').append(`
+                        <li class="page-item ${page === totalPages ? 'disabled' : ''}">
+                            <a href="#" class="page-link" data-page="${page + 1}"><i class="fas fa-chevron-right"></i></a>
+                        </li>
+                    `);
+                }
+            },
+            error: function (error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    }
+
+    // Fetch data initially
+    fetchFarmersData();
+
+    // Handle filters change
+    $('#district-dropdown, #search-input, #date-interview-dropdown').on('change keyup', function () {
+        const filters = {
+            district: $('#district-dropdown').val(),
+            search: $('#search-input').val(),
+            date_interview: $('#date-interview-dropdown').val()
+        };
+        fetchFarmersData(filters);
+    });
+
+    // Handle pagination link clicks
+    $(document).on('click', '.page-link', function (e) {
+        e.preventDefault();
+        const page = $(this).data('page');
+        if (page) {
+            const filters = {
+                district: $('#district-dropdown').val(),
+                search: $('#search-input').val()
+            };
+            fetchFarmersData(filters, page);
+        }
+    });
+
+    // Handle column sorting
+    $('#sortable-table th').on('click', function () {
+        const column = $(this).data('column');
+        if (column) {
+            sortColumn = column;
+            sortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
+            const filters = {
+                district: $('#district-dropdown').val(),
+                search: $('#search-input').val()
+            };
+            fetchFarmersData(filters);
+        }
+    });
+});
+
+
+
+     </script>
 <!-- Add the script to toggle the password visibility -->
 <script>
     // Toggle password visibility for 'New Password' and 'Confirm Password'
@@ -488,4 +545,458 @@ $(document).on('click', '.edit-user-btn', function() {
         });
     });
   </script>
+{{-- Ajax pass of data in to the table of agent --}}
+<script>
+
+    $(document).ready(function () {
+        let sortOrder = 'asc';
+        let sortColumn = 'id';
+    
+        function getPageRange(currentPage) {
+            const startPage = Math.floor((currentPage - 1) / 3) * 3 + 1;
+            const endPage = startPage + 2;
+            return { startPage, endPage };
+        }
+    
+        function fetchFarmersData(filters = {}, page = 1) {
+            filters.page = page;
+            filters.sort_order = sortOrder;
+            filters.sort_column = sortColumn;
+            const formatDate = (dateString) => {
+        if (!dateString) return 'N/A';
+    
+        const date = new Date(dateString);
+        return date.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true,
+        });
+    };
+    
+            $.ajax({
+                url: '/view-accounts',
+                type: 'GET',
+                data: filters,
+                success: function (response) {
+                    $('#agent-info-list').html('');
+                    $('#agent-list').html('');
+                    $('#agent-pagination-links').html('');
+                  
+                    // Populate personal information
+                    response.users.data
+        .filter(info => info.role === 'agent') // Filter by role
+        .forEach(info => {
+                        $('#agent-info-list').append(`
+                            <tr class="new-row">
+                                <td class="custom-cell">${info.id}</td>
+                                <td class="custom-cell">${info.first_name} ${info.middle_name || ''} ${info.last_name} ${info.extension_name || ''}</td>
+                             
+                                <td class="custom-cell">${info.email || 'N/A'}</td>
+                                <td class="custom-cell">${info.district || 'N/A'}</td>
+
+                                <td class="custom-cell">${info.role || 'N/A'}</td>
+                                 <td class="custom-cell">${formatDate(info.created_at)}</td>
+                                <td class="custom-cell">
+                                   
+                                     
+                                  <a href="/edit-accounts/${info.id}" title="Edit farmer">
+                                        <button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                    </a>
+                                    <form action="/delete-accounts/${info.id}" method="post" style="display:inline">
+                                        {{ csrf_field() }}
+                                        <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm('Confirm delete?')">
+                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        `);
+                    });
+    
+    
+                    // Populate districts dropdown
+                    function toProperCase(text) {
+                        return text.replace(/\b\w/g, char => char.toUpperCase());
+                    }
+                    response.districts.forEach(district => {
+        if (district.district) {
+            // Ensure value is escaped to prevent issues with special characters
+            let districtValue = escapeHtml(district.district);
+            let districtText = toProperCase(district.district);
+    
+            // Check if the option already exists in the dropdown
+            if (!$(`#agent-district-dropdown option[value="${districtValue}"]`).length) {
+                // Append the new option only if it doesn't exist
+                $('#agent-district-dropdown').append(`
+                    <option value="${districtValue}">${districtText}</option>
+                `);
+            } else {
+                // Option already exists; update its text if necessary
+                let option = $(`#agent-district-dropdown option[value="${districtValue}"]`);
+                if (option.text() !== districtText) {
+                    option.text(districtText);
+                }
+            }
+        }
+    });
+    
+    // Utility function to escape HTML special characters
+    function escapeHtml(str) {
+        return str.replace(/[&<>"']/g, function (match) {
+            const escape = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return escape[match];
+        });
+    }
+    
+    
+    
+                    // Update total rice production
+                    $('#total-rice-production').text(response.totalRiceProduction);
+    
+                    // Generate pagination links
+                    if (response.users.links) {
+                        const totalPages = response.users.last_page;
+                        const { startPage, endPage } = getPageRange(page);
+    
+                        for (let i = startPage; i <= endPage && i <= totalPages; i++) {
+                            const isActive = (i === page) ? 'active' : '';
+                            $('#agent-pagination-links').append(`
+                                <li class="page-item ${isActive}">
+                                    <a href="#" class="page-link" data-page="${i}">${i}</a>
+                                </li>
+                            `);
+                        }
+    
+                        $('#agent-pagination-links').prepend(`
+                            <li class="page-item ${page === 1 ? 'disabled' : ''}">
+                                <a href="#" class="page-link" data-page="${page - 1}"><i class="fas fa-chevron-left"></i></a>
+                            </li>
+                        `);
+    
+                        $('#agent-pagination-links').append(`
+                            <li class="page-item ${page === totalPages ? 'disabled' : ''}">
+                                <a href="#" class="page-link" data-page="${page + 1}"><i class="fas fa-chevron-right"></i></a>
+                            </li>
+                        `);
+                    }
+                },
+                error: function (error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        }
+    
+        // Fetch data initially
+        fetchFarmersData();
+    
+        // Handle filters change
+        $('#agent-district-dropdown, #agent-search-input, #date-interview-dropdown').on('change keyup', function () {
+            const filters = {
+                district: $('#agent-district-dropdown').val(),
+                search: $('#agent-search-input').val(),
+                date_interview: $('#date-interview-dropdown').val()
+            };
+            fetchFarmersData(filters);
+        });
+    
+        // Handle pagination link clicks
+        $(document).on('click', '.page-link', function (e) {
+            e.preventDefault();
+            const page = $(this).data('page');
+            if (page) {
+                const filters = {
+                    district: $('#district-dropdown').val(),
+                    search: $('#search-input').val()
+                };
+                fetchFarmersData(filters, page);
+            }
+        });
+    
+        // Handle column sorting
+        $('#sortable-table th').on('click', function () {
+            const column = $(this).data('column');
+            if (column) {
+                sortColumn = column;
+                sortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
+                const filters = {
+                    district: $('#district-dropdown').val(),
+                    search: $('#search-input').val()
+                };
+                fetchFarmersData(filters);
+            }
+        });
+    });
+    
+    
+    
+         </script>
+{{-- ajax passing of data into the admin table --}}
+<script>
+
+    $(document).ready(function () {
+        let sortOrder = 'asc';
+        let sortColumn = 'id';
+    
+        function getPageRange(currentPage) {
+            const startPage = Math.floor((currentPage - 1) / 3) * 3 + 1;
+            const endPage = startPage + 2;
+            return { startPage, endPage };
+        }
+        const formatDate = (dateString) => {
+        if (!dateString) return 'N/A';
+    
+        const date = new Date(dateString);
+        return date.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true,
+        });
+    };
+    
+    // Example usage
+    
+        function fetchFarmersData(filters = {}, page = 1) {
+            filters.page = page;
+            filters.sort_order = sortOrder;
+            filters.sort_column = sortColumn;
+    
+            $.ajax({
+                url: '/view-accounts',
+                type: 'GET',
+                data: filters,
+                success: function (response) {
+                    $('#admin-info-list').html('');
+                    $('#agent-list').html('');
+                    $('#admin-pagination-links').html('');
+                   
+             
+                    // Populate personal information
+                    response.users.data
+        .filter(info => info.role === 'admin') // Filter by role
+        .forEach(info => {
+                        $('#admin-info-list').append(`
+                            <tr class="new-row">
+                                <td class="custom-cell">${info.id}</td>
+                                <td class="custom-cell">${info.first_name} ${info.middle_name || ''} ${info.last_name} ${info.extension_name || ''}</td>
+                             
+                                <td class="custom-cell">${info.email || 'N/A'}</td>
+                                <td class="custom-cell">${info.district || 'N/A'}</td>
+                                <td class="custom-cell">${info.role || 'N/A'}</td>
+                                         <td class="custom-cell">${formatDate(info.created_at)}</td>
+                                                    
+                                <td class="custom-cell">
+                                   
+                                    <a href="/edit-accounts/${info.id}" title="Edit farmer">
+                                        <button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                    </a>
+                                    <form action="/delete-accounts/${info.id}" method="post" style="display:inline">
+                                        {{ csrf_field() }}
+                                        <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm('Confirm delete?')">
+                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        `);
+                    });
+    
+    
+             
+                    // Populate districts dropdown
+                    function toProperCase(text) {
+                        return text.replace(/\b\w/g, char => char.toUpperCase());
+                    }
+                    response.districts.forEach(district => {
+        if (district.district) {
+            // Ensure value is escaped to prevent issues with special characters
+            let districtValue = escapeHtml(district.district);
+            let districtText = toProperCase(district.district);
+    
+            // Check if the option already exists in the dropdown
+            if (!$(`#admin-district-dropdown option[value="${districtValue}"]`).length) {
+                // Append the new option only if it doesn't exist
+                $('#admin-district-dropdown ').append(`
+                    <option value="${districtValue}">${districtText}</option>
+                `);
+            } else {
+                // Option already exists; update its text if necessary
+                let option = $(`#admin-district-dropdown  option[value="${districtValue}"]`);
+                if (option.text() !== districtText) {
+                    option.text(districtText);
+                }
+            }
+        }
+    });
+    
+    // Utility function to escape HTML special characters
+    function escapeHtml(str) {
+        return str.replace(/[&<>"']/g, function (match) {
+            const escape = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return escape[match];
+        });
+    }
+    
+    
+    
+                    // Update total rice production
+                    $('#total-rice-production').text(response.totalRiceProduction);
+    
+                    // Generate pagination links
+                    if (response.users.links) {
+                        const totalPages = response.users.last_page;
+                        const { startPage, endPage } = getPageRange(page);
+    
+                        for (let i = startPage; i <= endPage && i <= totalPages; i++) {
+                            const isActive = (i === page) ? 'active' : '';
+                            $('#admin-pagination-links').append(`
+                                <li class="page-item ${isActive}">
+                                    <a href="#" class="page-link" data-page="${i}">${i}</a>
+                                </li>
+                            `);
+                        }
+    
+                        $('#admin-pagination-links').prepend(`
+                            <li class="page-item ${page === 1 ? 'disabled' : ''}">
+                                <a href="#" class="page-link" data-page="${page - 1}"><i class="fas fa-chevron-left"></i></a>
+                            </li>
+                        `);
+    
+                        $('#admin-pagination-links').append(`
+                            <li class="page-item ${page === totalPages ? 'disabled' : ''}">
+                                <a href="#" class="page-link" data-page="${page + 1}"><i class="fas fa-chevron-right"></i></a>
+                            </li>
+                        `);
+                    }
+    
+    
+                    
+                },
+                error: function (error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        }
+    
+        // Fetch data initially
+        fetchFarmersData();
+    
+        // Handle filters change
+        $('#admin-district-dropdown , #admin-search-input, #date-interview-dropdown').on('change keyup', function () {
+            const filters = {
+                district: $('#admin-district-dropdown ').val(),
+                search: $('#admin-search-input').val(),
+                date_interview: $('#date-interview-dropdown').val()
+            };
+            fetchFarmersData(filters);
+        });
+    
+        // Handle pagination link clicks
+        $(document).on('click', '.page-link', function (e) {
+            e.preventDefault();
+            const page = $(this).data('page');
+            if (page) {
+                const filters = {
+                    district: $('#district-dropdown').val(),
+                    search: $('#search-input').val()
+                };
+                fetchFarmersData(filters, page);
+            }
+        });
+    
+        // Handle column sorting
+        $('#sortable-table th').on('click', function () {
+            const column = $(this).data('column');
+            if (column) {
+                sortColumn = column;
+                sortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
+                const filters = {
+                    district: $('#district-dropdown').val(),
+                    search: $('#search-input').val()
+                };
+                fetchFarmersData(filters);
+            }
+        });
+    });
+    
+    
+    
+         </script>
+    <style>
+
+
+
+
+        #pagination-links {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.page-item {
+    margin: 0 5px;
+}
+
+.page-link {
+    padding: 10px 15px;
+    background-color: #fff;
+    color: #007bff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.page-link:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.page-link:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(38, 143, 255, 0.5);
+}
+
+.page-item:first-child .page-link {
+    border-radius: 5px 0 0 5px;
+}
+
+.page-item:last-child .page-link {
+    border-radius: 0 5px 5px 0;
+}
+
+.page-item.disabled .page-link {
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.page-item a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+        
+        
+        </style> 
+
 @endsection
