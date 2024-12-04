@@ -1083,9 +1083,10 @@ function escapeHtml(str) {
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error downloading file.');
+            alert('Error downloading file. Please try again.');
         });
     });
 </script>
+
 
 @endsection
