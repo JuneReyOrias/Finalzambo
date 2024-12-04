@@ -464,6 +464,7 @@ public function AgentsaveUploadForm(Request $request)
 public function exportDataToExcel()
 {
     try {
+        ini_set('memory_limit', '512M'); // Increase memory limit for this export operation
         return Excel::download(new AllDataExport, 'all_farmers.xlsx');
     } catch (\Exception $e) {
         Log::error('Export failed: ' . $e->getMessage());
