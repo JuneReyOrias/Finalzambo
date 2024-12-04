@@ -1061,7 +1061,7 @@ function escapeHtml(str) {
 
 <script>
     document.getElementById('exportExcel').addEventListener('click', function () {
-        fetch('/export-excel', {
+        fetch('/admin-view-General-Farmers', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
