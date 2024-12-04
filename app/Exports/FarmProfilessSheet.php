@@ -32,7 +32,7 @@ class FarmProfilessSheet implements WithHeadings, WithTitle, FromCollection
                 'farm_profiles.pcic_insured',
                 'farm_profiles.source_of_capital',
                 'farm_profiles.remarks_recommendation',
-                'farm_profiles.oca_district_office',
+                // 'farm_profiles.oca_district_office',
                 'farm_profiles.name_of_field_officer_technician',
                 'farm_profiles.date_interviewed',
               

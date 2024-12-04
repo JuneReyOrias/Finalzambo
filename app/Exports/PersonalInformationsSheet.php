@@ -46,8 +46,8 @@ class PersonalInformationsSheet implements FromCollection, WithHeadings, WithTit
             'date_interview',
             // Ensure this field is included
         ])
-        ->whereNotNull('agri_district') // Exclude NULL values
-        ->where('agri_district', '<>', '') // Exclude empty strings
+        // ->whereNotNull('agri_district') // Exclude NULL values
+        // ->where('agri_district', '<>', '') // Exclude empty strings
         ->orderByRaw("FIELD(agri_district, 'ayala', 'tumaga','culianan','manicahan','curuan','vitali') ASC") // Prioritize Ayala and Tumag
         ->orderBy('agri_district') // Sort remaining districts alphabetically
         ->get();
