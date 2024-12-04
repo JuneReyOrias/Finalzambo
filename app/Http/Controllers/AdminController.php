@@ -5110,5 +5110,103 @@ public function CornSave(Request $request)
             return view('admin.farmersdata.genfarmers', compact('admin', 'personalinfos', 'farmProfiles', 'districts'));
         }
         
+        // Print and download Farmers Data
+        public function ReportsFarmer(Request $request)
+        {
+            // Check if the user is authenticated
+            if (!Auth::check()) {
+                return redirect()->route('login');
+            }
+        
+            $userId = Auth::id();
+            $admin = User::find($userId);
+        
+            if (!$admin) {
+                return redirect()->route('login')->with('error', 'User not found.');
+            }
+        
+            // Base query for personal information
+            $personalinfos = PersonalInformations::orderBy('id', 'asc');
+        
+            // Filter by district if specified
+            if ($request->has('district') && $request->input('district') !== null) {
+                $districtFilter = $request->input('district');
+        
+                if ($districtFilter !== 'All') {
+                    // Case-insensitive comparison for the district filter
+                    $personalinfos->whereRaw('UPPER(agri_district) = ?', [strtoupper($districtFilter)]);
+                }
+            } else {
+                // If 'district' is null or not provided, include all records
+                $personalinfos->whereNotNull('id');
+            }
+        
+            // Filter by interview date
+            if ($request->has('date_interview') && $request->input('date_interview') !== null) {
+                $dateFilter = $request->input('date_interview');
+                if ($dateFilter == 'new') {
+                    $personalinfos->whereDate('date_interview', '>=', now()->subMonths(6)); // New records
+                } elseif ($dateFilter == 'old') {
+                    $personalinfos->whereDate('date_interview', '<', now()->subMonths(6)); // Old records
+                }
+            }
+        
+            // Search functionality for personal information
+            if ($request->has('search') && $request->input('search') !== null) {
+                $keyword = $request->input('search');
+                $personalinfos->where(function ($query) use ($keyword) {
+                    $query->where('last_name', 'like', "%$keyword%")
+                          ->orWhere('first_name', 'like', "%$keyword%");
+                });
+            }
+        
+            // Apply sorting if specified
+            if ($request->has('sortColumn') && $request->has('sortOrder')) {
+                $personalinfos->orderBy($request->sortColumn, $request->sortOrder);
+            }
+        
+            // Paginate the personal information results
+            $personalinfos = $personalinfos->paginate(100);
+        
+            // Fetch distinct districts for the dropdown
+            $districts = PersonalInformations::select('agri_district')
+                                             ->distinct()
+                                             ->orderBy('agri_district')
+                                             ->get();
+        
+            // Base query for farm profiles
+            $farmProfiles = FarmProfile::select('farm_profiles.*')
+                                       ->leftJoin('personal_informations', 'farm_profiles.personal_informations_id', '=', 'personal_informations.id')
+                                       ->with('agriDistrict')
+                                       ->orderBy('farm_profiles.id', 'asc');
+        
+            // Search functionality for farm profiles
+            if ($request->has('search') && $request->input('search') !== null) {
+                $keyword = $request->input('search');
+                $farmProfiles->where(function ($query) use ($keyword) {
+                    $query->where('personal_informations.last_name', 'like', "%$keyword%")
+                          ->orWhere('personal_informations.first_name', 'like', "%$keyword%");
+                });
+            }
+        
+            // Paginate the farm profiles results
+            $farmProfiles = $farmProfiles->paginate(20);
+        
+            // Calculate total rice production
+            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+        
+            // Return JSON response for AJAX requests
+            if ($request->ajax()) {
+                return response()->json([
+                    'personalinfos' => $personalinfos,
+                    'farmProfiles' => $farmProfiles,
+                    'districts' => $districts,
+                    'totalRiceProduction' => $totalRiceProduction,
+                ]);
+            }
+        
+            // For regular requests, return the view
+            return view('admin.farmersdata.farmer_report', compact('admin', 'personalinfos', 'farmProfiles', 'districts'));
+        }
 
                     }

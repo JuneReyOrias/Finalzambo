@@ -257,7 +257,7 @@ Route::get('/admin-view-Farmers-crop/{farmData}',[PersonalInformationsController
 Route::get('/admin-view-Farmers-farm/{personalinfos}',[PersonalInformationsController ::class,'farmview'])->name('admin.farmersdata.farm');
 // view farmerse data
 Route::get('/admin-view-General-Farmers',[AdminController::class,'GenFarmers'])->name('admin.farmersdata.genfarmers');
- 
+Route::get('/admin-view-General-Farmers-reports',[AdminController::class,'ReportsFarmer'])->name('admin.farmersdata.farmer_report');
 
 // admin homepage form
  Route::get('/admin-view-homepage-setting',[LandingPageController::class,'viewHomepages'])->name('landing-page.view_homepage');

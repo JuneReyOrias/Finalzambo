@@ -18,6 +18,8 @@
                 <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                     
                     <h4>Farmers Data</h4>
+                  
+
                 </div>
                 <br>
                 @if (session()->has('message'))
@@ -42,39 +44,44 @@
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <div class="input-group mb-3">
                                     <h5 for="personainfo">I.Personal Information</h5>
+                                  
                                 </div>
-                                <a href="{{route("admin.farmersdata.samplefolder.farm_edit")}}" title="Add Farmer">
-                                    <button class="btn btn-success btn-sm">
-                                        <i class="fa fa-plus" aria-hidden="true"></i>
-                                    </button>
-                                </a>
-                                <a href="{{route("admin.farmersdata.farmer_report")}}" title="Print and Download Farmers Data">
-                                    <button class="btn btn-success btn-sm">
-                                        Farmers
-                                    </button>
-                                </a>
+                                
+                                
                                     <form action="">
                                        
 
                                         
                                         <div class="input-group mb-3">
-                                         
-                                            <select id="date-interview-dropdown" class="form-select">
+
+                                            {{-- <select id="date-interview-dropdown" class="form-select">
                                                 <option value="">All Farmers</option>
                                                 <option value="new">New (Last 6 months)</option>
                                                 <option value="old">Old (More than 6 months)</option>
-                                            </select>
+                                            </select> --}}
+                                            <button id="print-all-data" class="btn btn-primary" title="Print Farmer Data">
+                                                <i class="fas fa-print"></i> 
+                                            </button>
+                                            <button id="exportExcel" class="btn btn-success" title="Download Farmers Data">
+                                                <i class="fas fa-file-excel"></i>
+                                            </button>
+                                            
                                             <select class="form-select" id="district-dropdown">
                                                 <option value="">All Districts</option>
                                             </select>
                                             <input type="text"  class="form-control" id="search-input" placeholder="Search">
+                                            
                                         </div>
                                     </form>
-                               
+                                   
+                                    
                                    
                                  
                                 
                                
+                            </div>
+                            <div>
+                                <strong>Total Farmers: </strong><span id="total-farmers-count">0</span>
                             </div>
                                <div class="table-responsive">
                                 {{-- <form id="multipleDeleteForm" method="POST">
@@ -95,7 +102,7 @@
                                          
                                           
                                         
-                                           <th class="custom-cell">Action </th>
+                                           <th class="custom-cell">Farmers Organization </th>
                                         </tr>
                                     </thead>
                                     <tbody id="personal-info-list">
@@ -806,7 +813,6 @@ function capitalizeFirstLetter(string) {
 
 
      <script>
-
 $(document).ready(function () {
     let sortOrder = 'asc';
     let sortColumn = 'id';
@@ -823,10 +829,11 @@ $(document).ready(function () {
         filters.sort_column = sortColumn;
 
         $.ajax({
-            url: '/admin-view-General-Farmers',
+            url: '/admin-view-General-Farmers-reports',
             type: 'GET',
             data: filters,
             success: function (response) {
+                // Clear existing content
                 $('#personal-info-list').html('');
                 $('#farm-profile-list').html('');
                 $('#pagination-links').html('');
@@ -840,35 +847,13 @@ $(document).ready(function () {
                             <td class="custom-cell">${info.barangay || info.district || info.city ? `${info.barangay || 'N/A'}, ${info.district || 'N/A'}, ${info.city || 'N/A'}` : info.home_address || 'N/A'}</td>
                             <td class="custom-cell">${info.date_of_birth || 'N/A'}</td>
                             <td class="custom-cell">${info.place_of_birth || 'N/A'}</td>
-                            <td class="custom-cell">
-                                <a href="/admin-view-Farmers-farm/${info.id}" title="View farm">
-                                    <button class="btn btn-success btn-sm"><i class="fa fa-eye" aria-hidden="true"></i></button>
-                                </a>
-                                <a href="javascript:void(0);" class="viewfarmerBtn" data-bs-toggle="modal" title="View farmer" data-bs-target="#farmerModal" data-id="${info.id}">
-                                    <button class="btn btn-warning btn-sm" style="border-color: #54d572;">
-                                        <img src="../assets/logo/farmer.png" alt="Crop Icon" style="width: 20px; height: 20px;" class="me-1">
-                                        <i class="fas fa-rice" aria-hidden="true"></i>
-                                    </button>
-                                </a>
-                                <a href="javascript:void(0);" class="viewArchive" data-bs-toggle="modal" title="View Farmer Archive Data" data-bs-target="#farmerArchiveModal" data-id="${info.id}">
-                                    <button class="btn btn-warning btn-sm" style="border-color: #54d572;">
-                                        <img src="../assets/logo/history.png" alt="Crop Icon" style="width: 20px; height: 20px;" class="me-1">
-                                        <i class="fas fa-rice" aria-hidden="true"></i>
-                                    </button>
-                                </a>
-                                <a href="/admin-update-personalinfo/${info.id}" title="Edit farmer">
-                                    <button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-                                </a>
-                                <form action="/admin-delete-personalinfo/${info.id}" method="post" style="display:inline">
-                                    {{ csrf_field() }}
-                                    <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm('Confirm delete?')">
-                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                    </button>
-                                </form>
-                            </td>
+                            <td class="custom-cell">${info.nameof_farmers_ass_org_coop || 'N/A'}</td>
                         </tr>
                     `);
                 });
+
+                // Update the total number of farmers
+                $('#total-farmers-count').text(response.personalinfos.total);
 
                 // Populate farm profiles
                 response.farmProfiles.data.forEach(profile => {
@@ -886,44 +871,36 @@ $(document).ready(function () {
                     return text.replace(/\b\w/g, char => char.toUpperCase());
                 }
                 response.districts.forEach(district => {
-    if (district.agri_district) {
-        // Ensure value is escaped to prevent issues with special characters
-        let districtValue = escapeHtml(district.agri_district);
-        let districtText = toProperCase(district.agri_district);
+                    if (district.agri_district) {
+                        let districtValue = escapeHtml(district.agri_district);
+                        let districtText = toProperCase(district.agri_district);
 
-        // Check if the option already exists in the dropdown
-        if (!$(`#district-dropdown option[value="${districtValue}"]`).length) {
-            // Append the new option only if it doesn't exist
-            $('#district-dropdown').append(`
-                <option value="${districtValue}">${districtText}</option>
-            `);
-        } else {
-            // Option already exists; update its text if necessary
-            let option = $(`#district-dropdown option[value="${districtValue}"]`);
-            if (option.text() !== districtText) {
-                option.text(districtText);
-            }
-        }
-    }
-});
+                        if (!$(`#district-dropdown option[value="${districtValue}"]`).length) {
+                            $('#district-dropdown').append(`
+                                <option value="${districtValue}">${districtText}</option>
+                            `);
+                        } else {
+                            let option = $(`#district-dropdown option[value="${districtValue}"]`);
+                            if (option.text() !== districtText) {
+                                option.text(districtText);
+                            }
+                        }
+                    }
+                });
 
-// Utility function to escape HTML special characters
-function escapeHtml(str) {
-    return str.replace(/[&<>"']/g, function (match) {
-        const escape = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#039;'
-        };
-        return escape[match];
-    });
-}
+                function escapeHtml(str) {
+                    return str.replace(/[&<>"']/g, function (match) {
+                        const escape = {
+                            '&': '&amp;',
+                            '<': '&lt;',
+                            '>': '&gt;',
+                            '"': '&quot;',
+                            "'": '&#039;'
+                        };
+                        return escape[match];
+                    });
+                }
 
-
-
-                // Update total rice production
                 $('#total-rice-production').text(response.totalRiceProduction);
 
                 // Generate pagination links
@@ -998,7 +975,74 @@ function escapeHtml(str) {
             fetchFarmersData(filters);
         }
     });
+
+    // Print All Data button click event
+    $('#print-all-data').on('click', function () {
+    const rightLogo = "../assets/logo/Citylogo.jpg"; // Adjust this path as needed
+    const leftLogo = "../assets/logo/agriculture.jpg"; // Adjust this path as needed
+
+    let printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <html>
+        <head>
+         
+            <style>
+                table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                th { background-color: #f2f2f2; }
+                h2, h3 { margin: 10px 0; }
+                .header { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+                .header img { max-height: 90px; max-width: 80px; }
+                .header .text-center { text-align: center; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <!-- Right Logo -->
+                <div>
+                    <img src="${rightLogo}" alt="Right Logo">
+                </div>
+
+                <!-- Institution Name -->
+                <div class="text-center">
+                    <h4 class="institution-name mb-0">Office of City Agriculture</h4>
+                    <h5 class="mb-1">Zamboanga City</h5>
+                </div>
+
+                <!-- Left Logo -->
+                <div>
+                    <img src="${leftLogo}" alt="Left Logo">
+                </div>
+            </div>
+
+            <h2>Farmers Data</h2>
+            <h3>Personal Information</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Date of Birth</th>
+                        <th>Place of Birth</th>
+                        <th>Farmer Organization</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${$('#personal-info-list').html()}
+                </tbody>
+            </table>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
 });
+
+});
+
+
 
 
 
