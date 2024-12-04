@@ -1077,7 +1077,7 @@ function escapeHtml(str) {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'all_data.xlsx'; // Set the file name
+            a.download = 'all_farmers.xlsx'; // Set the file name
             a.click();
             window.URL.revokeObjectURL(url);
         })

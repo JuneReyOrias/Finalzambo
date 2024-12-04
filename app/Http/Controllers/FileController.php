@@ -461,7 +461,7 @@ public function AgentsaveUploadForm(Request $request)
 
 public function exportDataToExcel()
 {
-    return Excel::download(new AllDataExport, 'all_data.xlsx');
+    return Excel::download(new AllDataExport, 'all_farmers.xlsx');
 }
 
 }
