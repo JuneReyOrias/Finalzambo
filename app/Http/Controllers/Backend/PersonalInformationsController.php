@@ -78,46 +78,6 @@ return response()->json([
 // join table for farmprfofiles
 
 
-    //join all table and then fetch specific column
-public function Personalfarms() {
-
-    try { 
-
-    $personalInformations = DB::table('personal_informations')
-    ->leftJoin('farm_profiles', 'farm_profiles.id', '=', 'personal_informations.id')
-    ->leftJoin('fixed_costs', 'fixed_costs.id', '=', 'personal_informations.id')
-    ->leftJoin('machineries_useds', 'machineries_useds.id', '=', 'personal_informations.id')
-    ->leftJoin('seeds', 'seeds.id', '=', 'personal_informations.id')
-    ->leftJoin('fertilizers', 'fertilizers.id', '=', 'personal_informations.id')
-    ->leftJoin('labors', 'labors.id', '=', 'personal_informations.id')
-    ->leftJoin('pesticides', 'pesticides.id', '=', 'personal_informations.id')
-    ->leftJoin('transports', 'transports.id', '=', 'personal_informations.id')
-    ->leftJoin('variable_costs', 'variable_costs.id', '=', 'personal_informations.id')
-    ->leftJoin('last_production_datas', 'last_production_datas.id', '=', 'personal_informations.id')
-    ->select(
-        'personal_informations.*',
-        'farm_profiles.*',
-        'fixed_costs.*',
-        'machineries_useds.*', // Select all columns from machineries_useds
-        'seeds.*',
-        'fertilizers.*',
-        'labors.*',
-        'pesticides.*',
-        'transports.*',
-        'variable_costs.*',
-        'last_production_datas.*', 
-        )
-    ->get();
-  
-    return view('farm-table.join_table',['personalInformations' => $personalInformations]);
-} catch (\Exception $ex) {
-    // Log the exception for debugging purposes
-    dd($ex);
-    return redirect()->back()->with('message', 'Something went wrong');
-}
- 
-// }
-    }
    
     public function Gmap()
     {
@@ -125,7 +85,7 @@ public function Personalfarms() {
      $parcels= ParcellaryBoundaries::all();
    
         // Fetch the latest uploaded KML file from the database
-        $kmlFile = KmlFile::latest()->first();
+      
 
        
     
@@ -134,56 +94,7 @@ public function Personalfarms() {
     }
 
 
-        // view the personalinfo by admin
-        public function PersonalInfo()
-        {
-            // Check if the user is authenticated
-            if (Auth::check()) {
-                // User is authenticated, proceed with retrieving the user's ID
-                $userId = Auth::id();
-        
-                // Find the user based on the retrieved ID
-                $admin = User::find($userId);
-        
-                if ($admin) {
-                    // Assuming $user represents the currently logged-in user
-                    $user = auth()->user();
-                    $agri_district = $admin->agri_district;
-                    // Check if user is authenticated before proceeding
-                    if (!$user) {
-                        // Handle unauthenticated user, for example, redirect them to login
-                        return redirect()->route('login');
-                    }
-        
-                    // Find the user's personal information by their ID
-                    $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
-        
-                    // Fetch the farm ID associated with the user
-                    $farmId = $user->farm_id;
-        
-                    // Find the farm profile using the fetched farm ID
-                    $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
-                 
-                    $personalInformation= PersonalInformations::all();
-        
-                    
-                    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-                    // Return the view with the fetched data
-                    return view('personalinfo.index', compact('admin', 'profile', 'farmProfile','totalRiceProduction'
-                    ,'personalInformation','userId','agri_district'
-                    
-                    ));
-                } else {
-                    // Handle the case where the user is not found
-                    // You can redirect the user or display an error message
-                    return redirect()->route('login')->with('error', 'User not found.');
-                }
-            } else {
-                // Handle the case where the user is not authenticated
-                // Redirect the user to the login page
-                return redirect()->route('login');
-            }
-        }
+
 
     public function Agent(): View
     {
@@ -192,10 +103,6 @@ public function Personalfarms() {
     }
    
 
-    public function PersonalInfoCrud():View{
-        $personalInformations= PersonalInformations::latest()->get();
-        return view('personalinfo.create',compact('personalInformations'));
-    }
 
     //agent form personal info form
     public function PersonalInfoCrudAgent():View{
@@ -205,137 +112,7 @@ public function Personalfarms() {
    
 
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(PersonalInformationsRequest $request): RedirectResponse
-    {
-      
-        try{
-        
-          // Access the primary key of the PersonalInformations model instance
-
-    $existingPersonalInformations = PersonalInformations::where([
-        ['first_name', '=', $request->input('first_name')],
-        ['middle_name', '=', $request->input('middle_name')],
-        ['last_name', '=', $request->input('last_name')],
-       
-       
-    
-      
-        // Add other fields here
-    ])->first();
-    
-    if ($existingPersonalInformations) {
-        // FarmProfile with the given personal_informations_id and other fields already exists
-        // You can handle this scenario here, for example, return an error message
-        return redirect('/add-personal-info')->with('error', 'Farm Profile with this information already exists.');
-    }
-    
-    // $personalInformation= $request->validated();
-    // $personalInformation= $request->all();
-           $personalInformation= new PersonalInformations;
-        //    dd($request->all());
-     
-  // Check if a file is present in the request and if it's valid
-if ($request->hasFile('image') && $request->file('image')->isValid()) {
-    // Retrieve the image file from the request
-    $image = $request->file('image');
-    
-    // Generate a unique image name using current timestamp and file extension
-    $imagename = time() . '.' . $image->getClientOriginalExtension();
-    
-    // Move the uploaded image to the 'personalInfoimages' directory with the generated name
-    $image->move('personalInfoimages', $imagename);
-    
-    // Set the image name in the PersonalInformation model
-    $personalInformation->image = $imagename;
-} 
-            $personalInformation->users_id =$request->users_id;
-            $personalInformation->first_name= $request->first_name;
-            $personalInformation->middle_name= $request->middle_name;
-            $personalInformation->last_name=  $request->last_name;
-
-            if ($request->extension_name === 'others') {
-                $personalInformation->extension_name = $request->add_extName; // Use the value entered in the "add_extenstion name" input field
-           } else {
-                $personalInformation->extension_name = $request->extension_name; // Use the selected color from the dropdown
-           }
-            $personalInformation->country=  $request->country;
-            $personalInformation->province=  $request->province;
-            $personalInformation->city=  $request->city;
-            $personalInformation->agri_district=  $request->agri_district;
-            $personalInformation->barangay=  $request->barangay;
-            
-             $personalInformation->home_address=  $request->home_address;
-             $personalInformation->sex=  $request->sex;
-
-             if ($request->religion=== 'other') {
-                $personalInformation->religion= $request->add_Religion; // Use the value entered in the "religion" input field
-           } else {
-                $personalInformation->religion= $request->religion; // Use the selected religion from the dropdown
-           }
-             $personalInformation->date_of_birth=  $request->date_of_birth;
-            
-             if ($request->place_of_birth=== 'Add Place of Birth') {
-                $personalInformation->place_of_birth= $request->add_PlaceBirth; // Use the value entered in the "place_of_birth" input field
-           } else {
-                $personalInformation->place_of_birth= $request->place_of_birth; // Use the selected place_of_birth from the dropdown
-           }
-             $personalInformation->contact_no=  $request->contact_no;
-             $personalInformation->civil_status=  $request->civil_status;
-             $personalInformation->name_legal_spouse=  $request->name_legal_spouse;
-
-             if ($request->no_of_children=== 'Add') {
-                $personalInformation->no_of_children= $request->add_noChildren; // Use the value entered in the "no_of_children" input field
-                } else {
-                        $personalInformation->no_of_children= $request->no_of_children; // Use the selected no_of_children from the dropdown
-                }
-    
-             $personalInformation->mothers_maiden_name=  $request->mothers_maiden_name;
-             if ($request->highest_formal_education=== 'Other') {
-                $personalInformation->highest_formal_education= $request->add_formEduc; // Use the value entered in the "highest_formal_education" input field
-                } else {
-                        $personalInformation->highest_formal_education= $request->highest_formal_education; // Use the selected highest_formal_education from the dropdown
-                }
-             $personalInformation->person_with_disability=  $request->person_with_disability;
-             $personalInformation->pwd_id_no=  $request->pwd_id_no;
-             $personalInformation->government_issued_id=  $request->government_issued_id;
-             $personalInformation->id_type=  $request->id_type;
-             $personalInformation->gov_id_no=  $request->gov_id_no;
-             $personalInformation->member_ofany_farmers_ass_org_coop=  $request->member_ofany_farmers_ass_org_coop;
-             
-             if ($request->nameof_farmers_ass_org_coop === 'add') {
-                $personalInformation->nameof_farmers_ass_org_coop = $request->add_FarmersGroup; // Use the value entered in the "add_extenstion name" input field
-           } else {
-                $personalInformation->nameof_farmers_ass_org_coop = $request->nameof_farmers_ass_org_coop; // Use the selected color from the dropdown
-           }
-             $personalInformation->name_contact_person=  $request->name_contact_person;
-      
-             $personalInformation->cp_tel_no=  $request->cp_tel_no;
-            
-
-
-
-        
-            dd($personalInformation);
-             $personalInformation->save();
-            return redirect('/admin-farmprofile')->with('message','Personal informations Added successsfully');
-        
-        }
-        catch(\Exception $ex){
-            // dd($ex); // Debugging statement to inspect the exception
-            return redirect('/admin-add-personalinformation')->with('message','Please Try Again');
-            
-        }   
-        
-        
-               
-          
-  
-
-} 
-    
+ 
 
         // view the personalinfo by admin
         public function PersonalInfoView(Request $request)
@@ -1102,121 +879,12 @@ public function  cropview(Request $request, $id)
     }
 }
 
-        // production view
-//         public function  productionview (Request $request, $id)
-// {
-//     // Check if the user is authenticated
-//     if (Auth::check()) {
-//         // User is authenticated, proceed with retrieving the user's ID
-//         $userId = Auth::id();
+// Retrieves production data from the database and passes it to the template for displaying the fetched data on the frontend.
+// CUR (Create, Update, Read) functionality for managing production data:
+// - Create: Adds new production records (e.g., yield, harvest details) to the database.
+// - Update: Modifies existing production data to reflect updated yield or crop details.
+// - Read: Retrieves and displays production data from the database based on selected criteria for analysis or reporting.
 
-//         // Find the user based on the retrieved ID
-//         $admin = User::find($userId);
-
-//         if ($admin) {
-//             // Assuming $user represents the currently logged-in user
-//             $user = auth()->user();
-
-//             // Check if user is authenticated before proceeding
-//             if (!$user) {
-//                 // Handle unauthenticated user, for example, redirect them to login
-//                 return redirect()->route('login');
-//             }
-
-//             // Find the user's personal information by their ID
-//             $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
-
-//             // Fetch the farm ID associated with the user
-//             $farmId = $user->farm_id;
-//             $agri_district = $user->agri_district;
-//             $agri_districts_id = $user->agri_districts_id;
-
-//                     // Find the farm profile using the fetched farm ID
-//                     $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
-//                     $farmData = FarmProfile::find($id);
-//                 // Fetch farmer's information based on ID
-//                 $cropData = Crop::find($id);
-
-
-//                   // Fetch the LastProductionDatas using crops_farms_id
-//             $lastProductionDatas = LastProductionDatas::where('crops_farms_id', $id)->get();
-
-//             // Initialize array to hold the personal information records
-//             $personalInfos = collect();
-
-//             foreach ($lastProductionDatas as $data) {
-//                 // Fetch the related CropFarm
-//                 $cropFarm = $data->cropFarm;
-
-//                 if ($cropFarm) {
-//                     // Fetch the related FarmProfile
-//                     $farmProfile = $cropFarm->farmProfile;
-
-//                     if ($farmProfile) {
-//                         // Fetch the related PersonalInformations
-//                         $personalInfo = $farmProfile->personalInformation;
-
-//                         if ($personalInfo) {
-//                             $personalInfos->push($personalInfo);
-//                         }
-//                     }
-//                 }
-//             }
-
-//             // Remove duplicate personal information records
-//             $personalInfos = $personalInfos->unique('id');
-
-//                 $cropName = $request->input('crop_name');
-
-                
-            
-//                 //  Fetch all crop data or filter based on the selected crop name
-//                  if ($cropName && $cropName != 'All') {
-//                     $cropData = Crop::where('farm_profiles_id', $id)
-//                                     ->where('crop_name', $cropName)
-                                    
-//                                     ->get();
-//                 } else {
-//                     $cropData = Crop::where('farm_profiles_id', $id)
-//                                     ->with( 'farmprofile')
-//                                     ->get();
-//                 }
-//                 $productionData = LastProductionDatas::where('crops_farms_id', $id)
-//                                                 ->with('crop')
-//                                                 ->get();
-           
-               
-//                 // fixed cost
-//                 $FixedData = FixedCost::where('last_production_datas_id', $id)
-           
-//                 ->get();
-
-//                 $machineriesData =MachineriesUseds::where('last_production_datas_id', $id)
-           
-//                 ->get();
-//                 $variableData =VariableCost::where('last_production_datas_id', $id)
-           
-//                 ->get();
-      
-
-            
-//             $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-//             // Return the view with the fetched data
-//             return view('admin.farmersdata.production', compact('admin', 'profile', 'farmProfile','totalRiceProduction'
-//             ,'userId','agri_district','agri_districts_id','cropData','id','productionData','FixedData'
-//             ,'farmData','machineriesData','variableData','personalInfos'
-//             ));
-//         } else {
-//             // Handle the case where the user is not found
-//             // You can redirect the user or display an error message
-//             return redirect()->route('login')->with('error', 'User not found.');
-//         }
-//     } else {
-//         // Handle the case where the user is not authenticated
-//         // Redirect the user to the login page
-//         return redirect()->route('login');
-//     }
-// }
 public function productionview (Request $request, $id)
 {
     // Check if the user is authenticated
@@ -1344,8 +1012,7 @@ public function productionview (Request $request, $id)
     }
 }
 
-
-// add new production if empty
+// add 
   
 public function productionAdd(Request $request,$id)
 {
@@ -1440,7 +1107,6 @@ public function productionAdd(Request $request,$id)
 }
 
     // store new production
-
 
     public function productionSave(Request $request)
     {
@@ -1599,7 +1265,7 @@ public function productionAdd(Request $request,$id)
          }  
         
 
-
+        //  update
          public function productionEdit(Request $request,$id)
          {
              // Check if the user is authenticated
@@ -1799,7 +1465,7 @@ public function productionAdd(Request $request,$id)
          }  
          } 
   
-
+        //  delete
          public function productiondelete($id) {
             try {
                 // Find thecrop farm by ID
@@ -1823,7 +1489,11 @@ public function productionAdd(Request $request,$id)
         }
     
 
-        // admin fixed cost 
+  // CRUD operations for managing fixed cost data related to production:
+// - Create: Adds new fixed cost records (e.g., equipment, rent, utilities) to the database.
+// - Read: Retrieves and displays fixed cost data for analysis or financial reporting.
+// - Update: Modifies existing fixed cost records based on updated cost details or changes in expenses.
+// - Delete: Removes fixed cost data from the database when no longer required or applicable.
 
         public function fixedAdd(Request $request,$id)
         {
@@ -1917,8 +1587,7 @@ public function productionAdd(Request $request,$id)
                 return redirect()->route('login');
             }
         }
-
-
+        // store data
         public function fixedSave(Request $request)
         {
        
@@ -2026,7 +1695,7 @@ public function productionAdd(Request $request,$id)
                      'success' => "Saved to database" // Corrected the syntax here
                  ];
              }  
-
+            //  update and edit
              public function fixedEdit(Request $request, $id)
              {
                  // Check if the user is authenticated
@@ -2193,8 +1862,7 @@ public function productionAdd(Request $request,$id)
              }  
              } 
 
-
-              
+            //  delete
        public function fixeddelete($id) {
         try {
             // Find thecrop farm by ID
@@ -2217,6 +1885,13 @@ public function productionAdd(Request $request,$id)
         }
     }
 
+// CRUD operations for managing machinery cost data:
+// - Create: Adds new machinery cost records (e.g., purchase cost, maintenance, repairs) to the database.
+// - Read: Retrieves and displays machinery cost data for analysis or reporting purposes.
+// - Update: Modifies existing machinery cost records based on updated expenses or equipment changes.
+// - Delete: Removes machinery cost data from the database when no longer necessary or applicable.
+
+    // add 
 
     public function AddMachinerie(Request $request,$id)
     {
@@ -2312,7 +1987,7 @@ public function productionAdd(Request $request,$id)
         }
     }
 
-
+    // store
     
     public function MachineriesSave(Request $request)
     {
@@ -2422,6 +2097,8 @@ public function productionAdd(Request $request,$id)
              ];
          }  
 
+        //  update and edit
+
          public function MachineriesEdit(Request $request, $id)
          {
              // Check if the user is authenticated
@@ -2514,8 +2191,7 @@ public function productionAdd(Request $request,$id)
                  return redirect()->route('login');
              }
          }
-
-         
+   
          public function MachineriesUpdate(Request $request,$id)
          {
 
@@ -2606,8 +2282,8 @@ public function productionAdd(Request $request,$id)
      }  
          }
 
+        //  delete
 
-         
          public function Machineriesdelete($id) {
             try {
             // Find thecrop farm by ID
@@ -2631,8 +2307,17 @@ public function productionAdd(Request $request,$id)
             }
 
 
-            
-    public function AddVariable(Request $request,$id)
+
+
+// CRUD operations for managing variable cost data:
+// - Create: Adds new variable cost records (e.g., raw materials, labor, utilities) to the database.
+// - Read: Retrieves and displays variable cost data for analysis, financial reporting, or decision-making.
+// - Update: Modifies existing variable cost records based on changes in expenses or input requirements.
+// - Delete: Removes variable cost data from the database when no longer relevant or needed.
+
+            //  add
+
+            public function AddVariable(Request $request,$id)
     {
         // Check if the user is authenticated
         if (Auth::check()) {
@@ -2725,7 +2410,7 @@ public function productionAdd(Request $request,$id)
             return redirect()->route('login');
         }
     }
-
+            // store
     public function VariableSave(Request $request)
     {
    
@@ -2834,7 +2519,7 @@ public function productionAdd(Request $request,$id)
              ];
          }  
 
-
+            // update and edit
     public function VariableEdit(Request $request, $id)
     {
         // Check if the user is authenticated
@@ -3032,6 +2717,8 @@ public function productionAdd(Request $request,$id)
     }  
     } 
 
+        // Delete
+
     public function Variabledelete($id) {
         try {
         // Find thecrop farm by ID
@@ -3054,6 +2741,13 @@ public function productionAdd(Request $request,$id)
         }
         }
 
+// CRUD operations for managing production sold data:
+// - Create: Adds new records for products sold (e.g., quantities, sale price, and date of sale) to the database.
+// - Read: Retrieves and displays production sold data for reporting, analysis, or decision-making purposes.
+// - Update: Modifies existing records of sold production based on changes in quantities, prices, or sale conditions.
+// - Delete: Removes production sold records from the database when no longer needed or applicable.
+
+        // add
 
         public function AddSolds(Request $request, $id)
         {
@@ -3150,6 +2844,8 @@ public function productionAdd(Request $request,$id)
             }
         }
 
+        // store
+
         public function SoldsSave(Request $request)
         {
        
@@ -3189,28 +2885,8 @@ public function productionAdd(Request $request,$id)
                  ];
              }  
 
+            //  update and edit 
 
-             public function Soldsdelete($id) {
-                try {
-                // Find thecrop farm by ID
-                $Solds =ProductionSold::find($id);
-
-                // Check if thecrop farm exists
-                if (!$Solds) {
-                return redirect()->back()->with('error', 'Production Solds  not found');
-                }
-
-                // Delete theProduction Solds  data from the database
-                $Solds->delete();
-
-                // Redirect back with success message
-                return redirect()->back()->with('message', 'Production Solds  deleted successfully');
-
-                } catch (\Exception $e) {
-                // Handle any exceptions and redirect back with error message
-                return redirect()->back()->with('error', 'Error deleting Production Solds: ' . $e->getMessage());
-                }
-                }
              public function SoldsEdit(Request $request, $id)
              {
                  // Check if the user is authenticated
@@ -3333,7 +3009,33 @@ public function productionAdd(Request $request,$id)
                  }
              }
 
+            //  delete
 
+             public function Soldsdelete($id) {
+                try {
+                // Find thecrop farm by ID
+                $Solds =ProductionSold::find($id);
+
+                // Check if thecrop farm exists
+                if (!$Solds) {
+                return redirect()->back()->with('error', 'Production Solds  not found');
+                }
+
+                // Delete theProduction Solds  data from the database
+                $Solds->delete();
+
+                // Redirect back with success message
+                return redirect()->back()->with('message', 'Production Solds  deleted successfully');
+
+                } catch (\Exception $e) {
+                // Handle any exceptions and redirect back with error message
+                return redirect()->back()->with('error', 'Error deleting Production Solds: ' . $e->getMessage());
+                }
+                }
+
+
+
+//samplefolder function darmer data from the form. Upon clicking the save or submit button, the input data is passed to the database for storage.
 
 public function samplefolder(Request $request) {
     // Check if the user is authenticated
@@ -3568,7 +3270,7 @@ public function samplefolder(Request $request) {
         }
 }
 
-
+// Function to check if the farmer already exists in the database. If the farmer’s data is found, the form submission is halted and a validation message is provided to the user.
 
 
 public function checkFarmerExistence(Request $request)
@@ -3582,9 +3284,7 @@ public function checkFarmerExistence(Request $request)
     return response()->json(['exists' => $exists]);
 }
 
-
-
-
+// save form
 public function test(Request $request)
 {
 
@@ -3849,265 +3549,6 @@ public function test(Request $request)
           'success' => "Saved to database" // Corrected the syntax here
       ];
   }
-
-
-  public function updatefarmer(Request $request,$id)
-  {
-  
-  
-  
-        // Farmer info
-        $farmerdata = $request -> farmer;
-  
-        // $existingFarmer = PersonalInformations::where('last_name', $farmerdata['last_name'])
-        // ->where('first_name', $farmerdata['first_name'])
-        // ->where('mothers_maiden_name', $farmerdata['mothers_maiden_name'])
-        // ->where('date_of_birth', $farmerdata['date_of_birth'])
-        // ->first();
-  
-        // if ($existingFarmer) {
-        //     return response()->json([
-        //         'error' => 'A record with this last name, first name, mother\'s maiden name, and date of birth already exists.'
-        //     ], 400); // Send a 400 Bad Request status code
-        // }
-        $farmerModel =PersonalInformations::find($id);
-        $farmerModel -> users_id = $farmerdata['users_id'];
-        $farmerModel -> first_name = $farmerdata['first_name'];
-        $farmerModel -> middle_name= $farmerdata['middle_name'];
-        $farmerModel -> last_name= $farmerdata['last_name'];
-        $farmerModel -> extension_name = $farmerdata['extension_name'];
-        $farmerModel -> country= $farmerdata['country'];
-        $farmerModel -> province= $farmerdata['province'];
-        $farmerModel -> city = $farmerdata['city'];
-        $farmerModel -> district= $farmerdata['agri_district'];
-        $farmerModel -> barangay= $farmerdata['barangay'];
-        $farmerModel -> street= $farmerdata['street'];
-        $farmerModel -> zip_code= $farmerdata['zip_code'];
-        $farmerModel -> sex= $farmerdata['sex'];
-        $farmerModel -> religion = $farmerdata['religion'];
-        $farmerModel -> date_of_birth= $farmerdata['date_of_birth'];
-        $farmerModel -> place_of_birth= $farmerdata['place_of_birth'];
-        $farmerModel -> contact_no = $farmerdata['contact_no'];
-        $farmerModel -> civil_status= $farmerdata['civil_status'];
-        $farmerModel -> name_legal_spouse= $farmerdata['name_legal_spouse'];
-        $farmerModel -> no_of_children = $farmerdata['no_of_children'];
-        $farmerModel -> mothers_maiden_name= $farmerdata['mothers_maiden_name'];
-        $farmerModel -> highest_formal_education= $farmerdata['highest_formal_education'];
-        $farmerModel -> person_with_disability = $farmerdata['person_with_disability'];
-        $farmerModel -> pwd_id_no= $farmerdata['YEspwd_id_no'];
-        $farmerModel -> government_issued_id= $farmerdata['government_issued_id'];
-        $farmerModel -> id_type = $farmerdata['id_type'];
-        $farmerModel -> gov_id_no= $farmerdata['add_Idtype'];
-        $farmerModel -> member_ofany_farmers_ass_org_coop= $farmerdata['member_ofany_farmers'];
-        $farmerModel -> nameof_farmers_ass_org_coop = $farmerdata['nameof_farmers'];
-        $farmerModel -> name_contact_person= $farmerdata['name_contact_person'];
-        $farmerModel -> cp_tel_no= $farmerdata['cp_tel_no'];
-        $farmerModel -> date_interview= $farmerdata['date_of_interviewed'];
-        $farmerModel ->save();
-  
-  
-      // VARIABLES
-      // VARIABLES
-    //   $farmer_id = $farmerModel -> id;
-    //   // VARIABLES
-    //   // VARIABLES
-  
-    //      // Farm info
-    //     $farms = $request -> farm;
-    //     $farmModel = new FarmProfile();
-  
-    //     $farmModel -> users_id = $farmerModel -> users_id;
-  
-    //     // FROM USER
-    //     $farmModel -> agri_districts_id = 1;
-  
-  
-    //     $farmModel -> personal_informations_id = $farmer_id;
-  
-    //   //   $farmModel -> polygons_id = $farms['polygons_id'];
-    //   //   $farmModel -> agri_districts = $farms['agri_districts'];
-  
-    //     $farmModel -> tenurial_status = $farms['tenurial_status'];
-    //     $farmModel -> farm_address = $farms['farm_address'];
-  
-    //     $farmModel -> no_of_years_as_farmers = $farms['no_of_years_as_farmers'];
-    //     $farmModel -> gps_longitude = $farms['gps_longitude'];
-    //     $farmModel -> gps_latitude = $farms['gps_latitude'];
-    //     $farmModel -> total_physical_area = $farms['Total_area_cultivated_has'];
-    //     $farmModel -> total_area_cultivated = $farms['Total_area_cultivated_has'];
-    //     $farmModel -> land_title_no = $farms['land_title_no'];
-    //     $farmModel -> lot_no = $farms['lot_no'];
-    //     $farmModel -> area_prone_to = $farms['area_prone_to'];
-    //     $farmModel -> ecosystem = $farms['ecosystem'];
-    //     $farmModel -> rsba_registered = $farms['rsba_register'];
-    //     $farmModel -> pcic_insured = $farms['pcic_insured'];
-    //     $farmModel -> government_assisted = $farms['government_assisted'];
-    //     $farmModel -> source_of_capital = $farms['source_of_capital'];
-    //     $farmModel -> remarks_recommendation = $farms['remarks'];
-    //     $farmModel -> oca_district_office =$farmerModel -> district;
-    //     $farmModel -> name_of_field_officer_technician = $farms['name_technicians'];
-    //     $farmModel -> date_interviewed = $farms['date_interview'];
-  
-    //     $farmModel ->save();
-       
-    //   // VARIABLES
-    //   // VARIABLES
-    //   $farm_id = $farmModel -> id;
-    //   $users_id =  $farmerModel -> users_id;
-    //   // VARIABLES
-    //   // VARIABLES
-  
-  
-    //     // Crop info 
-    //     foreach ($request -> crops as $crop) {
-    //         $cropModel = new Crop();
-    //         $cropModel -> farm_profiles_id = $farm_id;
-    //         $cropModel -> crop_name = $crop['crop_name'];
-    //         $cropModel -> users_id = $users_id;
-    //         $cropModel -> planting_schedule_dryseason = $crop['variety']['dry_season'];
-    //         $cropModel -> no_of_cropping_per_year = $crop['variety']['no_cropping_year'];
-    //         $cropModel -> preferred_variety = $crop['variety']['preferred'];
-    //         $cropModel -> type_of_variety_planted = $crop['variety']['type_variety'];
-    //         $cropModel -> planting_schedule_wetseason	 = $crop['variety']['wet_season'];
-    //         $cropModel -> yield_kg_ha = $crop['variety']['yield_kg_ha'];
-    //         $cropModel -> save();
-  
-    //         $crop_id = $cropModel -> id;
-  
-    //         $productionModel = new LastProductionDatas();
-    //         $productionModel -> users_id = $users_id;
-    //         $productionModel -> farm_profiles_id = $farm_id;
-    //         $productionModel -> crops_farms_id = $crop_id;
-    //         $productionModel -> seed_source = $crop['production']['seedSource'];
-    //         $productionModel -> seeds_used_in_kg = $crop['production']['seedUsed'];
-    //         $productionModel -> seeds_typed_used = $crop['production']['seedtype'];
-    //         $productionModel -> no_of_fertilizer_used_in_bags = $crop['production']['fertilizedUsed'];
-    //         $productionModel -> no_of_insecticides_used_in_l = $crop['production']['insecticide'];
-    //         $productionModel -> no_of_pesticides_used_in_l_per_kg = $crop['production']['pesticidesUsed'];
-    //         $productionModel -> area_planted = $crop['production']['areaPlanted'];
-    //         $productionModel -> date_planted = $crop['production']['datePlanted'];
-    //         $productionModel -> date_planted = $crop['production']['Dateharvested'];
-    //         $productionModel -> unit = $crop['production']['unit'];
-    //         $productionModel -> yield_tons_per_kg = $crop['production']['yieldkg'];
-        
-           
-    //         $productionModel -> save();
-  
-    //       // productionid
-    //       $productionId=$productionModel ->id;
-  
-    //       foreach ($crop['sales'] as $sale) {
-    //           // Create a new sale associated with the production ID
-    //           $salesModel = new ProductionSold();
-    //           $salesModel -> last_production_datas_id = $productionId;
-    //           $salesModel -> sold_to = $sale['soldTo'];
-    //           $salesModel -> measurement = $sale['measurement'];
-    //           $salesModel -> 	unit_price_rice_per_kg = $sale['unit_price'];
-    //           $salesModel -> 	quantity = $sale['quantity'];
-    //           $salesModel -> 	gross_income = $sale['grossIncome'];
-    //           $salesModel ->save();
-    //       }
-  
-  
-    //       // FIXED COST
-    //       $fixedcostModel = new FixedCost();
-    //       $fixedcostModel -> users_id = $users_id;
-    //       $fixedcostModel -> farm_profiles_id = $farm_id;
-    //       $fixedcostModel -> crops_farms_id = $crop_id;
-    //       $fixedcostModel -> last_production_datas_id = $productionId;
-    //       $fixedcostModel -> 	particular = $crop['fixedCost']['particular'];
-    //       $fixedcostModel -> no_of_ha = $crop['fixedCost']['no_of_has'];
-    //       $fixedcostModel -> cost_per_ha = $crop['fixedCost']['costperHas'];
-    //       $fixedcostModel -> total_amount = $crop['fixedCost']['TotalFixed'];
-    //       $fixedcostModel -> save();
-  
-    //       // machineries
-    //         $machineriesModel = new MachineriesUseds();
-    //         $machineriesModel -> users_id = $users_id;
-    //         $machineriesModel -> farm_profiles_id = $farm_id;
-    //         $machineriesModel -> crops_farms_id = $crop_id;
-    //         $machineriesModel -> last_production_datas_id = $productionId;
-    //         $machineriesModel-> plowing_machineries_used = $crop['machineries']['PlowingMachine'];
-    //         $machineriesModel -> plo_ownership_status = $crop['machineries']['plow_status'];
-          
-    //         $machineriesModel -> no_of_plowing = $crop['machineries']['no_of_plowing'];
-    //         $machineriesModel -> plowing_cost = $crop['machineries']['cost_per_plowing'];
-    //         $machineriesModel -> plowing_cost_total = $crop['machineries']['plowing_cost'];
-    //         $machineriesModel -> harrowing_machineries_used = $crop['machineries']['harro_machine'];
-    //         $machineriesModel -> harro_ownership_status = $crop['machineries']['harro_ownership_status'];
-    //         $machineriesModel -> no_of_harrowing = $crop['machineries']['no_of_harrowing'];
-    //         $machineriesModel -> harrowing_cost = $crop['machineries']['cost_per_harrowing'];
-    //         $machineriesModel -> harrowing_cost_total = $crop['machineries']['harrowing_cost_total'];
-    //         $machineriesModel -> harvesting_machineries_used = $crop['machineries']['harvest_machine'];
-    //         $machineriesModel -> harvest_ownership_status	 = $crop['machineries']['harvest_ownership_status'];
-         
-    //       //   $machineriesModel -> harvesting_cost = $crop['machineries']['harvesting_cost'];
-    //         $machineriesModel -> harvesting_cost_total = $crop['machineries']['Harvesting_cost_total'];
-    //         $machineriesModel -> postharvest_machineries_used = $crop['machineries']['postharves_machine'];
-    //         $machineriesModel -> postharv_ownership_status = $crop['machineries']['postharv_ownership_status'];
-    //         $machineriesModel -> post_harvest_cost = $crop['machineries']['postharvestCost'];
-    //         $machineriesModel -> 	total_cost_for_machineries = $crop['machineries']['total_cost_for_machineries'];
-    //         $machineriesModel -> save();
-  
-    //       //   variable cost
-    //         $variablesModel = new VariableCost();
-    //         $variablesModel -> users_id = $users_id;
-    //         $variablesModel -> farm_profiles_id = $farm_id;
-    //         $variablesModel -> crops_farms_id = $crop_id;
-    //         $variablesModel -> last_production_datas_id = $productionId;
-    //       //   seeds
-        
-    //         $variablesModel -> seed_name = $crop['variables']['seed_name'];
-    //         $variablesModel -> unit = $crop['variables']['unit'];
-    //         $variablesModel -> quantity = $crop['variables']['quantity'];
-    //         $variablesModel -> unit_price = $crop['variables']['unit_price_seed'];
-    //         $variablesModel -> total_seed_cost = $crop['variables']['total_seed_cost'];
-  
-    //          //   seeds
-    //          $variablesModel -> labor_no_of_person = $crop['variables']['no_of_person'];
-    //          $variablesModel -> rate_per_person = $crop['variables']['rate_per_person'];
-    //          $variablesModel -> total_labor_cost = $crop['variables']['total_labor_cost'];
-  
-    //           // fertilizer
-    //          $variablesModel -> name_of_fertilizer = $crop['variables']['name_of_fertilizer'];
-    //          $variablesModel -> type_of_fertilizer = $crop['variables']['total_seed_cost'];
-    //          $variablesModel -> no_of_sacks = $crop['variables']['no_ofsacks'];
-    //          $variablesModel -> unit_price_per_sacks = $crop['variables']['unitprice_per_sacks'];
-    //          $variablesModel -> total_cost_fertilizers = $crop['variables']['total_cost_fertilizers'];
-  
-    //            //pesticides
-    //            $variablesModel -> pesticide_name = $crop['variables']['pesticides_name'];
-    //           //  $variablesModel ->	type_of_pesticides = $crop['variables']['no_of_l_kg'];2
-    //            $variablesModel -> no_of_l_kg = $crop['variables']['no_of_l_kg'];
-    //            $variablesModel -> unit_price_of_pesticides = $crop['variables']['unitprice_ofpesticides'];
-    //            $variablesModel -> total_cost_pesticides = $crop['variables']['total_cost_pesticides'];
-           
-    //             //transportation
-    //             $variablesModel -> name_of_vehicle = $crop['variables']['type_of_vehicle'];
-               
-    //             $variablesModel -> total_transport_delivery_cost = $crop['variables']['total_seed_cost'];
-             
-    //             $variablesModel -> total_machinery_fuel_cost= $crop['variables']['total_machinery_fuel_cost'];
-    //             $variablesModel -> total_variable_cost= $crop['variables']['total_variable_costs'];
-    //             $variablesModel -> save();
-       
-            //     return $request;
-            //   }
-  
-     
-  
-  
-  
-  
-  
-  
-        // Return success message
-        return [
-            'success' => "Successfull Farmers info updated" // Corrected the syntax here
-        ];
-    }
-  
-
 
 
 

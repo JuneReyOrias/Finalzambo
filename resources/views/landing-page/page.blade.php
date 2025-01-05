@@ -49,13 +49,7 @@
                             <span class="toggler-icon"> </span>
 
                         </button>
-                        {{-- @if ($errors->any())
-              <ul class="alert alert-warning">
-                @foreach ($errors->all() as $error)
-                <li>{{$error}}</li>
-                @endforeach
-              </ul>
-              @endif --}}
+
                         <div class="navbar-collapse">
                             <ul id="nav" class="navbar-nav mx-auto">
                                 <li class="nav-item">
@@ -75,10 +69,7 @@
                                     <a href="{{ route('login') }}" href="javascript:void(0)">Log in</a>
 
                                 </li>
-                                {{-- <li class="nav-item">
-                    <a href="{{route('register')}}" href="javascript:void(0)" >Register</a>
-              
-                  </li> --}}
+
                             </ul>
                         </div>
 
@@ -109,28 +100,8 @@
                             <img src="../assets/logo/agriculture.jpg" alt="header-logo"
                                 style="width: 60px; height:60px;border-radius: 50%; position: absolute; top: -20px; left: 50%; transform: translateX(-50%);" />
                         </div>
-                        <!-- Logo Carousel Overlay -->
-                        {{-- <div id="logoCarousel" class="carousel slide" data-bs-ride="carousel" style="position: absolute; top: -60px; left: 50%; transform: translateX(-50%); width: 60px; height: 60px; border-radius: 50%; overflow: hidden;">
-                  <div class="carousel-inner">
-                      <div class="carousel-item active">
-                          <img src="../assets/logo/agriculture.jpg" alt="logo-1" class="d-block w-100" style="height: 60px; border-radius: 50%;" />
-                      </div>
-                      <div class="carousel-item">
-                          <img src="../assets/logo/Citylogo.jpg" alt="logo-2" class="d-block w-100" style="height: 60px; border-radius: 50%;" />
-                      </div>
-                      <div class="carousel-item">
-                          <img src="landing_page/assets/images/footer/brands/Picture1.png" alt="logo-3" class="d-block w-100" style="height: 60px; border-radius: 50%;" />
-                      </div>
-                      <div class="carousel-item">
-                          <img src="landing_page/assets/images/footer/brands/cs-logo.png" alt="logo-4" class="d-block w-100" style="height: 60px; border-radius: 50%;" />
-                      </div>
-                  </div>
-              </div>
-       --}}
-                        <!-- Heading with Modal Trigger -->
-                        {{-- <h1 class="ud-hero-title" data-toggle="modal" data-target="#infoModal" style="cursor: pointer;">
-            Zambo AgriMap or Geo mapping
-        </h1> --}}
+
+
                         <h1 class="ud-hero-title" id="agriMapTitle" data-toggle="modal" data-target="#infoModal"
                             style="cursor: pointer;">
                             <!-- Title will be injected here -->
@@ -166,52 +137,12 @@
                         <div class="modal-body" id="modalBody">
 
                         </div>
-                        {{-- <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div> --}}
+
                     </div>
                 </div>
             </div>
 
-            {{-- 
-<div class=" wow fadeInUp carousel slide" data-wow-delay=".25s" data-bs-ride="carousel">
 
-    <div class="carousel-inner">
-      <!-- First Carousel Item -->
-      <div class="carousel-item active">
-        <img src="landing_page/assets/images/hero/agrimap.png" alt="hero-image" class="d-block w-100" style="border-radius: 10%;">
-      </div>
-      <!-- Additional Carousel Items -->
-      <div class="carousel-item">
-        <img src="../assets/logo/agriculture.jpg" alt="shape" class="d-block w-100 shape shape-1" style="border-radius: 10%; width:100%">
-      </div>
-      <div class="carousel-item">
-        <img src="landing_page/assets/images/hero/agrimap.png" alt="shape" class="d-block w-100 shape shape-2" style="border-radius: 10%;">
-      </div>
-    </div>
-    
-    <!-- Carousel Controls -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
-
-  
-  <img
-    src="landing_page/assets/images/hero/dotted-shape.svg"
-    alt="shape"
-    class="shape shape-1"
-  />
-  <img
-    src="landing_page/assets/images/hero/dotted-shape.svg"
-    alt="shape"
-    class="shape shape-2"
-  />
-</div> --}}
 
 
             <div class="row mt-5">
@@ -224,12 +155,7 @@
                                         href="#all-crops" role="tab" aria-controls="all-crops"
                                         aria-selected="true">All Crops</a>
                                 </li>
-                                {{-- <li class="nav-item">
-                          <a class="nav-link" id="agri-districts-tab" data-bs-toggle="tab" href="#agri-districts" role="tab" aria-controls="agri-districts" aria-selected="false">Agri Districts</a>
-                      </li>
-                      <li class="nav-item">
-                          <a class="nav-link" id="grpas-tab" data-bs-toggle="tab" href="#grpas" role="tab" aria-controls="grpas" aria-selected="false">GRPAS</a>
-                      </li> --}}
+
                                 <li class="nav-item">
                                     <a class="nav-link" id="farmers-tab" data-bs-toggle="tab" href="#farmers"
                                         role="tab" aria-controls="farmers" aria-selected="false">Farmers</a>
@@ -247,29 +173,7 @@
                                 <div class="data-analytics-section text-center my-4 mb-2">
                                     <h3 class="text-white">All Crops Production</h3>
                                     <p class="mb-4">View the aggregated production data across all crops.</p>
-                                    <!-- Other content goes here -->
-                                    <!-- Crop Name Dropdown -->
-                                    {{-- <div class="row justify-content-left mb-3">
-                              <div class="col-md-2"> <!-- Adjust column width for crop dropdown -->
-                                  <select id="cropName" class="form-select form-select-sm"> <!-- Use form-select-sm for a smaller dropdown -->
-                                      <option value="">All Crops</option>
-                                      @foreach ($crops as $crop)
-                                          <option value="{{ $crop }}">{{ ucwords(strtolower($crop)) }}</option>
-                                      @endforeach
-                                  </select>
-                              </div>
-                              
-                              <div class="col-md-2"> <!-- Adjust column width for district dropdown -->
-                                 
-                                  <select id="district" class="form-select form-select-sm">
-                                      <option value="">All Districts</option>
-                                      @foreach ($districts as $district)
-                                          <option value="{{ $district }}">{{ ucwords(strtolower($district)) }}</option>
-                                      @endforeach
-                                  </select>
-                              </div>
-                          </div>
-                           --}}
+
                                     <div class="row justify-content-left mb-3">
                                         <div class="col-md-2"> <!-- Adjust column width for crop dropdown -->
                                             <select id="cropName" class="form-select form-select-sm">
@@ -292,10 +196,7 @@
                                             </select>
                                         </div>
 
-                                        {{-- <div class="col-md-4"> <!-- Optional: You can add more filters like date range here -->
-                                <input type="date" id="dateFrom" class="form-control form-control-sm" placeholder="Date From">
-                                <input type="date" id="dateTo" class="form-control form-control-sm" placeholder="Date To">
-                            </div> --}}
+
                                     </div>
 
 
@@ -450,79 +351,6 @@
                                 </div>
                             </div>
 
-                            <!-- Agri Districts Tab Pane -->
-                            {{-- <div class="tab-pane fade" id="agri-districts" role="tabpanel" aria-labelledby="agri-districts-tab">
-                          <div class="data-analytics-section text-center my-4 mb-3">
-                              <h3 class="text-white">Production by Agri Districts</h3>
-                              <p class="mb-4" >Analyze production data by specific agricultural districts.</p>
-                              <div class="table-responsive">
-                                  <table class="table table-striped table-bordered">
-                                      <thead>
-                                          <tr>
-                                              <th>District</th>
-                                              <th>Crop Name</th>
-                                              <th>Production (tons)</th>
-                                              <th>Yield per Hectare (kg/ha)</th>
-                                              <th>Area Planted (ha)</th>
-                                          </tr>
-                                      </thead>
-                                      <tbody>
-                                          <tr>
-                                              <th>District 1</th>
-                                              <td>Rice</td>
-                                              <td>300</td>
-                                              <td>2100</td>
-                                              <td>150</td>
-                                          </tr>
-                                          <tr>
-                                              <th>District 2</th>
-                                              <td>Corn</td>
-                                              <td>200</td>
-                                              <td>1400</td>
-                                              <td>100</td>
-                                          </tr>
-                                      </tbody>
-                                  </table>
-                              </div>
-                          </div>
-                      </div> --}}
-
-                            <!-- GRPAS Tab Pane -->
-                            {{-- <div class="tab-pane fade" id="grpas" role="tabpanel" aria-labelledby="grpas-tab">
-                          <div class="data-analytics-section text-center my-4 mb-2">
-                              <h3 class="text-white">GRPAS Data Analysis</h3>
-                              <p class="mb-4">Explore production statistics per GRPAS classification.</p>
-                              <div class="table-responsive">
-                                  <table class="table table-striped table-bordered">
-                                      <thead>
-                                          <tr>
-                                              <th>GRPAS Category</th>
-                                              <th>Crop Name</th>
-                                              <th>Production (tons)</th>
-                                              <th>Yield per Hectare (kg/ha)</th>
-                                              <th>Area Planted (ha)</th>
-                                          </tr>
-                                      </thead>
-                                      <tbody>
-                                          <tr>
-                                              <th>High Yield</th>
-                                              <td>Rice</td>
-                                              <td>500</td>
-                                              <td>2200</td>
-                                              <td>230</td>
-                                          </tr>
-                                          <tr>
-                                              <th>Moderate Yield</th>
-                                              <td>Corn</td>
-                                              <td>320</td>
-                                              <td>1500</td>
-                                              <td>210</td>
-                                          </tr>
-                                      </tbody>
-                                  </table>
-                              </div>
-                          </div>
-                      </div> --}}
 
                             <!-- Farmers Tab Pane -->
                             <div class="tab-pane fade" id="farmers" role="tabpanel" aria-labelledby="farmers-tab">
@@ -600,49 +428,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- <!-- Card 5 -->
-                                <div class="col-md-3">
-                                    <div class="card mb-4">
-                                        <div class="card-body">
-                                          <h5 class="card-title">Gender</h5>
-                                          <canvas id="genderChart" width="180" height="180"></canvas>
-                                            
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Card 6 -->
-                                <div class="col-md-3">
-                                    <div class="card mb-4">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Barley</h5>
-                                            <p class="card-text">Production: 220 tons</p>
-                                            <p class="card-text">Yield per Hectare: 1900 kg/ha</p>
-                                            <p class="card-text">Area Planted: 130 ha</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Card 7 -->
-                                <div class="col-md-3">
-                                    <div class="card mb-4">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Potato</h5>
-                                            <p class="card-text">Production: 340 tons</p>
-                                            <p class="card-text">Yield per Hectare: 2100 kg/ha</p>
-                                            <p class="card-text">Area Planted: 160 ha</p>
-                                        </div>
-                                    </div>
-                                </div> --}}
-                                        <!-- Card 8 -->
-                                        {{-- <div class="col-md-3">
-                                    <div class="card mb-4">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Tomato</h5>
-                                            <p class="card-text">Production: 400 tons</p>
-                                            <p class="card-text">Yield per Hectare: 2200 kg/ha</p>
-                                            <p class="card-text">Area Planted: 180 ha</p>
-                                        </div>
-                                    </div>
-                                </div> --}}
+
                                     </div>
                                 </div>
                             </div>
@@ -681,9 +467,7 @@
                                 <div class="modal-body" id="agriMapdescriptionFeature">
 
                                 </div>
-                                {{-- <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                      </div> --}}
+
                             </div>
                         </div>
                     </div>
@@ -882,9 +666,7 @@
                             <li>
                                 <a href="javascript:void(0)">About</a>
                             </li>
-                            {{-- <li>
-                    <a href="javascript:void(0)">Testimonial</a>
-                  </li> --}}
+
                         </ul>
                     </div>
                 </div>
@@ -901,9 +683,7 @@
                             <li>
                                 <a href="javascript:void(0)">Terms of service</a>
                             </li>
-                            {{-- <li>
-                    <a href="javascript:void(0)">Refund policy</a>
-                  </li> --}}
+
                         </ul>
                     </div>
                 </div>
@@ -987,23 +767,15 @@
             <div class="row">
                 <div class="col-md-8">
                     <ul class="ud-footer-bottom-left">
-                        {{-- <li>
-                  <a href="javascript:void(0)">Privacy policy</a>
-                </li>
-                <li>
-                  <a href="javascript:void(0)">Support policy</a>
-                </li>
-                <li>
-                  <a href="javascript:void(0)">Terms of service</a>
-                </li> --}}
+
                     </ul>
                 </div>
-                <div class="col-md-4">
-                    <p class="ud-footer-bottom-right">
-                        Developed by
-                        <a href="https://uideck.com" rel="nofollow">June Rey</a>
-                    </p>
-                </div>
+                {{-- <div class="col-md-4">
+              <p class="ud-footer-bottom-right">
+               Developed by
+                <a href="https://uideck.com" rel="Developer">OJR</a>
+              </p>
+            </div> --}}
             </div>
         </div>
     </div>
@@ -1021,7 +793,7 @@
 <script src="landing_page/assets/js/wow.min.js"></script>
 <script src="landing_page/assets/js/main.js"></script>
 <script src="landing_page/assets/js/auth.js"></script>
-<script src="landing_page/assets/js/signup.js"></script>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
 
 <script>
@@ -1078,8 +850,7 @@
         });
     });
 </script>
-@include('modal.login')
-@include('modal.register')
+
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -1215,7 +986,7 @@
                 // });
             },
             error: function(xhr, status, error) {
-                console.error('Error fetching landing page data:', error);
+                // console.error('Error fetching landing page data:', error);
             }
         });
     });
@@ -1287,11 +1058,16 @@
                 // });
             },
             error: function(xhr, status, error) {
-                console.error('Error fetching landing page data:', error);
+                // console.error('Error fetching landing page data:', error);
             }
         });
     });
 </script>
+
+{{-- Function that retrieves and displays total farms, production data, crop variety distribution, and
+
+farm tenurial status across all districts for the farmer dashboard. --}}
+
 <script>
     $(document).ready(function() {
         // Initialize chart variables
@@ -1456,7 +1232,7 @@
             });
         }
 
-        // Function to update the Pie Chart
+
         // Function to update the Pie Chart
         function updatePieChart(pieChartData) {
             // Validate the pie chart data structure
@@ -1550,7 +1326,7 @@
             }
 
             // Log the bar chart data to the console for debugging
-            console.log('Bar Chart Data:', barChartData);
+            // console.log('Bar Chart Data:', barChartData);
 
             const ctx = document.getElementById('barChart').getContext('2d');
 
@@ -1824,293 +1600,8 @@
 
 
 
-        $(document).ready(function() {
-            $('#printButton').click(function() {
-                printReport();
-            });
-        });
 
-        function printReport() {
-            // Get content of the charts
-            const pieChartContent = document.getElementById('pieChart')
-                .toDataURL(); // Get chart image as data URL
-            const barChartContent = document.getElementById('barChart').toDataURL();
-            const donutChartContent = document.getElementById('donutChart').toDataURL();
-            const lineChartContent = document.getElementById('lineChart').toDataURL();
-
-            // Dynamic data (Farmer name, Signature)
-            const farmerName = "John Doe"; // Replace with dynamic data
-            const signContent =
-                "<img src='../assets/logo/Citylogo.jpg' style='width: 100px;' alt='Signature'/>"; // Update path to the actual image
-            const CityLogoContent =
-                "<img src='../assets/logo/agriculture.jpg' style='width: 100px;' alt='Signature'/>"; // Update path to the actual image
-            const totalFarms = document.getElementById('totalFarms')
-                .innerText; // Fetch total farms value dynamically
-            const totalAreaPlanted = document.getElementById('totalAreaPlanted')
-                .innerText; // Fetch total area planted value dynamically
-            const totalAreaYield = document.getElementById('totalAreaYield')
-                .innerText; // Fetch total area yield value dynamically
-            const totalCost = document.getElementById('totalCost')
-                .innerText; // Fetch total cost value dynamically
-            const yieldPerAreaPlanted = document.getElementById('yieldPerAreaPlanted')
-                .innerText; // Fetch yield per area planted value dynamically
-            const averageCostPerAreaPlanted = document.getElementById('averageCostPerAreaPlanted')
-                .innerText; // Fetch average cost per area planted value dynamically
-
-            // Open a new window for the printable report
-            const win = window.open('', '', 'height=900,width=1200');
-
-            // Write HTML and styles to the new window
-            win.document.write('<html><head><title>Agrimap Report</title>');
-            win.document.write(`
-              <style>
-                  body {
-                      font-family: Arial, sans-serif;
-                      margin: 0;
-                      padding: 0;
-                      display: flex;
-                      justify-content: center;
-                      align-items: center;
-                      text-align: center;
-                      background-color: #f4f4f4;
-                      color: black; /* Set default font color to black */
-                  }
-                  .report-container {
-                      max-width: 800px;
-                      margin: 20px auto;
-                      background: white;
-                      padding: 20px;
-                      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-                      border-radius: 8px;
-      
-                  }
-                     h2 {
-                      text-align: center;
-                      margin-top: 2px;
-                      margin-bottom: 110px;
-                      font-size:15px;
-                  }
-                  h1 {
-                      text-align: center;
-                      margin-top: 20px;
-                      margin-bottom: 3px;
-                      font-size:15px;
-                  }
-                  .results-container {
-                      margin-bottom: 40px;
-                      display: flex;
-                      justify-content: center;
-                      
-                      flex-wrap: wrap; /* Allows cards to wrap in case of narrow screens */
-                  }
-                  .card.custom-card {
-                      color: black; /* Default color for card text */
-                      width: 200px;
-                      border-radius: 8px;
-                      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-                      margin: 10px;
-                  }
-                  .card-body {
-                      padding: 20px;
-                      text-align: center;
-                  }
-                  .chart-container {
-                      margin-bottom: 50px;
-                      page-break-after: auto;
-                  }
-                  .signature {
-                      display: flex;
-                      justify-content: space-between;
-                      align-items: center;
-                      padding: 20px 0;
-                  }
-                  .signature img {
-                      height: 100px;
-                  }
-                  .signature h3 {
-                      margin: 0;
-                  }
-                  .chart-image {
-                      margin: 10px auto;
-                      display: block;
-                      width: 400px;
-                  }
-                 
-              </style>
-          `);
-            win.document.write('</head><body>');
-
-            // Centering content in a card-like structure
-            win.document.write('<div class="report-container">');
-
-            // Signature and header
-            win.document.write(`
-          <div class="signature" style="display: flex; justify-content: space-between; align-items: center;">
-      
-              ${signContent}
-              <div style="text-align: center; margin-top: 20px;">
-              <h1>Office of City Agriculture</h1>
-              <h2>Zamboanga City</h2>
-          </div>
-              <h3 style="margin: 0;"> ${CityLogoContent}</h3>
-          </div>
-      `);
-            // </div>
-            //         <h3 style="margin: 0;">Date: ${new Date().toLocaleDateString()}</h3>
-            //     </div>
-            // // Centering the Report Title and Farmer's Name
-            // win.document.write(`
-            //     <div style="text-align: center; margin-top: 20px;">
-            //         <h1>Agrimap Report</h1>
-            //         <h2>Farmer: ${farmerName}</h2>
-            //     </div>
-            // `);
-
-
-            // Results section with cards
-            win.document.write(`
-              <div class="results-container">
-                  <!-- Total Farms Card -->
-                  <div class="col-md-2 stretch-card">
-                      <div class="card custom-card bg">
-                          <div class="card-body">
-                              <div class="d-flex justify-content-center align-items-center flex-column">
-                                  <div class="text-center">
-                                      <h5 class="mb-2" id="printTotalFarms">${totalFarms}</h5>
-                                  </div>
-                                  <div class="small-title mt-2 text-center">
-                                      <h6 class="mb-0">Total Farms</h6>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-      
-                  <!-- Total Area Planted Card -->
-                  <div class="col-md-2 stretch-card">
-                      <div class="card custom-card bgma">
-                          <div class="card-body">
-                              <div class="d-flex justify-content-center align-items-center flex-column">
-                                  <div class="text-center">
-                                      <h5 class="mb-2" id="printTotalAreaPlanted">${totalAreaPlanted}</h5>
-                                  </div>
-                                  <div class="small-title mt-2 text-center">
-                                      <h6 class="mb-0">Total Area Planted (ha)</h6>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-      
-                  <!-- Total Area Yield Card -->
-                  <div class="col-md-2 stretch-card">
-                      <div class="card custom-card backg">
-                          <div class="card-body">
-                              <div class="d-flex justify-content-center align-items-center flex-column">
-                                  <div class="text-center">
-                                      <h5 class="mb-2" id="printTotalAreaYield">${totalAreaYield}</h5>
-                                  </div>
-                                  <div class="small-title mt-2 text-center">
-                                      <h6 class="mb-0">Total Area Yield (kg)</h6>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-      
-                  <!-- Total Cost Card -->
-                  <div class="col-md-2 stretch-card">
-                      <div class="card custom-card bgnew">
-                          <div class="card-body">
-                              <div class="d-flex justify-content-center align-items-center flex-column">
-                                  <div class="text-center">
-                                      <h5 class="mb-2" id="printTotalCost">${totalCost}</h5>
-                                  </div>
-                                  <div class="small-title mt-2 text-center">
-                                      <h6 class="mb-0">Total Cost (PHP)</h6>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-      
-                  <!-- Yield per Area Planted Card -->
-                  <div class="col-md-2 stretch-card">
-                      <div class="card custom-card">
-                          <div class="card-body">
-                              <div class="d-flex justify-content-center align-items-center flex-column">
-                                  <div class="text-center">
-                                      <h5 class="mb-2" id="printYieldPerAreaPlanted">${yieldPerAreaPlanted}</h5>
-                                  </div>
-                                  <div class="small-title mt-2 text-center">
-                                      <h6 class="mb-0">Yield per Area Planted (kg/ha)</h6>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-      
-                  <!-- Average Cost per Area Planted Card -->
-                  <div class="col-md-2 stretch-card">
-                      <div class="card custom-card bgma">
-                          <div class="card-body">
-                              <div class="d-flex justify-content-center align-items-center flex-column">
-                                  <div class="text-center">
-                                      <h5 class="mb-2" id="printAverageCostPerAreaPlanted">${averageCostPerAreaPlanted}</h5>
-                                  </div>
-                                  <div class="small-title mt-2 text-center">
-                                      <h6 class="mb-0">Ave. Cost/Area (PHP/ha)</h6>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          `);
-
-            // Charts section
-            win.document.write('<h2></h2>');
-
-            // Pie Chart
-            win.document.write(`
-              <div class="chart-container">
-                
-                  <img src="${pieChartContent}" class="chart-image">
-              </div>
-          `);
-
-            // Bar Chart
-            win.document.write(`
-              <div class="chart-container">
-                  
-                  <img src="${barChartContent}" class="chart-image">
-              </div>
-          `);
-
-            // Donut Chart
-            win.document.write(`
-              <div class="chart-container">
-            
-                  <img src="${donutChartContent}" class="chart-image">
-              </div>
-          `);
-
-            // Line Chart
-            win.document.write(`
-              <div class="chart-container">
-                 
-                  <img src="${lineChartContent}" class="chart-image">
-              </div>
-          `);
-
-            win.document.write('</div>'); // End of report-container
-            win.document.write('</body></html>');
-            win.document.close();
-            win.print();
-        }
-
-    });
-
+    })
 
     function openFarmersModal() {
         // Logic to fetch and display farmers data in the modal
@@ -2119,8 +1610,10 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+{{-- Retrieves and visualizes the distribution of farms across different districts, ensuring accurate representation of farm locations and areas for analysis. --}}
 
 <script>
     $(document).ready(function() {
@@ -2202,6 +1695,9 @@
         fetchFarmsPerDistrictData();
     });
 </script>
+
+
+{{-- Updates the Pie chart visualization to represent the Rice Gross Income distribution, ensuring the data reflects the latest financial metrics. --}}
 
 <script>
     $(document).ready(function() {
@@ -2298,13 +1794,16 @@
     }
 </script>
 
+
+{{-- Retrieves and calculates the total gender distribution of farmers across all districts for analysis or reporting purposes. --}}
+
 <script>
     $(document).ready(function() {
         $.ajax({
             url: '/farmer-profile-data',
             method: 'GET',
             success: function(data) {
-                console.log('Fetched Gender Distribution Data:', data);
+                // console.log('Fetched Gender Distribution Data:', data);
                 const ctx = document.getElementById('genderChart').getContext('2d');
                 const genderChart = new Chart(ctx, {
                     type: 'bar', // Set chart type to 'bar'
@@ -2350,6 +1849,10 @@
     });
 </script>
 
+
+{{-- Retrieves and processes data for MachineryCost and VariableCost of farmers across 
+all districts, ensuring accurate representation for analysis or display. --}}
+
 <script>
     $(document).ready(function() {
         $.ajax({
@@ -2360,7 +1863,7 @@
                 renderMachineryCostChart(response.labels, response.series);
             },
             error: function(xhr, status, error) {
-                console.error('Error fetching machinery cost data:', error);
+                // console.error('Error fetching machinery cost data:', error);
             }
         });
     });
@@ -2453,7 +1956,7 @@
                 renderVariableCostChart(response.variableCostLabels, response.variableCostSeries);
             },
             error: function(xhr, status, error) {
-                console.error('Error fetching variable cost data:', error);
+                // console.error('Error fetching variable cost data:', error);
             }
         });
     });
@@ -2525,6 +2028,10 @@
 </script>
 
 
+{{-- This function retrieves and displays the content of map markers and polygons on the map. 
+It ensures that marker details and polygon boundaries are dynamically
+ loaded and accurately rendered on the map interface. --}}
+
 <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMstylquYwo8gAuOrkrF5IsN6K8gbgV6I&libraries=drawing,geometry&callback=initMap">
 </script>
@@ -2546,16 +2053,6 @@
             mapTypeId: 'satellite'
         });
 
-        // Click event to add a marker and update latitude/longitude inputs
-        // map.addListener('click', function(event) {
-        //     if (markers.length >= 1) {
-        //         deleteMarkers();
-        //     }
-        //     selectedLatLng = event.latLng;
-        //     addMarker(selectedLatLng);
-        //     $('#gps_latitude_0').val(selectedLatLng.lat());
-        //     $('#gps_longitude_0').val(selectedLatLng.lng());
-        // });
 
         loadPolygons(); // Load polygons when the map is initialized
         loadDistrictsAndPolygons(); // Load districts and additional polygons
@@ -2637,26 +2134,24 @@
                         lat: parseFloat(district.gpsLatitude),
                         lng: parseFloat(district.gpsLongitude)
                     };
-                    console.log('Adding district marker:',
-                        district); // Log each district being added
+                    // console.log('Adding district marker:',
+                    //     district); // Log each district being added
                     addDistrictMarker(position, district.districtName, district.description,
                         district.id); // Pass district ID
                 });
-                console.log('Total district markers added:', districtsData
-                    .length); // Log total number of district markers added
+                // console.log('Total district markers added:', districtsData
+                //     .length); // Log total number of district markers added
 
                 // Draw additional polygons
                 polygonsData.forEach(function(polygonData) {
-                    console.log('Drawing polygon with coordinates:', polygonData
-                        .coordinates); // Log polygon coordinates
+                    // console.log('Drawing polygon with coordinates:', polygonData.coordinates); // Log polygon coordinates
                     drawPolygon(polygonData.coordinates,
                         polygonData); // Assuming polygonData contains options
                 });
-                console.log('Total polygons drawn:', polygonsData
-                    .length); // Log total number of polygons drawn
+                // console.log('Total polygons drawn:', polygonsData.length); // Log total number of polygons drawn
             },
             error: function(error) {
-                console.error('Error loading map data:', error); // Log error message
+                // console.error('Error loading map data:', error); // Log error message
             }
         });
     }
