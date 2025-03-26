@@ -303,16 +303,12 @@ Route::post('/admin-edit-features/{Page}',[LandingPageController::class,'updateF
     //     // Add more protected routes here
     // });
         // admin corn map 
-        Route::get('/admin-view-corn-map',[AdminController::class,'CornMap'])->name('map.cornmap');
+        Route::get('/admin-view-all-crop-map',[AdminController::class,'CornMap'])->name('map.cornmap');
 
         // admin coconut map 
         Route::get('/admin-view-coconut-map',[AdminController::class,'CoconutMap'])->name('map.coconutmap');
 
-        // admin chicken map 
-        Route::get('/admin-view-chicken-map',[AdminController::class,'ChickenMap'])->name('map.chickenmap');
-
-        // admin hogs map 
-        Route::get('/admin-view-hogs-map',[AdminController::class,'HogsMap'])->name('map.hogsmap');
+    
 
        
 

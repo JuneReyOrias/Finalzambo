@@ -33,9 +33,7 @@
             <li class="nav-item">
               <a href="{{route('map.cornmap')}}" class="nav-link">All Crop</a>
             </li>
-            <li class="nav-item">
-              <a href="{{route('map.coconutmap')}}" class="nav-link">Coconut</a>
-            </li>
+          
           </ul>
         </div>
       </li>
@@ -156,22 +154,7 @@
         </div>
       </li>
 
-      {{-- <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#Notification" role="button" aria-expanded="false" aria-controls="Notification">
-          <img src="../assets/logo/notifsetting.png" alt="Crop Icon" style="width: 20px; height: 20px; color: white;">
-          <span class="link-title"style="margin-left:12px;">Notification</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="Notification">
-          <ul class="nav sub-menu"style="padding-left:70px;">
-            <li class="nav-item">
-              <a href="{{route('admin.notification.view_notif')}}" class="nav-link">Notification Tools</a>
-            </li>
-         
-           
-          </ul>
-        </div>
-      </li> --}}
+
       <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" role="button" aria-expanded="false" aria-controls="general-pages">
           <i class="link-icon" data-feather="users"></i>
