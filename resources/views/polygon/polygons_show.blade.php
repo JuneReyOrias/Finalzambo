@@ -8,7 +8,7 @@
 <div class="page-content">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                     
-                    <h2> Rice Boarders</h2>
+                    <h2>Crop and Polygon Setting</h2>
                 </div>
                 <br>
                 @if (session('success'))
