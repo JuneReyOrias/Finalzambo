@@ -298,7 +298,7 @@
                     </div>
                     <div class="me-md-1">
                         <a href="{{ route('parcels.new_parcels') }}" class="btn btn-success"><i class="fa fa-plus"
-                                title="Add Parcel" aria-hidden="true"></i></a>
+                                title="Add Parcel" aria-hidden="true">Parcel</i></a>
                     </div>
                     {{-- <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET">
                                     <div class="input-group mb-3">
