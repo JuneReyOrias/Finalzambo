@@ -1,69 +1,115 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+🌾 Zambo AgriMap
+Zambo AgriMap is a web-based agricultural and geo-mapping system designed to support the rice farming sector in Zamboanga City. The system leverages Geographic Information System (GIS) technology to centralize, manage, and visualize critical agricultural data — enabling stakeholders to make informed decisions, monitor productivity, and implement strategic measures for sustainability and growth.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+📌 Purpose
+The primary goal of Zambo AgriMap is to provide a digital platform that empowers local government units, agricultural officers, and farmers with real-time data insights. By integrating geospatial mapping and agriculture data management, the system enhances planning, resource allocation, and support services aimed at improving rice farming productivity across the city.
 
-## About Laravel
+🎯 Specific Objectives
+GIS-Based Mapping
+Utilize GIS technology to create a comprehensive agricultural map of Zamboanga City. This map offers a detailed view of the agricultural landscape and highlights areas with potential for new agricultural development.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Data Collection & Analysis
+Gather and analyze key data factors that influence agricultural productivity, such as rice field locations, environmental conditions, and the socio-economic status of farmers in the city.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Interactive Web Platform
+Develop a user-friendly web platform that enables users to:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Manage rice field data, including GPS-based locations
 
-## Learning Laravel
+Maintain farmer profiles and production records
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Track crop yields and generate reports
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Use an interactive map to view and plot agricultural fields
+The platform is built to be functional, usable, and reliable, and will be evaluated based on these criteria.
 
 
-yuy
+Laravel Installation using XAMPP (Localhost) + Deployment to Hostinger
+🔧 Local Installation (XAMPP)
+Step 1: Install Requirements
+Download and install XAMPP
+
+Download and install Composer
+
+Step 2: Create a Laravel Project
+Open your terminal or command prompt.
+
+Run the following command:
+
+composer create-project laravel/laravel your-project-name
+Step 3: Move Project to XAMPP Directory
+Move the entire project folder to:
+
+
+C:\xampp\htdocs\
+Step 4: Configure Virtual Host (Optional but Recommended)
+Open: C:\xampp\apache\conf\extra\httpd-vhosts.conf
+
+Add:
+
+<VirtualHost *:80>
+    DocumentRoot "C:/xampp/htdocs/your-project-name/public"
+    ServerName your-project.local
+    <Directory "C:/xampp/htdocs/your-project-name">
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+Then edit your hosts file (located at C:\Windows\System32\drivers\etc\hosts) and add:
+
+
+127.0.0.1 your-project.local
+Step 5: Start XAMPP Services
+Open XAMPP Control Panel.
+
+Start Apache and MySQL.
+
+Step 6: Set Up Database
+Open http://localhost/phpmyadmin
+
+Create a new database (e.g., laravel_db)
+
+In your Laravel project’s .env file, update:
+
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel_db
+DB_USERNAME=root
+DB_PASSWORD=
+Step 7: Run Migrations
+Open terminal in your project directory and run:
+
+
+php artisan migrate
+🌐 Deploying to Hostinger
+Step 8: Upload Project
+Compress your Laravel project (except vendor and node_modules) and upload it to the public_html directory via Hostinger File Manager or FTP.
+
+Step 9: Move Public Folder Contents
+Move all files from the public folder to the root of public_html.
+
+Step 10: Update index.php Paths
+In public_html/index.php, change:
+
+require __DIR__.'/../vendor/autoload.php';
+$app = require_once __DIR__.'/../bootstrap/app.php';
+to:
+
+require __DIR__.'/vendor/autoload.php';
+$app = require_once __DIR__.'/bootstrap/app.php';
+Step 11: Configure .env for Production
+Update your .env file with Hostinger database credentials.
+
+Step 12: Install Dependencies (Hostinger)
+Use Hostinger’s Terminal/SSH to run:
+
+
+composer install
+php artisan migrate
+php artisan key:generate
+
+📘 Useful Links
+Laravel Migrations Guide
+Hostinger Laravel Hosting Tutorial
