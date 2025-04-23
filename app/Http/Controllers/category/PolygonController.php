@@ -181,157 +181,146 @@ if (request()->wantsJson()) {
 
 
 
-public function  polygonshow(Request $request)
+public function polygonshow(Request $request)
 {
-    // Check if the user is authenticated
-    if (Auth::check()) {
-        // User is authenticated, proceed with retrieving the user's ID
-        $userId = Auth::id();
-
-        // Find the user based on the retrieved ID
-        $admin = User::find($userId);
-
-        if ($admin) {
-            // Assuming $user represents the currently logged-in user
-            $user = auth()->user();
-
-            // Check if user is authenticated before proceeding
-            if (!$user) {
-                // Handle unauthenticated user, for example, redirect them to login
-                return redirect()->route('login');
-            }
-
-            // Find the user's personal information by their ID
-            $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
-         
-                // Query for seeds with search functionality
-            $polygonsQuery = Polygon::query();
-            if ($request->has('search')) {
-                $searchTerm = $request->input('search');
-                $polygonsQuery->where('poly_name', 'like', "%$searchTerm%");
-            }
-            $polygons = $polygonsQuery->orderBy('id','asc')->paginate(4);
-          
-            // Query for labors with search functionality
-                $parcelsQuery = ParcellaryBoundaries::query();
-                if ($request->has('search')) {
-                    $searchTerm = $request->input('search');
-                    $parcelsQuery->where(function($query) use ($searchTerm) {
-                        $query->where('no_of_person', 'like', "%$searchTerm%")
-                            ->orWhere('total_labor_cost', 'like', "%$searchTerm%")
-                            ->orWhere('rate_per_person', 'like', "%$searchTerm%");
-                    });
-                }
-                $parcels = $parcelsQuery->orderBy('id','asc')->paginate(10);
-
-                      // Query for fertilizer with search functionality
-                      $AgriDistrictQuery = AgriDistrict::query();
-                      if ($request->has('search')) {
-                          $searchTerm = $request->input('search');
-                          $AgriDistrictQuery->where(function($query) use ($searchTerm) {
-                              $query->where('name_of_fertilizer', 'like', "%$searchTerm%")
-                                  ->orWhere('no_ofsacks', 'like', "%$searchTerm%")
-                                  ->orWhere('total_cost_AgriDistrict', 'like', "%$searchTerm%");
-                          });
-                      }
-                      $AgriDistrict = $AgriDistrictQuery->orderBy('id','asc')->paginate(4);
-
-                      // Query for pesticides with search functionality
-                    $pesticidesQuery =  Pesticide::query();
-                    if ($request->has('search')) {
-                        $searchTerm = $request->input('search');
-                        $pesticidesQuery->where(function($query) use ($searchTerm) {
-                            $query->where('pesticides_name', 'like', "%$searchTerm%")
-                                ->orWhere('type_ofpesticides', 'like', "%$searchTerm%")
-                                ->orWhere('total_cost_pesticides', 'like', "%$searchTerm%");
-                        });
-                    }
-                    $pesticides = $pesticidesQuery->orderBy('id','asc')->paginate(10);
-                    
-                     // Query for transports with search functionality
-                    $transportsQuery =  Transport::query();
-                    if ($request->has('search')) {
-                        $searchTerm = $request->input('search');
-                        $transportsQuery->where(function($query) use ($searchTerm) {
-                            $query->where('name_of_vehicle', 'like', "%$searchTerm%")
-                                ->orWhere('type_of_vehicle', 'like', "%$searchTerm%")
-                                ->orWhere('total_transport_per_deliverycost', 'like', "%$searchTerm%");
-                        });
-                    }
-                    $transports = $transportsQuery->orderBy('id','asc')->paginate(10);
-
-                    // CROP CATEGORY
-                    $CropCatQuery =  CropCategory::query();
-                    if ($request->has('search')) {
-                        $searchTerm = $request->input('search');
-                        $CropCatQuery->where(function($query) use ($searchTerm) {
-                            $query->where('crop_name', 'like', "%$searchTerm%")
-                             
-                                ->orWhere('type_of_variety', 'like', "%$searchTerm%");
-                        });
-                    }
-                    $CropCat = $CropCatQuery->orderBy('id','asc')->paginate(4);
-                    $cropVarieties = CropCategory::all()->groupBy('crop_name');
-            
-                    // Crop Variety
-                    $CropVarietyQuery =  Categorize::query();
-                    if ($request->has('search')) {
-                        $searchTerm = $request->input('search');
-                        $$CropVarietyQuery->where(function($query) use ($searchTerm) {
-                            $query->where('crop_name', 'like', "%$searchTerm%")
-                             
-                                ->orWhere('variety_name', 'like', "%$searchTerm%");
-                        });
-                    }
-                    $CropVariety = $CropVarietyQuery->orderBy('id','asc')->paginate(4);
-                                // Fetch CropParcel records, optionally applying search criteria
-                        $cropParcelsQuery = CropParcel::query();
-                        if ($request->has('search')) {
-                            $cropParcelsQuery->where('strokecolor', 'like', "%$searchTerm%");
-                        }
-                        $cropParcels = $cropParcelsQuery->orderBy('id', 'asc')->paginate(4); // Adjust pagination as needed
-
-
-           
-            $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-                            // Fetch all CropParcel records and transform them
-                            $mapdata = CropParcel::all()->map(function($parcel) {
-                                // Output the individual parcel data for debugging
-                            //   echo "Parcel data fetched: " . json_encode($parcel) . "\n";
-
-                                // Decode the JSON coordinates
-                                $coordinates = json_decode($parcel->coordinates);
-                                
-                                // Check if the coordinates are valid and properly formatted
-                                if (!is_array($coordinates)) {
-                                //   echo "Invalid coordinates for parcel ID {$parcel->id}: " . $parcel->coordinates . "\n";
-                                    return null; // Return null for invalid data
-                                }
-
-                                return [
-                                    'polygon_name' => $parcel->polygon_name, 
-                                    'coordinates' => $coordinates, // Include the decoded coordinates
-                                    'area' => $parcel->area, // Assuming there's an area field
-                                    'altitude' => $parcel->altitude, // Assuming there's an altitude field
-                                    'strokecolor' => $parcel->strokecolor, // Include the stroke color
-                                    'fillColor' => $parcel->fillColor // Optionally include the fill color if available
-                                ];
-                            })->filter(); // Remove any null values from the collection
-
-            // Return the view with the fetched data
-            return view('polygon.polygons_show', compact('userId','admin','polygons', 'profile', 'parcels','AgriDistrict','pesticides',
-           'CropCat','cropVarieties','transports', 'totalRiceProduction','CropVariety','mapdata','cropParcels'));
-        } else {
-            // Handle the case where the user is not found
-            // You can redirect the user or display an error message
-            return redirect()->route('login')->with('error', 'User not found.');
-        }
-    } else {
-        // Handle the case where the user is not authenticated
-        // Redirect the user to the login page
+    if (!Auth::check()) {
         return redirect()->route('login');
     }
+
+    $admin = User::find(Auth::id());
+    if (!$admin) {
+        return redirect()->route('login')->with('error', 'User not found.');
+    }
+
+    // ========== POLYGON QUERY ==========
+    $polygons = CropParcel::query();
+
+    if ($request->filled('polygon_search')) {
+        $keyword = $request->input('polygon_search');
+        $polygons->where(function ($query) use ($keyword) {
+            $query->where('polygon_name', 'like', "%$keyword%")
+                  ->orWhere('strokecolor', 'like', "%$keyword%");
+        });
+    }
+
+    if ($request->filled('sort_column') && $request->filled('sort_order')) {
+        $polygons->orderBy($request->input('sort_column'), $request->input('sort_order'));
+    } else {
+        $polygons->orderBy('id', 'asc');
+    }
+
+    $polygonPage = $request->input('polygon_page', 1);
+    $polygons = $polygons->paginate(4, ['*'], 'polygon_page', $polygonPage);
+
+    // ========== PARCEL QUERY ==========
+    $parcels = ParcellaryBoundaries::query();
+
+    if ($request->filled('parcel_search')) {
+        $keyword = $request->input('parcel_search');
+        $parcels->where(function ($q) use ($keyword) {
+            $q->where('parcel_name', 'like', "%$keyword%")
+              ->orWhere('barangay_name', 'like', "%$keyword%")
+              ->orWhere('arpowner_na', 'like', "%$keyword%");
+        });
+    }
+
+    $parcelPage = $request->input('parcel_page', 1);
+    $parcels = $parcels->orderBy('id', 'asc')->paginate(4, ['*'], 'parcel_page', $parcelPage);
+
+    // ========== FERTILIZER SEARCH ==========
+    $AgriDistrictQuery = AgriDistrict::query();
+    if ($request->filled('agri_search')) {
+        $searchTerm = $request->input('agri_search');
+        $AgriDistrictQuery->where(function ($query) use ($searchTerm) {
+            $query->where('district', 'like', "%$searchTerm%")
+                ->orWhere('latitude', 'like', "%$searchTerm%")
+                ->orWhere('longitude', 'like', "%$searchTerm%");
+        });
+    }
+    $agriPage = $request->input('agri_page', 1);
+    $AgriDistrict = $AgriDistrictQuery->orderBy('id', 'asc')->paginate(4, ['*'], 'agri_page', $agriPage);
+   
+
+    // ========== CROP CATEGORY ==========
+    $CropCatQuery = CropCategory::query();
+    if ($request->filled('crop_category_search')) {
+        $searchTerm = $request->input('crop_category_search');
+        $CropCatQuery->where(function ($query) use ($searchTerm) {
+            $query->where('crop_name', 'like', "%$searchTerm%")
+                  ->orWhere('type_of_variety', 'like', "%$searchTerm%");
+        });
+    }
+
+    $cropCategoryPage = $request->input('crop_category_page', 1);
+    $CropCat = $CropCatQuery->orderBy('id', 'asc')->paginate(2, ['*'], 'crop_category_page', $cropCategoryPage);
+   
+  
+    $cropVarieties = CropCategory::all()->groupBy('crop_name');
+
+    // ========== CROP VARIETY ==========
+    $CropVarietyQuery = Categorize::query();
+    if ($request->filled('crop_variety_search')) {
+        $searchTerm = $request->input('crop_variety_search');
+        $CropVarietyQuery->where(function ($query) use ($searchTerm) {
+            $query->where('crop_name', 'like', "%$searchTerm%")
+                  ->orWhere('variety_name', 'like', "%$searchTerm%");
+        });
+    }
+
+    $cropVarietyPage = $request->input('crop_variety_page', 1);
+    $CropVariety = $CropVarietyQuery->orderBy('id', 'asc')->paginate(2, ['*'], 'crop_variety_page', $cropVarietyPage);
+   
+ 
+
+    // ========== OTHER DATA ==========
+    $districts = PersonalInformations::select('agri_district')->distinct()->orderBy('agri_district')->get();
+    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+
+
+    // Fetch all CropParcel records and transform them
+    $mapdata = CropParcel::all()->map(function($parcel) {
+        // Output the individual parcel data for debugging
+    //   echo "Parcel data fetched: " . json_encode($parcel) . "\n";
+
+        // Decode the JSON coordinates
+        $coordinates = json_decode($parcel->coordinates);
+        
+        // Check if the coordinates are valid and properly formatted
+        if (!is_array($coordinates)) {
+        //   echo "Invalid coordinates for parcel ID {$parcel->id}: " . $parcel->coordinates . "\n";
+            return null; // Return null for invalid data
+        }
+
+        return [
+            'polygon_name' => $parcel->polygon_name, 
+            'coordinates' => $coordinates, // Include the decoded coordinates
+            'area' => $parcel->area, // Assuming there's an area field
+            'altitude' => $parcel->altitude, // Assuming there's an altitude field
+            'strokecolor' => $parcel->strokecolor, // Include the stroke color
+            'fillColor' => $parcel->fillColor // Optionally include the fill color if available
+        ];
+    })->filter(); // Remove any null values from the collection
+    // ========== AJAX RESPONSE ==========
+    if ($request->ajax()) {
+        return response()->json([
+            'polygons' => $polygons,
+            'parcels' => $parcels,
+            'AgriDistrict' => $AgriDistrict,
+            'CropCat' => $CropCat,
+            'CropVariety' => $CropVariety,
+            'districts' => $districts,
+            'totalRiceProduction' => $totalRiceProduction,
+
+        ]);
+    }
+
+    // ========== INITIAL VIEW ==========
+    return view('polygon.polygons_show', compact(
+        'admin', 'polygons', 'parcels', 'districts', 'totalRiceProduction',
+        'AgriDistrict', 'CropCat', 'cropVarieties', 'CropVariety','mapdata'
+    ));
 }
+
 
 
 

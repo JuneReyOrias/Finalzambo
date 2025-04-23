@@ -8,7 +8,7 @@
     <div class="page-content">
         <div class="d-grid gap-2 d-md-flex justify-content-md-center">
 
-            <h2>Crop and Polygon Setting</h2>
+            <h2> Crop and Polygon Setting</h2>
         </div>
         <br>
         @if (session('success'))
@@ -36,6 +36,7 @@
         <div class="tabs">
             <input type="radio" name="tabs" id="Seed" checked="checked">
             <label for="Seed">Polygon</label>
+      
             <div class="tab">
 
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -46,11 +47,19 @@
                     <div class="me-md-1">
                         <button type="button" class="btn btn-success" data-bs-toggle="modal" title="add Polygon"
                             data-bs-target="#mapModal">
-                            <i class="fa fa-plus" aria-hidden="true">Polygon</i>
+                            <i class="fa fa-plus" aria-hidden="true"></i>
                         </button>
-
-                        {{-- <a href="{{ route('polygon.create') }}" class="btn btn-success">Add</a> --}}
+               
+                      
                     </div>
+                    {{-- Search engine for polygon --}}
+                    <form action="">
+                                      
+                        <!-- POLYGON SEARCH -->
+                    <input type="text" id="search-polygon" placeholder="Search Polygon..." class="form-control mb-2">
+
+                  
+                </form>
                     <!-- Map Modal -->
                     <div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel"
                         aria-hidden="true">
@@ -63,7 +72,7 @@
                                 </div>
                                 <div class="modal-body">
 
-                                    <div id="map" style="height: 400px; width: 100%;"></div>
+                                    <div id="map" style="height: 200px; width: 80%;"></div>
                                     <!-- Polygon Coordinates Section -->
                                     <div
                                         style="margin: 40px auto; width: 80%; max-width: 800px; display: flex; flex-wrap: wrap; gap: 20px;">
@@ -206,16 +215,7 @@
                             </div>
                         </div>
                     </div>
-                    {{-- <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET" class="me-2">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
-                                        <button class="btn btn-outline-success" type="submit">Search</button>
-                                    </div>
-                                </form>
-                            
-                                <form id="showAllForm" action="{{ route('polygon.polygons_show') }}" method="GET">
-                                    <button class="btn btn-outline-success" type="submit">All</button>
-                                </form> --}}
+                  
                 </div>
 
 
@@ -233,58 +233,18 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @if ($cropParcels->count() > 0)
-                                @foreach ($cropParcels as $seed)
-                                    <tr class="table-light">
-
-                                        <td>{{ $seed->id }}</td>
-                                        <td>{{ $seed->polygon_name }}</td>
-                                        <td>{{ $seed->area }}</td>
-                                        <td>{{ $seed->altitude }}</td>
-
-                                        <td>{{ $seed->strokecolor }}</td>
-
-
-
-
-
-                                        <td>
-
-                                            <a href="{{ route('polygon.polygons_edit', $seed->id) }}"
-                                                title="Edit"><button class="btn btn-primary btn-sm"><i
-                                                        class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-
-                                            <form action="{{ route('polygon.delete', $seed->id) }}"method="post"
-                                                accept-charset="UTF-8" style="display:inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete"
-                                                    onclick="return confirm(&quot;Confirm delete?&quot;)"><i
-                                                        class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                            </form>
-
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td class="text-center" colspan="5">Polygon Boarder is empty</td>
-                                </tr>
-                            @endif
+                        <tbody id="polygon-info-list">
+                            <!-- AJAX data will be inserted here -->
                         </tbody>
                     </table>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <ul id="pagination-links" class="pagination mb-0">
+                            <!-- AJAX pagination links will be inserted here -->
+                        </ul>
+                    </div>
                 </div>
-                <!-- Pagination links -->
-                <ul class="pagination">
-                    <li><a href="{{ $cropParcels->previousPageUrl() }}">Previous</a></li>
-                    @foreach ($cropParcels->getUrlRange(1, $cropParcels->lastPage()) as $page => $url)
-                        <li class="{{ $page == $cropParcels->currentPage() ? 'active' : '' }}">
-                            <a href="{{ $url }}">{{ $page }}</a>
-                        </li>
-                    @endforeach
-                    <li><a href="{{ $cropParcels->nextPageUrl() }}">Next</a></li>
-                </ul>
+           
             </div>
 
 
@@ -298,17 +258,16 @@
                     </div>
                     <div class="me-md-1">
                         <a href="{{ route('parcels.new_parcels') }}" class="btn btn-success"><i class="fa fa-plus"
-                                title="Add Parcel" aria-hidden="true">Parcel</i></a>
+                                title="Add Parcel" aria-hidden="true"></i></a>
                     </div>
-                    {{-- <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET">
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
-                                        <button class="btn btn-outline-success" type="submit">Search</button>
-                                    </div>
-                                </form>
-                                <form id="showAllForm" action="{{ route('polygon.polygons_show') }}" method="GET">
-                                    <button class="btn btn-outline-success" type="submit">All</button>
-                                </form> --}}
+                   {{-- Search engine for polygon --}}
+                   <form action="">
+                                      
+                    <!-- PARCEL SEARCH -->
+                <input type="text" id="search-parcel" placeholder="Search Parcel..." class="form-control mb-2">
+
+              
+            </form>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-bordered datatable">
@@ -327,57 +286,17 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @if ($parcels->count() > 0)
-                                @foreach ($parcels as $personalinformation)
-                                    <tr class="table-light">
-
-                                        <td>{{ $personalinformation->id }}</td>
-
-                                        <td>{{ $personalinformation->parcel_name }}</td>
-                                        <td>{{ $personalinformation->arpowner_na }}</td>
-
-                                        <td>{{ $personalinformation->actual_used }}</td>
-
-                                        <td>{{ $personalinformation->area }}</td>
-                                        <td>{{ $personalinformation->strokecolor }}</td>
-
-                                        <td>
-
-                                            <a href="{{ route('parcels.edit', $personalinformation->id) }}"
-                                                title="Edit"><button class="btn btn-primary btn-sm"><i
-                                                        class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-
-                                            <form
-                                                action="{{ route('parcels.delete', $personalinformation->id) }}"method="post"
-                                                accept-charset="UTF-8" style="display:inline">
-                                                {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete"
-                                                    onclick="return confirm(&quot;Confirm delete?&quot;)"><i
-                                                        class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                            </form>
-
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td class="text-center" colspan="10">Farm Parcel is empty</td>
-                                </tr>
-                            @endif
+                        <tbody id="parcel-boundaries-list">
+                           
                         </tbody>
                     </table>
                 </div>
                 <!-- Pagination links -->
-                <ul class="pagination">
-                    <li><a href="{{ $parcels->previousPageUrl() }}">Previous</a></li>
-                    @foreach ($parcels->getUrlRange(1, $parcels->lastPage()) as $page => $url)
-                        <li class="{{ $page == $parcels->currentPage() ? 'active' : '' }}">
-                            <a href="{{ $url }}">{{ $page }}</a>
-                        </li>
-                    @endforeach
-                    <li><a href="{{ $parcels->nextPageUrl() }}">Next</a></li>
-                </ul>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <ul id="parcel-pagination-links" class="pagination mb-0">
+                        <!-- AJAX pagination links will be inserted here -->
+                    </ul>
+                </div>
             </div>
 
             {{-- district --}}
@@ -392,19 +311,16 @@
                         <!-- Button trigger modal -->
                         <div class="me-md-1">
                             <a href="{{ route('agri_districts.display') }}" title="Add  Agri-District"
-                                class="btn btn-success"><i class="fa fa-plus" aria-hidden="true">Agri-District</i></a>
+                                class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></a>
                         </div>
                     </div>
 
-                    {{-- <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET">
-                                                         <div class="input-group mb-3">
-                                                             <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
-                                                             <button class="btn btn-outline-success" type="submit">Search</button>
-                                                         </div>
-                                                     </form>
-                                                     <form id="showAllForm" action="{{ route('polygon.polygons_show') }}" method="GET">
-                                                         <button class="btn btn-outline-success" type="submit">All</button>
-                                                     </form> --}}
+                    <form action="">
+                                      
+                        <!-- AGRI DISTRICT SEARCH -->
+                                 <input type="text" id="search-agri" placeholder="Search Agri District..." class="form-control mb-2">
+
+                     </form>
                 </div>
 
 
@@ -420,11 +336,21 @@
                             </div>
                             <div class="modal-body">
                                 <div class="content">
+
+                                    <form action="">
+                                      
+                                   <!-- AGRI DISTRICT SEARCH -->
+                                            <input type="text" id="search-agri" placeholder="Search Agri District..." class="form-control mb-2">
+
+                    
+                                  
+                                </form>
+
                                     <form id="multi-step-form" action{{ url('CornSave') }} method="post">
                                         @csrf
                                         <div>
 
-                                            <input type="hidden" name="users_id" value="{{ $userId }}">
+                                            {{-- <input type="hidden" name="users_id" value="{{ $userId }}"> --}}
 
 
                                         </div>
@@ -566,56 +492,17 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @if ($AgriDistrict->count() > 0)
-                                @foreach ($AgriDistrict as $personalinformation)
-                                    <tr class="table-light">
-
-                                        <td>{{ $personalinformation->id }}</td>
-                                        <td>{{ $personalinformation->district }}</td>
-                                        <td>{{ $personalinformation->description }}</td>
-                                        <td>{{ $personalinformation->latitude }}</td>
-                                        <td>{{ $personalinformation->longitude }}</td>
-                                        <td>{{ $personalinformation->altitude }}</td>
-
-                                        <td>
-
-
-                                            <a href="{{ route('agri_districts.agri_edit', $personalinformation->id) }}"
-                                                title="Edit"><button class="btn btn-primary btn-sm"><i
-                                                        class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-
-
-                                            <form
-                                                action="{{ route('agri_districts.agri_delete', $personalinformation->id) }}"method="post"
-                                                accept-charset="UTF-8" style="display:inline">
-                                                {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete"
-                                                    onclick="return confirm(&quot;Confirm delete?&quot;)"><i
-                                                        class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                            </form>
-
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td class="text-center" colspan="5">AgriDistirict is empty</td>
-                                </tr>
-                            @endif
+                        <tbody id="agri-districts-list">
+                           
                         </tbody>
                     </table>
                 </div>
                 <!-- Pagination links -->
-                <ul class="pagination">
-                    <li><a href="{{ $AgriDistrict->previousPageUrl() }}">Previous</a></li>
-                    @foreach ($AgriDistrict->getUrlRange(1, $AgriDistrict->lastPage()) as $page => $url)
-                        <li class="{{ $page == $AgriDistrict->currentPage() ? 'active' : '' }}">
-                            <a href="{{ $url }}">{{ $page }}</a>
-                        </li>
-                    @endforeach
-                    <li><a href="{{ $AgriDistrict->nextPageUrl() }}">Next</a></li>
-                </ul>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <ul id="agri-pagination-links" class="pagination mb-0">
+                        <!-- AJAX pagination links will be inserted here -->
+                    </ul>
+                </div>
             </div>
 
 
@@ -630,20 +517,18 @@
                     <div class="me-md-1">
                         <!-- Button trigger modal -->
                         <div class="me-md-1">
-                            <a href="{{ route('crop_category.crop_create') }}" title="Add Crop"
-                                class="btn btn-success"><i class="fa fa-plus" aria-hidden="true">Crop</i></a>
+                            <a href="{{ route('crop_category.crop_create') }}" title="Add Category"
+                                class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></a>
                         </div>
                     </div>
+                            <form action="">
+                                      
+                                  
+                                           <!-- CROP CATEGORY SEARCH -->
+                            <input type="text" id="search-crop-category" placeholder="Search Crop Category..." class="form-control mb-2">
 
-                    {{-- <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET">
-                                                                     <div class="input-group mb-3">
-                                                                         <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
-                                                                         <button class="btn btn-outline-success" type="submit">Search</button>
-                                                                     </div>
-                                                                 </form>
-                                                                 <form id="showAllForm" action="{{ route('polygon.polygons_show') }}" method="GET">
-                                                                     <button class="btn btn-outline-success" type="submit">All</button>
-                                                                 </form> --}}
+                                </form>
+                   
                 </div>
 
 
@@ -662,54 +547,17 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @if ($CropCat->count() > 0)
-                                @foreach ($CropCat as $cropcategory)
-                                    <tr class="table-light">
-
-                                        <td>{{ $cropcategory->id }}</td>
-                                        <td>{{ $cropcategory->crop_name }}</td>
-                                        {{-- <td>{{  $cropcategory->type_of_variety}}</td> --}}
-
-
-                                        <td>
-
-                                            <!-- Example link to open edit modal -->
-                                            <a href="{{ route('crop_category.crop_edit', $cropcategory->id) }}"
-                                                title="Edit"><button class="btn btn-primary btn-sm"><i
-                                                        class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-
-
-                                            <form
-                                                action="{{ route('crop_category.crop_destroy', $cropcategory->id) }}"method="post"
-                                                accept-charset="UTF-8" style="display:inline">
-                                                {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete"
-                                                    onclick="return confirm(&quot;Confirm delete?&quot;)"><i
-                                                        class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                            </form>
-
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td class="text-center" colspan="5">Crop is empty</td>
-                                </tr>
-                            @endif
+                        <tbody id="crop-category-list">
+                           
                         </tbody>
                     </table>
                 </div>
                 <!-- Pagination links -->
-                <ul class="pagination">
-                    <li><a href="{{ $CropCat->previousPageUrl() }}">Previous</a></li>
-                    @foreach ($CropCat->getUrlRange(1, $CropCat->lastPage()) as $page => $url)
-                        <li class="{{ $page == $CropCat->currentPage() ? 'active' : '' }}">
-                            <a href="{{ $url }}">{{ $page }}</a>
-                        </li>
-                    @endforeach
-                    <li><a href="{{ $CropCat->nextPageUrl() }}">Next</a></li>
-                </ul>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <ul id="crop-category-pagination-links" class="pagination mb-0">
+                        <!-- AJAX pagination links will be inserted here -->
+                    </ul>
+                </div>
             </div>
             {{-- crop variety look up table --}}
             <input type="radio" name="tabs" id="cropVariety" checked="checked">
@@ -722,20 +570,17 @@
                     <div class="me-md-1">
                         <!-- Button trigger modal -->
                         <div class="me-md-1">
-                            <a href="{{ route('admin.variety.add_variety') }}" class="btn btn-success" title="Add Crop Variety"><i
-                                    class="fa fa-plus" aria-hidden="true">Variety</i></a>
+                            <a href="{{ route('admin.variety.add_variety') }}" class="btn btn-success"><i
+                                    class="fa fa-plus" aria-hidden="true"></i></a>
                         </div>
                     </div>
+                    <form action="">
+                                            
+                        <!-- CROP VARIETY SEARCH -->
+                    <input type="text" id="search-crop-variety" placeholder="Search Crop Variety..." class="form-control mb-2">
 
-                    {{-- <form id="farmProfileSearchForm" action="{{ route('polygon.polygons_show') }}" method="GET">
-                                                                      <div class="input-group mb-3">
-                                                                          <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
-                                                                          <button class="btn btn-outline-success" type="submit">Search</button>
-                                                                      </div>
-                                                                  </form>
-                                                                  <form id="showAllForm" action="{{ route('polygon.polygons_show') }}" method="GET">
-                                                                      <button class="btn btn-outline-success" type="submit">All</button>
-                                                                  </form> --}}
+             </form>
+                  
                 </div>
 
 
@@ -754,54 +599,17 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @if ($CropVariety->count() > 0)
-                                @foreach ($CropVariety as $cropcategory)
-                                    <tr class="table-light">
-
-                                        <td>{{ $cropcategory->id }}</td>
-                                        <td>{{ $cropcategory->crop_name }}</td>
-                                        <td>{{ $cropcategory->variety_name }}</td>
-
-
-                                        <td>
-
-                                            <!-- Example link to open edit modal -->
-                                            <a href="{{ route('admin.variety.edit_variety', $cropcategory->id) }}"
-                                                title="Edit"><button class="btn btn-primary btn-sm"><i
-                                                        class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-
-
-                                            <form
-                                                action="{{ route('admin.variety.delete', $cropcategory->id) }}"method="post"
-                                                accept-charset="UTF-8" style="display:inline">
-                                                {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete"
-                                                    onclick="return confirm(&quot;Confirm delete?&quot;)"><i
-                                                        class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                            </form>
-
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td class="text-center" colspan="5">Crop Variety is empty</td>
-                                </tr>
-                            @endif
+                        <tbody id="crop-variety-list">
+                           
                         </tbody>
                     </table>
                 </div>
                 <!-- Pagination links -->
-                <ul class="pagination">
-                    <li><a href="{{ $CropVariety->previousPageUrl() }}">Previous</a></li>
-                    @foreach ($CropVariety->getUrlRange(1, $CropVariety->lastPage()) as $page => $url)
-                        <li class="{{ $page == $CropVariety->currentPage() ? 'active' : '' }}">
-                            <a href="{{ $url }}">{{ $page }}</a>
-                        </li>
-                    @endforeach
-                    <li><a href="{{ $CropVariety->nextPageUrl() }}">Next</a></li>
-                </ul>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <ul id="crop-variety-pagination-links" class="pagination mb-0">
+                        <!-- AJAX pagination links will be inserted here -->
+                    </ul>
+                </div>
             </div>
             <!-- Repeat the same structure for other tabs -->
 
@@ -1080,4 +888,200 @@
 
 
     <script src="{{ asset('js/modal_map.js') }}"></script>
+
+    <script>
+        $(document).ready(function () {
+            let sortOrder = 'asc';
+            let sortColumn = 'id';
+            let currentPage = 1;
+            let parcelCurrentPage = 1;
+            let agriPage = 1;
+            let cropCategoryPage = 1;
+            let cropVarietyPage = 1;
+    
+            function getPageRange(currentPage) {
+                const startPage = Math.floor((currentPage - 1) / 3) * 3 + 1;
+                const endPage = startPage + 2;
+                return { startPage, endPage };
+            }
+    
+            function fetchFarmersData() {
+                const filters = {
+                    polygon_search: $('#search-polygon').val(),
+                    parcel_search: $('#search-parcel').val(),
+                    agri_search: $('#search-agri').val(),
+                    crop_category_search: $('#search-crop-category').val(),
+                    crop_variety_search: $('#search-crop-variety').val(),
+                    sort_order: sortOrder,
+                    sort_column: sortColumn,
+                    polygon_page: currentPage,
+                    parcel_page: parcelCurrentPage,
+                    agri_page: agriPage,
+                    crop_category_page: cropCategoryPage,
+                    crop_variety_page: cropVarietyPage
+                };
+    
+                $.ajax({
+                    url: '/admin-view-polygon',
+                    type: 'GET',
+                    data: filters,
+                    success: function (response) {
+                        $('#polygon-info-list, #parcel-boundaries-list, #agri-districts-list, #crop-category-list, #crop-variety-list').empty();
+                        $('#pagination-links, #parcel-pagination-links, #agri-pagination-links, #crop-category-pagination-links, #crop-variety-pagination-links').empty();
+    
+                        // Polygons
+                        response.polygons.data.forEach(info => {
+                            $('#polygon-info-list').append(`
+                                <tr>
+                                    <td>${info.id}</td>
+                                    <td>${info.polygon_name || 'N/A'}</td>
+                                    <td>${info.area || 'N/A'}</td>
+                                    <td>${info.altitude || 'N/A'}</td>
+                                    <td>${info.strokecolor || 'N/A'}</td>
+                                    <td>
+                                        <a href="/admin-edit-polygon/${info.id}"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o"></i></button></a>
+                                        <form action="/admin-delete-polygon/${info.id}" method="post" style="display:inline">
+                                            <input type="hidden" name="_token" value="${$('meta[name="csrf-token"]').attr('content')}">
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Confirm delete?')"><i class="fa fa-trash-o"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            `);
+                        });
+    
+                        // Parcels
+                        response.parcels.data.forEach(boundary => {
+                            $('#parcel-boundaries-list').append(`
+                                <tr>
+                                    <td>${boundary.id}</td>
+                                    <td>${boundary.parcel_name || 'N/A'}</td>
+                                    <td>${boundary.arpowner_na || 'N/A'}</td>
+                                    <td>${boundary.actual_used || 'N/A'}</td>
+                                    <td>${boundary.area || 'N/A'}</td>
+                                    <td>${boundary.strokecolor || 'N/A'}</td>
+                                    <td>
+                                        <a href="/admin-edit-parcel-boarders/${boundary.id}"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o"></i></button></a>
+                                        <form action="/admin-delete-parcel-boarders/${boundary.id}" method="post" style="display:inline">
+                                            <input type="hidden" name="_token" value="${$('meta[name="csrf-token"]').attr('content')}">
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Confirm delete?')"><i class="fa fa-trash-o"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            `);
+                        });
+    
+                        // Agri Districts
+                        response.AgriDistrict.data.forEach(item => {
+                            $('#agri-districts-list').append(`
+                                <tr>
+                                    <td>${item.id}</td>
+                                    <td>${item.district || 'N/A'}</td>
+                                    <td>${item.description || 'N/A'}</td>
+                                    <td>${item.latitude || 'N/A'}</td>
+                                    <td>${item.longitude || 'N/A'}</td>
+                                    <td>${item.altitude || 'N/A'}</td>
+                                    <td>
+                                        <a href="/admin-update-agridistrict/${item.id}"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o"></i></button></a>
+                                        <form action="/admin-delete-agridistrict/${item.id}" method="post" style="display:inline">
+                                            <input type="hidden" name="_token" value="${$('meta[name="csrf-token"]').attr('content')}">
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Confirm delete?')"><i class="fa fa-trash-o"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            `);
+                        });
+    
+                        // Crop Category
+                        response.CropCat.data.forEach(item => {
+                            $('#crop-category-list').append(`
+                                <tr>
+                                    <td>${item.id}</td>
+                                    <td>${item.crop_name || 'N/A'}</td>
+                                    <td>
+                                        <a href="/admin-edit-new-crop/${item.id}"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o"></i></button></a>
+                                        <form action="/admin-delete-crop/${item.id}" method="post" style="display:inline">
+                                            <input type="hidden" name="_token" value="${$('meta[name="csrf-token"]').attr('content')}">
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Confirm delete?')"><i class="fa fa-trash-o"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            `);
+                        });
+    
+                        // Crop Variety
+                        response.CropVariety.data.forEach(item => {
+                            $('#crop-variety-list').append(`
+                                <tr>
+                                    <td>${item.id}</td>
+                                    <td>${item.crop_name || 'N/A'}</td>
+                                    <td>${item.variety_name || 'N/A'}</td>
+                                    <td>
+                                        <a href="/admin-edit-crop-variety/${item.id}"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o"></i></button></a>
+                                        <form action="/admin-delete-crop-variety/${item.id}" method="post" style="display:inline">
+                                            <input type="hidden" name="_token" value="${$('meta[name="csrf-token"]').attr('content')}">
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Confirm delete?')"><i class="fa fa-trash-o"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            `);
+                        });
+    
+                        // Pagination
+                        createPagination('#pagination-links', response.polygons.current_page, response.polygons.last_page, 'data-page');
+                        createPagination('#parcel-pagination-links', response.parcels.current_page, response.parcels.last_page, 'data-parcel-page');
+                        createPagination('#agri-pagination-links', response.AgriDistrict.current_page, response.AgriDistrict.last_page, 'data-agri-page');
+                        createPagination('#crop-category-pagination-links', response.CropCat.current_page, response.CropCat.last_page, 'data-crop-category-page');
+                        createPagination('#crop-variety-pagination-links', response.CropVariety.current_page, response.CropVariety.last_page, 'data-crop-variety-page');
+                    }
+                });
+            }
+    
+            function createPagination(container, current, last, attr) {
+                const { startPage, endPage } = getPageRange(current);
+                const $container = $(container).empty();
+    
+                $container.append(`<li class="page-item ${current === 1 ? 'disabled' : ''}">
+                    <a href="#" class="page-link" ${attr}="${current - 1}">&laquo;</a>
+                </li>`);
+    
+                for (let i = startPage; i <= endPage && i <= last; i++) {
+                    const active = (i === current) ? 'active' : '';
+                    $container.append(`<li class="page-item ${active}">
+                        <a href="#" class="page-link" ${attr}="${i}">${i}</a>
+                    </li>`);
+                }
+    
+                $container.append(`<li class="page-item ${current === last ? 'disabled' : ''}">
+                    <a href="#" class="page-link" ${attr}="${current + 1}">&raquo;</a>
+                </li>`);
+            }
+    
+            // Pagination click handler
+            $(document).on('click', '.page-link', function (e) {
+                e.preventDefault();
+                const $link = $(this);
+    
+                if ($link.attr('data-page')) currentPage = parseInt($link.attr('data-page'));
+                else if ($link.attr('data-parcel-page')) parcelCurrentPage = parseInt($link.attr('data-parcel-page'));
+                else if ($link.attr('data-agri-page')) agriPage = parseInt($link.attr('data-agri-page'));
+                else if ($link.attr('data-crop-category-page')) cropCategoryPage = parseInt($link.attr('data-crop-category-page'));
+                else if ($link.attr('data-crop-variety-page')) cropVarietyPage = parseInt($link.attr('data-crop-variety-page'));
+    
+                fetchFarmersData();
+            });
+    
+            // Individual search fields
+            $('#search-polygon').on('input', () => { currentPage = 1; fetchFarmersData(); });
+            $('#search-parcel').on('input', () => { parcelCurrentPage = 1; fetchFarmersData(); });
+            $('#search-agri').on('input', () => { agriPage = 1; fetchFarmersData(); });
+            $('#search-crop-category').on('input', () => { cropCategoryPage = 1; fetchFarmersData(); });
+            $('#search-crop-variety').on('input', () => { cropVarietyPage = 1; fetchFarmersData(); });
+    
+            // Initial load
+            fetchFarmersData();
+        });
+    </script>
+    
+    
+        
 @endsection
