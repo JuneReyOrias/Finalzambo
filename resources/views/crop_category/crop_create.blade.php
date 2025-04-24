@@ -334,16 +334,7 @@
         
                     <div class="user-details">
                         
-                        {{-- <div class="input-box">
-                            <span class="details">AgriDistrict</span>
-                            <select class="form-control light-gray-placeholder" name="agri_district" id="agri_districts_id">
-                           
-                                @foreach ($agriDistrict as $agri)
-                                    <option value="{{ $agri->district  }}">{{ $agri->district }}</option>
-                                @endforeach
-                            </select>
-                        </div> --}}
-                        
+                      
                       
                         <div class="input-box">
                           <span class="details">Crop Name</span>
@@ -366,14 +357,14 @@
                       </div>
                       
                        
-                        <div class="input-box">
+                        {{-- <div class="input-box">
                           <span class="details">Crop Variety</span>
                           <input type="text" class="form-control light-gray-placeholder @error('type_of_variety') is-invalid @enderror"  name="type_of_variety"placeholder="Enter crop variety" value="{{ old('type_of_variety') }}" >
                           @error('type_of_variety')
                           <div class="invalid-feedback">{{ $message }}</div>
                       @enderror
                         </div>
-                     
+                      --}}
                         
                       </div>
                       <div class="form_1_btns">
