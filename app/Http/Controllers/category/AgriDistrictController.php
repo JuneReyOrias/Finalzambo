@@ -206,7 +206,7 @@ class AgriDistrictController extends Controller
         
         }
         catch(\Exception $ex){
-            dd($ex); // Debugging statement to inspect the exception
+            // dd($ex); // Debugging statement to inspect the exception
             return redirect('/admin-add-district')->with('message','Someting went wrong');
             
         }   
@@ -274,10 +274,6 @@ public function  AgriInfoEdit($id)
     
         try{
         
-            // $data= $request->validated([]);
-            // $data= $request->all();
-
-            
             $addDistrict= AgriDistrict::find($id);
             $addDistrict->users_id = $request->users_id;
             $addDistrict->district =$request->district;
@@ -285,13 +281,13 @@ public function  AgriInfoEdit($id)
             $addDistrict->latitude =$request->latitude;
             $addDistrict->longitude =$request->longitude;
             // $addDistrict->altitude =$request->altitude;
-            dd($addDistrict);
+            // dd($addDistrict);
             $addDistrict->save();
             return redirect('/admin-view-polygon')->with('message','AgriDistrict updated successsfully');
         
         }
         catch(\Exception $ex){
-            dd($ex); // Debugging statement to inspect the exception
+            // dd($ex); // Debugging statement to inspect the exception
             return redirect('/admin-view-polygon')->with('message','Someting went wrong');
             
         }   

@@ -116,7 +116,7 @@ class CropCategoryController extends Controller
         $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
         $cropsEdit= CropCategory::find($id);
     
-        $crop= CropCategory::all();
+        $crop = CropCategory::all()->unique('crop_name')->values();
         
         $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
         // Return the view with the fetched data

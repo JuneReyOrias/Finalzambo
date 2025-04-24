@@ -1033,7 +1033,7 @@ public function Parcel(Request $request)
     $parcel->save();
 
     // Flash a success message
-    session()->flash('success', 'Polygon successfully created!');
+    session()->flash('success', 'Parcel successfully created!');
 
     // Return a JSON response indicating success and redirection URL
     return response()->json([
@@ -1233,7 +1233,7 @@ public function ParcelUpdates(Request $request,$id)
     $parcel->save();
 
     // Flash a success message
-    session()->flash('success', 'Polygon Updated successfully !');
+    session()->flash('success', 'Parcel Updated successfully !');
 
     // Return a JSON response indicating success and redirection URL
     return response()->json([
