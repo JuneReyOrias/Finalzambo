@@ -1436,34 +1436,24 @@ transform: translate(-50%, -50%) scale(1);
 
 <!-- Success Modal -->
 <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-md">
-        <div class="modal-content border-0 shadow-lg">
-            <!-- Modal Header -->
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title fw-bold" id="successModalLabel">
-                    <i class="fas fa-check-circle me-2"></i>Success!
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            
-            <!-- Modal Body -->
-            <div class="modal-body text-center py-5">
-                <i class="fas fa-smile-beam fa-3x text-success mb-4"></i>
-                <p class="fs-5 text-muted">
-                    Your data has been successfully added.
-                </p>
-            </div>
-            
-            <!-- Modal Footer -->
-            <div class="modal-footer justify-content-center border-0">
-                <a href="{{route('admin.farmersdata.crop',$farmData->id)}}" class="btn btn-lg btn-success px-5">
-                    Proceed to Crop Data
-                    <i class="fas fa-arrow-right ms-2"></i>
-                </a>
-            </div>
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="successModalLabel">Success</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <div class="modal-body">
+          <p>Your data has been successfully added.</p>
+        </div>
+        <div class="modal-footer">
+          {{-- <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button> --}}
+          {{-- <a href="{{ route('admin.farmersdata.production', $cropData->id) }}" class="btn btn-success">add Form</a> --}}
+            <!-- Link to proceed to another page -->
+            <a href="{{ route('admin.farmersdata.production', $cropData->id) }}" class="btn btn-success">Proceed to Production Info</a>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 
 
 
@@ -1687,56 +1677,7 @@ if (cropVarietySelect.value === "add") {
 });
 
 
-// Function to fetch crop varieties based on selected crop name
-// function fetchCropSeeds(varietyId, selectElement) {
-//     $.ajax({
-//         url: '/admin-add-crop-farms/{farmData}',
-//         method: 'GET',
-//         data: { type: 'seedname', variety_name: varietyId },
-//         success: function(response) {
-//             if (response.error) {
-//                 console.error('Error fetching crop seeds:', response.error);
-//                 return;
-//             }
 
-//             // Console log the fetched seed data
-//             console.log('Fetched seed data:', response);
-
-//             const $seedSelect = $(selectElement).closest('.crop-section').find('.seed_name');
-//             $seedSelect.empty();
-//             $seedSelect.append('<option value="" disabled selected>Select Seed</option>');
-        
-//             // Add fetched seed options
-//             $.each(response, function(id, seed) {
-//                 $seedSelect.append(new Option(seed, id));
-//             });
-
-      
-//         },
-//         error: function(xhr) {
-//             console.error('AJAX request failed. Status:', xhr.status, 'Response:', xhr.responseText);
-//         }
-//     });
-// }
-
-
-
-// // Bind change event to variety name dropdowns
-// $(document).on('change', '.crop_variety', function() {
-//     const varietyId = $(this).val();
-//     if (varietyId) {
-//         fetchCropSeeds(varietyId, this);
-//     } else {
-//         // Clear the seed dropdown if no variety is selected
-//         $(this).closest('.crop-section').find('.seed_name').empty().append('<option value="" disabled selected>Select Seed</option>');
-//           // Prompt for new seed name
-//           var newSeedName = prompt("Please enter a new seed name:");
-//             if (newSeedName) {
-//                 var newSeedId = 'new_' + Date.now(); // Generate a unique ID for the new option
-//                 $seedSelect.append(new Option(newSeedName, newSeedId));
-//             }
-//     }
-// });
 function fetchCropSeeds(varietyId, selectElement) {
 $.ajax({
     url: '/admin-add-crop-farms/{farmData}',
