@@ -251,123 +251,147 @@ foreach ($cropsData as $cropData) {
        
 
         // adding new farm profile data
-                    public function FarmProfile(Request $request,$id)
-            {
-                // Check if the user is authenticated
-                if (Auth::check()) {
-                    // User is authenticated, proceed with retrieving the user's ID
-                    $userId = Auth::id();
+        public function FarmProfile(Request $request,$id)
+        {
+            // Check if the user is authenticated
+            if (Auth::check()) {
+                // User is authenticated, proceed with retrieving the user's ID
+                $userId = Auth::id();
 
-                    // Find the user based on the retrieved ID
-                    $admin = User::find($userId);
+                // Find the user based on the retrieved ID
+                $admin = User::find($userId);
 
-                    if ($admin) {
-                        // Assuming $user represents the currently logged-in user
-                        $user = auth()->user();
+                if ($admin) {
+                    // Assuming $user represents the currently logged-in user
+                    $user = auth()->user();
 
-                        // Check if user is authenticated before proceeding
-                        if (!$user) {
-                            // Handle unauthenticated user, for example, redirect them to login
-                            return redirect()->route('login');
-                        }
+                    // Check if user is authenticated before proceeding
+                    if (!$user) {
+                        // Handle unauthenticated user, for example, redirect them to login
+                        return redirect()->route('login');
+                    }
 
-                        // Fetch user's information
-                        $user_id = $user->id;
-                        $agri_district = $user->agri_district;
-                        $agri_districts_id = $user->agri_districts_id;
-                        $cropVarieties = CropCategory::all();
-                        // Find the user by their ID and eager load the personalInformation relationship
-                        $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
-                        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-                        $personalinfos = PersonalInformations::find($id);
-                        // Fetch all agri districts
-                        $agriDistricts = AgriDistrict::all(); // Get all agri districts
-                        $polygons = Polygon::all();
-    // Handle AJAX requests
-    if ($request->ajax()) {
-        $type = $request->input('type');
+                    // Fetch user's information
+                    $user_id = $user->id;
+                    $agri_district = $user->agri_district;
+                    $agri_districts_id = $user->agri_districts_id;
+                    $cropVarieties = CropCategory::all();
+                    // Find the user by their ID and eager load the personalInformation relationship
+                    $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+                    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                    $personalinfos = PersonalInformations::find($id);
+                    // Fetch all agri districts
+                    $agriDistricts = AgriDistrict::all(); // Get all agri districts
+                    $polygons = Polygon::all();
+// Handle AJAX requests
+if ($request->ajax()) {
+    $type = $request->input('type');
 
-        // Handle requests for barangays and organizations
-        if ($type === 'barangays' || $type === 'organizations') {
-            $district = $request->input('district');
+    // Handle requests for barangays and organizations
+    if ($type === 'barangays' || $type === 'organizations') {
+        $district = $request->input('district');
 
-            if ($type === 'barangays') {
-                $barangays = Barangay::where('district', $district)->get(['id', 'barangay_name']);
-                return response()->json($barangays);
+        if ($type === 'barangays') {
+            $barangays = Barangay::where('district', $district)->get(['id', 'barangay_name']);
+            return response()->json($barangays);
 
-            } elseif ($type === 'organizations') {
-                $organizations = FarmerOrg::where('district', $district)->get(['id', 'organization_name']);
-                return response()->json($organizations);
-            }
-
-            return response()->json(['error' => 'Invalid type parameter.'], 400);
+        } elseif ($type === 'organizations') {
+            $organizations = FarmerOrg::where('district', $district)->get(['id', 'organization_name']);
+            return response()->json($organizations);
         }
 
-        // Handle requests for crop names and crop varieties
-        if ($type === 'crops') {
-            $crops = CropCategory::pluck( 'crop_name','crop_name',);
-            return response()->json($crops);
-        }
-       
-        if ($type === 'varieties') {
-            $cropId = $request->input('crop_name');
-            $varieties = Categorize::where('crop_name', $cropId)->pluck('variety_name', 'variety_name');
-            return response()->json($varieties);
-        }
-        if ($type === 'seedname') {
-            // Retrieve the 'variety_name' from the request
-            $varietyId = $request->input('variety_name');
-        
-            // Fetch the seeds based on the variety name and return the result as a JSON response
-            $seeds = Seed::where('variety_name', $varietyId)->pluck('seed_name', 'seed_name');
-        
-            // Return the seeds as a JSON response for the frontend
-            return response()->json($seeds);
-        }
         return response()->json(['error' => 'Invalid type parameter.'], 400);
     }
+
+    // Handle requests for crop names and crop varieties
+    if ($type === 'crops') {
+        $crops = CropCategory::pluck( 'crop_name','crop_name',);
+        return response()->json($crops);
+    }
+   
+    if ($type === 'varieties') {
+        $cropId = $request->input('crop_name');
+        $varieties = Categorize::where('crop_name', $cropId)->pluck('variety_name', 'variety_name');
+        return response()->json($varieties);
+    }
+    if ($type === 'seedname') {
+        // Retrieve the 'variety_name' from the request
+        $varietyId = $request->input('variety_name');
     
-  // Prepare agri district GPS coordinates
-  $districtsData = [];
-  foreach ($agriDistricts as $district) {
-      $districtsData[] = [
-          'gpsLatitude' => $district->latitude,
-          'gpsLongitude' => $district->longitude,
-          'districtName' => $district->district,
-          'description' => $district->description,
+        // Fetch the seeds based on the variety name and return the result as a JSON response
+        $seeds = Seed::where('variety_name', $varietyId)->pluck('seed_name', 'seed_name');
     
-      ];
-  }
-  $polygonsData = [];
-  foreach ($polygons as $polygon) {
-      // Prepare coordinates array from vertex fields
-      $coordinates = [
-          ['lat' => $polygon->verone_latitude, 'lng' => $polygon->verone_longitude],
-          ['lat' => $polygon->vertwo_latitude, 'lng' => $polygon->vertwo_longitude],
-          ['lat' => $polygon->verthree_latitude, 'lng' => $polygon->verthree_longitude],
-          ['lat' => $polygon->vertfour_latitude, 'lng' => $polygon->vertfour_longitude],
-          ['lat' => $polygon->verfive_latitude, 'lng' => $polygon->verfive_longitude],
-          ['lat' => $polygon->versix_latitude, 'lng' => $polygon->versix_longitude],
-          ['lat' => $polygon->verseven_latitude, 'lng' => $polygon->verseven_longitude],
-          ['lat' => $polygon->vereight_latitude, 'lng' => $polygon->verteight_longitude]
-      ];
-      
-      // Push to polygonData
-      $polygonsData[] = [
-          'id' => $polygon->id,
-          'name' => $polygon->poly_name,
-          'coordinates' => $coordinates,
-          'strokeColor' => $polygon->strokecolor, // Stroke color of the polygon
-          'area' => $polygon->area, // Area of the polygon (if applicable)
-          'perimeter' => $polygon->perimeter // Perimeter of the polygon (if applicable)
-      ];
-  }
+        // Return the seeds as a JSON response for the frontend
+        return response()->json($seeds);
+    }
+    return response()->json(['error' => 'Invalid type parameter.'], 400);
+}
+
+// Prepare agri district GPS coordinates
+$districtsData = [];
+foreach ($agriDistricts as $district) {
+  $districtsData[] = [
+      'gpsLatitude' => $district->latitude,
+      'gpsLongitude' => $district->longitude,
+      'districtName' => $district->district,
+      'description' => $district->description,
+
+  ];
+}
+$polygonsData = [];
+foreach ($polygons as $polygon) {
+  // Prepare coordinates array from vertex fields
+  $coordinates = [
+      ['lat' => $polygon->verone_latitude, 'lng' => $polygon->verone_longitude],
+      ['lat' => $polygon->vertwo_latitude, 'lng' => $polygon->vertwo_longitude],
+      ['lat' => $polygon->verthree_latitude, 'lng' => $polygon->verthree_longitude],
+      ['lat' => $polygon->vertfour_latitude, 'lng' => $polygon->vertfour_longitude],
+      ['lat' => $polygon->verfive_latitude, 'lng' => $polygon->verfive_longitude],
+      ['lat' => $polygon->versix_latitude, 'lng' => $polygon->versix_longitude],
+      ['lat' => $polygon->verseven_latitude, 'lng' => $polygon->verseven_longitude],
+      ['lat' => $polygon->vereight_latitude, 'lng' => $polygon->verteight_longitude]
+  ];
   
+  // Push to polygonData
+  $polygonsData[] = [
+      'id' => $polygon->id,
+      'name' => $polygon->poly_name,
+      'coordinates' => $coordinates,
+      'strokeColor' => $polygon->strokecolor, // Stroke color of the polygon
+      'area' => $polygon->area, // Area of the polygon (if applicable)
+      'perimeter' => $polygon->perimeter // Perimeter of the polygon (if applicable)
+  ];
+}
 
 
-  // Fetch all CropParcel records and transform them
-  $mapdata = CropParcel::all()->map(function($parcel) {
+
+// Fetch all CropParcel records and transform them
+$mapdata = CropParcel::all()->map(function($parcel) {
+
+  // Decode the JSON coordinates
+  $coordinates = json_decode($parcel->coordinates);
   
+  // Check if the coordinates are valid and properly formatted
+  if (!is_array($coordinates)) {
+  //   echo "Invalid coordinates for parcel ID {$parcel->id}: " . $parcel->coordinates . "\n";
+      return null; // Return null for invalid data
+  }
+
+  return [
+      'polygon_name' => $parcel->polygon_name, // Include the ID for reference
+      'coordinates' => $coordinates, // Include the decoded coordinates
+      'area' => $parcel->area, // Assuming there's an area field
+      'altitude' => $parcel->altitude, // Assuming there's an altitude field
+      'strokecolor' => $parcel->strokecolor, // Include the stroke color
+      'fillColor' => $parcel->fillColor // Optionally include the fill color if available
+  ];
+})->filter(); // Remove any null values from the collection
+
+
+  $parceldata = ParcellaryBoundaries::all()->map(function($parcel) {
+      // Output the individual parcel data for debugging
+  //   echo "Parcel data fetched: " . json_encode($parcel) . "\n";
+
       // Decode the JSON coordinates
       $coordinates = json_decode($parcel->coordinates);
       
@@ -378,81 +402,56 @@ foreach ($cropsData as $cropData) {
       }
 
       return [
-          'polygon_name' => $parcel->polygon_name, // Include the ID for reference
+          'parcel_name' => $parcel->parcel_name, // Include the ID for reference
+          'arpowner_na' => $parcel->arpowner_na, 
+          'agri_districts' => $parcel->agri_districts, 
+          'barangay_name' => $parcel->barangay_name, 
+          'tct_no' => $parcel->tct_no, 
+          'lot_no' => $parcel->lot_no, 
+          'pkind_desc' => $parcel->pkind_desc, 
+          'puse_desc' => $parcel->puse_desc, 
+          'actual_used' => $parcel->actual_used, 
           'coordinates' => $coordinates, // Include the decoded coordinates
           'area' => $parcel->area, // Assuming there's an area field
           'altitude' => $parcel->altitude, // Assuming there's an altitude field
           'strokecolor' => $parcel->strokecolor, // Include the stroke color
-          'fillColor' => $parcel->fillColor // Optionally include the fill color if available
+      
       ];
   })->filter(); // Remove any null values from the collection
 
+
+
+// Check if the request is an AJAX request
+if ($request->ajax()) {
+  // Return the response as JSON for AJAX requests
+  return response()->json([
+      'admin' => $admin,
+      'profile' => $profile,
+     
+      'totalRiceProduction' => $totalRiceProduction,
   
-      $parceldata = ParcellaryBoundaries::all()->map(function($parcel) {
-          // Output the individual parcel data for debugging
-      //   echo "Parcel data fetched: " . json_encode($parcel) . "\n";
+      'polygons' => $polygonsData,
+      'districtsData' => $districtsData // Send all district GPS coordinates
+  ]);
+} else {
 
-          // Decode the JSON coordinates
-          $coordinates = json_decode($parcel->coordinates);
-          
-          // Check if the coordinates are valid and properly formatted
-          if (!is_array($coordinates)) {
-          //   echo "Invalid coordinates for parcel ID {$parcel->id}: " . $parcel->coordinates . "\n";
-              return null; // Return null for invalid data
-          }
+                    // Return the view with the fetched data
+                    return view('farm_profile.farm_index', compact('agri_district', 'agri_districts_id', 'admin', 'profile',
+                    'totalRiceProduction','userId','cropVarieties','personalinfos','userId', 'mapdata', // Pass to view
+                    'parceldata' ));
 
-          return [
-              'parcel_name' => $parcel->parcel_name, // Include the ID for reference
-              'arpowner_na' => $parcel->arpowner_na, 
-              'agri_districts' => $parcel->agri_districts, 
-              'barangay_name' => $parcel->barangay_name, 
-              'tct_no' => $parcel->tct_no, 
-              'lot_no' => $parcel->lot_no, 
-              'pkind_desc' => $parcel->pkind_desc, 
-              'puse_desc' => $parcel->puse_desc, 
-              'actual_used' => $parcel->actual_used, 
-              'coordinates' => $coordinates, // Include the decoded coordinates
-              'area' => $parcel->area, // Assuming there's an area field
-              'altitude' => $parcel->altitude, // Assuming there's an altitude field
-              'strokecolor' => $parcel->strokecolor, // Include the stroke color
-          
-          ];
-      })->filter(); // Remove any null values from the collection
-
-
-
-  // Check if the request is an AJAX request
-  if ($request->ajax()) {
-      // Return the response as JSON for AJAX requests
-      return response()->json([
-          'admin' => $admin,
-          'profile' => $profile,
-         
-          'totalRiceProduction' => $totalRiceProduction,
-      
-          'polygons' => $polygonsData,
-          'districtsData' => $districtsData // Send all district GPS coordinates
-      ]);
-  } else {
-
-                        // Return the view with the fetched data
-                        return view('farm_profile.farm_index', compact('agri_district', 'agri_districts_id', 'admin', 'profile',
-                        'totalRiceProduction','userId','cropVarieties','personalinfos','userId', 'mapdata', // Pass to view
-                        'parceldata' ));
-
-  }
-                    } else {
-                        // Handle the case where the user is not found
-                        // You can redirect the user or display an error message
-                        return redirect()->route('login')->with('error', 'User not found.');
-                    }
+}
                 } else {
-                    // Handle the case where the user is not authenticated
-                    // Redirect the user to the login page
-                    return redirect()->route('login');
+                    // Handle the case where the user is not found
+                    // You can redirect the user or display an error message
+                    return redirect()->route('login')->with('error', 'User not found.');
                 }
+            } else {
+                // Handle the case where the user is not authenticated
+                // Redirect the user to the login page
+                return redirect()->route('login');
             }
-
+        }
             public function Arcmap(Request $request)
             {
                 if (Auth::check()) {

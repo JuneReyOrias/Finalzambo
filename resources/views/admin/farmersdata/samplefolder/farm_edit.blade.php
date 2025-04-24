@@ -787,7 +787,7 @@
 
                                     <div class="input-box col-md-4"id="YesInputSelected" style="display: none;" >
                                     <span class="details">PWD ID No.</span>
-                                    <input type="number" name="pwd_id_no" id="YesInputSelected" class="form-control YEspwd_id_no light-gray-placeholder @error('pwd_id_no') is-invalid @enderror" placeholder="Mother's Maiden Name" autocomplete="new-password" value="{{ old('pwd_id_no') }}" >
+                                    <input type="number" name="pwd_id_no" id="YesInputSelected" class="form-control YEspwd_id_no light-gray-placeholder @error('pwd_id_no') is-invalid @enderror" placeholder="PWD ID no." autocomplete="new-password" value="{{ old('pwd_id_no') }}" >
                                     @error('pwd_id_no')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror

@@ -430,7 +430,7 @@ return response()->json([
                     'contact_no' => 'nullable|string|max:20',
                     'civil_status' => 'nullable|string|max:20',
                     'name_legal_spouse' => 'nullable|string|max:255',
-                    'no_of_children' => 'nullable|integer|min:0',
+                    'no_of_children' => 'nullable|string|min:0',
                     'mothers_maiden_name' => 'nullable|string|max:255',
                     'highest_formal_education' => 'nullable|string|max:255',
                     'person_with_disability' => 'nullable|string|max:10',
@@ -3321,7 +3321,7 @@ public function test(Request $request)
       $farmerModel -> country= $farmerdata['country'];
       $farmerModel -> province= $farmerdata['province'];
       $farmerModel -> city = $farmerdata['city'];
-      $farmerModel -> district= $farmerdata['agri_district'];
+      $farmerModel -> agri_district= $farmerdata['agri_district'];
       $farmerModel -> barangay= $farmerdata['barangay'];
       
     //   $farmerModel -> street= $farmerdata['street'];
