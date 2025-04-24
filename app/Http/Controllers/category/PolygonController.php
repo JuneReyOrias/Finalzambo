@@ -537,7 +537,7 @@ public function update(Request $request, $id)
     
         // Find the farm profile using the fetched farm ID
         $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
-        $crop= CropCategory::all();
+        $crop = CropCategory::all()->unique('crop_name')->values();
     
     
         
