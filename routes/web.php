@@ -322,7 +322,7 @@ use Illuminate\Support\Facades\Auth;
 
         Route::get('/edit-accounts/{users}', [AdminController::class, 'editAccount'])->name('admin.create_account.edit_accounts');
         Route::post('/edit-accounts/{users}', [AdminController::class, 'updateAccounts']);
-        Route::delete('/delete-accounts/{users}', [AdminController::class, 'deleteusers'])->name('admin.create_account.delete');
+        Route::post('/delete-accounts/{users}', [AdminController::class, 'deleteusers'])->name('admin.create_account.delete');
         Route::get('/edit-password/{users}', [AdminController::class, 'editpassword'])->name('admin.create_account.update_password');
         Route::post('/edit-password/{users}', [AdminController::class, 'Updatepasswords']);
 
