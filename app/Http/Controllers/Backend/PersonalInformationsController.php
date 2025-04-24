@@ -2191,7 +2191,6 @@ public function productionAdd(Request $request,$id)
                  return redirect()->route('login');
              }
          }
-   
          public function MachineriesUpdate(Request $request,$id)
          {
 
@@ -2277,11 +2276,11 @@ public function productionAdd(Request $request,$id)
          return redirect()->route('admin.farmersdata.production', $machineused->crops_farms_id)
          ->with('message', 'Machineries Cost Data updated successfully');
      } catch (\Exception $ex) {
+        dd($ex);
          // Handle the exception and provide error feedback
          return redirect()->back()->with('message', 'Something went wrong');
      }  
          }
-
         //  delete
 
          public function Machineriesdelete($id) {

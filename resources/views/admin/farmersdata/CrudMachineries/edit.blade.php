@@ -556,7 +556,7 @@
                                         id="selectPlowingStatus" 
                                         onchange="checkPlowingStatus()" 
                                         aria-label="label select e">
-                                        <option value="{{$machineriesData->harro_ownership_status}}">{{$machineriesData->harro_ownership_status}}</option>
+                                        <option value="{{$machineriesData->plo_ownership_status}}">{{$machineriesData->plo_ownership_status}}</option>
                                     <option  value="Own" {{ old('plo_ownership_status') == 'Own' ? 'selected' : '' }}>Own</option>
                                     <option value="Rent" {{ old('plo_ownership_status') == 'Rent' ? 'selected' : '' }}>Rent</option>
                                     <option value="Other" {{ old('plo_ownership_status') == 'Other' ? 'selected' : '' }}>Other(Optional)</option>
@@ -581,7 +581,7 @@
                         
                         <div class="input-box col-md-4">
                             <span class="details">Cost per Plowing</span>
-                            <input type="number" class="form-control light-gray-placeholder cost_per_plowing @error('plowing_cost') is-invalid @enderror" value="{{$machineriesData->plowing_cost}}" name="cost_per_plowing" id="plowingperCostInput" placeholder="Enter plowing per cost" value="{{ old('plowing_cost') }}">
+                            <input type="number" class="form-control light-gray-placeholder cost_per_plowing @error('plowing_cost') is-invalid @enderror" value="{{$machineriesData->plowing_cost}}" name="plowing_cost" id="plowingperCostInput" placeholder="Enter plowing per cost" value="{{ old('plowing_cost') }}">
                             @error('plowing_cost')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -589,7 +589,7 @@
                         
                         <div class="input-box col-md-4">
                             <span class="details">Total Plowing Cost</span>
-                            <input type="number" class="form-control light-gray-placeholder plowing_cost @error('plowing_cost') is-invalid @enderror" value="{{$machineriesData->plowing_cost_total}}" name="plowing_cost" id="plowingCostInput" placeholder="Total plowing cost" value="{{ old('plowing_cost') }}" readonly>
+                            <input type="number" class="form-control light-gray-placeholder plowing_cost @error('plowing_cost') is-invalid @enderror" value="{{$machineriesData->plowing_cost_total}}" name="plowing_cost_total" id="plowingCostInput" placeholder="Total plowing cost" value="{{ old('plowing_cost') }}" readonly>
                             @error('plowing_cost')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
