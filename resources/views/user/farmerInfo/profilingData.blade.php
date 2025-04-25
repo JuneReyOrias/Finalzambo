@@ -886,7 +886,7 @@
                 <div class="d-flex justify-content-between align-items-center mt-3">
                     <!-- Right Logo -->
                     <div class="right-logo mr-5">
-                        <img src="{{ $user->image ? asset('../assets/logo/Citylogo.jpg') : asset('assets/logo/default_logo.png') }}"
+                        <img src="{{ $user->image ? asset('assets/logo/Citylogo.jpg') : asset('assets/logo/default_logo.png') }}"
                             alt="Right Logo" class="img-fluid rounded-circle" style="max-height: 90px;">
                     </div>
 
