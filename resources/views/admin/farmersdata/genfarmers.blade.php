@@ -837,7 +837,7 @@ $(document).ready(function () {
                         <tr class="new-row">
                             <td class="custom-cell">${info.id}</td>
                             <td class="custom-cell">${info.first_name} ${info.middle_name || ''} ${info.last_name} ${info.extension_name || ''}</td>
-                            <td class="custom-cell">${info.barangay || info.district || info.city ? `${info.barangay || ''}, ${info.district || ''}, ${info.city || ''}` : info.home_address || ''}</td>
+                            <td class="custom-cell">${info.barangay || info.district || info.city ? `${info.barangay || ''}, ${info.district || ''} ${info.city || ''}` : info.home_address || ''}</td>
                             <td class="custom-cell">${info.date_of_birth || ''}</td>
                             <td class="custom-cell">${info.place_of_birth || ''}</td>
                             <td class="custom-cell">
