@@ -6937,7 +6937,7 @@ public function ViewFarmers(Request $request)
                                 return redirect()->route('agent.FarmerInfo.production_view', $machineused->crops_farms_id)
                                 ->with('message', 'Machineries Cost Data updated successfully');
                             } catch (\Exception $ex) {
-                                dd($ex);
+                                // dd($ex);
                                 // Handle the exception and provide error feedback
                                 return redirect()->back()->with('message', 'Something went wrong');
                             }  
