@@ -3353,6 +3353,7 @@ public function test(Request $request)
     // VARIABLES
     // VARIABLES
     $farmer_id = $farmerModel -> id;
+    $farmer_agri = $farmerModel -> agri_district;
     // VARIABLES
     // VARIABLES
 
@@ -3373,7 +3374,7 @@ public function test(Request $request)
 
       $farmModel -> tenurial_status = $farms['tenurial_status'];
       $farmModel -> farm_address = $farms['farm_address'];
-
+      $farmModel -> agri_districts = $farmer_agri;
       $farmModel -> no_of_years_as_farmers = $farms['no_of_years_as_farmers'];
       $farmModel -> gps_longitude = $farms['gps_longitude'];
       $farmModel -> gps_latitude = $farms['gps_latitude'];

@@ -5390,97 +5390,93 @@ public function ViewFarmers(Request $request)
 
   // adding new farm profile data
 
-  public function ViewAddCrops(Request $request,$id)
-  {
-      // Check if the user is authenticated
-      if (Auth::check()) {
-          // User is authenticated, proceed with retrieving the user's ID
-          $userId = Auth::id();
+  public function ViewAddCrops(Request $request, $id)
+    {
+        // Check if the user is authenticated
+        if (Auth::check()) {
+            // User is authenticated, proceed with retrieving the user's ID
+            $userId = Auth::id();
 
-          // Find the user based on the retrieved ID
-          $agent = User::find($userId);
+            // Find the user based on the retrieved ID
+            $agent = User::find($userId);
 
-          if ($agent) {
-              // Assuming $user represents the currently logged-in user
-              $user = auth()->user();
+            if ($agent) {
+                // Assuming $user represents the currently logged-in user
+                $user = auth()->user();
 
-              // Check if user is authenticated before proceeding
-              if (!$user) {
-                  // Handle unauthenticated user, for example, redirect them to login
-                  return redirect()->route('login');
-              }
+                // Check if user is authenticated before proceeding
+                if (!$user) {
+                    // Handle unauthenticated user, for example, redirect them to login
+                    return redirect()->route('login');
+                }
 
-              // Fetch user's information
-              $user_id = $user->id;
-              $agri_district = $user->agri_district;
-              $agri_districts_id = $user->agri_districts_id;
-              $cropVarieties = CropCategory::all();
-              // Find the user by their ID and eager load the personalInformation relationship
-              $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
-              $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-            // Fetch farm profile data
-            $farmData = FarmProfile::find($id);
+                // Fetch user's information
+                $user_id = $user->id;
+                $agri_district = $user->agri_district;
+                $agri_districts_id = $user->agri_districts_id;
+                $cropVarieties = CropCategory::all();
+                // Find the user by their ID and eager load the personalInformation relationship
+                $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+                $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                // Fetch farm profile data
+                $farmData = FarmProfile::find($id);
 
-                    // Handle AJAX requests
-                    if ($request->ajax()) {
+                // Handle AJAX requests
+                if ($request->ajax()) {
                     $type = $request->input('type');
 
                     // Handle requests for barangays and organizations
                     if ($type === 'barangays' || $type === 'organizations') {
-                    $district = $request->input('district');
+                        $district = $request->input('district');
 
-                    if ($type === 'barangays') {
-                        $barangays = Barangay::where('district', $district)->get(['id', 'barangay_name']);
-                        return response()->json($barangays);
+                        if ($type === 'barangays') {
+                            $barangays = Barangay::where('district', $district)->get(['id', 'barangay_name']);
+                            return response()->json($barangays);
+                        } elseif ($type === 'organizations') {
+                            $organizations = FarmerOrg::where('district', $district)->get(['id', 'organization_name']);
+                            return response()->json($organizations);
+                        }
 
-                    } elseif ($type === 'organizations') {
-                        $organizations = FarmerOrg::where('district', $district)->get(['id', 'organization_name']);
-                        return response()->json($organizations);
-                    }
-
-                    return response()->json(['error' => 'Invalid type parameter.'], 400);
+                        return response()->json(['error' => 'Invalid type parameter.'], 400);
                     }
 
                     // Handle requests for crop names and crop varieties
                     if ($type === 'crops') {
-                    $crops = CropCategory::pluck( 'crop_name','crop_name',);
-                    return response()->json($crops);
+                        $crops = CropCategory::pluck('crop_name', 'crop_name');
+                        return response()->json($crops);
                     }
 
                     if ($type === 'varieties') {
-                    $cropId = $request->input('crop_name');
-                    $varieties = Categorize::where('crop_name', $cropId)->pluck('variety_name', 'variety_name');
-                    return response()->json($varieties);
+                        $cropId = $request->input('crop_name');
+                        $varieties = Categorize::where('crop_name', $cropId)->pluck('variety_name', 'variety_name');
+                        return response()->json($varieties);
                     }
                     if ($type === 'seedname') {
-                    // Retrieve the 'variety_name' from the request
-                    $varietyId = $request->input('variety_name');
+                        // Retrieve the 'variety_name' from the request
+                        $varietyId = $request->input('variety_name');
 
-                    // Fetch the seeds based on the variety name and return the result as a JSON response
-                    $seeds = Seed::where('variety_name', $varietyId)->pluck('seed_name', 'seed_name');
+                        // Fetch the seeds based on the variety name and return the result as a JSON response
+                        $seeds = Seed::where('variety_name', $varietyId)->pluck('seed_name', 'seed_name');
 
-                    // Return the seeds as a JSON response for the frontend
-                    return response()->json($seeds);
+                        // Return the seeds as a JSON response for the frontend
+                        return response()->json($seeds);
                     }
                     return response()->json(['error' => 'Invalid type parameter.'], 400);
-                    }
+                }
 
-
-
-              // Return the view with the fetched data
-              return view('agent.FarmerInfo.CrudCrop.add', compact('agri_district', 'agri_districts_id', 'agent', 'profile',
-              'totalRiceProduction','userId','cropVarieties','farmData'));
-          } else {
-              // Handle the case where the user is not found
-              // You can redirect the user or display an error message
-              return redirect()->route('login')->with('error', 'User not found.');
-          }
-      } else {
-          // Handle the case where the user is not authenticated
-          // Redirect the user to the login page
-          return redirect()->route('login');
-      }
-  }
+                // Return the view with the fetched data
+                return view('agent.FarmerInfo.CrudCrop.add', compact('agri_district', 'agri_districts_id', 'agent', 'profile', 'totalRiceProduction', 'userId', 'cropVarieties', 'farmData'));
+            } else {
+                // Handle the case where the user is not found
+                // You can redirect the user or display an error message
+                return redirect()->route('login')->with('error', 'User not found.');
+            }
+        } else {
+            // Handle the case where the user is not authenticated
+            // Redirect the user to the login page
+            return redirect()->route('login');
+        }
+    }
 
 
   public function SaveNewCrop(Request $request)
