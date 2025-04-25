@@ -5465,7 +5465,7 @@ public function ViewFarmers(Request $request)
                 }
 
                 // Return the view with the fetched data
-                return view('agent.FarmerInfo.CrudCrop.add', compact('agri_district', 'agri_districts_id', 'agent', 'profile', 'totalRiceProduction', 'userId', 'cropVarieties', 'farmData'));
+                return view('agent.FarmerInfo.CrudCrop.Add', compact('agri_district', 'agri_districts_id', 'agent', 'profile', 'totalRiceProduction', 'userId', 'cropVarieties', 'farmData'));
             } else {
                 // Handle the case where the user is not found
                 // You can redirect the user or display an error message
