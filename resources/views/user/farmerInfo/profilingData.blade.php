@@ -886,7 +886,7 @@
                 <div class="d-flex justify-content-between align-items-center mt-3">
                     <!-- Right Logo -->
                     <div class="right-logo mr-5">
-                        <img src="{{ $user->image ? asset('assets/logo/Citylogo.jpg') : asset('assets/logo/default_logo.png') }}"
+                        <img src="{{ $user->image ? asset('assets/logo/Citylogo.jpg') : asset('assets/logo/Citylogo.jpg') }}"
                             alt="Right Logo" class="img-fluid rounded-circle" style="max-height: 90px;">
                     </div>
 
@@ -899,7 +899,7 @@
 
                     <!-- Left Logo -->
                     <div class="left-logo ml-5">
-                        <img src="{{ $user->image ? asset('assets/logo/agriculture.jpg') : asset('assets/logo/default_logo.png') }}"
+                        <img src="{{ $user->image ? asset('assets/logo/agriculture.jpg') : asset('assets/logo/agriculture.jpg') }}"
                             alt="Left Logo" class="img-fluid rounded-circle" style="max-height: 90px; max-width: 80px;">
                     </div>
                 </div>
