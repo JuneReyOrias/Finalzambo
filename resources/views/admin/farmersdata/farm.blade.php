@@ -100,7 +100,7 @@
                     
                                             <th>#</th>
                                          
-                                            <th>Agri-District</th>
+                                           
                                             <th>tenurial status</th>
                                             <th>farm address</th>
                                             <th>years as farmer</th>
@@ -123,13 +123,13 @@
                                     {{-- <td>{{ $loop->iteration }}</td> --}}
                                     <td>{{  $farmprofile->id }}</td>
                                     
-                            <td>
+                            {{-- <td>
                                 @if ($farmprofile->agriDistrict->district && $farmprofile->agriDistrict->district != 'N/A')
                                     {{ $farmprofile->agriDistrict->district }}
                                 @else
                                     
                                 @endif
-                            </td>
+                            </td> --}}
                             <td>
                                 @if ($farmprofile->tenurial_status && $farmprofile->tenurial_status != 'N/A')
                                     {{ $farmprofile->tenurial_status }}
@@ -456,16 +456,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                {{-- <div class="form-group mt-3">
-                    <label for="user_id">Select User:</label>
-                    <select class="form-control" id="user_id">
-                        <option value="">Select a user</option>
-                        @foreach ($users as $item)
-                        <option value="{{$item->id}}">{{$item->first_name.' '.$item->last_name}}</option>
-                            
-                        @endforeach
-                    </select>
-                </div> --}}
+             
                
                     <div class="row">
                         <!-- User Selection -->
