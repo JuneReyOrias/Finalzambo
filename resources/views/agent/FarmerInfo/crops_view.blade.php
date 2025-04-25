@@ -53,7 +53,7 @@
                                     <h5 for="personainfo"></h5>
                                 </div>
                                    
-                                <a href="{{ route('agent.FarmerInfo.CrudCrop.add',$farmData->id)}}" title="Add farm">
+                                <a href="{{ route('agent.FarmerInfo.CrudCrop.Add',$farmData->id)}}" title="Add farm">
                                     <button class="btn btn-success btn-sm">
                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                     </button>
