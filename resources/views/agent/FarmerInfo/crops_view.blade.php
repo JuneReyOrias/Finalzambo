@@ -247,7 +247,7 @@
                                 <i class="fas fa-rice" aria-hidden="true"></i>
                             </button>
                         </a>  
-                        <a href="{{route('agent.FarmerInfo.CrudCrop.edit', $cropdata->id)}}" title="edit crop"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a> 
+                        <a href="{{route('agent.FarmerInfo.CrudCrop.Edit', $cropdata->id)}}" title="edit crop"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a> 
                 
                         <form  action="{{ route('agent.FarmerInfo.CrudCrop.delete', $cropdata->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
                            {{-- {{ csrf_field()}} --}}@csrf

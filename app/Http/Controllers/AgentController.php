@@ -5738,7 +5738,7 @@ public function ViewFarmers(Request $request)
                    
                    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
                    // Return the view with the fetched data
-                   return view('agent.FarmerInfo.CrudCrop.edit', compact('agent', 'profile', 'farmProfile','totalRiceProduction'
+                   return view('agent.FarmerInfo.CrudCrop.Edit', compact('agent', 'profile', 'farmProfile','totalRiceProduction'
                    ,'cropfarm','userId','agri_district','agri_districts_id'
                    
                    ));

@@ -458,7 +458,7 @@ use Illuminate\Support\Facades\Auth;
             Route::get('/agent-view-farmer-crops/{farmData}',[AgentController ::class,'ViewFarmerCrops'])->name('agent.FarmerInfo.crops_view');
             Route::get('/agent-add-farmer-crops/{farmData}',[AgentController ::class,'ViewAddCrops'])->name('agent.FarmerInfo.CrudCrop.Add');
             Route::post('/agent-add-farmer-crops/{farmData}',[AgentController ::class,'SaveNewCrop']);
-            Route::get('/agent-edit-farmer-crops/{farmData}',[AgentController ::class,'EditCrops'])->name('agent.FarmerInfo.CrudCrop.edit');
+            Route::get('/agent-edit-farmer-crops/{farmData}',[AgentController ::class,'EditCrops'])->name('agent.FarmerInfo.CrudCrop.Edit');
             Route::post('/agent-edit-farmer-crops/{farmData}',[AgentController ::class,'UpdatedCrop']);
             Route::delete('/agent-delete-farmer-crops/{farmData}',[AgentController ::class,'DeletingCrops'])->name('agent.FarmerInfo.CrudCrop.delete');
 
