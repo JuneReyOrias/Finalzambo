@@ -837,9 +837,9 @@ $(document).ready(function () {
                         <tr class="new-row">
                             <td class="custom-cell">${info.id}</td>
                             <td class="custom-cell">${info.first_name} ${info.middle_name || ''} ${info.last_name} ${info.extension_name || ''}</td>
-                            <td class="custom-cell">${info.barangay || info.district || info.city ? `${info.barangay || 'N/A'}, ${info.district || 'N/A'}, ${info.city || 'N/A'}` : info.home_address || 'N/A'}</td>
-                            <td class="custom-cell">${info.date_of_birth || 'N/A'}</td>
-                            <td class="custom-cell">${info.place_of_birth || 'N/A'}</td>
+                            <td class="custom-cell">${info.barangay || info.district || info.city ? `${info.barangay || ''}, ${info.district || ''}, ${info.city || ''}` : info.home_address || ''}</td>
+                            <td class="custom-cell">${info.date_of_birth || ''}</td>
+                            <td class="custom-cell">${info.place_of_birth || ''}</td>
                             <td class="custom-cell">
                                 <a href="/admin-view-Farmers-farm/${info.id}" title="View farm">
                                     <button class="btn btn-success btn-sm"><i class="fa fa-eye" aria-hidden="true"></i></button>

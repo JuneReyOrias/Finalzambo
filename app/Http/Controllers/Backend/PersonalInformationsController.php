@@ -420,6 +420,7 @@ return response()->json([
                     'extension_name' => 'nullable|string|max:255',
                    
                     'city' => 'nullable|string|max:255',
+                    'agri_district'=>'nullable|string|max:255',
                     'district' => 'nullable|string|max:255',
                     'barangay' => 'nullable|string|max:255',
                     'home_address' => 'nullable|string|max:255',
@@ -462,6 +463,7 @@ return response()->json([
                 'province' => $data->province,
                 'city' => $data->city,
                 'district' => $data->district,
+                'agri_district' => $data->agri_district,
                 'barangay' => $data->barangay,
                 'home_address' => $data->home_address,
                 'sex' => $data->sex,
