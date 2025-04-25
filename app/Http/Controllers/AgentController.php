@@ -7070,102 +7070,96 @@ public function ViewFarmers(Request $request)
                                     }
                                 }
                                 
-
-                            public function UpdateVariable(Request $request,$id)
-                            {
-
-                            try{
-
-
-                            // $data= $request->validated();
-                            // $data= $request->all();
-
-                            $variable= VariableCost::find($id);
-                            // Pass the previous data into the new record
-                            VariableCostArchive::create([
-                                'variable_costs_id' => $variable->id,
-                                'personal_informations_id' => $variable->personal_informations_id,
-                                'farm_profiles_id' => $variable->farm_profiles_id,
-                                'last_production_datas_id' => $variable->last_production_datas_id,
-                                'crops_farms_id' => $variable->crops_farms_id,
-                                'users_id' => $variable->users_id,
-
-                                // Seed Information
-                                'unit' => $variable->unit,
-                                'quantity' => $variable->quantity,
-                                'unit_price' => $variable->unit_price,
-                                'total_seed_cost' => $variable->total_seed_cost,
-
-                                // Labor Information
-                                'labor_no_of_person' => $variable->labor_no_of_person,
-                                'rate_per_person' => $variable->rate_per_person,
-                                'total_labor_cost' => $variable->total_labor_cost,
-
-                                // Fertilizer Information
-                                'no_of_sacks' => $variable->no_of_sacks,
-                                'unit_price_per_sacks' => $variable->unit_price_per_sacks,
-                                'total_cost_fertilizers' => $variable->total_cost_fertilizers,
-
-                                // Pesticides Information
-                                'no_of_l_kg' => $variable->no_of_l_kg,
-                                'unit_price_of_pesticides' => $variable->unit_price_of_pesticides,
-                                'total_cost_pesticides' => $variable->total_cost_pesticides,
-
-                                // Transport Information
-                                'total_transport_delivery_cost' => $variable->total_transport_delivery_cost,
-
-                                // Total Costs
-                                'total_machinery_fuel_cost' => $variable->total_machinery_fuel_cost,
-                                'total_variable_cost' => $variable->total_variable_cost,
-
-                                // Pass the previous created_at timestamp
-                                'old_created_at' => $variable->created_at,
-
-                                // Optional: Use the same updated_at timestamp, or set a new one
-                                'updated_at' => now(),
-                            ]);
-
-                            $variable->users_id = $request->users_id;
-
-
-                            $variable->crops_farms_id = $request->crops_farms_id;
-                            $variable-> seed_name = $request->seed_name;
-                            $variable-> unit = $request->unit;
-                            $variable->quantity = $request->quantity;
-                            $variable->unit_price = $request->unit_price;
-                            $variable-> total_seed_cost = $request->total_seed_cost;
-                             
-                            $variable-> labor_no_of_person = $request->labor_no_of_person;
-                            $variable->rate_per_person = $request->rate_per_person;
-                            $variable->total_labor_cost = $request->total_labor_cost; 
-                            $variable->name_of_fertilizer = $request->name_of_fertilizer;
-                            $variable->no_of_sacks = $request->no_of_sacks; 
-                         
-                     
-                            $variable->unit_price_per_sacks = $request->unit_price_per_sacks;
-                            $variable->total_cost_fertilizers = $request->total_cost_fertilizers;
-                            $variable->pesticide_name = $request->pesticide_name;
-                            $variable->no_of_l_kg = $request->no_of_l_kg;
-                            $variable->unit_price_of_pesticides = $request->unit_price_of_pesticides;
-                         
-                                $variable->total_cost_pesticides = $request->total_cost_pesticides;
-                                $variable->name_of_vehicle = $request->name_of_vehicle;
-                                $variable->total_transport_delivery_cost = $request->total_transport_delivery_cost;
-                                $variable->total_machinery_fuel_cost = $request->total_machinery_fuel_cost;
-                                $variable->total_variable_cost = $request->total_variable_cost;
-                            //  dd($variable);
-                             $variable->save();
-
-                         
+                                public function UpdateVariable(Request $request, $id)
+                                {
+                                    try {
+                                        // $data= $request->validated();
+                                        // $data= $request->all();
                             
-                                // Redirect to the production view page based on the crop_farms_id
-                                return redirect()->route('agent.FarmerInfo.production_view', $variable->crops_farms_id)
-                                ->with('message', 'Variable Cost Data updated successfully');
-                            } catch (\Exception $ex) {
-                                // Handle the exception and provide error feedback
-                                return redirect()->back()->with('message', 'Something went wrong');
-                            }  
-                            } 
+                                        $variable = VariableCost::find($id);
+                                        // Pass the previous data into the new record
+                                        VariableCostArchive::create([
+                                            'variable_costs_id' => $variable->id,
+                                            'personal_informations_id' => $variable->personal_informations_id,
+                                            'farm_profiles_id' => $variable->farm_profiles_id,
+                                            'last_production_datas_id' => $variable->last_production_datas_id,
+                                            'crops_farms_id' => $variable->crops_farms_id,
+                                            'users_id' => $variable->users_id,
+                            
+                                            // Seed Information
+                                            'unit' => $variable->unit,
+                                            'quantity' => $variable->quantity,
+                                            'unit_price' => $variable->unit_price,
+                                            'total_seed_cost' => $variable->total_seed_cost,
+                            
+                                            // Labor Information
+                                            'labor_no_of_person' => $variable->labor_no_of_person,
+                                            'rate_per_person' => $variable->rate_per_person,
+                                            'total_labor_cost' => $variable->total_labor_cost,
+                            
+                                            // Fertilizer Information
+                                            'no_of_sacks' => $variable->no_of_sacks,
+                                            'unit_price_per_sacks' => $variable->unit_price_per_sacks,
+                                            'total_cost_fertilizers' => $variable->total_cost_fertilizers,
+                            
+                                            // Pesticides Information
+                                            'no_of_l_kg' => $variable->no_of_l_kg,
+                                            'unit_price_of_pesticides' => $variable->unit_price_of_pesticides,
+                                            'total_cost_pesticides' => $variable->total_cost_pesticides,
+                            
+                                            // Transport Information
+                                            'total_transport_delivery_cost' => $variable->total_transport_delivery_cost,
+                            
+                                            // Total Costs
+                                            'total_machinery_fuel_cost' => $variable->total_machinery_fuel_cost,
+                                            'total_variable_cost' => $variable->total_variable_cost,
+                            
+                                            // Pass the previous created_at timestamp
+                                            'old_created_at' => $variable->created_at,
+                            
+                                            // Optional: Use the same updated_at timestamp, or set a new one
+                                            'updated_at' => now(),
+                                        ]);
+                            
+                                        $variable->users_id = $request->users_id;
+                            
+                                        $variable->crops_farms_id = $request->crops_farms_id;
+                                        $variable->seed_name = $request->seed_name;
+                                        $variable->unit = $request->unit;
+                                        $variable->quantity = $request->quantity;
+                                        $variable->unit_price = $request->unit_price;
+                                        $variable->total_seed_cost = $request->total_seed_cost;
+                            
+                                        $variable->labor_no_of_person = $request->labor_no_of_person;
+                                        $variable->rate_per_person = $request->rate_per_person;
+                                        $variable->total_labor_cost = $request->total_labor_cost;
+                                        $variable->name_of_fertilizer = $request->name_of_fertilizer;
+                                        $variable->no_of_sacks = $request->no_of_sacks;
+                            
+                                        $variable->unit_price_per_sacks = $request->unit_price_per_sacks;
+                                        $variable->total_cost_fertilizers = $request->total_cost_fertilizers;
+                                        $variable->pesticide_name = $request->pesticide_name;
+                                        $variable->no_of_l_kg = $request->no_of_l_kg;
+                                        $variable->unit_price_of_pesticides = $request->unit_price_of_pesticides;
+                            
+                                        $variable->total_cost_pesticides = $request->total_cost_pesticides;
+                                        $variable->name_of_vehicle = $request->name_of_vehicle;
+                                        $variable->total_transport_delivery_cost = $request->total_transport_delivery_cost;
+                                        $variable->total_machinery_fuel_cost = $request->total_machinery_fuel_cost;
+                                        $variable->total_variable_cost = $request->total_variable_cost;
+                                        //  dd($variable);
+                                        $variable->save();
+                            
+                                        // Redirect to the production view page based on the crop_farms_id
+                                        return redirect()
+                                            ->route('agent.FarmerInfo.production_view', $variable->crops_farms_id)
+                                            ->with('message', 'Variable Cost Data updated successfully');
+                                    } catch (\Exception $ex) {
+                                        dd($ex);
+                                        // Handle the exception and provide error feedback
+                                        return redirect()->back()->with('message', 'Something went wrong');
+                                    }
+                                }
 
 
 
