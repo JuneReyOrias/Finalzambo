@@ -15,12 +15,13 @@
 </style>
 
 <div class="page-content">
-                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                    
-                    <h4>Farmers Data</h4>
-                  
-
-                </div>
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <a href="{{ route('admin.farmersdata.genfarmers') }}" class="btn btn-outline-secondary btn-sm">
+            ← Back
+        </a>
+        <h4 class="flex-grow-1 text-center m-0">Farmers Data</h4>
+        <div style="width: 80px;"></div> <!-- spacer to balance the back button width -->
+    </div>
                 <br>
                 @if (session()->has('message'))
                 <div class="alert alert-success" id="success-alert">
@@ -54,17 +55,11 @@
                                         
                                         <div class="input-group mb-3">
 
-                                            {{-- <select id="date-interview-dropdown" class="form-select">
-                                                <option value="">All Farmers</option>
-                                                <option value="new">New (Last 6 months)</option>
-                                                <option value="old">Old (More than 6 months)</option>
-                                            </select> --}}
+
                                             <button id="print-all-data" class="btn btn-primary" title="Print Farmer Data">
                                                 <i class="fas fa-print"></i> 
                                             </button>
-                                            <button id="exportExcel" class="btn btn-success" title="Download Farmers Data">
-                                                <i class="fas fa-file-excel"></i>
-                                            </button>
+                                   
                                             
                                             <select class="form-select" id="district-dropdown">
                                                 <option value="">All Districts</option>
