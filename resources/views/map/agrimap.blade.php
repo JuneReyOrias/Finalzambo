@@ -659,8 +659,8 @@ function loadPolygons() {
             if (isParcelData) {
                 contentString = 'Parcel Name: ' + parcel.parcel_name + '<br>' +
                                  'ARPOwner Name: ' + parcel.arpowner_na + '<br>' +
-                                'Agri-District: ' + parcel.agri_districts + ' sq. meters<br>' +
-                                'Brgy. Name: ' + parcel.barangay_name + ' sq. meters<br>' +
+                                'Agri-District: ' + parcel.agri_districts + '<br>' +
+                                'Brgy. Name: ' + parcel.barangay_name + '<br>' +
                                 'Title name: ' + parcel.tct_no + '<br>' +
                                 'Property kind description: ' + parcel.pkind_desc + '<br>' +
                                 'Property Used description: ' + parcel.puse_desc + '<br>' +
