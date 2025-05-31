@@ -172,7 +172,7 @@ $(document).ready(function () {
         e.preventDefault();
         const $link = $(this);
         if ($link.attr('data-barangay-page')) {
-            barangayPage = parseInt($link.attr('data-barangay-page'));
+            FarmerOrgPage = parseInt($link.attr('data-barangay-page'));
             fetchBarangayData();
         }
     });
@@ -182,7 +182,7 @@ $(document).ready(function () {
     $('#searchInput').on('input', function () {
         clearTimeout(searchTimer);
         searchTimer = setTimeout(function () {
-            barangayPage = 1;
+            FarmerOrgPage = 1;
             fetchBarangayData();
         }, 500); // 500ms delay
     });
@@ -191,7 +191,7 @@ $(document).ready(function () {
     $('#showAllForm').on('submit', function (e) {
         e.preventDefault();
         $('#searchInput').val('');
-        barangayPage = 1;
+        FarmerOrgPage = 1;
         fetchBarangayData();
     });
 
