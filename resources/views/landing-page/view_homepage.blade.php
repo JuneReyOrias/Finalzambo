@@ -129,7 +129,7 @@
                                                       </div>
                                                       <div class="form_1_btns">
                                                        
-                                                        <a  href="{{route('admin.barangay.view_forms')}}"button class="btn btn-secondary btn_back mr-2">Back</button></a>
+                                                        <a  href="{{route('admin.barangay.view_barangay')}}"button class="btn btn-secondary btn_back mr-2">Back</button></a>
                                                         <button type="submit" class="btn btn-success">Submit</button>
                                                     </div>
                                                 </div>
@@ -320,7 +320,7 @@
                                                       </div>
                                                       <div class="form_1_btns">
                                                        
-                                                        <a  href="{{route('admin.barangay.view_forms')}}"button class="btn btn-secondary btn_back mr-2">Back</button></a>
+                                                        <a  href="{{route('admin.barangay.view_barangay')}}"button class="btn btn-secondary btn_back mr-2">Back</button></a>
                                                         <button type="submit" class="btn btn-success">Submit</button>
                                                     </div>
                                                 </div>
