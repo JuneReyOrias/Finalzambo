@@ -41,6 +41,7 @@ use App\Models\Transport;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Response;
 use App\Models\User;
 use App\Models\CropParcel;
 use Carbon\Carbon;
@@ -291,7 +292,8 @@ public function AdminupdateFarmProfile(Request $request)
         return response()->json(['success' => true, 'polygon_id' => $polygon->id]);
     }
         
-    // Function to retrieve all relevant data for the admin dashboard, including statistics and records, and pass the data to the dashboard view for display.
+    // Function to retrieve all relevant data for the admin dashboard,
+    //  including statistics and records, and pass the data to the dashboard view for display.
  
     public function adminDashb(Request $request)
     {
@@ -2920,65 +2922,106 @@ public function CornSave(Request $request)
 
                  // view barangay form access by admin
 
-                 public function viewBaranagay(Request $request){
-                    // Check if the user is authenticated
-                if (Auth::check()) {
-                // User is authenticated, proceed with retrieving the user's ID
-                $userId = Auth::id();
+                //  public function viewBaranagay(Request $request){
+                //     // Check if the user is authenticated
+                // if (Auth::check()) {
+                // // User is authenticated, proceed with retrieving the user's ID
+                // $userId = Auth::id();
                 
-                // Find the user based on the retrieved ID
-                $admin = User::find($userId);
+                // // Find the user based on the retrieved ID
+                // $admin = User::find($userId);
                 
-                if ($admin) {
-                    // Assuming $user represents the currently logged-in user
-                    $user = auth()->user();
+                // if ($admin) {
+                //     // Assuming $user represents the currently logged-in user
+                //     $user = auth()->user();
                 
-                    // Check if user is authenticated before proceeding
-                    if (!$user) {
-                        // Handle unauthenticated user, for example, redirect them to login
-                        return redirect()->route('login');
-                    }
+                //     // Check if user is authenticated before proceeding
+                //     if (!$user) {
+                //         // Handle unauthenticated user, for example, redirect them to login
+                //         return redirect()->route('login');
+                //     }
                 
-                    // Find the user's personal information by their ID
-                    $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+                //     // Find the user's personal information by their ID
+                //     $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
                 
-                    // Fetch the farm ID associated with the user
-                    $farmId = $user->farm_id;
+                //     // Fetch the farm ID associated with the user
+                //     $farmId = $user->farm_id;
                 
-                    // Find the farm profile using the fetched farm ID
-                    $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
-                // Query for labors with search functionality
-                $barangaysQuery = Barangay::query();
-                if ($request->has('search')) {
-                    $searchTerm = $request->input('search');
-                    $barangaysQuery->where(function($query) use ($searchTerm) {
-                        $query->where('barangay_name', 'like', "%$searchTerm%");
+                //     // Find the farm profile using the fetched farm ID
+                //     $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
+                // // Query for labors with search functionality
+                // $barangaysQuery = Barangay::query();
+                // if ($request->has('search')) {
+                //     $searchTerm = $request->input('search');
+                //     $barangaysQuery->where(function($query) use ($searchTerm) {
+                //         $query->where('barangay_name', 'like', "%$searchTerm%");
                            
-                    });
-                }
-                $barangays = $barangaysQuery->orderBy('id','asc')->paginate(10);
-                // $productions = LastProductionDatas::with('personalinformation', 'farmprofile','agridistrict')
-                // ->orderBy('id', 'asc');
+                //     });
+                // }
+                // $barangays = $barangaysQuery->orderBy('id','asc')->paginate(10);
+                // // $productions = LastProductionDatas::with('personalinformation', 'farmprofile','agridistrict')
+                // // ->orderBy('id', 'asc');
                 
-                $agriDistrict = AgriDistrict::all();
+                // $agriDistrict = AgriDistrict::all();
                     
-                    $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-                    // Return the view with the fetched data
-                    return view('admin.barangay.view_forms', compact('agriDistrict','barangays','userId','admin', 'profile', 'farmProfile','totalRiceProduction'
-                    ,'userId'));
-                } else {
-                    // Handle the case where the user is not found
-                    // You can redirect the user or display an error message
-                    return redirect()->route('login')->with('error', 'User not found.');
-                }
-                } else {
-                // Handle the case where the user is not authenticated
-                // Redirect the user to the login page
-                return redirect()->route('login');
-                }
-                }
+                //     $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                //     // Return the view with the fetched data
+                //     return view('admin.barangay.view_barangay', compact('agriDistrict','barangays','userId','admin', 'profile', 'farmProfile','totalRiceProduction'
+                //     ,'userId'));
+                // } else {
+                //     // Handle the case where the user is not found
+                //     // You can redirect the user or display an error message
+                //     return redirect()->route('login')->with('error', 'User not found.');
+                // }
+                // } else {
+                // // Handle the case where the user is not authenticated
+                // // Redirect the user to the login page
+                // return redirect()->route('login');
+                // }
+                // }
 
+   public function viewBarangay(Request $request)
+    {
+        // Redirect to login if not authenticated
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
 
+        // Get the logged-in admin user
+        $admin = User::find(Auth::id());
+        if (!$admin) {
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+
+        // Query the Barangay model
+        $barangays = Barangay::query();
+
+        // Handle search
+        if ($request->filled('barangay_search')) {
+            $keyword = $request->input('barangay_search');
+            $barangays->where('barangay_name', 'like', "%{$keyword}%")
+            ->orwhere('district', 'like', "%{$keyword}%");
+        }
+
+        // Handle sorting
+        $sortColumn = $request->input('sort_column', 'id');
+        $sortOrder = $request->input('sort_order', 'asc');
+        $barangays->orderBy($sortColumn, $sortOrder);
+
+        // Handle pagination
+        $barangayPage = $request->input('barangay_page', 1);
+        $barangays = $barangays->paginate(4, ['*'], 'barangay_page', $barangayPage);
+
+        // AJAX response
+        if ($request->ajax()) {
+            return response()->json([
+                'barangays' => $barangays
+            ]);
+        }
+
+        // Initial full-page view
+        return view('admin.barangay.view_barangay', compact('barangays', 'admin'));
+    }
                     // view barangay form access by admin
                     
                     public function EditBrgy($id){
@@ -3061,14 +3104,14 @@ public function CornSave(Request $request)
                         
                             if ($barangay) {
                                 $barangay->delete();
-                                return redirect()->route('admin.barangay.view_forms')
+                                return redirect()->route('admin.barangay.view_barangay')
                                                  ->with('message', 'barangay data deleted successfully');
                             } else {
-                                return redirect()->route('admin.barangay.view_forms')
+                                return redirect()->route('admin.barangay.view_barangay')
                                                  ->with('message', 'barangay data not found');
                             }
                         } catch (Exception $e) {
-                            return redirect()->route('admin.barangay.view_forms')
+                            return redirect()->route('admin.barangay.view_barangay')
                                              ->with('message', 'Error deleting barangay data : ' . $e->getMessage());
                         }
                     }
@@ -3131,8 +3174,7 @@ public function CornSave(Request $request)
                 }
 
 
-                public function saveFarmerOrg(Request $request
-                )
+                public function saveFarmerOrg(Request $request )
                 {
                     try{
                     
@@ -3160,63 +3202,105 @@ public function CornSave(Request $request)
 
                     // view farmers org form access by admin
 
-                    public function viewfarmersOrg(Request $request){
-                        // Check if the user is authenticated
-                    if (Auth::check()) {
-                    // User is authenticated, proceed with retrieving the user's ID
-                    $userId = Auth::id();
+                    // public function viewfarmersOrg(Request $request){
+                    //     // Check if the user is authenticated
+                    // if (Auth::check()) {
+                    // // User is authenticated, proceed with retrieving the user's ID
+                    // $userId = Auth::id();
                     
-                    // Find the user based on the retrieved ID
-                    $admin = User::find($userId);
+                    // // Find the user based on the retrieved ID
+                    // $admin = User::find($userId);
                     
-                    if ($admin) {
-                        // Assuming $user represents the currently logged-in user
-                        $user = auth()->user();
+                    // if ($admin) {
+                    //     // Assuming $user represents the currently logged-in user
+                    //     $user = auth()->user();
                     
-                        // Check if user is authenticated before proceeding
-                        if (!$user) {
-                            // Handle unauthenticated user, for example, redirect them to login
-                            return redirect()->route('login');
-                        }
+                    //     // Check if user is authenticated before proceeding
+                    //     if (!$user) {
+                    //         // Handle unauthenticated user, for example, redirect them to login
+                    //         return redirect()->route('login');
+                    //     }
                     
-                        // Find the user's personal information by their ID
-                        $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
+                    //     // Find the user's personal information by their ID
+                    //     $profile = PersonalInformations::where('users_id', $userId)->latest()->first();
                     
-                        // Fetch the farm ID associated with the user
-                        $farmId = $user->farm_id;
+                    //     // Fetch the farm ID associated with the user
+                    //     $farmId = $user->farm_id;
                     
-                        // Find the farm profile using the fetched farm ID
-                        $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
+                    //     // Find the farm profile using the fetched farm ID
+                    //     $farmProfile = FarmProfile::where('id', $farmId)->latest()->first();
                     
-                        $FarmerOrgQuery = FarmerOrg::query();
-                        if ($request->has('search')) {
-                            $searchTerm = $request->input('search');
-                            $FarmerOrgQuery->where(function($query) use ($searchTerm) {
-                                $query->where('organization_name', 'like', "%$searchTerm%");
+                    //     $FarmerOrgQuery = FarmerOrg::query();
+                    //     if ($request->has('search')) {
+                    //         $searchTerm = $request->input('search');
+                    //         $FarmerOrgQuery->where(function($query) use ($searchTerm) {
+                    //             $query->where('organization_name', 'like', "%$searchTerm%");
                                   
                                 
-                            });
-                        }
-                        $FarmerOrg = $FarmerOrgQuery->orderBy('id','asc')->paginate(10);
+                    //         });
+                    //     }
+                    //     $FarmerOrg = $FarmerOrgQuery->orderBy('id','asc')->paginate(10);
                     
                         
-                        $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
-                        // Return the view with the fetched data
-                        return view('admin.farmerOrg.view_orgs', compact('FarmerOrg','userId','admin', 'profile', 'farmProfile','totalRiceProduction'
-                        ,'userId'));
-                    } else {
-                        // Handle the case where the user is not found
-                        // You can redirect the user or display an error message
-                        return redirect()->route('login')->with('error', 'User not found.');
-                    }
-                    } else {
-                    // Handle the case where the user is not authenticated
-                    // Redirect the user to the login page
-                    return redirect()->route('login');
-                    }
-                    }
+                    //     $totalRiceProduction = LastProductionDatas::sum('yield_tons_per_kg');
+                    //     // Return the view with the fetched data
+                    //     return view('admin.farmerOrg.view_orgs', compact('FarmerOrg','userId','admin', 'profile', 'farmProfile','totalRiceProduction'
+                    //     ,'userId'));
+                    // } else {
+                    //     // Handle the case where the user is not found
+                    //     // You can redirect the user or display an error message
+                    //     return redirect()->route('login')->with('error', 'User not found.');
+                    // }
+                    // } else {
+                    // // Handle the case where the user is not authenticated
+                    // // Redirect the user to the login page
+                    // return redirect()->route('login');
+                    // }
+                    // }
 
+   public function viewfarmersOrg(Request $request)
+    {
+        // Redirect to login if not authenticated
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
 
+        // Get the logged-in admin user
+        $admin = User::find(Auth::id());
+        if (!$admin) {
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+
+        // Query the Barangay model
+        $FarmerOrg = FarmerOrg::query();
+
+        // Handle search
+        if ($request->filled('FarmerOrg_search')) {
+            $keyword = $request->input('FarmerOrg_search');
+            $FarmerOrg->where('organization_name', 'like', "%{$keyword}%")
+            ->orwhere('district', 'like', "%{$keyword}%");
+        }
+
+        // Handle sorting
+        $sortColumn = $request->input('sort_column', 'id');
+        $sortOrder = $request->input('sort_order', 'asc');
+        $FarmerOrg->orderBy($sortColumn, $sortOrder);
+
+        // Handle pagination
+        $FarmerOrgPage = $request->input('FarmerOrg_page', 1);
+        $FarmerOrg = $FarmerOrg->paginate(4, ['*'], 'FarmerOrg_page', $FarmerOrgPage);
+
+        // AJAX response
+        if ($request->ajax()) {
+            return response()->json([
+                'FarmerOrg' => $FarmerOrg
+            ]);
+        }
+
+        // Initial full-page view
+        return view('admin.farmerOrg.view_orgs', compact('FarmerOrg', 'admin'));
+    }
+       
                         // update and delete by admin
 
                  public function EditOrg($id){
@@ -3523,4 +3607,45 @@ public function CornSave(Request $request)
             return view('admin.farmersdata.farmer_report', compact('admin', 'personalinfos', 'farmProfiles', 'districts'));
         }
 
+
+        // Retrieving all farmers data from database to create a analytics report
+   
+        public function AnalyticReport(Request $request)
+        {
+            if (!Auth::check()) {
+                if ($request->ajax()) {
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
+                return redirect()->route('login');
+            }
+        
+            try {
+                // Fetch farmer count by district
+                $data = FarmProfile::getFarmerCountByDistrict();
+        
+                // Format the data for the chart
+                $formattedData = $data->map(function ($item) {
+                    return [
+                        'agri_districts' => $item->agri_districts,
+                        'farmer_count' => $item->farmer_count,
+                    ];
+                });
+        
+                // If the request is AJAX, return JSON response
+                if ($request->ajax()) {
+                    return response()->json($formattedData);
+                }
+        
+                // Otherwise, return the view with 'admin' data
+                $admin = Auth::user(); // Assuming you're passing the authenticated user
+                return view('admin.GeneralReport.FarmersReport', compact('admin', 'formattedData'));
+        
+            } catch (Exception $e) {
+                // Log the error and return a message
+                Log::error('Error fetching analytics report: ' . $e->getMessage());
+                return response()->json(['error' => 'Internal Server Error'], 500);
+            }
+        }
+        
+        
                     }

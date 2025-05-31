@@ -205,15 +205,15 @@ use Illuminate\Support\Facades\Auth;
     Route::get('/admin-view-farmer-org',[AdminController::class,'viewfarmersOrg'])->name('admin.farmerOrg.view_orgs');
     Route::get('/admin-edit-farmer-org/{farmerOrg}',[AdminController::class,'EditOrg'])->name('admin.farmerOrg.edit_org');
     Route::post('/admin-edit-farmer-org/{farmerOrg}',[AdminController::class,'updateFarmerOrg']);
-    Route::delete('/admin-delete-farmer-org/{farmerOrg}',[AdminController::class,'deleteFarmerOrg'])->name('admin.farmerOrg.delete');
+    Route::post('/admin-delete-farmer-org/{farmerOrg}',[AdminController::class,'deleteFarmerOrg'])->name('admin.farmerOrg.delete');
 
         // admin  add barangay form
         Route::get('/admin-add-barangay',[AdminController::class,'barangayForm'])->name('admin.barangay.add_form');
         Route::post('/admin-add-barangay',[AdminController::class,'newBarangay']);
         Route::get('/admin-edit-barangays/{barangay}',[AdminController::class,'EditBrgy'])->name('admin.barangay.edit_barangay');
         Route::post('/admin-edit-barangays/{barangay}',[AdminController::class,'updateBarangay']);
-        Route::delete('/admin-delete-barangays/{barangay}',[AdminController::class,'destroy'])->name('admin.barangay.delete');
-        Route::get('/admin-view-barangays',[AdminController::class,'viewBaranagay'])->name('admin.barangay.view_forms');
+        Route::post('/admin-delete-barangays/{barangay}',[AdminController::class,'destroy'])->name('admin.barangay.delete');
+        Route::get('/admin-view-barangays',[AdminController::class,'viewBarangay'])->name('admin.barangay.view_barangay');
 
 
     
@@ -456,7 +456,7 @@ use Illuminate\Support\Facades\Auth;
 
             // agent access Farmer-Crops
             Route::get('/agent-view-farmer-crops/{farmData}',[AgentController ::class,'ViewFarmerCrops'])->name('agent.FarmerInfo.crops_view');
-            Route::get('/agent-add-farmer-crops/{farmData}',[AgentController ::class,'ViewAddCrops'])->name('agent.FarmerInfo.CrudCrop.Add');
+            Route::get('/agent-add-farmer-crops/{farmData}',[AgentController ::class,'ViewAddCrops'])->name('agent.FarmerInfo.CrudCrop.add');
             Route::post('/agent-add-farmer-crops/{farmData}',[AgentController ::class,'SaveNewCrop']);
             Route::get('/agent-edit-farmer-crops/{farmData}',[AgentController ::class,'EditCrops'])->name('agent.FarmerInfo.CrudCrop.Edit');
             Route::post('/agent-edit-farmer-crops/{farmData}',[AgentController ::class,'UpdatedCrop']);

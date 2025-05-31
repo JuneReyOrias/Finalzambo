@@ -37,110 +37,21 @@
                                 </div>
                             
                                 <div class="me-md-1">
-                                    <a href="{{ route('admin.farmerOrg.add_form') }}" title="Add" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                                    <a href="{{ route('admin.farmerOrg.add_form') }}" title="Add" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true">Add</i></a>
                                 </div>
                             
                                 <form id="farmProfileSearchForm" action="" method="GET" class="me-2">
                                     <div class="input-group">
                                         <input type="text" class="form-control" placeholder="Search" name="search" id="searchInput">
-                                        <button class="btn btn-outline-success" type="submit">Search</button>
+                                      
                                     </div>
                                 </form>
                             
-                                <form id="showAllForm" action="" method="GET">
-                                    <button class="btn btn-outline-success" type="submit">All</button>
-                                </form>
+                               
                             </div>
                             
-                            <!-- Modal -->
-                            <div class="modal fade" id="addBarangayModal" tabindex="-1" aria-labelledby="addBarangayModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="addBarangayModalLabel">Add Barangay</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="content">
-                                            <form id="multi-step-form" action{{url('CornSave')}} method="post">
-                                                @csrf
-                                                <div >
-                                
-                                                    <input type="hidden" name="users_id" value="{{ $userId}}">
-                                                   
-                                                 
-                                             </div>
-                                             <div class="input-box">
-                                               
-                                                <input type="hidden" class="form-control light-gray-placeholder @error('first_name') is-invalid @enderror" name="country" id="validationCustom01" value="corn" readonly >
-                                                @error('first_name')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                              </div>
-                                         
-                                                <!-- Step 1 -->
-                                                <div id="step-1" class="form_1">
-                                                    {{-- <h4 class="card-titles" style="display: flex;text-align: center; "><span></span>Rice Survey Form Zamboanga City</h4> --}}
-                                          <br>
-                                          {{-- <h6 class="card-title"><span></span>Barangay</h6> --}}
-                   
-                                                   
-                                                    <p class="text-success">Provide clear and concise responses to each section, ensuring accuracy and relevance. If certain information is not applicable, write N/A.</p><br>
-                                        
-                                                    <div class="user-details">
-                                                        
-                                                        <div class="input-box">
-                                                            <span class="details">AgriDistrict</span>
-                                                            <select class="form-control light-gray-placeholder @error('extension_name') is-invalid @enderror"  name="extension_name"id="validationCustom01" aria-label="Floating label select e">
-                                                              <option selected disabled>Select</option>
-                                                             
-                                                              <option value="others" {{ old('extension_name') == 'others' ? 'selected' : '' }}>others</option>
-                                                            </select>
-                                                          </div>
-                                                          <div class="input-box">
-                                                            <span class="details">Barangay</span>
-                                                            <select class="form-control light-gray-placeholder"  name="religion"id="selectReligion"onchange="checkReligion()" aria-label="Floating label select e">
-                                                                <option selected disabled>Select</option>
-                                                                <option value="Roman Catholic" {{ old('religion') == 'Roman Catholic' ? 'selected' : '' }}>Roman Catholic</option>
-                                                                <option value="Iglesia Ni Cristo" {{ old('religion') == 'Iglesia Ni Cristo' ? 'selected' : '' }}>Iglesia Ni Cristo</option>
-                                                                <option value="Seventh-day Adventist" {{ old('religion') == 'Seventh-day Adventist' ? 'selected' : '' }}>Seventh-day Adventist</option>
-                                                                <option value="Islam" {{ old('religion') == 'Islam' ? 'selected' : '' }}>Islam</option>
-                                                                <option value="Born Again CHurch" {{ old('religion') == 'Born Again CHurch' ? 'selected' : '' }}>Born Again CHurch</option>
-                                                                <option value="N/A" {{ old('religion') == 'N/A' ? 'selected' : '' }}>N/A</option>
-                                                                <option value="other" {{ old('religion') == 'other' ? 'selected' : '' }}>other</option>
-                                                            </select>
-                                                          </div>
-                                                        <div class="input-box" id="ReligionInputField" style="display: none;">
-                                                          <span class="details">Add Barangay</span>
-                                                          <input type="text" class="form-control light-gray-placeholder @error('middle_name') is-invalid @enderror"  name="religion"id="selectReligion"onchange="checkReligion()" >
-                                                          @error('middle_name')
-                                                          <div class="invalid-feedback">{{ $message }}</div>
-                                                      @enderror
-                                                        </div>
-                                                     
-                                                       
-                                                      
-                                                        
-                                                      </div>
-                                                      <div class="form_1_btns">
-                                                       
-                                                        <a  href="{{route('admin.barangay.view_forms')}}"button class="btn btn-secondary btn_back mr-2">Back</button></a>
-                                                        <button type="submit" class="btn btn-success">Submit</button>
-                                                    </div>
-                                                </div>
-                                
-                                            
-                                                          
-                                                            
-                                                          </div>
-                                                     
-                                            
-                                                     
-                                            </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    </div>
+                           
+                      
                             
                                <div class="table-responsive">
                                 <table class="table table-bordered datatable">
@@ -154,48 +65,16 @@
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        @if($FarmerOrg->count() > 0)
-                                        @foreach($FarmerOrg as $org)
-                                            <tr class="table-light">
-                                                 
-                                                 <td>{{$org->id}}</td>
-                                                 <td>{{$org->district }}</td>
-                                                 <td>{{$org->organization_name }}</td>
-                                               
-                                                
-                          
-                                                <td>
-                                                   
-                                                     <a href="{{route('admin.farmerOrg.edit_org',  $org->id)}}" title="Edit Student"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a> 
-                                        
-                                                     <form  action="{{ route('admin.farmerOrg.delete', $org->id) }}"method="post" accept-charset="UTF-8" style="display:inline">
-                                                    @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                                    </form> 
-                                                    
-                                                </td>
-                                        </tr>
-                                        @endforeach
-                                        @else
-                                        <tr>
-                                            <td class="text-center" colspan="5">Farmer Org/Coop/Assoc is empty</td>
-                                        </tr>
-                                        @endif
-                                    </tbody>
+                                      <tbody id="FarmerOrg-info-list">
+                                            <!-- AJAX data will be inserted here -->
+                                        </tbody>
                                 </table>
                             </div>
-                             <!-- Pagination links -->
-                             <ul class="pagination">
-                                <li><a href="{{ $FarmerOrg->previousPageUrl() }}">Previous</a></li>
-                                @foreach ($FarmerOrg->getUrlRange(1,$FarmerOrg->lastPage()) as $page => $url)
-                                    <li class="{{ $page == $FarmerOrg->currentPage() ? 'active' : '' }}">
-                                        <a href="{{ $url }}">{{ $page }}</a>
-                                    </li>
-                                @endforeach
-                                <li><a href="{{ $FarmerOrg->nextPageUrl() }}">Next</a></li>
-                            </ul>
+                             <div class="d-flex justify-content-between align-items-center mt-3">
+                <ul id="pagination-links" class="pagination mb-0">
+                    <!-- AJAX pagination links -->
+                </ul>
+            </div>
                         </div>
 
 
@@ -207,34 +86,119 @@
         </div>
     </div>
 </div>
+
+{{-- JavaScript for fetching organization data with live search --}}
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const searchInput = document.getElementById('searchInput');
-        const farmProfileSearchForm = document.getElementById('farmProfileSearchForm');
-        const showAllForm = document.getElementById('showAllForm');
-  
-        let timer;
-  
-        // Add event listener for search input
-        searchInput.addEventListener('input', function() {
-            // Clear previous timer
-            clearTimeout(timer);
-            // Start new timer with a delay of 500 milliseconds (adjust as needed)
-            timer = setTimeout(function() {
-                // Submit the search form
-                farmProfileSearchForm.submit();
-            }, 1000);
+$(document).ready(function () {
+    let sortOrder = 'asc';
+    let sortColumn = 'id';
+    let  FarmerOrgPage = 1;
+
+    function getPageRange(currentPage) {
+        const startPage = Math.floor((currentPage - 1) / 3) * 3 + 1;
+        const endPage = startPage + 2;
+        return { startPage, endPage };
+    }
+
+    function fetchBarangayData() {
+        const filters = {
+            FarmerOrg_search: $('#searchInput').val(),
+            sort_order: sortOrder,
+            sort_column: sortColumn,
+            FarmerOrg_page: FarmerOrgPage
+        };
+
+        $.ajax({
+            url: '/admin-view-farmer-org',
+            type: 'GET',
+            data: filters,
+            success: function (response) {
+                $('#FarmerOrg-info-list').empty();
+                $('#pagination-links').empty();
+
+                function toTitleCase(str) {
+                        return str.toLowerCase().split(' ').map(word => 
+                            word.charAt(0).toUpperCase() + word.slice(1)
+                        ).join(' ');
+                    }
+                response.FarmerOrg.data.forEach(info => {
+                    $('#FarmerOrg-info-list').append(`
+                        <tr>
+                            <td>${info.id}</td>
+                             <td>${info.district ? toTitleCase(info.district) : 'N/A'}</td>
+                              <td>${info.organization_name ? toTitleCase(info.organization_name) : 'N/A'}</td>
+                            <td>
+                                <a href="/admin-edit-farmer-org/${info.id}">
+                                    <button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o"></i></button>
+                                </a>
+                                <form action="/admin-delete-farmer-org/${info.id}" method="post" style="display:inline">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Confirm delete?')">
+                                        <i class="fa fa-trash-o"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    `);
+                });
+
+                createPagination('#pagination-links', response.FarmerOrg.current_page, response.FarmerOrg.last_page, 'data-barangay-page');
+            }
         });
-  
-        // Add event listener for "Show All" button
-        showAllForm.addEventListener('click', function(event) {
-            // Prevent default form submission behavior
-            event.preventDefault();
-            // Remove search query from input field
-            searchInput.value = '';
-            // Submit the form
-            showAllForm.submit();
-        });
+    }
+
+    function createPagination(container, current, last, attr) {
+        const { startPage, endPage } = getPageRange(current);
+        const $container = $(container).empty();
+
+        $container.append(`<li class="page-item ${current === 1 ? 'disabled' : ''}">
+            <a href="#" class="page-link" ${attr}="${current - 1}">&laquo;</a>
+        </li>`);
+
+        for (let i = startPage; i <= endPage && i <= last; i++) {
+            const active = (i === current) ? 'active' : '';
+            $container.append(`<li class="page-item ${active}">
+                <a href="#" class="page-link" ${attr}="${i}">${i}</a>
+            </li>`);
+        }
+
+        $container.append(`<li class="page-item ${current === last ? 'disabled' : ''}">
+            <a href="#" class="page-link" ${attr}="${current + 1}">&raquo;</a>
+        </li>`);
+    }
+
+    // Pagination click handler
+    $(document).on('click', '.page-link', function (e) {
+        e.preventDefault();
+        const $link = $(this);
+        if ($link.attr('data-barangay-page')) {
+            barangayPage = parseInt($link.attr('data-barangay-page'));
+            fetchBarangayData();
+        }
     });
-  </script>
+
+    // Live search while typing with debounce
+    let searchTimer;
+    $('#searchInput').on('input', function () {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(function () {
+            barangayPage = 1;
+            fetchBarangayData();
+        }, 500); // 500ms delay
+    });
+
+    // Show all button click handler
+    $('#showAllForm').on('submit', function (e) {
+        e.preventDefault();
+        $('#searchInput').val('');
+        barangayPage = 1;
+        fetchBarangayData();
+    });
+
+    // Initial load
+    fetchBarangayData();
+});
+</script>
+
 @endsection
+

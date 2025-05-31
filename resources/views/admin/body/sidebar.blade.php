@@ -109,7 +109,7 @@
         <div class="collapse" id="brangay">
           <ul class="nav sub-menu"style="padding-left:70px;">
             <li class="nav-item">
-              <a href="{{route('admin.barangay.view_forms')}}" class="nav-link">Add Barangay</a>
+              <a href="{{route('admin.barangay.view_barangay')}}" class="nav-link">Add Barangay</a>
             </li>
          
            

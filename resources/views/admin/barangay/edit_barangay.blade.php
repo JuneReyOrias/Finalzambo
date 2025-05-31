@@ -274,25 +274,7 @@
 
             <div class="card-body">
               
-            {{-- <div class="header">
-                <ul>
-                    <li class="active form_1_progessbar">
-                        <div>
-                            <p>A</p>
-                        </div>
-                    </li>
-                    <li class="form_2_progessbar">
-                        <div>
-                            <p>B</p>
-                        </div>
-                    </li>
-                    <li class="form_3_progessbar">
-                        <div>
-                            <p>C</p>
-                        </div>
-                    </li>
-                </ul>
-            </div> --}}
+            
             <div class="content">
             <form id="multi-step-form" action{{url('updateBarangay')}} method="post">
                 @csrf
@@ -310,11 +292,11 @@
             @enderror
               </div>
          
-                <!-- Step 1 -->
+                <!-- barangay update-->
                 <div id="step-1" class="form_1">
-                    {{-- <h4 class="card-titles" style="display: flex;text-align: center; "><span></span>Rice Survey Form Zamboanga City</h4> --}}
+                 
           <br>
-          {{-- <h6 class="card-title"><span></span>Barangay</h6> --}}
+       
 <br><br>
          
                     <h3>Update Barangay</h3><br>
@@ -334,19 +316,7 @@
                         </div>
                         
                       
-                          {{-- <div class="input-box">
-                            <span class="details">Barangay</span>
-                            <select class="form-control light-gray-placeholder"  name="religion"id="selectReligion"onchange="checkReligion()" aria-label="Floating label select e">
-                                <option selected disabled>Select</option>
-                                <option value="Roman Catholic" {{ old('religion') == 'Roman Catholic' ? 'selected' : '' }}>Roman Catholic</option>
-                                <option value="Iglesia Ni Cristo" {{ old('religion') == 'Iglesia Ni Cristo' ? 'selected' : '' }}>Iglesia Ni Cristo</option>
-                                <option value="Seventh-day Adventist" {{ old('religion') == 'Seventh-day Adventist' ? 'selected' : '' }}>Seventh-day Adventist</option>
-                                <option value="Islam" {{ old('religion') == 'Islam' ? 'selected' : '' }}>Islam</option>
-                                <option value="Born Again CHurch" {{ old('religion') == 'Born Again CHurch' ? 'selected' : '' }}>Born Again CHurch</option>
-                                <option value="N/A" {{ old('religion') == 'N/A' ? 'selected' : '' }}>N/A</option>
-                                <option value="other" {{ old('religion') == 'other' ? 'selected' : '' }}>other</option>
-                            </select>
-                          </div> --}}
+                        
                         <div class="input-box">
                           <span class="details">Barangay Name</span>
                           <input type="text" class="form-control light-gray-placeholder @error('barangay_name') is-invalid @enderror" value="{{$barangay->barangay_name}}"  name="barangay_name"id="selectReligion"onchange="checkReligion()" >
@@ -361,7 +331,7 @@
                       </div>
                       <div class="form_1_btns">
                        
-                        <a  href="{{route('admin.barangay.view_forms')}}"button class="btn btn-secondary btn_back mr-2">Back</button></a>
+                        <a  href="{{route('admin.barangay.view_barangay')}}"button class="btn btn-secondary btn_back mr-2">Back</button></a>
                         <button type="submit" class="btn btn-success">Submit</button>
                     </div>
                 </div>
